@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style x:Key="ArcWpf.Menu.FocusVisual" TargetType="Control">
+    <Setter Property="Template"><Setter.Value><ControlTemplate>
+      <Border Margin="-2" BorderThickness="2" CornerRadius="{DynamicResource ArcWpf.Radius.Control}" BorderBrush="{DynamicResource ArcWpf.Brush.Focus}" />
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <ControlTemplate x:Key="ArcWpf.Menu.TriggerTemplate" TargetType="Button">
+    <Border x:Name="TriggerSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ArcWpf.Radius.Control}" Padding="{TemplateBinding Padding}">
+      <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+    </Border>
+    <ControlTemplate.Triggers>
+      <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TriggerSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}" /><Setter TargetName="TriggerSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}" /></Trigger>
+      <Trigger Property="IsPressed" Value="True"><Setter TargetName="TriggerSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}" /><Setter TargetName="TriggerSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}" /></Trigger>
+    </ControlTemplate.Triggers>
+  </ControlTemplate>
+  <Style x:Key="ArcWpf.Menu.TriggerStyle" TargetType="Button">
+    <Setter Property="Template" Value="{StaticResource ArcWpf.Menu.TriggerTemplate}" />
+    <Setter Property="FocusVisualStyle" Value="{StaticResource ArcWpf.Menu.FocusVisual}" />
+  </Style>
+  <Style TargetType="{x:Type arc:Menu}">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" />
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:Menu}">
+      <Grid>
+        <Button x:Name="PART_Trigger" Style="{StaticResource ArcWpf.Menu.TriggerStyle}" MinHeight="36" Padding="12,0" HorizontalContentAlignment="Stretch" Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" Foreground="{TemplateBinding Foreground}">
+          <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><ContentControl Grid.Column="0" Content="{Binding Icon, RelativeSource={RelativeSource AncestorType={x:Type arc:Menu}}}" VerticalContentAlignment="Center" Margin="0,0,8,0" /><TextBlock x:Name="PART_TriggerLabel" Grid.Column="1" Text="{Binding Label, RelativeSource={RelativeSource AncestorType={x:Type arc:Menu}}}" VerticalAlignment="Center" RenderTransformOrigin=".5,.5" /><Path Grid.Column="2" Width="12" Height="12" Margin="12,0,0,0" Data="M 3,5 L 6,8 L 9,5" Stroke="{DynamicResource ArcWpf.Brush.TextMuted}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" HorizontalAlignment="Right" VerticalAlignment="Center" IsHitTestVisible="False" /></Grid>
+        </Button>
+        <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Custom" PlacementTarget="{Binding ElementName=PART_Trigger}" StaysOpen="False" PopupAnimation="None">
+          <Border x:Name="PART_Surface" MinWidth="192" MaxWidth="352" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
+            <Grid>
+            <Border x:Name="PART_Highlight" Margin="0" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="8" IsHitTestVisible="False" Visibility="Hidden" />
+            <ListBox x:Name="PART_ItemsHost" ItemsSource="{TemplateBinding Items}" BorderThickness="0" Background="Transparent" KeyboardNavigation.TabNavigation="Continue" Focusable="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+              <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                  <Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" /><Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Focusable" Value="True" />
+                  <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="0"><ContentPresenter /></Border></ControlTemplate></Setter.Value></Setter>
+                  <Style.Triggers><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}" /></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}" /></Trigger><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45" /></Trigger></Style.Triggers>
+                </Style>
+              </ListBox.ItemContainerStyle>
+              <ListBox.ItemTemplate><DataTemplate>
+                <Grid>
+                  <Border Height="1" Margin="0,4" Background="{DynamicResource ArcWpf.Brush.Border}" Visibility="{Binding SeparatorVisibility}" />
+                  <Button IsEnabled="{Binding IsEnabled}" MinHeight="36" Padding="11,0" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FocusVisualStyle="{x:Null}">
+                    <Grid>
+                      <Grid.ColumnDefinitions><ColumnDefinition Width="24" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                      <ContentControl Grid.Column="0" Content="{Binding Icon}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" HorizontalContentAlignment="Left" />
+                      <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" /><Style.Triggers><DataTrigger Binding="{Binding IsDestructive}" Value="True"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                      <TextBlock Grid.Column="2" Text="{Binding InputGestureText}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="16,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                  </Button>
+                </Grid>
+              </DataTemplate></ListBox.ItemTemplate>
+            </ListBox>
+            </Grid>
+          </Border>
+        </Popup>
+      </Grid>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>

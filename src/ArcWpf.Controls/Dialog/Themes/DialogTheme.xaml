@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="arc:DialogHost">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:DialogHost"><Grid>
+      <ContentPresenter x:Name="PART_Background" ContentSource="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+      <ContentPresenter x:Name="PART_Dialog" Content="{TemplateBinding Dialog}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Grid></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="arc:DialogSwapText">
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:DialogSwapText"><Grid>
+      <TextBlock x:Name="PART_Current" TextWrapping="Wrap" Text="{TemplateBinding Text}"/>
+      <Canvas IsHitTestVisible="False"><arc:DialogDecorativeText x:Name="PART_Old" TextWrapping="Wrap" Opacity="0"/></Canvas>
+    </Grid></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="arc:Dialog">
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/><Setter Property="FontSize" Value="14"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceRaised}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/><Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle"/><Setter Property="KeyboardNavigation.ControlTabNavigation" Value="Cycle"/><Setter Property="Visibility" Value="Collapsed"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:Dialog">
+      <Grid>
+        <Border x:Name="PART_Overlay" Background="{DynamicResource ArcWpf.Brush.DialogOverlay}"/>
+        <Border x:Name="PART_Surface" Margin="16" MaxWidth="440" HorizontalAlignment="Stretch" VerticalAlignment="Center" Focusable="True" RenderTransformOrigin=".5,.5" CornerRadius="34" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+            <StackPanel>
+              <Border x:Name="HeaderBorder" Padding="24" BorderThickness="0,0,0,1" BorderBrush="{TemplateBinding BorderBrush}">
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="20"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
+                  <StackPanel><arc:DialogSwapText x:Name="TitleText" Text="{TemplateBinding Title}" FontSize="18" FontWeight="Medium" TextBlock.LineHeight="25.2"/>
+                    <arc:DialogSwapText x:Name="DescriptionText" Text="{TemplateBinding Description}" Margin="0,8,0,0" FontSize="14" TextBlock.LineHeight="19.6" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+                  </StackPanel>
+                  <arc:Button x:Name="PART_CloseButton" Grid.Column="2" Width="32" Height="32" MinHeight="0" MinWidth="0" Padding="0" Margin="0,-3.4,0,0" VerticalAlignment="Top" Variant="Secondary" AutomationProperties.Name="Close dialog">
+                    <arc:Button.Style><Style TargetType="arc:Button">
+                      <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.DialogClose}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+                      <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/></Trigger></Style.Triggers>
+                    </Style></arc:Button.Style>
+                    <Path Width="16" Height="16" Data="M 4,4 L 12,12 M 12,4 L 4,12" Stroke="{Binding Path=(TextElement.Foreground),RelativeSource={RelativeSource Self}}" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                  </arc:Button>
+                </Grid>
+              </Border>
+              <ContentPresenter x:Name="Body" Margin="24" ContentSource="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextBlock.LineHeight="19.6"/>
+            </StackPanel>
+          </ScrollViewer>
+        </Border>
+      </Grid>
+      <ControlTemplate.Triggers>
+        <Trigger Property="Description" Value=""><Setter TargetName="DescriptionText" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="Description" Value="{x:Null}"><Setter TargetName="DescriptionText" Property="Visibility" Value="Collapsed"/></Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers><Trigger Property="IsPresented" Value="True"><Setter Property="Visibility" Value="Visible"/></Trigger></Style.Triggers>
+  </Style>
+</ResourceDictionary>
+
+

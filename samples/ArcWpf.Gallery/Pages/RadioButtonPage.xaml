@@ -1,0 +1,37 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.RadioButtonPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="RadioButton" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="单选项与分组 · 选中框随选择移动" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <Grid MinHeight="310">
+        <StackPanel MaxWidth="380" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+          <arc:RadioGroup Header="Review mode" SelectedValue="{Binding ReviewMode}">
+            <arc:RadioButton Content="Focused review" Description="One reviewer at a time." Value="focused" />
+            <arc:RadioButton Content="Open review" Description="Everyone can comment together." Value="open" />
+            <arc:RadioButton Content="Async review" Description="Reviewers leave notes when they can." Value="async" />
+          </arc:RadioGroup>
+          <TextBlock Text="{Binding Status}" MinHeight="18" FontSize="12" TextAlignment="Center" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Expander Header="绑定、禁用、动态项目和布局" Margin="0,24,0,0" IsExpanded="True" HorizontalContentAlignment="Stretch">
+      <StackPanel Margin="0,16,0,0" MaxWidth="440" HorizontalAlignment="Stretch">
+        <arc:Button Content="切换到 Open review" Variant="Secondary" HorizontalAlignment="Left" Click="SelectOpen" Margin="0,0,0,20" />
+        <arc:RadioGroup Header="独立分组" SelectedValue="{Binding Independent}">
+          <arc:RadioButton Content="允许选择" Value="enabled" />
+          <arc:RadioButton Content="禁用选项" Description="方向键应跳过此项" Value="disabled" IsEnabled="False" />
+          <arc:RadioButton Content="这一条很长的选项名称会随可用宽度换行" Description="圆环居中于整个文案块，选中框跟随这一行的高度。" Value="long" />
+        </arc:RadioGroup>
+        <arc:RadioGroup Header="数据项绑定" ItemsSource="{Binding Options}" SelectedValue="{Binding DataChoice}" Margin="0,20,0,0" />
+        <arc:Button Content="添加一项" Variant="Secondary" Click="AddOption" HorizontalAlignment="Left" Margin="0,8,0,20" />
+        <arc:RadioGroup Header="Right-to-left" FlowDirection="RightToLeft" SelectedValue="one">
+          <arc:RadioButton Content="First option" Description="Right-to-left layout" Value="one" />
+          <arc:RadioButton Content="Second option" Value="two" />
+        </arc:RadioGroup>
+        <TextBlock Text="独立使用原生 GroupName" Margin="0,20,0,8" />
+        <arc:RadioButton Content="Option A" GroupName="StandaloneExample" IsChecked="True" Margin="0,0,0,8" />
+        <arc:RadioButton Content="Option B" GroupName="StandaloneExample" />
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

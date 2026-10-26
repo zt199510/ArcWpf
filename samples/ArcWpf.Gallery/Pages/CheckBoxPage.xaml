@@ -1,0 +1,32 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.CheckBoxPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="CheckBox" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="表单选择 · 支持勾选、不确定与说明文字" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <Grid MinHeight="246">
+        <StackPanel MaxWidth="620" VerticalAlignment="Center">
+          <arc:CheckBox Content="Include archived projects" Description="Show projects that are no longer active." IsChecked="{Binding IncludeArchived}" HorizontalAlignment="Center" />
+          <TextBlock Text="{Binding Status}" MinHeight="18" Margin="0,16,0,0" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Expander Header="状态、内容与绑定示例" Margin="0,24,0,0" HorizontalContentAlignment="Stretch" IsExpanded="True">
+      <StackPanel Margin="0,16,0,0">
+        <arc:CheckBox Content="三态选择" Description="未选中 → 选中 → 不确定 → 未选中" IsThreeState="True" IsChecked="{Binding Selection}" />
+        <StackPanel Orientation="Horizontal" Margin="0,8,0,16">
+          <arc:Button Content="设为不确定" Variant="Secondary" Click="SetMixed" />
+          <TextBlock Text="{Binding SelectionSummary}" VerticalAlignment="Center" Margin="12,0,0,0" />
+        </StackPanel>
+        <arc:CheckBox Content="未选中" />
+        <arc:CheckBox Content="已选中" IsChecked="True" />
+        <arc:CheckBox Content="禁用，保留文字可读性" Description="方框区降低透明度" IsChecked="True" IsEnabled="False" />
+        <arc:CheckBox Content="这个长标签用于检查换行时，方框仍与第一行保持对齐。" Description="说明也能独立换行，不挤压方框或改变其大小。" MaxWidth="260" HorizontalAlignment="Left" Margin="0,12,0,0" />
+        <arc:CheckBox Description="只有说明文字" AutomationProperties.Name="只有说明的选项" Margin="0,12,0,0" />
+        <arc:CheckBox AutomationProperties.Name="无标签选项" HorizontalAlignment="Left" />
+        <arc:CheckBox Content="Right-to-left layout" Description="The mark keeps its direction." FlowDirection="RightToLeft" IsChecked="True" HorizontalAlignment="Left" Margin="0,12,0,0" />
+        <arc:CheckBox Content="执行命令" Command="{Binding SelectionCommand}" CommandParameter="Selection" Margin="0,12,0,0" />
+        <TextBlock Text="{Binding CommandStatus}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,23 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TooltipPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Tooltip" FontSize="24" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="悬停与键盘焦点提示 · 连续切换与动态文案" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24"/>
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32"><Grid MinHeight="246"><StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <arc:Tooltip Tip="Only workspace members can see this project" HorizontalAlignment="Center">
+        <arc:Button Variant="Secondary" Width="36" Height="36" MinHeight="0" Padding="0" AutomationProperties.Name="Project visibility information"><Grid Width="16" Height="16"><Ellipse Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.5" Margin="1"/><Path Data="M 8,7 L 8,11 M 8,4.5 L 8,5" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/></Grid></arc:Button>
+      </arc:Tooltip>
+      <TextBlock Text="Hover or focus the icon" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,16,0,0"/>
+    </StackPanel></Grid></Border>
+    <Expander Header="连续提示、四个方向与长文本" IsExpanded="True" Margin="0,24,0,0"><StackPanel Margin="0,16,0,0">
+      <WrapPanel>
+        <arc:Tooltip Tip="Archive project" Margin="0,0,12,12"><arc:Button Content="Archive" Variant="Secondary"/></arc:Tooltip>
+        <arc:Tooltip Tip="Share with your team" Side="Bottom" Margin="0,0,12,12"><arc:Button Content="Share · Bottom" Variant="Secondary"/></arc:Tooltip>
+        <arc:Tooltip Tip="Previous view" Side="Left" Margin="0,0,12,12"><arc:Button Content="Left" Variant="Secondary"/></arc:Tooltip>
+        <arc:Tooltip Tip="Next view" Side="Right" Margin="0,0,12,12"><arc:Button Content="Right" Variant="Secondary"/></arc:Tooltip>
+      </WrapPanel>
+      <arc:Tooltip Tip="This is a longer supporting message that wraps inside the tooltip while keeping a maximum bubble width of 240 DIP." HorizontalAlignment="Left" Margin="0,0,0,16"><arc:Button Content="Long text" Variant="Secondary"/></arc:Tooltip>
+      <arc:Tooltip Tip="{Binding Status}" HorizontalAlignment="Left"><arc:Button Content="聚焦后按 F2 切换提示文案" Variant="Secondary" PreviewKeyDown="ChangeTip"/></arc:Tooltip>
+      <TextBlock Text="Tab 聚焦按钮，按 F2 连续切换长短文案；Escape 关闭。" Margin="0,12,0,0" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    </StackPanel></Expander>
+  </StackPanel>
+</UserControl>

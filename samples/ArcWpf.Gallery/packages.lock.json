@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0-windows7.0": {
+      "arcwpf.controls": {
+        "type": "Project",
+        "dependencies": {
+          "ArcWpf.Core": "[1.0.0, )"
+        }
+      },
+      "arcwpf.core": {
+        "type": "Project"
+      }
+    }
+  }
+}

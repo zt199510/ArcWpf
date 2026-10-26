@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/ArcWpf.Consumer/ArcWpf.Consumer.csproj" />
+    <Project Path="samples/ArcWpf.Gallery/ArcWpf.Gallery.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ArcWpf.Controls/ArcWpf.Controls.csproj" />
+    <Project Path="src/ArcWpf.Core/ArcWpf.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ArcWpf.Tests/ArcWpf.Tests.csproj" />
+  </Folder>
+</Solution>

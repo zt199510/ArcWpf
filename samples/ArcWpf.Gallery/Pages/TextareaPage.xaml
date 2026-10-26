@@ -1,0 +1,19 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TextareaPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Textarea" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="用于备注、描述和较长文本的多行字段。" Margin="0,0,0,24" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <StackPanel MaxWidth="540" HorizontalAlignment="Center">
+        <arc:Textarea Label="Project description" Placeholder="Describe the project" Description="A short description helps your team understand the context." TextWrapping="Wrap" />
+      </StackPanel>
+    </Border>
+    <Expander Header="更多状态与绑定示例" Margin="0,24,0,0" HorizontalContentAlignment="Stretch">
+      <StackPanel Margin="0,16,0,0" MaxWidth="540" HorizontalAlignment="Left">
+        <arc:Textarea Label="Notes" Text="第一行\n第二行" Description="支持换行、复制、粘贴和原生撤销。" Margin="0,0,0,20" />
+        <arc:Textarea Label="校验错误" Text="内容过长" ErrorMessage="请输入 500 个字符以内的内容。" Margin="0,0,0,20" />
+        <arc:Textarea Label="只读" Text="只读内容仍然可以选择和复制。" IsReadOnly="True" Margin="0,0,0,20" />
+        <arc:Textarea Label="禁用" Text="暂不可编辑" IsEnabled="False" />
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

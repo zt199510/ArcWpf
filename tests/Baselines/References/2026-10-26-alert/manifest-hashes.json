@@ -1,0 +1,18 @@
+[
+  {
+    "Path": "D:\\AI\\ArcWpf\\tests\\Baselines\\References\\2026-10-26-alert\\alert-expanded.json",
+    "Hash": "037A13B8C98485E05F115B0881FF8177B0051B100BF8D32C8FDFBD87AE7D464C"
+  },
+  {
+    "Path": "D:\\AI\\ArcWpf\\tests\\Baselines\\References\\2026-10-26-alert\\alert.json",
+    "Hash": "AAA26038EE9916947D2DB8EA6EFB0F4E0ED5470358529395FF6420ACB28DFC37"
+  },
+  {
+    "Path": "D:\\AI\\ArcWpf\\tests\\Baselines\\References\\2026-10-26-alert\\alert.module.css",
+    "Hash": "C129C8359F9A30C365C66ED09A1884ECA7D37EDB70763388B771E00CBE542B42"
+  },
+  {
+    "Path": "D:\\AI\\ArcWpf\\tests\\Baselines\\References\\2026-10-26-alert\\alert.tsx",
+    "Hash": "C95980384282A6FF1E7309FF4CC7917761DF99A9562D304F46E2646B5CAC9F51"
+  }
+]

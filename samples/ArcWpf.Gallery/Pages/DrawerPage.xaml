@@ -1,0 +1,35 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.DrawerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <arc:Drawer x:Key="FiltersDrawer" Title="Filters" Description="Narrow the list of projects."><StackPanel>
+      <arc:CheckBox Content="Include archived projects" Description="Show projects that are no longer active." IsChecked="True" />
+      <arc:Select Label="Owner" SelectedIndex="0" Margin="0,20,0,0"><arc:SelectItem Content="Everyone"/><arc:SelectItem Content="My team"/></arc:Select>
+      <arc:Button Content="Apply filters" HorizontalAlignment="Right" Margin="0,24,0,0" Command="{x:Static arc:Drawer.CloseCommand}" />
+    </StackPanel></arc:Drawer>
+    <arc:Drawer x:Key="LeftDrawer" Side="Left" Title="Project details" Description="A panel from the left edge."><StackPanel>
+      <TextBlock Text="The page stays in context while this surface is open." TextWrapping="Wrap" />
+      <arc:Button Content="Close" Variant="Secondary" HorizontalAlignment="Left" Margin="0,24,0,0" Command="{x:Static arc:Drawer.CloseCommand}" />
+    </StackPanel></arc:Drawer>
+    <arc:Drawer x:Key="TopDrawer" Side="Top" Title="Quick settings" Description="Top and bottom edges use the full available width."><StackPanel>
+      <arc:Switch Content="Compact density" IsChecked="True" />
+      <arc:Button Content="Done" HorizontalAlignment="Right" Margin="0,20,0,0" Command="{x:Static arc:Drawer.CloseCommand}" />
+    </StackPanel></arc:Drawer>
+    <arc:Drawer x:Key="GuardDrawer" Title="Unsaved changes" Description="Closing is protected until the option is cleared." Closing="GuardClosing"><StackPanel>
+      <arc:CheckBox x:Name="GuardCheck" Content="Prevent closing" IsChecked="True" />
+      <TextBlock Text="Clear the option, then use Escape or the close button." TextWrapping="Wrap" Margin="0,16,0,0" />
+    </StackPanel></arc:Drawer>
+  </UserControl.Resources>
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Drawer" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="临时侧面板 · 保持页面上下文" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32"><Grid MinHeight="246"><StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <arc:Button Content="Filters" Click="OpenFilters" HorizontalAlignment="Center" />
+      <TextBlock Text="Opens a temporary side surface" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" />
+    </StackPanel></Grid></Border>
+    <Expander Header="四边、长内容和关闭保护" IsExpanded="True" Margin="0,24,0,0"><WrapPanel Margin="0,16,0,0">
+      <arc:Button Content="左侧" Variant="Secondary" Click="OpenLeft" Margin="0,0,12,12" />
+      <arc:Button Content="顶部" Variant="Secondary" Click="OpenTop" Margin="0,0,12,12" />
+      <arc:Button Content="长内容" Variant="Secondary" Click="OpenLong" Margin="0,0,12,12" />
+      <arc:Button Content="取消关闭" Variant="Secondary" Click="OpenGuard" Margin="0,0,12,12" />
+    </WrapPanel></Expander>
+  </StackPanel>
+</UserControl>

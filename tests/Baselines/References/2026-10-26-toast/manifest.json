@@ -1,0 +1,35 @@
+{
+  "license": "Arc free Registry MIT",
+  "batch": "2026-10-26-toast",
+  "retrieved": "2026-10-26T08:27:40.6474338+08:00",
+  "sources": [
+    "https://uiarc.dev/r/toast.json",
+    "https://uiarc.dev/components/toast",
+    "https://uiarc.dev/components/toast/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "kind": "project acquisition batch, not upstream version",
+  "files": [
+    {
+      "path": "license.html",
+      "sha256": "641409d3208a93c1867f51d3794bcf3639333b76fefc04955eaf3cd8c59a8ba6"
+    },
+    {
+      "path": "motion.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141"
+    },
+    {
+      "path": "page.html",
+      "sha256": "2b6ba64f1b460e7db23d0e74c9153ee7239bb412ea0e65c61dfd649863ac9b62"
+    },
+    {
+      "path": "toast.json",
+      "sha256": "31f89b19361286b80cb2292ad8ee72349f0b9d3b702d90aa47ff7c527aa1a757"
+    },
+    {
+      "path": "toast.md",
+      "sha256": "8616dcdde2cce201d80a8f7d1b0d8a259ceb36e45a543f39b2ddd112444da322"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "batch": "2026-10-26-textarea",
+  "acquiredAt": "2026-10-26",
+  "project": "ArcWpf",
+  "sources": [
+    { "url": "https://uiarc.dev/components/textarea", "role": "official preview and documentation" },
+    { "url": "https://uiarc.dev/r/textarea.json", "role": "component source registry" },
+    { "url": "https://uiarc.dev/r/arc-motion-tokens.json", "role": "motion dependency" }
+  ],
+  "license": "The source registry identifies the component as free; retain source attribution and re-evaluate license before redistribution.",
+  "assets": "See manifest-hashes.json for the frozen source files used by the implementation."
+}

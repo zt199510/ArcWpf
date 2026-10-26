@@ -1,0 +1,35 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.PopoverPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Popover" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="锚定内容面板 · Arc 冻结文档中的 Share 示例" Margin="0,0,0,24" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <Grid MinHeight="246">
+        <arc:Button x:Name="ShareAnchor" Content="Share" Variant="Secondary" IsPressAnimationEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ToggleShare" />
+        <arc:Popover x:Name="SharePanel" PlacementTarget="{Binding ElementName=ShareAnchor}" IsOpen="{Binding ShareOpen}" Opened="PanelOpened" Closed="PanelClosed">
+          <TextBlock Text="Anyone with the link can view." TextWrapping="Wrap" />
+        </arc:Popover>
+      </Grid>
+    </Border>
+    <TextBlock Text="此处使用文档样本；官网当前主预览为 Why this status?，其展开内容尚未采集。" TextWrapping="Wrap" Margin="0,12,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+    <Expander Header="位置、输入与关闭事件" Margin="0,24,0,0" HorizontalContentAlignment="Stretch" IsExpanded="True">
+      <StackPanel Margin="0,16,0,0">
+        <WrapPanel Margin="0,0,0,16">
+          <TextBlock Text="方向" VerticalAlignment="Center" Margin="0,0,8,0" />
+          <ComboBox ItemsSource="{Binding Sides}" SelectedItem="{Binding Side}" Width="100" Margin="0,0,20,0" />
+          <TextBlock Text="对齐" VerticalAlignment="Center" Margin="0,0,8,0" />
+          <ComboBox ItemsSource="{Binding Alignments}" SelectedItem="{Binding Alignment}" Width="100" />
+        </WrapPanel>
+        <arc:Button x:Name="EditorAnchor" Content="编辑项目" Variant="Secondary" IsPressAnimationEnabled="False" HorizontalAlignment="Left" Click="ToggleEditor" />
+        <arc:Popover x:Name="EditorPanel" PlacementTarget="{Binding ElementName=EditorAnchor}" IsOpen="{Binding EditorOpen}" Side="{Binding Side}" Alignment="{Binding Alignment}" Opened="PanelOpened" Closed="PanelClosed">
+          <StackPanel Width="270">
+            <arc:Input Label="Project name" Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged}" Description="Changes are saved as you type." />
+            <arc:Button Content="完成" HorizontalAlignment="Right" Margin="0,16,0,0" Click="CloseEditor" />
+          </StackPanel>
+        </arc:Popover>
+        <arc:Input Label="弹层之外的输入框" Placeholder="可检查 Tab 是否离开弹层" MaxWidth="352" HorizontalAlignment="Left" Margin="0,16,0,0" />
+        <TextBlock Text="{Binding ProjectName, StringFormat=当前项目：{0}}" Margin="0,12,0,0" />
+        <TextBlock x:Name="EventStatus" Text="尚未打开" Margin="0,8,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

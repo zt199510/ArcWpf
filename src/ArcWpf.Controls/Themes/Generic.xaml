@@ -1,0 +1,31 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:core="clr-namespace:ArcWpf;assembly=ArcWpf.Core">
+  <ResourceDictionary.MergedDictionaries>
+
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Button/Themes/ButtonTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Switch/Themes/SwitchTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Input/Themes/InputTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Textarea/Themes/TextareaTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Popover/Themes/PopoverTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/CheckBox/Themes/CheckBoxTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/RadioButton/Themes/RadioButtonTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Select/Themes/SelectTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Tabs/Themes/TabsTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Dialog/Themes/DialogTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Tooltip/Themes/TooltipTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Toast/Themes/ToastTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Alert/Themes/AlertTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ToastStack/Themes/ToastStackTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Drawer/Themes/DrawerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Accordion/Themes/AccordionTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableCard/Themes/ExpandableCardTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml" />
+  </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
+
+
+
+
+
+
+
+

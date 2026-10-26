@@ -1,0 +1,32 @@
+[
+  {
+    "file": "switch-comparison-a.png",
+    "context": "用户对比图A，椭圆缺陷示例；未独立确认捕获环境",
+    "dpi": "unknown",
+    "status": "archived",
+    "captured_at": "unknown",
+    "sha256": "cd01669f86462798bb02eaaae271f93a06d10e37569c6998b09c7ad900dcff35",
+    "origin": "user attachment",
+    "archived_at": "2026-10-25"
+  },
+  {
+    "file": "switch-comparison-b.png",
+    "context": "用户对比图B，目标胶囊外形；未独立确认捕获环境",
+    "dpi": "unknown",
+    "status": "archived",
+    "captured_at": "unknown",
+    "sha256": "d704f5d7b12f9c85cf2d1d8081f294ee2aa8ef0c78833bf8419e42b8ab3cd4bf",
+    "origin": "user attachment",
+    "archived_at": "2026-10-25"
+  },
+  {
+    "file": "input-reference.png",
+    "context": "用户提供Project name参考外形，未独立确认捕获环境",
+    "dpi": "unknown",
+    "status": "archived",
+    "captured_at": "unknown",
+    "sha256": "2dffc6183147ed0eece3f5d467ad66d7979fecf8306aadf5b2c75fecade0b656",
+    "origin": "user attachment",
+    "archived_at": "2026-10-25"
+  }
+]

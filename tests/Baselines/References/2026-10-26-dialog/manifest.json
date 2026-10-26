@@ -1,0 +1,56 @@
+{
+  "observation": "Source/HTML/CSS/preview JS only; no live interaction or screenshots",
+  "kind": "project acquisition batch, not upstream version",
+  "batch": "2026-10-26-dialog",
+  "sources": [
+    "https://uiarc.dev/r/dialog.json",
+    "https://uiarc.dev/components/dialog",
+    "https://uiarc.dev/components/dialog/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "retrieved": "2026-10-26T01:29:34.1050206+08:00",
+  "license": "Arc free Registry MIT; full notice retained in THIRD-PARTY-NOTICES.md",
+  "files": [
+    {
+      "path": "14932.0d469760e3266a9e.js",
+      "sha256": "5b58ac1d1320df6b41d67574442d952bfa009d33cff8190e808261c3ec0b9f55"
+    },
+    {
+      "path": "87863.8a026000f8112e63.js",
+      "sha256": "4348c1eae10108171e033146821484424b1a0774dc72051b42aaa3c4640aabe0"
+    },
+    {
+      "path": "b717584d841b7030.css",
+      "sha256": "bf1d670eca7ffcd0770067c76b5a71fd98eff12de4f3658c36a701898c64d619"
+    },
+    {
+      "path": "dialog.json",
+      "sha256": "f00866fd51357914989f15ea43062acfb262537db02e29d5cc66895c2be48a7d"
+    },
+    {
+      "path": "dialog.md",
+      "sha256": "856d7341cc24c122e74506c80a52f9416f196317209093f37d733af7e533456c"
+    },
+    {
+      "path": "license.html",
+      "sha256": "641409d3208a93c1867f51d3794bcf3639333b76fefc04955eaf3cd8c59a8ba6"
+    },
+    {
+      "path": "motion.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141"
+    },
+    {
+      "path": "page.html",
+      "sha256": "10ffde2246b28db0a4abc6a2acb846c0abec2235019206ab23d8c143fcebf4c3"
+    },
+    {
+      "path": "registry/components/dialog/dialog.module.css",
+      "sha256": "a71ce7476732e9a996ddf6f765585cd2c7fab6168b8715bad464916c0a36168d"
+    },
+    {
+      "path": "registry/components/dialog/dialog.tsx",
+      "sha256": "eb84a7eb2ac864dc07f2825eab252eac78e9c6b889d0e9f00bf6b2b799975ade"
+    }
+  ]
+}

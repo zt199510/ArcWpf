@@ -1,0 +1,25 @@
+{
+  "batch": "2026-10-26-drawer",
+  "acquiredAt": "2026-10-26",
+  "project": "ArcWpf",
+  "sources": [
+    {
+      "url": "https://uiarc.dev/components/drawer",
+      "role": "official preview and documentation"
+    },
+    {
+      "url": "https://uiarc.dev/components/drawer/markdown",
+      "role": "official Markdown contract"
+    },
+    {
+      "url": "https://uiarc.dev/r/drawer.json",
+      "role": "component source registry"
+    },
+    {
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "role": "motion dependency"
+    }
+  ],
+  "license": "The Arc registry identifies Drawer as free/open source; this project retains attribution and treats the registry as reference material, with no direct source reuse.",
+  "assets": "See manifest-hashes.json for frozen source files."
+}

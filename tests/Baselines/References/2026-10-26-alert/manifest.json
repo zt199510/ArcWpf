@@ -1,0 +1,12 @@
+{
+  "batch": "2026-10-26-alert",
+  "acquiredAt": "2026-10-26",
+  "project": "ArcWpf",
+  "sources": [
+    { "url": "https://uiarc.dev/components/alert", "role": "official preview and documentation" },
+    { "url": "https://uiarc.dev/r/alert.json", "role": "component source registry" },
+    { "url": "https://uiarc.dev/r/arc-motion-tokens.json", "role": "motion dependency" }
+  ],
+  "license": "The source registry identifies the component as free; retain source attribution and re-evaluate license before redistribution.",
+  "assets": "See manifest-hashes.json for frozen source files."
+}

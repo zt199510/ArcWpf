@@ -1,0 +1,28 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.SelectPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Select" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="固定选项单选 · 原生绑定与键盘操作" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32"><Grid MinHeight="246">
+      <StackPanel MaxWidth="540" VerticalAlignment="Center">
+        <arc:Select Label="Team" Description="Choose the team that owns this work." SelectedValuePath="Tag" SelectedValue="{Binding Team}">
+          <arc:SelectItem Content="Design" Tag="design" /><arc:SelectItem Content="Engineering" Tag="engineering" /><arc:SelectItem Content="Research" Tag="research" />
+        </arc:Select>
+        <TextBlock MinHeight="18" Margin="0,16,0,0" />
+      </StackPanel>
+    </Grid></Border>
+    <Expander Header="占位、禁用、数据绑定与长列表" Margin="0,24,0,0" HorizontalContentAlignment="Stretch" IsExpanded="True">
+      <StackPanel MaxWidth="440" HorizontalAlignment="Stretch" Margin="0,16,0,0">
+        <arc:Select Label="Region" Placeholder="Select a region" SelectedValuePath="Tag" Margin="0,0,0,20">
+          <arc:SelectItem Content="United States" Tag="us" /><arc:SelectItem Content="Europe" Tag="eu" /><arc:SelectItem Content="Asia Pacific (disabled)" Tag="ap" IsEnabled="False" />
+        </arc:Select>
+        <arc:Select Label="禁用字段" IsEnabled="False" SelectedIndex="0" Margin="0,0,0,20"><arc:SelectItem Content="Design" /></arc:Select>
+        <arc:Select Label="动态数据源" ItemsSource="{Binding Teams}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding Team}" Margin="0,0,0,12" />
+        <arc:Button Content="切换到 Research" Variant="Secondary" Click="SelectResearch" HorizontalAlignment="Left" Margin="0,0,0,20" />
+        <arc:Select Label="长列表" ItemsSource="{Binding LongOptions}" SelectedIndex="0" Margin="0,0,0,20" />
+        <arc:Select Label="长文案" Width="230" HorizontalAlignment="Left" SelectedIndex="0" Margin="0,0,0,20"><arc:SelectItem Content="A long option label that should ellipsize inside the trigger" /><arc:SelectItem Content="Short label" /></arc:Select>
+        <arc:Select Label="Right-to-left" FlowDirection="RightToLeft" SelectedIndex="0"><arc:SelectItem Content="Design" /><arc:SelectItem Content="Engineering" /></arc:Select>
+        <TextBlock Text="{Binding Team, StringFormat=Selected value: {0}}" Margin="0,12,0,0" />
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

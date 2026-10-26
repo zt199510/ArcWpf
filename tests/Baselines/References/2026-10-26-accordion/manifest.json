@@ -1,0 +1,24 @@
+{
+  "batch": "2026-10-26-accordion",
+  "kind": "project acquisition batch, not upstream release",
+  "retrieved": "2026-10-26T02:15:38Z",
+  "sources": [
+    "https://uiarc.dev/r/accordion.json",
+    "https://uiarc.dev/components/accordion",
+    "https://uiarc.dev/components/accordion/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "license": "Registry free tier; license page retained",
+  "observation": "Static source, HTML/CSS and preview documentation only",
+  "acquisitionNotes": "Accordion registry source, Markdown, motion tokens and license page saved; page asset bundle not required for implementation",
+  "files": {
+    "accordion.json": "EC6751E1862795D9E1DDC237485506DED509C4255A5B0E4C3B09253BBC9E428A",
+    "accordion.md": "EF3421CBD01B2A49ED78359B3F5E6A1BD087A07CF544BF6709C9BBAA947F5CAC",
+    "license.html": "48C4D61576B53C48830B6BEA160770325D9BA4BBC427DC3B72E407F5DFB67705",
+    "motion.json": "7675DDD97DE675C8890AB7809CEDCA3C67EB6CDBE55DE6EE9CEAEA3AC1776016",
+    "page.html": "D1AAE34E8E218598511348C56BABE3EB4CC8F5AB07341288F7B8763C33EE759C",
+    "registry/components/accordion/accordion.module.css": "38FA5FE748E62CCFB7BDC2C6F33FA422CEA4E1FEF1A3528F7660870211A6689A",
+    "registry/components/accordion/accordion.tsx": "F9BBF94B86EDBDB5AC7B322C0A38ECC2E06A57A2DEFC209026E5797DDF3492D1"
+  }
+}

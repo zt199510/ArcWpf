@@ -1,0 +1,58 @@
+<Window x:Class="ArcWpf.Gallery.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:ArcWpf;assembly=ArcWpf.Core" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"
+        xmlns:pages="clr-namespace:ArcWpf.Gallery.Pages" Title="ArcWpf · Gallery" Width="1000" Height="760" MinWidth="620" MinHeight="480"
+        Background="{DynamicResource ArcWpf.Brush.Background}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FontFamily="{DynamicResource ArcWpf.Font.Body}">
+  <arc:DialogHost><arc:DrawerHost><Grid Margin="32">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0" Margin="0,0,0,28">
+      <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+      <StackPanel><TextBlock Text="ArcWpf" FontSize="28" FontWeight="Medium" /><TextBlock Text="WPF 原生组件" Margin="0,6,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" /></StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+        <arc:Button Content="切换明暗" Variant="Secondary" Click="ToggleTheme" Margin="0,0,12,0" />
+        <ComboBox x:Name="MotionPicker" Width="125" SelectedIndex="0" SelectionChanged="ChangeMotion" AutomationProperties.Name="动效级别">
+          <ComboBoxItem Content="完整动效" /><ComboBoxItem Content="减少动效" /><ComboBoxItem Content="关闭动效" />
+        </ComboBox>
+      </StackPanel>
+    </Grid>
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+      <arc:Tabs AutomationProperties.Name="组件页面" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+        <arc:TabItem Header="Button"><pages:ButtonPage Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Switch"><pages:SwitchPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Input"><pages:InputPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Textarea"><pages:TextareaPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Alert"><pages:AlertPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Popover"><pages:PopoverPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="CheckBox"><pages:CheckBoxPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="RadioButton"><pages:RadioButtonPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Select"><pages:SelectPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Tabs"><pages:TabsPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Dialog"><pages:DialogPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Tooltip"><pages:TooltipPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Toast"><pages:ToastPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="ToastStack"><pages:ToastStackPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Drawer"><pages:DrawerPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Accordion"><pages:AccordionPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="ExpandableCard"><pages:ExpandableCardPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Menu"><pages:MenuPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Form"><pages:FormLayoutPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+      </arc:Tabs>
+    </ScrollViewer>
+  </Grid></arc:DrawerHost>
+</arc:DialogHost></Window>
+
+
+
+
+
+
+
+
+
+
+
+
+

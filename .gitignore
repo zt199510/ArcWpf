@@ -1,0 +1,18 @@
+# Local references and intermediate work
+work/
+artifacts/
+
+# .NET build and IDE output
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+TestResults/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12

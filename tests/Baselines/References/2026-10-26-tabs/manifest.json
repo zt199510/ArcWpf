@@ -1,0 +1,192 @@
+{
+  "batch": "2026-10-26-tabs",
+  "kind": "project acquisition batch, not upstream release",
+  "retrieved": "2026-10-26T01:06:47.7632161+08:00",
+  "sources": [
+    "https://uiarc.dev/r/tabs.json",
+    "https://uiarc.dev/components/tabs",
+    "https://uiarc.dev/components/tabs/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "pageAssetUrls": [
+    "https://uiarc.dev/_next/static/css/181cd48c283fede8.css",
+    "https://uiarc.dev/_next/static/css/b717584d841b7030.css",
+    "https://uiarc.dev/_next/static/css/0f53ea37a85ba588.css",
+    "https://uiarc.dev/_next/static/css/31bdadfcc9af4fd1.css",
+    "https://uiarc.dev/_next/static/css/be1cfac80ec4dcdb.css",
+    "https://uiarc.dev/_next/static/css/44fe1d31668628d3.css",
+    "https://uiarc.dev/_next/static/css/bdfcd1befe4a3a94.css",
+    "https://uiarc.dev/_next/static/css/8ef5bb2abc8b43f1.css",
+    "https://uiarc.dev/_next/static/css/b5912c12f034fc18.css",
+    "https://uiarc.dev/_next/static/css/929a5e394560ec88.css",
+    "https://uiarc.dev/_next/static/css/3cbc2f5a46a1bef6.css",
+    "https://uiarc.dev/_next/static/css/ce0fa97453587b51.css",
+    "https://uiarc.dev/_next/static/css/1e3434f92cd9722d.css",
+    "https://uiarc.dev/_next/static/css/5975a2417c4d1bad.css",
+    "https://uiarc.dev/_next/static/css/bdb6e50668985f3b.css",
+    "https://uiarc.dev/_next/static/css/aeeaa45ffa4ef985.css",
+    "https://uiarc.dev/_next/static/css/391b00f0cd088bcf.css",
+    "https://uiarc.dev/_next/static/chunks/webpack-05b9a6d74cf9a4f2.js",
+    "https://uiarc.dev/_next/static/chunks/4bd1b696-f998cba21de05210.js",
+    "https://uiarc.dev/_next/static/chunks/93794-8c2751a843a91a6a.js",
+    "https://uiarc.dev/_next/static/chunks/main-app-88084e8eead7054c.js",
+    "https://uiarc.dev/_next/static/chunks/98500-70e335ec61470b06.js",
+    "https://uiarc.dev/_next/static/chunks/app/global-error-616f9e91d7da1e4a.js",
+    "https://uiarc.dev/_next/static/chunks/38437-5e648cf52a220849.js",
+    "https://uiarc.dev/_next/static/chunks/48598-deb0a44170a0cdb1.js",
+    "https://uiarc.dev/_next/static/chunks/91849-ccd40773e6c75d7e.js",
+    "https://uiarc.dev/_next/static/chunks/80878-acd3740c93821527.js",
+    "https://uiarc.dev/_next/static/chunks/40623-eb01f67e84e34eb6.js",
+    "https://uiarc.dev/_next/static/chunks/59107-91ddfd89f75fd32f.js",
+    "https://uiarc.dev/_next/static/chunks/99854-58c38d013d43e95b.js",
+    "https://uiarc.dev/_next/static/chunks/57793-cf40dec6eaec0ce9.js",
+    "https://uiarc.dev/_next/static/chunks/52741-06dc275f83a23469.js",
+    "https://uiarc.dev/_next/static/chunks/93519-2a9c60719c4fd177.js",
+    "https://uiarc.dev/_next/static/chunks/98089-35122ec0bc7e534d.js",
+    "https://uiarc.dev/_next/static/chunks/app/layout-6cde4a8938d53d38.js",
+    "https://uiarc.dev/_next/static/chunks/92171-d1867a7f453454f3.js",
+    "https://uiarc.dev/_next/static/chunks/47718-6254851ba04c5c63.js",
+    "https://uiarc.dev/_next/static/chunks/50631-e24a36705587d3de.js",
+    "https://uiarc.dev/_next/static/chunks/40386-0c55fec48b195c4c.js",
+    "https://uiarc.dev/_next/static/chunks/93214-c9ee39c4bb4bed5e.js",
+    "https://uiarc.dev/_next/static/chunks/55686-838cc6339de20f2d.js",
+    "https://uiarc.dev/_next/static/chunks/82263-c708b4ae1d87e3e2.js",
+    "https://uiarc.dev/_next/static/chunks/39213-524973231ec03a3d.js",
+    "https://uiarc.dev/_next/static/chunks/68556-7ab62965c4fc913c.js",
+    "https://uiarc.dev/_next/static/chunks/85700-8c87abf90c2cc2e3.js",
+    "https://uiarc.dev/_next/static/chunks/5549-d57e9cf415f995d6.js",
+    "https://uiarc.dev/_next/static/chunks/75442-446e6f6dbda42df2.js",
+    "https://uiarc.dev/_next/static/chunks/88986-9454796df227629a.js",
+    "https://uiarc.dev/_next/static/chunks/app/components/%5Bslug%5D/page-2835bbd363d4b1e3.js",
+    "https://uiarc.dev/_next/static/chunks/76250-8576805f3e401408.js",
+    "https://uiarc.dev/_next/static/chunks/35763-02e50f83f39bb27e.js",
+    "https://uiarc.dev/_next/static/chunks/55779-aacef8d1bc65d790.js",
+    "https://uiarc.dev/_next/static/chunks/95714-64ad8d36735326f6.js",
+    "https://uiarc.dev/_next/static/chunks/app/error-efde95e29f78fb23.js",
+    "https://uiarc.dev/_next/static/chunks/73564-2195193b731ac692.js",
+    "https://uiarc.dev/_next/static/chunks/64654-c3a13dd7f1ac5d88.js",
+    "https://uiarc.dev/_next/static/chunks/app/page-fb18403ac3c9325c.js",
+    "https://uiarc.devhttps://clerk.uiarc.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js",
+    "https://uiarc.dev/_next/static/css/44939f48d4440596.css",
+    "https://uiarc.dev/_next/static/chunks/63004.1b2493ed7edbcccf.js",
+    "https://uiarc.dev/_next/static/chunks/32105-adf1607a165e2115.js",
+    "https://uiarc.dev/_next/static/chunks/36012-5b2490c83f8a269f.js",
+    "https://uiarc.dev/_next/static/chunks/13387.f72341e6c221074b.js",
+    "https://uiarc.dev/_next/static/chunks/60859-58e0270dcfdb367d.js",
+    "https://uiarc.dev/_next/static/chunks/87863.8a026000f8112e63.js",
+    "https://uiarc.dev/_next/static/chunks/14932.0d469760e3266a9e.js",
+    "https://uiarc.devhttps://clerk.uiarc.dev/npm/@clerk/ui@1/dist/ui.browser.js",
+    "https://uiarc.dev/_next/static/chunks/polyfills-42372ed130431b0a.js",
+    "https://uiarc.devhttps://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+  ],
+  "license": "Registry free tier, MIT license page; full Arc notice retained in initial snapshot",
+  "observation": "Static source, HTML/CSS and preview script only",
+  "acquisitionNotes": "Four unrelated page assets failed; needed component source, foundation, preview CSS and sample script obtained",
+  "files": [
+    {
+      "path": "0f53ea37a85ba588.css",
+      "sha256": "F8C15ECE7FD30E0D01C086F2282652B36B7F3C44226D4709F38EFAD8D373F143"
+    },
+    {
+      "path": "14932.0d469760e3266a9e.js",
+      "sha256": "5B58AC1D1320DF6B41D67574442D952BFA009D33CFF8190E808261C3EC0B9F55"
+    },
+    {
+      "path": "181cd48c283fede8.css",
+      "sha256": "EF22552064D9584809A893C624C7FEE6DCF8C24CEDCB490102F95EDA1C06C274"
+    },
+    {
+      "path": "1e3434f92cd9722d.css",
+      "sha256": "C17D44058DE10C4593D3F4A25F01BD7C2F1001EE28277158B3DFEBD6959A6061"
+    },
+    {
+      "path": "31bdadfcc9af4fd1.css",
+      "sha256": "2841DEC348125ACB7C18DC27B21C70FC2E0EE9C105A1BE0F99FCE43EF429554C"
+    },
+    {
+      "path": "391b00f0cd088bcf.css",
+      "sha256": "CD55C20A17F5547886F64D7DBAAA87A0433A160F04E393AA66A53D53CC4CA1EB"
+    },
+    {
+      "path": "3cbc2f5a46a1bef6.css",
+      "sha256": "3B1900CF85F129C50970A1306EE6CCFF3EB2BDA3E00926EA395D50BA19793DF4"
+    },
+    {
+      "path": "44939f48d4440596.css",
+      "sha256": "A806660C36303FDD8CB12BA85665BE571F02829EF99EEB7F19CA3E83BEA15AF0"
+    },
+    {
+      "path": "44fe1d31668628d3.css",
+      "sha256": "426BA8FFE0F68F1C9D3B894C9C3BF314746CF5135CB7C402C35ECDB70D468126"
+    },
+    {
+      "path": "5975a2417c4d1bad.css",
+      "sha256": "02B7A8CCD5AAEBFEA7DFAA4EB28770433F8DEC2870A0ABDD995C735CE2898D9D"
+    },
+    {
+      "path": "8ef5bb2abc8b43f1.css",
+      "sha256": "FDD7B16C35EC01DEEBFB0F8C9E26C1CAEB430A0FD417AC422FBEAC11AB123ADC"
+    },
+    {
+      "path": "929a5e394560ec88.css",
+      "sha256": "C95FC33A5B22932D4DB8EBFBD3F12C8A32F8BBEF336332AC65EFF907E3FA00EA"
+    },
+    {
+      "path": "aeeaa45ffa4ef985.css",
+      "sha256": "63D511FFCD772051C606615691A99B4A7BC5531297EF85CD925C378786DF552A"
+    },
+    {
+      "path": "b5912c12f034fc18.css",
+      "sha256": "6EA8B1D8CD550DDC5D7897FBC117C76FCA6C35977EDDBCEC2731BA9F658F8DA1"
+    },
+    {
+      "path": "b717584d841b7030.css",
+      "sha256": "BF1D670ECA7FFCD0770067C76B5A71FD98EFF12DE4F3658C36A701898C64D619"
+    },
+    {
+      "path": "bdb6e50668985f3b.css",
+      "sha256": "D32072DB30D0CD6F3A9CBCE90A3B1666795FEE962D6699E91870138C848AFA62"
+    },
+    {
+      "path": "bdfcd1befe4a3a94.css",
+      "sha256": "65F4205AA2BCA12E875F3D9E5392FC0F3BF7D7164CB6324507ED1AC842A2F533"
+    },
+    {
+      "path": "be1cfac80ec4dcdb.css",
+      "sha256": "38BB3E5D127256033929D7CC5C86A9B569A0C889C1943DD1D25BD577F989E92A"
+    },
+    {
+      "path": "ce0fa97453587b51.css",
+      "sha256": "1D48FBA3171B4EB59C2CA7311D4C17C415B4C8F0288FD11BBD02DCF29BE83782"
+    },
+    {
+      "path": "license.html",
+      "sha256": "641409D3208A93C1867F51D3794BCF3639333B76FEFC04955EAF3CD8C59A8BA6"
+    },
+    {
+      "path": "motion.json",
+      "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141"
+    },
+    {
+      "path": "page.html",
+      "sha256": "9D0A2BA4BFDCCA2D883743E6714A934AEFC4B8B8827CF7CD010DF5CB91E7F1D3"
+    },
+    {
+      "path": "tabs.json",
+      "sha256": "76407A8E59FF51CB9F08EFDF80AA60EDA4BFA3292FBA2DDE6DF5677AC4A0E468"
+    },
+    {
+      "path": "tabs.md",
+      "sha256": "F849DD8DE990540EB399B4840FB54B790792D75459B085EC7E9E4CE5DAC3F713"
+    },
+    {
+      "path": "registry/components/tabs/tabs.module.css",
+      "sha256": "CA968CE25602607AAF93285EF21CD0700341738C1B5453CD79929A9DEA723E31"
+    },
+    {
+      "path": "registry/components/tabs/tabs.tsx",
+      "sha256": "84DBDBF728969F215D87A9FD11EED5DC1BD0CF74AFA23C7CEB57BF76FADCB747"
+    }
+  ]
+}

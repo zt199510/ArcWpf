@@ -1,0 +1,54 @@
+{
+  "note": "Shared hashed preview JS and foundation CSS reused from same-day Dialog acquisition; preview URL also present in Tooltip HTML. No runtime observation.",
+  "files": [
+    {
+      "sha256": "5b58ac1d1320df6b41d67574442d952bfa009d33cff8190e808261c3ec0b9f55",
+      "path": "14932.0d469760e3266a9e.js"
+    },
+    {
+      "sha256": "bf1d670eca7ffcd0770067c76b5a71fd98eff12de4f3658c36a701898c64d619",
+      "path": "b717584d841b7030.css"
+    },
+    {
+      "sha256": "641409d3208a93c1867f51d3794bcf3639333b76fefc04955eaf3cd8c59a8ba6",
+      "path": "license.html"
+    },
+    {
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "path": "motion.json"
+    },
+    {
+      "sha256": "197cf58e422f4f0ca57d737ea5e09164456141bf04c4ec74ad214adef8d39693",
+      "path": "page.html"
+    },
+    {
+      "sha256": "7348cccf3b922ae40885e72e58a1b5bc42a2af27a69b4c033db483f217887bc0",
+      "path": "tooltip.json"
+    },
+    {
+      "sha256": "8200bb799b177fc7004da5b19f1c58854c5537f428a0ad50b9d224785ec0497e",
+      "path": "tooltip.md"
+    },
+    {
+      "sha256": "a6126eda83bbbc1164018ad9df811f437098167077ca493ec5c06538e7f901f4",
+      "path": "registry/components/tooltip/tooltip.module.css"
+    },
+    {
+      "sha256": "25ad5ea2b707da617e055f0c2fd9bcf8776775ad658e67f3e9176f3030855f9b",
+      "path": "registry/components/tooltip/tooltip.tsx"
+    }
+  ],
+  "sources": [
+    "https://uiarc.dev/r/tooltip.json",
+    "https://uiarc.dev/components/tooltip",
+    "https://uiarc.dev/components/tooltip/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license",
+    "https://uiarc.dev/_next/static/chunks/14932.0d469760e3266a9e.js",
+    "https://uiarc.dev/_next/static/css/b717584d841b7030.css"
+  ],
+  "license": "Free Registry MIT; full Arc notice retained in THIRD-PARTY-NOTICES.md",
+  "batch": "2026-10-26-tooltip",
+  "kind": "project acquisition batch, not upstream version",
+  "retrieved": "2026-10-26T01:43:17.6166690+08:00"
+}

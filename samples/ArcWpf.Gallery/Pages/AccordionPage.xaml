@@ -1,0 +1,29 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.AccordionPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Accordion" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="逐步展开支持信息 · 单开与键盘导航" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <Grid MinHeight="260" MaxWidth="620" HorizontalAlignment="Center">
+        <arc:Accordion Size="Large" AutomationProperties.Name="Frequently asked questions">
+          <arc:AccordionItem Header="Can I cancel anytime?"><TextBlock Text="Yes. Your plan stays active until the period ends." TextWrapping="Wrap" /></arc:AccordionItem>
+          <arc:AccordionItem Header="Do you offer refunds?"><TextBlock Text="Within 14 days of purchase, no questions asked." TextWrapping="Wrap" /></arc:AccordionItem>
+        </arc:Accordion>
+      </Grid>
+    </Border>
+    <Expander Header="绑定、禁用、长内容与嵌套" IsExpanded="True" Margin="0,24,0,0" HorizontalContentAlignment="Stretch">
+      <StackPanel Margin="0,16,0,0" MaxWidth="620">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+          <arc:Button Content="打开第二项" Variant="Secondary" Click="OpenSecond" />
+          <TextBlock Text="当前：" Margin="16,8,4,0" />
+          <TextBlock Text="{Binding ExpandedIndex, ElementName=BoundAccordion, StringFormat={}{0}}" Margin="0,8,0,0" />
+        </StackPanel>
+        <arc:Accordion x:Name="BoundAccordion" ExpandedIndex="0" AutomationProperties.Name="Workspace help">
+          <arc:AccordionItem Header="Focus and keyboard"><TextBlock Text="Enter or Space toggles the focused row. Arrow Up and Arrow Down move between rows; Home and End jump to the first and last row." TextWrapping="Wrap" /></arc:AccordionItem>
+          <arc:AccordionItem Header="A long answer that wraps with the available width"><TextBlock Text="Accordion content remains mounted while it is collapsed. This longer answer demonstrates wrapping, height measurement, and retargeting when the panel changes during its spring transition." TextWrapping="Wrap" /></arc:AccordionItem>
+          <arc:AccordionItem Header="Disabled row" IsEnabled="False"><TextBlock Text="This row is skipped by keyboard navigation." /></arc:AccordionItem>
+          <arc:AccordionItem Header="Nested content"><arc:Accordion Size="Medium"><arc:AccordionItem Header="Nested answer"><TextBlock Text="Nested accordions keep their own single-open state." TextWrapping="Wrap" /></arc:AccordionItem><arc:AccordionItem Header="Another nested answer"><TextBlock Text="The parent row owns only its content boundary." /></arc:AccordionItem></arc:Accordion></arc:AccordionItem>
+        </arc:Accordion>
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

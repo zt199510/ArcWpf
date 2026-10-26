@@ -1,0 +1,3 @@
+using System.Windows;using System.Windows.Controls;using ArcWpf.Controls;
+namespace ArcWpf.Gallery.Pages;
+public partial class ToastPage:UserControl{public ToastPage()=>InitializeComponent();private void Save(object s,RoutedEventArgs e)=>Toasts.Show("Changes saved","Synced to all devices.");private void ShowToast(object s,RoutedEventArgs e)=>Toasts.Show("Changes saved");private void ShowMany(object s,RoutedEventArgs e){Toasts.Show("First update","The workspace is ready.");Toasts.Show("Second update","Your changes are synced.");Toasts.Show("Third update","Everyone can see the latest version.");}private void Clear(object s,RoutedEventArgs e)=>Toasts.DismissAll();}

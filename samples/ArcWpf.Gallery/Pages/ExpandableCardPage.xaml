@@ -1,0 +1,29 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ExpandableCardPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="ExpandableCard" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="单张摘要卡片 · 展开时平滑增加空间" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <Grid MinHeight="280" MaxWidth="620" HorizontalAlignment="Center">
+        <arc:ExpandableCard Title="Pro plan" Description="Billed yearly, renews March 4" CollapsedWidth="400" ExpandedWidth="600" HorizontalAlignment="Stretch" VerticalAlignment="Center" AutomationProperties.Name="Pro plan details">
+          <StackPanel>
+            <TextBlock Text="Unlimited projects" Margin="0,0,0,8" />
+            <TextBlock Text="Priority support" />
+          </StackPanel>
+        </arc:ExpandableCard>
+      </Grid>
+    </Border>
+    <Expander Header="默认展开、Escape、长内容与绑定" IsExpanded="True" Margin="0,24,0,0" HorizontalContentAlignment="Stretch">
+      <StackPanel Margin="0,16,0,0" MaxWidth="620">
+        <arc:ExpandableCard Title="Workspace activity" Description="Updated a few minutes ago" DefaultExpanded="True" Margin="0,0,0,16">
+          <StackPanel>
+            <TextBlock Text="Emma reviewed the latest changes." Margin="0,0,0,8" />
+            <arc:Button Content="Open project" Variant="Secondary" HorizontalAlignment="Left" />
+          </StackPanel>
+        </arc:ExpandableCard>
+        <arc:ExpandableCard Title="A longer summary that wraps naturally" Description="The description remains readable at the available width">
+          <TextBlock Text="The card grows to fit its content and returns to the collapsed summary when Escape is pressed from inside the details." TextWrapping="Wrap" />
+        </arc:ExpandableCard>
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

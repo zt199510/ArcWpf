@@ -1,0 +1,156 @@
+{
+  "batch": "2026-10-26-radio",
+  "kind": "project acquisition batch, not upstream release",
+  "retrieved": "2026-10-26T00:21:22.0835902+08:00",
+  "sources": [
+    "https://uiarc.dev/r/radio-group.json",
+    "https://uiarc.dev/components/radio-group",
+    "https://uiarc.dev/components/radio-group/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "cssSources": [
+    "https://uiarc.dev/_next/static/css/181cd48c283fede8.css",
+    "https://uiarc.dev/_next/static/css/b717584d841b7030.css",
+    "https://uiarc.dev/_next/static/css/0f53ea37a85ba588.css",
+    "https://uiarc.dev/_next/static/css/31bdadfcc9af4fd1.css",
+    "https://uiarc.dev/_next/static/css/be1cfac80ec4dcdb.css",
+    "https://uiarc.dev/_next/static/css/44fe1d31668628d3.css",
+    "https://uiarc.dev/_next/static/css/bdfcd1befe4a3a94.css",
+    "https://uiarc.dev/_next/static/css/8ef5bb2abc8b43f1.css",
+    "https://uiarc.dev/_next/static/css/b5912c12f034fc18.css",
+    "https://uiarc.dev/_next/static/css/3cbc2f5a46a1bef6.css",
+    "https://uiarc.dev/_next/static/css/6c073ae1c22064d9.css",
+    "https://uiarc.dev/_next/static/css/bdb6e50668985f3b.css",
+    "https://uiarc.dev/_next/static/css/957b7d72058d27b1.css",
+    "https://uiarc.dev/_next/static/css/ce0fa97453587b51.css",
+    "https://uiarc.dev/_next/static/css/1e3434f92cd9722d.css",
+    "https://uiarc.dev/_next/static/css/fc75780a44d96b66.css",
+    "https://uiarc.dev/_next/static/css/24474daa1df32e79.css",
+    "https://uiarc.dev/_next/static/css/bf272efde959ac5d.css",
+    "https://uiarc.dev/_next/static/css/e206315b1d4f0708.css",
+    "https://uiarc.dev/_next/static/css/2f0d04f6fd838a41.css",
+    "https://uiarc.dev/_next/static/css/0b414d18691a1f4a.css",
+    "https://uiarc.dev/_next/static/css/44939f48d4440596.css"
+  ],
+  "license": "Free registry tier and MIT license page; full MIT notice retained in initial Arc snapshot",
+  "observation": "Static source/HTML/CSS only",
+  "files": [
+    {
+      "path": "0b414d18691a1f4a.css",
+      "sha256": "2A35C29824FBAB10EAAD3C575F1F425F0C4E2C055411BD00DCB5221D4D4CAF35"
+    },
+    {
+      "path": "0f53ea37a85ba588.css",
+      "sha256": "F8C15ECE7FD30E0D01C086F2282652B36B7F3C44226D4709F38EFAD8D373F143"
+    },
+    {
+      "path": "181cd48c283fede8.css",
+      "sha256": "EF22552064D9584809A893C624C7FEE6DCF8C24CEDCB490102F95EDA1C06C274"
+    },
+    {
+      "path": "1e3434f92cd9722d.css",
+      "sha256": "C17D44058DE10C4593D3F4A25F01BD7C2F1001EE28277158B3DFEBD6959A6061"
+    },
+    {
+      "path": "24474daa1df32e79.css",
+      "sha256": "F8B2FAA29AA3D7FFA417976A58F09BB6C8363B8A89D028C42217D1CDE4690828"
+    },
+    {
+      "path": "2f0d04f6fd838a41.css",
+      "sha256": "981888B3CD7C68B9716E31C9100FC4F6BC8F967CC5B843BB6A6A7D658305BA8D"
+    },
+    {
+      "path": "31bdadfcc9af4fd1.css",
+      "sha256": "2841DEC348125ACB7C18DC27B21C70FC2E0EE9C105A1BE0F99FCE43EF429554C"
+    },
+    {
+      "path": "3cbc2f5a46a1bef6.css",
+      "sha256": "3B1900CF85F129C50970A1306EE6CCFF3EB2BDA3E00926EA395D50BA19793DF4"
+    },
+    {
+      "path": "44939f48d4440596.css",
+      "sha256": "A806660C36303FDD8CB12BA85665BE571F02829EF99EEB7F19CA3E83BEA15AF0"
+    },
+    {
+      "path": "44fe1d31668628d3.css",
+      "sha256": "426BA8FFE0F68F1C9D3B894C9C3BF314746CF5135CB7C402C35ECDB70D468126"
+    },
+    {
+      "path": "6c073ae1c22064d9.css",
+      "sha256": "D3C529856F7CC42632561591384B6B63719E175FB22E5CC4F509FD270246A3D4"
+    },
+    {
+      "path": "8ef5bb2abc8b43f1.css",
+      "sha256": "FDD7B16C35EC01DEEBFB0F8C9E26C1CAEB430A0FD417AC422FBEAC11AB123ADC"
+    },
+    {
+      "path": "957b7d72058d27b1.css",
+      "sha256": "707AFFEDCBFDECBC3F96DE2027205FD77E3B2CC69A2BD6AFB039B8466BB62CF3"
+    },
+    {
+      "path": "b5912c12f034fc18.css",
+      "sha256": "6EA8B1D8CD550DDC5D7897FBC117C76FCA6C35977EDDBCEC2731BA9F658F8DA1"
+    },
+    {
+      "path": "b717584d841b7030.css",
+      "sha256": "BF1D670ECA7FFCD0770067C76B5A71FD98EFF12DE4F3658C36A701898C64D619"
+    },
+    {
+      "path": "bdb6e50668985f3b.css",
+      "sha256": "D32072DB30D0CD6F3A9CBCE90A3B1666795FEE962D6699E91870138C848AFA62"
+    },
+    {
+      "path": "bdfcd1befe4a3a94.css",
+      "sha256": "65F4205AA2BCA12E875F3D9E5392FC0F3BF7D7164CB6324507ED1AC842A2F533"
+    },
+    {
+      "path": "be1cfac80ec4dcdb.css",
+      "sha256": "38BB3E5D127256033929D7CC5C86A9B569A0C889C1943DD1D25BD577F989E92A"
+    },
+    {
+      "path": "bf272efde959ac5d.css",
+      "sha256": "CBD27CFC030E7D9C8179C603BAFC136E1D0696F88541300B3968B5E2680B56FC"
+    },
+    {
+      "path": "ce0fa97453587b51.css",
+      "sha256": "1D48FBA3171B4EB59C2CA7311D4C17C415B4C8F0288FD11BBD02DCF29BE83782"
+    },
+    {
+      "path": "e206315b1d4f0708.css",
+      "sha256": "F715387D7E312F57A0529A56CF89BD1BDE714B189087A549578F5B8446C0FAA9"
+    },
+    {
+      "path": "fc75780a44d96b66.css",
+      "sha256": "96E66A4DEAB47CF859585409E1A9364E353BC06A549812321886DA786693EE53"
+    },
+    {
+      "path": "license.html",
+      "sha256": "641409D3208A93C1867F51D3794BCF3639333B76FEFC04955EAF3CD8C59A8BA6"
+    },
+    {
+      "path": "motion.json",
+      "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141"
+    },
+    {
+      "path": "page.html",
+      "sha256": "5475B732CC245103C9AA1EA07C53E00171C313EA3F18EF357194B6A89AFB2833"
+    },
+    {
+      "path": "radio-group.json",
+      "sha256": "94902E2298947678E0CC7BDD6B01B2B137EE96E2C46D6112AF0492A27981F05F"
+    },
+    {
+      "path": "radio-group.md",
+      "sha256": "32868250A5B6418DAC60EB704D4646D33D33D40C9F1686E703A38BE35CBCF0AA"
+    },
+    {
+      "path": "registry/components/radio-group/radio-group.module.css",
+      "sha256": "3B3C899CA2B66050406E12B1E8E93823094A432E855B676502D511EFC041FBA5"
+    },
+    {
+      "path": "registry/components/radio-group/radio-group.tsx",
+      "sha256": "F5B4FBBDE4018841F2B1B49B2131FC0A9BF3A52B9713959F7543B4ECA29DC1EE"
+    }
+  ]
+}

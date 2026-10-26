@@ -1,0 +1,9 @@
+{
+  "url": "https://uiarc.dev/components/popover",
+  "collectedDate": "2026-10-25",
+  "recordedAt": "2026-10-25T22:55:46.3625102+08:00",
+  "file": "page.html",
+  "sha256": "A348DD8730CE870921F360250F53D51E4600D9DF53437E644896468816810EF0",
+  "evidence": "Static HTML only; panel closed; no browser interaction or screenshot",
+  "license": "Reference evidence; upstream Arc MIT snapshot notice retained in initial batch"
+}

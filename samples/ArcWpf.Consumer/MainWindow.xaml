@@ -1,0 +1,41 @@
+<Window x:Class="ArcWpf.Consumer.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls" Title="ArcWpf · 独立消费示例" Width="480" Height="760">
+  <arc:DialogHost><arc:DrawerHost><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="32">
+    <TextBlock Text="未引用 Gallery，也未手动合并控件主题。" Margin="0,0,0,16" />
+    <arc:Button Content="独立使用 Button" HorizontalAlignment="Left" Click="OnClick" />
+    <arc:Switch Content="独立使用 Switch" Margin="0,12,0,0" />
+    <arc:Input Label="独立使用 Input" Placeholder="请输入内容" Margin="0,12,0,0" />
+    <arc:Textarea Label="独立使用 Textarea" Placeholder="请输入备注" Description="支持多行文本。" Margin="0,12,0,0" />
+    <arc:Alert Title="独立使用 Alert" Description="控件主题由库自动提供。" Tone="Success" IsDismissible="True" Margin="0,12,0,0" />
+    <arc:ToastStack x:Name="Stack" Label="独立通知" IsContained="True" Margin="0,12,0,0" />
+    <arc:Button x:Name="PopoverAnchor" Content="Share" Variant="Secondary" IsPressAnimationEnabled="False" HorizontalAlignment="Left" Margin="0,12,0,0" Click="TogglePopover" />
+    <arc:Popover x:Name="SharePopover" PlacementTarget="{Binding ElementName=PopoverAnchor}">
+      <TextBlock Text="Anyone with the link can view." TextWrapping="Wrap" />
+    </arc:Popover>
+    <arc:CheckBox Content="Include archived projects" Description="Show projects that are no longer active." IsChecked="True" Margin="0,12,0,0" />
+    <arc:RadioGroup Header="Plan" SelectedValue="team" Margin="0,12,0,0">
+      <arc:RadioButton Content="Solo" Description="One seat" Value="solo" />
+      <arc:RadioButton Content="Team" Description="Up to 20 seats" Value="team" />
+    </arc:RadioGroup>
+    <arc:Select Label="Team" SelectedIndex="0" Margin="0,12,0,0"><arc:SelectItem Content="Design" /><arc:SelectItem Content="Engineering" /></arc:Select>
+    <arc:Tabs Margin="0,20,0,0"><arc:TabItem Header="Overview" Content="Workspace overview"/><arc:TabItem Header="Settings"><arc:Input Label="Project name" Text="Arc launch"/></arc:TabItem></arc:Tabs>
+    <arc:Accordion Margin="0,20,0,0" AutomationProperties.Name="Workspace help"><arc:AccordionItem Header="What is included?"><TextBlock Text="This consumer window uses the Accordion directly from ArcWpf.Controls." TextWrapping="Wrap" /></arc:AccordionItem><arc:AccordionItem Header="Keyboard"><TextBlock Text="Use Enter, Space, Arrow keys, Home, and End." /></arc:AccordionItem></arc:Accordion>
+    <arc:ExpandableCard Title="Independent plan" Description="Renews next month" Margin="0,20,0,0"><TextBlock Text="ExpandableCard is consumed directly from ArcWpf.Controls." TextWrapping="Wrap" /></arc:ExpandableCard>
+    <arc:Menu x:Name="ProjectMenu" Label="Project actions" Margin="0,20,0,0" />
+    <arc:Button Content="打开 Dialog" Variant="Secondary" HorizontalAlignment="Left" Margin="0,16,0,0" Click="OpenDialog"/>
+    <arc:Button Content="打开 Drawer" Variant="Secondary" HorizontalAlignment="Left" Margin="0,12,0,0" Click="OpenDrawer"/>
+    <arc:Tooltip Tip="Only workspace members can see this project" HorizontalAlignment="Left" Margin="0,16,0,0"><arc:Button Content="Project visibility" Variant="Secondary"/></arc:Tooltip>
+    <arc:ToastHost x:Name="Toasts" Width="440" Height="220" HorizontalAlignment="Right" Margin="0,12,0,0"/><arc:Button Content="显示 Toast" Variant="Secondary" HorizontalAlignment="Left" Margin="0,12,0,0" Click="ShowToast"/>
+    <TextBlock x:Name="Result" Margin="0,16,0,0" Text="等待操作" />
+  </StackPanel></ScrollViewer></arc:DrawerHost></arc:DialogHost>
+</Window>
+
+
+
+
+
+
+
+
+
+
+

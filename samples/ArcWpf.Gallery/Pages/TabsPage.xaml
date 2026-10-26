@@ -1,0 +1,27 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TabsPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Tabs" FontSize="24" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="标签导航 · 共享选中框与内容切换" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24"/>
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32"><Grid MinHeight="246">
+      <arc:Tabs MaxWidth="420" VerticalAlignment="Center" HeaderAlignment="Center" AutomationProperties.Name="Workspace views">
+        <arc:TabItem Header="Overview"><TextBlock Text="A calm summary of this workspace and its current health." TextWrapping="Wrap" TextAlignment="Center"/></arc:TabItem>
+        <arc:TabItem Header="Activity"><TextBlock Text="Emma reviewed the latest changes a few minutes ago." TextWrapping="Wrap" TextAlignment="Center"/></arc:TabItem>
+        <arc:TabItem Header="Settings"><TextBlock Text="Choose who can publish and receive notifications." TextWrapping="Wrap" TextAlignment="Center"/></arc:TabItem>
+      </arc:Tabs>
+    </Grid></Border>
+    <Expander Header="内容高度、输入状态与禁用项" IsExpanded="True" Margin="0,24,0,0" HorizontalContentAlignment="Stretch">
+      <arc:Tabs Margin="0,16,0,0" MaxWidth="540" SelectedValuePath="Tag" SelectedValue="{Binding View}">
+        <arc:TabItem Header="Summary" Tag="summary"><TextBlock Text="A short overview."/></arc:TabItem>
+        <arc:TabItem Header="Editor" Tag="editor"><StackPanel><arc:Input Label="Project name" Text="Arc launch" Description="Switch tabs and return: your edits remain."/><arc:Switch Content="Weekly digest" Margin="0,20,0,20"/></StackPanel></arc:TabItem>
+        <arc:TabItem Header="Disabled" Tag="disabled" IsEnabled="False"/>
+      </arc:Tabs>
+    </Expander>
+    <TextBlock Text="{Binding View,StringFormat=Selected value: {0}}" Margin="0,12,0,8"/>
+    <arc:Button Content="切换到 Editor" Variant="Secondary" Click="OpenEditor" HorizontalAlignment="Left"/>
+    <Expander Header="溢出滚动、嵌套与 RTL" IsExpanded="True" Margin="0,24,0,0" HorizontalContentAlignment="Stretch"><StackPanel Margin="0,16,0,0">
+      <arc:Tabs Width="300" HorizontalAlignment="Left" ItemsSource="{Binding ManyTabs}" AutomationProperties.Name="Scrollable views" Margin="0,0,0,24"/>
+      <arc:Tabs FlowDirection="RightToLeft" HeaderAlignment="Right" Margin="0,0,0,24"><arc:TabItem Header="Overview" Content="Right-to-left content"/><arc:TabItem Header="Activity" Content="Recent activity"/></arc:Tabs>
+      <arc:Tabs><arc:TabItem Header="Parent"><arc:Tabs><arc:TabItem Header="Child A" Content="Nested content A"/><arc:TabItem Header="Child B" Content="Nested content B"/></arc:Tabs></arc:TabItem><arc:TabItem Header="Other" Content="Other parent content"/></arc:Tabs>
+    </StackPanel></Expander>
+  </StackPanel>
+</UserControl>

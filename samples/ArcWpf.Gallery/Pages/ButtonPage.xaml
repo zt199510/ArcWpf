@@ -1,0 +1,91 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ButtonPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"
+             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+  <UserControl.Resources>
+    <Style x:Key="ButtonLabel" TargetType="TextBlock">
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" />
+    </Style>
+    <Style x:Key="ButtonIcon" TargetType="Path">
+      <Setter Property="Width" Value="16" /><Setter Property="Height" Value="16" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="StrokeThickness" Value="1.5" />
+      <Setter Property="StrokeStartLineCap" Value="Round" /><Setter Property="StrokeEndLineCap" Value="Round" />
+      <Setter Property="StrokeLineJoin" Value="Round" />
+      <Setter Property="Stroke" Value="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" />
+    </Style>
+    <Style TargetType="TextBlock"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" /></Style>
+    <Style x:Key="Heading" TargetType="TextBlock"><Setter Property="FontSize" Value="19" /><Setter Property="FontWeight" Value="Medium" /><Setter Property="Margin" Value="0,0,0,14" /></Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="四种变体" Style="{StaticResource Heading}" />
+    <WrapPanel Margin="0,0,0,28">
+      <arc:Button Content="保存更改" Command="{Binding CountCommand}" Margin="0,0,12,12" />
+      <arc:Button Content="取消" Variant="Secondary" Command="{Binding CountCommand}" Margin="0,0,12,12" />
+      <arc:Button Content="查看详情" Variant="Ghost" Command="{Binding CountCommand}" Margin="0,0,12,12" />
+      <arc:Button Content="删除项目" Variant="Danger" Command="{Binding CountCommand}" Margin="0,0,12,12" />
+    </WrapPanel>
+    <TextBlock Text="尺寸与内容" Style="{StaticResource Heading}" />
+    <WrapPanel Margin="0,0,0,28" VerticalAlignment="Center">
+      <arc:Button Content="小按钮" Size="Small" Margin="0,0,12,12" />
+      <arc:Button Content="标准按钮" Margin="0,0,12,12" />
+      <arc:Button Content="大按钮" Size="Large" Margin="0,0,12,12" />
+      <arc:Button Variant="Secondary" AutomationProperties.Name="添加项目" Width="44" Height="44" VerticalAlignment="Center" Padding="0" Margin="0,0,12,12">
+        <Grid Width="16" Height="16">
+          <Path Data="M 8,2 L 8,14 M 2,8 L 14,8" StrokeThickness="1.5"
+                StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                Stroke="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" />
+        </Grid>
+      </arc:Button>
+      <arc:Button Content="锚点按钮（不缩放）" Variant="Secondary" IsPressAnimationEnabled="False" Margin="0,0,12,12" />
+    </WrapPanel>
+    <TextBlock Text="图标与文字组合" Style="{StaticResource Heading}" />
+    <WrapPanel Margin="0,0,0,28">
+      <arc:Button Variant="Secondary" Command="{Binding CountCommand}" AutomationProperties.Name="添加项目" Margin="0,0,12,12">
+        <StackPanel Orientation="Horizontal">
+          <Path Style="{StaticResource ButtonIcon}" Data="M 8,2 L 8,14 M 2,8 L 14,8" Margin="0,0,8,0" />
+          <TextBlock Text="添加项目" Style="{StaticResource ButtonLabel}" />
+        </StackPanel>
+      </arc:Button>
+      <arc:Button Command="{Binding CountCommand}" AutomationProperties.Name="继续" Margin="0,0,12,12">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="继续" Style="{StaticResource ButtonLabel}" />
+          <Path Style="{StaticResource ButtonIcon}" Data="M 2,8 L 14,8 M 9,3 L 14,8 L 9,13" Margin="8,0,0,0" />
+        </StackPanel>
+      </arc:Button>
+      <arc:Button Variant="Secondary" IsLoading="{Binding IsSaving}" Command="{Binding SaveCommand}" AutomationProperties.Name="模拟上传文件" Margin="0,0,12,12">
+        <StackPanel Orientation="Horizontal">
+          <Path Style="{StaticResource ButtonIcon}" Data="M 8,11 L 8,2 M 3,7 L 8,2 L 13,7 M 2,11 L 2,14 L 14,14 L 14,11" Margin="0,0,8,0" />
+          <TextBlock Text="模拟上传文件" Style="{StaticResource ButtonLabel}" />
+        </StackPanel>
+      </arc:Button>
+    </WrapPanel>
+    <TextBlock Text="内容变化反馈" Style="{StaticResource Heading}" />
+    <WrapPanel Margin="0,0,0,12">
+      <arc:Button Content="{Binding MorphLabel}" Command="{Binding MorphCommand}" Margin="0,0,12,12" ToolTip="连续点击切换长短文字" />
+      <arc:Button Variant="Secondary" Command="{Binding CopyCommand}" Margin="0,0,12,12">
+        <arc:Button.Style>
+          <Style TargetType="{x:Type arc:Button}">
+            <Setter Property="Content" Value="复制链接" />
+            <Style.Triggers><DataTrigger Binding="{Binding Copied}" Value="True"><Setter Property="Content" Value="已复制" /></DataTrigger></Style.Triggers>
+          </Style>
+        </arc:Button.Style>
+      </arc:Button>
+    </WrapPanel>
+    <TextBlock Text="禁用状态" Style="{StaticResource Heading}" />
+    <WrapPanel Margin="0,0,0,28">
+      <arc:Button Content="保存更改" IsEnabled="False" Margin="0,0,12,12" />
+      <arc:Button Content="取消" Variant="Secondary" IsEnabled="False" Margin="0,0,12,12" />
+      <arc:Button Content="查看详情" Variant="Ghost" IsEnabled="False" Margin="0,0,12,12" />
+      <arc:Button Content="删除项目" Variant="Danger" IsEnabled="False" Margin="0,0,12,12" />
+    </WrapPanel>
+    <TextBlock Text="加载与命令" Style="{StaticResource Heading}" />
+    <WrapPanel>
+      <arc:Button Content="模拟保存" IsLoading="{Binding IsSaving}" Command="{Binding SaveCommand}" Margin="0,0,12,12" />
+      <arc:Button Content="持续加载" Variant="Secondary" IsLoading="True" Margin="0,0,12,12" />
+      <arc:Button Content="禁用且加载" IsLoading="True" IsEnabled="False" Margin="0,0,12,12" />
+    </WrapPanel>
+    <TextBlock Text="{Binding Status}" Margin="0,8,0,12" TextWrapping="Wrap" />
+    <TextBlock Text="可使用 Tab、Enter 和空格操作。模拟保存持续两秒，期间保留焦点并阻止重复提交。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+  </StackPanel>
+</UserControl>
+

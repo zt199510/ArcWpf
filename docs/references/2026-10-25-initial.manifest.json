@@ -1,0 +1,459 @@
+{
+  "batch": "2026-10-25-initial",
+  "kind": "project acquisition batch, not an upstream release",
+  "tkcode_commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+  "visual_observation": "not collected: in-app browser creation and selection timed out",
+  "items": [
+    {
+      "path": "work/references/2026-10-25-initial/arc/button.json",
+      "url": "https://uiarc.dev/r/button.json",
+      "retrieved_utc": "2026-10-25T13:02:54.576382+00:00",
+      "status": "ok",
+      "bytes": 13735,
+      "sha256": "a87bfc7182d4372c7806f8fa53b51c5ae7c5636b2628d599f887ed0d912f074d",
+      "registryDependencies": [
+        "https://uiarc.dev/r/arc-motion-tokens.json"
+      ],
+      "files": [
+        "registry/components/button/button.tsx",
+        "registry/components/button/button.module.css"
+      ],
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/button.json",
+      "tier": "free",
+      "license_basis": "https://uiarc.dev/license (free components: MIT)",
+      "extracted": [
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/button/button.tsx",
+          "sha256": "11d633757f599751d968989fd2ffbbde6dff939b38f3a790658655bf1a353b5e"
+        },
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/button/button.module.css",
+          "sha256": "98200d3d658ee8145a179343b9faef090b84eb585aaa19d9d0193a2bd625eae1"
+        }
+      ]
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/input.json",
+      "url": "https://uiarc.dev/r/input.json",
+      "retrieved_utc": "2026-10-25T13:02:55.011591+00:00",
+      "status": "ok",
+      "bytes": 9976,
+      "sha256": "6cf1b1f78bbfb29f12ddd12025b14a4872b16382a0e8903c29a0d9c538c0c5d0",
+      "registryDependencies": [
+        "https://uiarc.dev/r/arc-motion-tokens.json"
+      ],
+      "files": [
+        "registry/components/input/input.tsx",
+        "registry/components/input/input.module.css"
+      ],
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/input.json",
+      "tier": "free",
+      "license_basis": "https://uiarc.dev/license (free components: MIT)",
+      "extracted": [
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/input/input.tsx",
+          "sha256": "83e816239e039def8fd4a3becfc0856c90332f4e07b71632916fe967a77e533b"
+        },
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/input/input.module.css",
+          "sha256": "a418b6a587754b1d23f09d73f35dc6b8058d1e0e04847258c065016bcda3d01a"
+        }
+      ]
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/switch.json",
+      "url": "https://uiarc.dev/r/switch.json",
+      "retrieved_utc": "2026-10-25T13:02:54.343664+00:00",
+      "status": "ok",
+      "bytes": 6554,
+      "sha256": "bc3b514941718cf6d057a1fb179ffd21eefeb71e7547043177879fe7828fd7c8",
+      "registryDependencies": [
+        "https://uiarc.dev/r/arc-motion-tokens.json"
+      ],
+      "files": [
+        "registry/components/switch/switch.tsx",
+        "registry/components/switch/switch.module.css"
+      ],
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/switch.json",
+      "tier": "free",
+      "license_basis": "https://uiarc.dev/license (free components: MIT)",
+      "extracted": [
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/switch/switch.tsx",
+          "sha256": "1afe37e6b1efa66d1b0fb3e140ae337e8fc0d44406a0f36d7de000f3e6ff507a"
+        },
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/switch/switch.module.css",
+          "sha256": "a19cdebbc610848ecdd6190910c29777d6d2edabf98abf245625ad2869455413"
+        }
+      ]
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/popover.json",
+      "url": "https://uiarc.dev/r/popover.json",
+      "retrieved_utc": "2026-10-25T13:02:55.229641+00:00",
+      "status": "ok",
+      "bytes": 4328,
+      "sha256": "5bfaa4af94c78364799d8d5fbb66ba9c095d641531286c2510247d4ed9e18e20",
+      "registryDependencies": [],
+      "files": [
+        "registry/components/popover/popover.tsx",
+        "registry/components/popover/popover.module.css"
+      ],
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/popover.json",
+      "tier": "free",
+      "license_basis": "https://uiarc.dev/license (free components: MIT)",
+      "extracted": [
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/popover/popover.tsx",
+          "sha256": "609839cdf6eaf8dbaebe8e9aadf0f10ff437a0bc4012d1a9438d33d5adcc36e1"
+        },
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/components/popover/popover.module.css",
+          "sha256": "1bc17c51dd4f672e7e6055428107c2c6691af1ae78d6f100fa3ffab4a2c69f53"
+        }
+      ]
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/arc-foundation.json",
+      "url": "https://uiarc.dev/r/arc-foundation.json",
+      "retrieved_utc": "2026-10-25T13:02:54.749446+00:00",
+      "status": "ok",
+      "bytes": 16801,
+      "sha256": "562567f96cdb9086839466c87c7add1cacf624e70e36d7bd038d1607d5a84b64",
+      "registryDependencies": [
+        "https://uiarc.dev/r/arc-motion-tokens.json"
+      ],
+      "files": [
+        "registry/foundation.css"
+      ],
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/arc-foundation.json",
+      "tier": "free",
+      "license_basis": "https://uiarc.dev/license (free components: MIT)",
+      "extracted": [
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/foundation.css",
+          "sha256": "9c118673a3245332cbccd3abc4ab603a400942bdf9d786689af8fa867bb489a5"
+        }
+      ]
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/arc-motion-tokens.json",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "retrieved_utc": "2026-10-25T13:02:55.942580+00:00",
+      "status": "ok",
+      "bytes": 2360,
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "registryDependencies": [],
+      "files": [
+        "registry/motion-tokens.ts",
+        "lib/motion-tokens.ts"
+      ],
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/arc-motion-tokens.json",
+      "tier": "free",
+      "license_basis": "https://uiarc.dev/license (free components: MIT)",
+      "extracted": [
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/registry/motion-tokens.ts",
+          "sha256": "7061ad76a2bb95c62cae97480609c8bab5ad5df4b09652e2a9a0bb6d29eb2ba2"
+        },
+        {
+          "path": "tests/Baselines/References/2026-10-25-initial/arc/extracted/lib/motion-tokens.ts",
+          "sha256": "68005df4d65d3b30df117afa7384f7bb2aa442645882d4279def370780acdee8"
+        }
+      ]
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/docs/button.md",
+      "url": "https://uiarc.dev/components/button/markdown",
+      "retrieved_utc": "2026-10-25T13:02:59.865317+00:00",
+      "status": "ok",
+      "bytes": 6609,
+      "sha256": "746a3f2311dfbab9135a519d77d04a4b1628ca0a94d44c10e17ea8df12093bc4",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/docs/button.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/docs/input.md",
+      "url": "https://uiarc.dev/components/input/markdown",
+      "retrieved_utc": "2026-10-25T13:02:59.767478+00:00",
+      "status": "ok",
+      "bytes": 5505,
+      "sha256": "a3a2ffc951422c252bda6769f6fce2eeef8550fe093e4dcaf43db385768147f5",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/docs/input.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/docs/switch.md",
+      "url": "https://uiarc.dev/components/switch/markdown",
+      "retrieved_utc": "2026-10-25T13:02:58.217162+00:00",
+      "status": "ok",
+      "bytes": 5007,
+      "sha256": "a461de0793c38fb60b426f2331b4c33a3f82d63c0149fc7a06dca7238b465e63",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/docs/switch.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/docs/popover.md",
+      "url": "https://uiarc.dev/components/popover/markdown",
+      "retrieved_utc": "2026-10-25T13:02:59.230499+00:00",
+      "status": "ok",
+      "bytes": 6472,
+      "sha256": "4d421f56128254a55f044a62ffac6fae56f9937770c04350f0b5b31adaeee192",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/arc/docs/popover.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/skills/design.md",
+      "url": "https://uiarc.dev/r/skills/arc/design.md",
+      "retrieved_utc": "2026-10-25T13:02:58.506188+00:00",
+      "status": "ok",
+      "bytes": 7657,
+      "sha256": "bef6daa6cb0cba3ca137085879e04a822215e5f636ffc2d5ab5db058d9d1ea7f"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/skills/motion.md",
+      "url": "https://uiarc.dev/r/skills/arc/motion.md",
+      "retrieved_utc": "2026-10-25T13:03:00.013720+00:00",
+      "status": "ok",
+      "bytes": 5299,
+      "sha256": "99d8750bddc1545e3ea28fb8432662d941ed5ce5a753e973986a00ac33e48fdc"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/skills/accessibility.md",
+      "url": "https://uiarc.dev/r/skills/arc/accessibility.md",
+      "retrieved_utc": "2026-10-25T13:02:59.553260+00:00",
+      "status": "ok",
+      "bytes": 3851,
+      "sha256": "9c456fc18184e1b4499e76a289bf8523073cad8797165bd9aeaaefb2497591b2"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/license.html",
+      "url": "https://uiarc.dev/license",
+      "retrieved_utc": "2026-10-25T13:03:00.827924+00:00",
+      "status": "ok",
+      "bytes": 79080,
+      "sha256": "f949798b906e6236b8a60548572bc584720135927459629740b72e169d6f2f72"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/arc/llms.txt",
+      "url": "https://uiarc.dev/llms.txt",
+      "retrieved_utc": "2026-10-25T13:03:00.800972+00:00",
+      "status": "ok",
+      "bytes": 64263,
+      "sha256": "4317fd679af600aeef505c135ab543986994a25cb2d704a537f5bdcba722468d"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/LICENSE",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/LICENSE",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/LICENSE",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "750190dab770b8d6cdd045b5ed165acda94dc7e14a93ed3d76d202418e518d11",
+      "bytes": 1081,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Buttons/Button/Button.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Buttons/Button/Button.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Buttons/Button/Button.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "1463928627281bf96eac2ff315ebec21e0421cd9ce2f28287de01671ae646a79",
+      "bytes": 4038,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Buttons/Button/ButtonToken.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Buttons/Button/ButtonToken.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Buttons/Button/ButtonToken.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "ca3e46049c3d80002af615cd8d8f1e16ea7089b55fc5cff52df820c1988c983c",
+      "bytes": 1939,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Buttons/Button/Themes/ButtonTheme.axaml",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Buttons/Button/Themes/ButtonTheme.axaml",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Buttons/Button/Themes/ButtonTheme.axaml",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "21d12991918ea3d6941dc1016ab3282fa76520bd55431a2a70c347b456dbe833",
+      "bytes": 12269,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/Popover.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/Popover.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Overlays/Popover/Popover.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "4d257546210571d38fab24ceaf7e720dd01bbb997bceeaa70ad4533097f3b6d1",
+      "bytes": 14336,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/PopoverSurface.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/PopoverSurface.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Overlays/Popover/PopoverSurface.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "c85ed52a4cf332795f49518f1a92c32d37c7591cdb4e466c4cb8900a56ac8364",
+      "bytes": 1124,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/PopoverSurfaceToken.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/PopoverSurfaceToken.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Overlays/Popover/PopoverSurfaceToken.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "a45de90024d9f067c24941d1c7a1e6dcf5d86112a69a726b71d36693ee8116d4",
+      "bytes": 533,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/PopoverToken.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/PopoverToken.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Overlays/Popover/PopoverToken.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "8724a75560a48d4f379c6e7e7fae3e2b5855b0be80663d217d7e2db40738b2b6",
+      "bytes": 422,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/Themes/PopoverSurfaceTheme.axaml",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/Themes/PopoverSurfaceTheme.axaml",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Overlays/Popover/Themes/PopoverSurfaceTheme.axaml",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "57e78a36b9133d987aa851100cad3fcbf8f6777d400d6a11bbd7bb8f859d3fa7",
+      "bytes": 2456,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/Themes/PopoverTheme.axaml",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Overlays/Popover/Themes/PopoverTheme.axaml",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Overlays/Popover/Themes/PopoverTheme.axaml",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "425f7f72a11f926680ac184fb728273c4f5ef424a1215f006cc39c470f1239a4",
+      "bytes": 801,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/TextFields/Input/Input.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/TextFields/Input/Input.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/TextFields/Input/Input.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "ebd0d350583172f6fadf2451c7c3428e75567a49356e3bd72d872d04ae07641a",
+      "bytes": 572,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/TextFields/Input/InputToken.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/TextFields/Input/InputToken.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/TextFields/Input/InputToken.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "3d8e1d71218c03f52135eb309d7996010560b4b871bb5254b77bd3228ac8338b",
+      "bytes": 445,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/TextFields/Input/Themes/InputTheme.axaml",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/TextFields/Input/Themes/InputTheme.axaml",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/TextFields/Input/Themes/InputTheme.axaml",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "01ede2d412ed0352460077165c184ac8eb3bf2793abee138654157949626e7e4",
+      "bytes": 6063,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Toggles/Switch/Switch.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Toggles/Switch/Switch.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Toggles/Switch/Switch.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "7528b50c4f8c9b0e7c46b7aa223b38f1466a7b0f06df057e65dce35cc525b2a3",
+      "bytes": 3901,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Toggles/Switch/SwitchToken.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Toggles/Switch/SwitchToken.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Toggles/Switch/SwitchToken.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "bb2d92b002b5833bce11ff4e57c361be52e7dc1035deb409e1eb52eb64e0d00a",
+      "bytes": 1263,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc/Toggles/Switch/Themes/SwitchTheme.axaml",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc/Toggles/Switch/Themes/SwitchTheme.axaml",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc/Toggles/Switch/Themes/SwitchTheme.axaml",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "e1e62b8b492a4ea3c4b6ca98c394821918bff16b1006359b487dc3ccc28a6736",
+      "bytes": 7505,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/src/TKCode.Arc.Core/Motion/Springs.cs",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/src/TKCode.Arc.Core/Motion/Springs.cs",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/src/TKCode.Arc.Core/Motion/Springs.cs",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "9e2bc204846a9e71f013c8e608d7e00aa9031b2ce6b5b3237973119f5115baaf",
+      "bytes": 10386,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    },
+    {
+      "path": "work/references/2026-10-25-initial/tkcode/THIRD-PARTY-NOTICES.md",
+      "snapshot_path": "tests/Baselines/References/2026-10-25-initial/tkcode/THIRD-PARTY-NOTICES.md",
+      "url": "https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/1c9b1d94c1351da0db381c7d0a29835c9a1899aa/THIRD-PARTY-NOTICES.md",
+      "commit": "1c9b1d94c1351da0db381c7d0a29835c9a1899aa",
+      "status": "ok",
+      "retrieved_date": "2026-10-25",
+      "transport": "GitHub connector UTF-8 text; local hash describes stored text",
+      "sha256": "c14ca2825c590537512af97944aa79ac691c768790303bd5635b88dff4cc81ac",
+      "bytes": 11179,
+      "license_basis": "tkcode/LICENSE and THIRD-PARTY-NOTICES.md"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="arc:TooltipSurface">
+    <Setter Property="Focusable" Value="False"/><Setter Property="IsTabStop" Value="False"/><Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Background}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.TooltipBorder}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Padding" Value="16,12"/>
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/><Setter Property="FontSize" Value="14"/><Setter Property="FontWeight" Value="Normal"/><Setter Property="MaxWidth" Value="240"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:TooltipSurface"><Border x:Name="Bubble" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="18" Padding="{TemplateBinding Padding}" Effect="{DynamicResource ArcWpf.Shadow.Raised}"><ContentPresenter ContentSource="Content" TextBlock.LineHeight="19.6" IsHitTestVisible="False"/></Border></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="arc:TooltipText">
+    <Setter Property="Focusable" Value="False"/><Setter Property="IsTabStop" Value="False"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:TooltipText"><Grid x:Name="PART_Size" ClipToBounds="True">
+      <TextBlock x:Name="PART_Current" TextWrapping="Wrap" MaxWidth="206" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+      <Canvas IsHitTestVisible="False"><arc:DialogDecorativeText x:Name="PART_Old" TextWrapping="Wrap" Opacity="0"/></Canvas>
+    </Grid></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="arc:Tooltip">
+    <Setter Property="Focusable" Value="False"/><Setter Property="IsTabStop" Value="False"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:Tooltip"><Grid>
+      <ContentPresenter ContentSource="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+      <Popup x:Name="PART_Popup" AllowsTransparency="True" PopupAnimation="None" StaysOpen="True" Focusable="False">
+        <Border x:Name="PART_Frame" Padding="24">
+          <arc:TooltipSurface x:Name="PART_Surface"><Grid>
+            <arc:TooltipText x:Name="PART_Text"/>
+            <ContentPresenter x:Name="PART_Custom" IsHitTestVisible="False"/>
+          </Grid></arc:TooltipSurface>
+        </Border>
+      </Popup>
+    </Grid></ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>

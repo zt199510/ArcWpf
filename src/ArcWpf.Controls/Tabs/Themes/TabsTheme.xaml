@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style x:Key="TabsScrollButton" TargetType="Button">
+    <Setter Property="Width" Value="33"/><Setter Property="Focusable" Value="False"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="15"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0"/><Setter Property="IsHitTestVisible" Value="False"/></Trigger></Style.Triggers>
+  </Style>
+  <Style TargetType="arc:TabItem">
+    <Setter Property="MinWidth" Value="88"/><Setter Property="MinHeight" Value="36"/><Setter Property="Padding" Value="12,0"/>
+    <Setter Property="FontSize" Value="14"/><Setter Property="FontWeight" Value="Medium"/><Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextMuted}"/><Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:TabItem">
+      <Grid><Border Background="{TemplateBinding Background}" CornerRadius="15" Padding="{TemplateBinding Padding}">
+        <ContentPresenter x:Name="PART_Label" ContentSource="Header" RecognizesAccessKey="True" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+      </Border><Border x:Name="FocusRing" IsHitTestVisible="False" CornerRadius="17" BorderThickness="2" BorderBrush="{DynamicResource ArcWpf.Brush.Focus}" Margin="-2" Visibility="Collapsed"/></Grid>
+      <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="FocusRing" Property="Visibility" Value="Visible"/></Trigger></ControlTemplate.Triggers>
+    </ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/></Trigger>
+      <Trigger Property="IsSelected" Value="True"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/></Trigger>
+      <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.5"/></Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style TargetType="arc:Tabs">
+    <Setter Property="FontSize" Value="14"/><Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="ItemsPanel"><Setter.Value><ItemsPanelTemplate><arc:TabsHeaderPanel/></ItemsPanelTemplate></Setter.Value></Setter>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:Tabs">
+      <Grid KeyboardNavigation.TabNavigation="Local">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Border x:Name="HeaderShell" HorizontalAlignment="{TemplateBinding HeaderAlignment}" CornerRadius="18" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}">
+          <Grid>
+            <ScrollViewer x:Name="PART_HeaderScroll" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" CanContentScroll="False" Focusable="False">
+              <Grid x:Name="PART_HeaderTrack" Margin="4">
+                <Canvas IsHitTestVisible="False"><Border x:Name="PART_Selection" CornerRadius="15" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" Effect="{DynamicResource ArcWpf.Shadow.Resting}"/></Canvas>
+                <ItemsPresenter KeyboardNavigation.TabNavigation="Once"/>
+              </Grid>
+            </ScrollViewer>
+            <Button x:Name="PART_ScrollBackward" Style="{StaticResource TabsScrollButton}" HorizontalAlignment="Left" IsEnabled="{Binding CanScrollBackward,RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.Name="Previous tabs"><Path Data="M 10,4 L 5,8.5 L 10,13" Width="17" Height="17" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.5"/></Button>
+            <Button x:Name="PART_ScrollForward" Style="{StaticResource TabsScrollButton}" HorizontalAlignment="Right" IsEnabled="{Binding CanScrollForward,RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.Name="Next tabs"><Path Data="M 6,4 L 11,8.5 L 6,13" Width="17" Height="17" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.5"/></Button>
+          </Grid>
+        </Border>
+        <Grid Grid.Row="1" Margin="0,16,0,0">
+          <Grid x:Name="PART_PanelFrame"><ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextBlock.LineHeight="19.6"/></Grid>
+          <Canvas IsHitTestVisible="False"><arc:TabsSnapshot x:Name="PART_Outgoing" Stretch="Fill" Opacity="0"/></Canvas>
+        </Grid>
+      </Grid>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>
+

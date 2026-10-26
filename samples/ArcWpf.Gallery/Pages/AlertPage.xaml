@@ -1,0 +1,20 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.AlertPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Alert" FontSize="24" FontWeight="Medium" Margin="0,0,0,8" />
+    <TextBlock Text="用于展示需要用户注意的页面内状态和反馈。" Margin="0,0,0,24" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32">
+      <StackPanel MaxWidth="540" HorizontalAlignment="Center">
+        <arc:Alert Title="Changes saved" Description="Your workspace is up to date." />
+      </StackPanel>
+    </Border>
+    <Expander Header="更多语气与交互状态" Margin="0,24,0,0" HorizontalContentAlignment="Stretch">
+      <StackPanel Margin="0,16,0,0" MaxWidth="540" HorizontalAlignment="Left">
+        <arc:Alert Title="Information" Description="You can invite more members from Settings." Tone="Info" Margin="0,0,0,12" />
+        <arc:Alert Title="Changes saved" Description="Everything is synced." Tone="Success" Margin="0,0,0,12" />
+        <arc:Alert Title="Review required" Description="Some fields need your attention before publishing." Tone="Warning" Margin="0,0,0,12" />
+        <arc:Alert Title="Could not save changes" Description="Try again or contact an administrator." Tone="Danger" IsDismissible="True" Margin="0,0,0,12" />
+        <arc:Alert Title="Custom content" Tone="Info" IsDismissible="True"><TextBlock Text="Alert content can be supplied as a WPF element." TextWrapping="Wrap" /></arc:Alert>
+      </StackPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>

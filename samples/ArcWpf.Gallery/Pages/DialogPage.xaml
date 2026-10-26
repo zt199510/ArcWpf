@@ -1,0 +1,34 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.DialogPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <arc:Dialog x:Key="PublishDialog" Title="Publish workspace" Description="Your team will see these changes immediately.">
+      <StackPanel><TextBlock Text="Three files are ready to publish. You can still revise them later." TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+        <WrapPanel HorizontalAlignment="Right" Margin="0,20,0,0"><arc:Button Content="Keep editing" Variant="Secondary" Command="{x:Static arc:Dialog.CloseCommand}" Margin="0,0,8,8"/><arc:Button Content="Publish now" Command="{x:Static arc:Dialog.CloseCommand}" Margin="0,0,0,8"/></WrapPanel>
+      </StackPanel>
+    </arc:Dialog>
+    <arc:Dialog x:Key="FormDialog" Title="Rename project" Description="This changes the URL too."><StackPanel>
+      <arc:Input Label="Project name" Text="Arc launch" Description="关闭再打开，编辑内容仍然保留。"/>
+      <arc:Button Content="Save" Command="{x:Static arc:Dialog.CloseCommand}" HorizontalAlignment="Right" Margin="0,20,0,0"/>
+    </StackPanel></arc:Dialog>
+    <arc:Dialog x:Key="StepsDialog" Title="Review changes" Description="Check the details before publishing."><StackPanel><TextBlock Text="点击下一步观察标题和说明过渡。" TextWrapping="Wrap"/>
+      <arc:Button Content="下一步" Click="NextStep" HorizontalAlignment="Right" Margin="0,20,0,0"/>
+    </StackPanel></arc:Dialog>
+    <arc:Dialog x:Key="GuardDialog" Title="Unsaved changes" Description="开启保护时，关闭请求会被取消。" Closing="GuardClosing"><StackPanel>
+      <arc:CheckBox x:Name="GuardCheck" Content="阻止关闭" IsChecked="True"/>
+      <TextBlock Text="取消勾选后，可按 Escape、点击遮罩或关闭按钮退出。" TextWrapping="Wrap" Margin="0,16,0,0"/>
+    </StackPanel></arc:Dialog>
+  </UserControl.Resources>
+  <StackPanel Margin="0,20,0,0">
+    <TextBlock Text="Dialog" FontSize="24" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="模态对话框 · 聚焦当前决策" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24"/>
+    <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="32"><Grid MinHeight="246"><StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <arc:Button Content="Review changes" Click="OpenPublish" HorizontalAlignment="Center"/>
+      <TextBlock Text="Opens a focused decision surface" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+    </StackPanel></Grid></Border>
+    <Expander Header="表单、文案切换、长内容与关闭保护" IsExpanded="True" Margin="0,24,0,0"><WrapPanel Margin="0,16,0,0">
+      <arc:Button Content="编辑表单" Variant="Secondary" Click="OpenForm" Margin="0,0,12,12"/>
+      <arc:Button Content="标题切换" Variant="Secondary" Click="OpenSteps" Margin="0,0,12,12"/>
+      <arc:Button Content="长内容滚动" Variant="Secondary" Click="OpenLong" Margin="0,0,12,12"/>
+      <arc:Button Content="取消关闭" Variant="Secondary" Click="OpenGuard" Margin="0,0,12,12"/>
+    </WrapPanel></Expander>
+  </StackPanel>
+</UserControl>
