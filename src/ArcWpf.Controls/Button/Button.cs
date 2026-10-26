@@ -34,6 +34,8 @@ public partial class Button : System.Windows.Controls.Button
 
     public Button()
     {
+        // Keep the control surface free of the WPF default black focus adorner.
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded += (_, _) => UpdateMotion(false);
         Unloaded += (_, _) => StopMotion();
         IsVisibleChanged += (_, _) => UpdateMotion(false);

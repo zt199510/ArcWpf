@@ -19,7 +19,7 @@
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ToggleButton x:Name="PART_Trigger" Grid.Row="0" Content="{TemplateBinding Title}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="20,16,52,16" MinHeight="64" Background="Transparent" BorderThickness="0" Foreground="{TemplateBinding Foreground}" FontSize="14" FontWeight="Medium" Focusable="True" Cursor="Hand" FocusVisualStyle="{StaticResource ArcWpf.ExpandableCard.FocusVisual}" IsChecked="{TemplateBinding IsExpanded}">
+            <ToggleButton x:Name="PART_Trigger" Grid.Row="0" Content="{TemplateBinding Title}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="20,16,52,16" MinHeight="64" Background="Transparent" BorderThickness="0" Foreground="{TemplateBinding Foreground}" FontSize="14" FontWeight="Medium" Focusable="True" Cursor="Hand" FocusVisualStyle="{x:Null}" IsChecked="{TemplateBinding IsExpanded}">
               <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
                 <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                   <ContentPresenter ContentSource="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />

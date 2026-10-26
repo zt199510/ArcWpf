@@ -48,6 +48,7 @@ public class Menu : Control
     private readonly OwnedMotion _popupMotion = new();
     private readonly List<(ListBoxItem Item, OwnedMotion Motion)> _itemMotions = [];
     private bool _presented;
+    private Window? _ownerWindow;
 
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public object? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
@@ -82,7 +83,11 @@ public class Menu : Control
         _highlightMove = new TranslateTransform();
         if (_highlight is not null) _highlight.RenderTransform = _highlightMove;
         if (_surface is not null) { _surfaceScale = new ScaleTransform(1, 1); _surface.RenderTransformOrigin = new Point(.5, 0); _surface.RenderTransform = _surfaceScale; }
-        if (_trigger is not null) _trigger.Click += TriggerClick;
+        if (_trigger is not null)
+        {
+            _trigger.SetCurrentValue(Control.FocusVisualStyleProperty, null);
+            _trigger.Click += TriggerClick;
+        }
         if (_popup is not null) { _popup.Opened += PopupOpened; _popup.Closed += PopupClosed; _popup.PlacementTarget = _trigger; _popup.CustomPopupPlacementCallback = PlacePopup; }
         if (_itemsHost is not null) { _itemsHost.PreviewMouseLeftButtonUp += ItemsMouseUp; _itemsHost.PreviewKeyDown += ItemsKeyDown; _itemsHost.SelectionChanged += ItemsSelectionChanged; _itemsHost.PreviewMouseMove += ItemsMouseMove; }
         UpdateItems();
@@ -122,6 +127,8 @@ public class Menu : Control
     {
         SetCurrentValue(IsOpenProperty, true);
         _presented = true;
+        _ownerWindow = Window.GetWindow(this);
+        _ownerWindow?.AddHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OwnerPreviewMouseDown), true);
         SelectFirstEnabled();
         _itemsHost?.Focus();
         UpdateHighlight(false);
@@ -134,6 +141,8 @@ public class Menu : Control
         if (IsOpen) SetCurrentValue(IsOpenProperty, false);
         if (!_presented) return;
         _presented = false;
+        _ownerWindow?.RemoveHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OwnerPreviewMouseDown));
+        _ownerWindow = null;
         ResetMotion();
         RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
         if (!ReferenceEquals(Keyboard.FocusedElement, _trigger)) _trigger?.Focus();
@@ -249,6 +258,13 @@ public class Menu : Control
 
     private void CloseAndFocus() => SetCurrentValue(IsOpenProperty, false);
 
+    private void OwnerPreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!_presented || e.OriginalSource is not DependencyObject source) return;
+        bool inMenu = source is Visual visual && (visual.IsDescendantOf(this) || (_popup?.Child is Visual popupChild && visual.IsDescendantOf(popupChild)));
+        if (!inMenu) CloseAndFocus();
+    }
+
     private void SelectFirstEnabled()
     {
         if (_itemsHost is null) return;
@@ -288,6 +304,8 @@ public class Menu : Control
     {
         if (_trigger is not null) _trigger.Click -= TriggerClick;
         if (_popup is not null) { _popup.Opened -= PopupOpened; _popup.Closed -= PopupClosed; _popup.CustomPopupPlacementCallback = null; }
+        _ownerWindow?.RemoveHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OwnerPreviewMouseDown));
+        _ownerWindow = null;
         if (_itemsHost is not null) { _itemsHost.PreviewMouseLeftButtonUp -= ItemsMouseUp; _itemsHost.PreviewKeyDown -= ItemsKeyDown; _itemsHost.SelectionChanged -= ItemsSelectionChanged; _itemsHost.PreviewMouseMove -= ItemsMouseMove; }
         ResetMotion();
         _highlight = null; _highlightMove = null;

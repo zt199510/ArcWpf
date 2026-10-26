@@ -44,6 +44,7 @@ public class RadioButton : System.Windows.Controls.RadioButton
     }
     public RadioButton()
     {
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded+=(_,_)=>UpdateVisual(false); Unloaded+=(_,_)=>UpdateVisual(false); IsVisibleChanged+=(_,_)=>UpdateVisual(false);
     }
     protected override void OnClick(){if(IsEnabled)base.OnClick();}

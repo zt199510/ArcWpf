@@ -38,6 +38,8 @@ public class Switch : ToggleButton
 
     public Switch()
     {
+        // Arc controls use state surfaces instead of the WPF default black focus adorner.
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded += (_, _) => SetMotionTargets(false);
         Unloaded += (_, _) => SetMotionTargets(false);
         IsVisibleChanged += (_, _) => SetMotionTargets(false);

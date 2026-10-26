@@ -12,8 +12,7 @@
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="arc:TabItem">
       <Grid><Border Background="{TemplateBinding Background}" CornerRadius="15" Padding="{TemplateBinding Padding}">
         <ContentPresenter x:Name="PART_Label" ContentSource="Header" RecognizesAccessKey="True" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-      </Border><Border x:Name="FocusRing" IsHitTestVisible="False" CornerRadius="17" BorderThickness="2" BorderBrush="{DynamicResource ArcWpf.Brush.Focus}" Margin="-2" Visibility="Collapsed"/></Grid>
-      <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="FocusRing" Property="Visibility" Value="Visible"/></Trigger></ControlTemplate.Triggers>
+      </Border></Grid>
     </ControlTemplate></Setter.Value></Setter>
     <Style.Triggers>
       <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/></Trigger>

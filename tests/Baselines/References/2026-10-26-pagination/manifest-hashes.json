@@ -1,0 +1,30 @@
+[
+  {
+    "path": "license.html",
+    "sha256": "48c4d61576b53c48830b6bea160770325d9ba4bbc427dc3b72e407f5dfb67705"
+  },
+  {
+    "path": "motion.json",
+    "sha256": "7675ddd97de675c8890ab7809cedca3c67eb6cdbe55de6ee9ceaea3ac1776016"
+  },
+  {
+    "path": "page.html",
+    "sha256": "ea679f8a03ec0dfa737cc7686a209175481b8b19cba2bad975334476d00cae3c"
+  },
+  {
+    "path": "pagination.json",
+    "sha256": "2724b8f508ae7d3be9fea8f0240f24dc1aac4e4cbf29b6b9af4287ec436c3bcc"
+  },
+  {
+    "path": "pagination.md",
+    "sha256": "0b249d4c289bcbe91d241eeddc91c3eaeb5d54fa01ae278a8d7e50991502bf9f"
+  },
+  {
+    "path": "registry/components/pagination/pagination.module.css",
+    "sha256": "e3a713f3acfcfcd028905a51bfb1f99d2dbc20cc94cfe1d44edc2d86bb320485"
+  },
+  {
+    "path": "registry/components/pagination/pagination.tsx",
+    "sha256": "6030973e2e0de185ff462851d7699ef4be7ac495c7661ed4b4eea82f3f28f681"
+  }
+]

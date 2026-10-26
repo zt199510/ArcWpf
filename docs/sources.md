@@ -108,3 +108,4 @@ ArcWpf 自身许可证在发布准备时明确决定；不将参考项目的许�
 
 
 - Menu：补充来源基准见 [参考卡](references/components/Menu.md)；不复制上游运行时依赖。
+- Pagination：补充来源基准见 [参考卡](references/components/Pagination.md)；不复制上游运行时依赖。

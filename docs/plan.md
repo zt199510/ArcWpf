@@ -312,3 +312,11 @@ Toast收到用户“没问题”，记录当前版本通过。
 - [ ] 实际窗口 Popup、焦点、碰撞、DPI、读屏和性能验收。
 
 - [x] Menu 规格按官方 Dropdown menu 页面纠偏并复跑验证；5 项专项、198 项全量通过。
+
+## Pagination 来源与规格（2026-10-26）
+
+- [x] 冻结 Arc Pagination 页面、Markdown、Registry、CSS、共享动效令牌和许可页；见 `tests/Baselines/References/2026-10-26-pagination`。
+- [x] 完成 [Pagination 参考卡](references/components/Pagination.md) 与 [组件规格](components/Pagination.md)。
+- [ ] Pagination 原生控件、Gallery、测试与实际窗口验收尚未开始。
+
+来源结论：受控 1-based 页码、最多五页窗口、边界禁用、Tab/Enter/Space、共享当前页标记、窗口滑动和 Reduced motion 已固定；省略号、首尾快捷按钮、每页大小和异步加载不在首期范围。

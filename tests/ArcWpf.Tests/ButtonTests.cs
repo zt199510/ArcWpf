@@ -174,6 +174,16 @@ public sealed class ButtonTests
     });
 
     [TestMethod]
+    public void PrimaryButtonDoesNotPaintAHeavyBlackBorder() => Sta.Run(() =>
+    {
+        var button = new ArcButton { Content = "Save" };
+        Apply(button);
+        Assert.AreEqual(Colors.Transparent, ((SolidColorBrush)button.BorderBrush).Color);
+        var surface = (Border)button.Template.FindName("PART_PressTarget", button);
+        Assert.AreEqual(Colors.Transparent, ((SolidColorBrush)surface.BorderBrush).Color);
+    });
+
+    [TestMethod]
     public void ThemeSwitchUpdatesDynamicResourcesAndKeepsApplicationOverrides() => Sta.Run(() =>
     {
         var theme = new ArcThemeResources();

@@ -32,6 +32,7 @@ public class CheckBox : System.Windows.Controls.CheckBox
     static CheckBox() => DefaultStyleKeyProperty.OverrideMetadata(typeof(CheckBox), new FrameworkPropertyMetadata(typeof(CheckBox)));
     public CheckBox()
     {
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded += (_, _) => UpdateVisual(false);
         Unloaded += (_, _) => UpdateVisual(false);
         IsVisibleChanged += (_, _) => UpdateVisual(false);

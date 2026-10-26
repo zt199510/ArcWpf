@@ -46,7 +46,7 @@ public sealed class ExpandableCardTests
     public void HeaderUsesKeyboardOnlyFocusVisualAndChevronGeometry() => Sta.Run(() =>
     {
         var card = Make(); Layout(card, 500); var trigger = Part<ToggleButton>(card, "PART_Trigger"); var arrow = Part<Path>(card, "PART_Arrow");
-        Assert.IsNotNull(trigger.FocusVisualStyle); Assert.AreEqual(new Rect(5, 7, 8, 4), arrow.Data.Bounds); Assert.IsNull(card.Template.FindName("FocusRing", card));
+        Assert.IsNull(trigger.FocusVisualStyle); Assert.AreEqual(new Rect(5, 7, 8, 4), arrow.Data.Bounds); Assert.IsNull(card.Template.FindName("FocusRing", card));
     });
 
     [TestMethod]

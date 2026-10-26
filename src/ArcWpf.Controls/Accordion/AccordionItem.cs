@@ -46,6 +46,7 @@ public class AccordionItem : HeaderedContentControl
 
     public AccordionItem()
     {
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded += (_, _) => UpdatePresentation(false);
         Unloaded += (_, _) => StopMotion();
     }

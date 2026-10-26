@@ -1,0 +1,23 @@
+{
+  "component": "Pagination",
+  "batch": "2026-10-26-pagination",
+  "collectedAt": "2026-10-26",
+  "sources": [
+    { "url": "https://uiarc.dev/components/pagination", "kind": "page", "file": "page.html" },
+    { "url": "https://uiarc.dev/components/pagination/markdown", "kind": "documentation", "file": "pagination.md" },
+    { "url": "https://uiarc.dev/r/pagination.json", "kind": "registry", "file": "pagination.json" },
+    { "url": "https://uiarc.dev/r/arc-motion-tokens.json", "kind": "motion-dependency", "file": "motion.json" },
+    { "url": "https://uiarc.dev/license", "kind": "license", "file": "license.html" }
+  ],
+  "files": [
+    "pagination.json",
+    "pagination.md",
+    "page.html",
+    "motion.json",
+    "license.html",
+    "registry/components/pagination/pagination.tsx",
+    "registry/components/pagination/pagination.module.css"
+  ],
+  "reuse": "behavior-and-visual-reference-only; no React, Motion, lucide, or source code copied into ArcWpf",
+  "licenseNote": "The source page marks Pagination Free. The captured license page states Free components are MIT licensed; verify current license before any direct reuse."
+}

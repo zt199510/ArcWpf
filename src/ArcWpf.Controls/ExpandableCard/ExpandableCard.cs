@@ -50,6 +50,7 @@ public class ExpandableCard : ContentControl
 
     public ExpandableCard()
     {
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded += (_, _) => { if (!_initialized) { SetCurrentValue(IsExpandedProperty, DefaultExpanded); _initialized = true; } UpdatePresentation(false); };
         Unloaded += (_, _) => StopMotion();
     }

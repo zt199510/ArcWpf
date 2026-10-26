@@ -51,6 +51,7 @@ public partial class Tabs:TabControl
     }
     public Tabs()
     {
+        SetCurrentValue(FocusVisualStyleProperty, null);
         Loaded+=(_,_)=>{_previousIndex=SelectedIndex;PlaceIndicator(false);RevealSelected(false);};
         Unloaded+=(_,_)=>ResetMotion();
         IsVisibleChanged+=(_,_)=>{if(!IsVisible)ResetMotion();};

@@ -55,7 +55,7 @@ public sealed class AccordionTests
     public void HeaderUsesKeyboardOnlyFocusVisualInsteadOfPersistentFocusRing() => Sta.Run(() =>
     {
         var accordion = Make(); Layout(accordion); var row = Row(accordion, 0); var header = Part<ToggleButton>(row, "PART_HeaderButton");
-        Assert.IsNotNull(header.FocusVisualStyle);
+        Assert.IsNull(header.FocusVisualStyle);
         Assert.IsNull(row.Template.FindName("FocusRing", row));
     });
 

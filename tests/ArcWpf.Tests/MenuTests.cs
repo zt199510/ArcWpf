@@ -36,7 +36,7 @@ public sealed class MenuTests
         var popup = (Popup)menu.Template.FindName("PART_Popup", menu);
         var surface = (Border)menu.Template.FindName("PART_Surface", menu);
         Assert.AreEqual("Actions", menu.Label);
-        Assert.IsFalse(popup.StaysOpen);
+        Assert.IsTrue(popup.StaysOpen);
         Assert.AreEqual(192d, surface.MinWidth);
         Assert.AreEqual(new CornerRadius(26), surface.CornerRadius);
         Assert.AreEqual(5d, surface.Padding.Left);
@@ -72,6 +72,24 @@ public sealed class MenuTests
         var page = new ArcWpf.Gallery.Pages.MenuPage(); Assert.IsNotNull(page.Content);
         var consumer = new ArcWpf.Consumer.MainWindow(); Assert.IsNotNull(consumer.Content); consumer.Close();
     });
+
+    [TestMethod]
+    public void PopupRemainsPresentedAfterTriggerClick()
+    {
+        Sta.Run(() =>
+        {
+            var menu = Create(); menu.Items.Add(new ArcMenuItem { Label = "Rename" });
+            var host = new Window { Width = 400, Height = 240, Content = menu, ShowInTaskbar = false };
+            try
+            {
+                host.Show(); host.UpdateLayout();
+                menu.IsOpen = true; Sta.Pump();
+                var popup = (Popup)menu.Template.FindName("PART_Popup", menu);
+                Assert.IsTrue(menu.IsOpen); Assert.IsTrue(popup.IsOpen);
+            }
+            finally { host.Close(); }
+        });
+    }
 
     private static ArcMenu Create() { var menu = new ArcMenu { Label = "Actions" }; menu.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml", UriKind.Relative) }); return menu; }
     private static void Layout(FrameworkElement element) { element.Measure(new Size(500, 500)); element.Arrange(new Rect(0, 0, element.DesiredSize.Width, element.DesiredSize.Height)); element.UpdateLayout(); Sta.Pump(); }
