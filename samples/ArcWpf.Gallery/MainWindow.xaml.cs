@@ -22,9 +22,9 @@ public partial class MainWindow : Window
     {
         var groups = new[]
         {
-            Group("basic", "基础", ("button", "Button", new ButtonPage()), ("switch", "Switch", new SwitchPage()), ("input", "Input", new InputPage()), ("textarea", "Textarea", new TextareaPage()), ("date-picker", "DatePicker", new DatePickerPage())),
+            Group("basic", "基础", ("button", "Button", new ButtonPage()), ("switch", "Switch", new SwitchPage()), ("input", "Input", new InputPage()), ("textarea", "Textarea", new TextareaPage()), ("search", "Search", new SearchPage()), ("calendar", "Calendar", new CalendarPage()), ("date-picker", "DatePicker", new DatePickerPage())),
             Group("feedback", "反馈", ("alert", "Alert", new AlertPage()), ("popover", "Popover", new PopoverPage()), ("dialog", "Dialog", new DialogPage()), ("tooltip", "Tooltip", new TooltipPage()), ("toast", "Toast", new ToastPage()), ("toast-stack", "ToastStack", new ToastStackPage())),
-            Group("navigation", "选择与导航", ("checkbox", "CheckBox", new CheckBoxPage()), ("radio", "RadioButton", new RadioButtonPage()), ("select", "Select", new SelectPage()), ("tabs", "Tabs", new TabsPage()), ("drawer", "Drawer", new DrawerPage()), ("breadcrumb", "Breadcrumb", new BreadcrumbPage()), ("tree-view", "TreeView", new TreeViewPage())),
+            Group("navigation", "选择与导航", ("checkbox", "CheckBox", new CheckBoxPage()), ("radio", "RadioButton", new RadioButtonPage()), ("select", "Select", new SelectPage()), ("tabs", "Tabs", new TabsPage()), ("drawer", "Drawer", new DrawerPage()), ("breadcrumb", "Breadcrumb", new BreadcrumbPage()), ("pagination", "Pagination", new PaginationPage()), ("tree-view", "TreeView", new TreeViewPage())),
             Group("layout", "布局", ("accordion", "Accordion", new AccordionPage()), ("expandable-card", "ExpandableCard", new ExpandableCardPage()), ("menu", "Menu", new MenuPage()), ("form", "Form", new FormLayoutPage()), ("list", "List", new ListPage()), ("progress", "Progress", new ProgressPage()), ("number-input", "NumberInput", new NumberInputPage()))
         };
 

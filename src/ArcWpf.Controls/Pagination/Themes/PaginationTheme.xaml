@@ -1,0 +1,35 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="{x:Type arc:Pagination}">
+    <Style.Resources>
+  <Style x:Key="ArcWpf.Pagination.Focus" TargetType="Control">
+    <Setter Property="Template"><Setter.Value><ControlTemplate><Border CornerRadius="{DynamicResource ArcWpf.Radius.Control}" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Focus}"/></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style x:Key="ArcWpf.Pagination.Button" TargetType="Button">
+    <Setter Property="Width" Value="{DynamicResource ArcWpf.ControlHeight.Small}"/>
+    <Setter Property="Height" Value="{DynamicResource ArcWpf.ControlHeight.Small}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
+    <Setter Property="FontSize" Value="{DynamicResource ArcWpf.FontSize.ExtraSmall}"/>
+    <Setter Property="Typography.NumeralAlignment" Value="Tabular"/>
+    <Setter Property="FocusVisualStyle" Value="{StaticResource ArcWpf.Pagination.Focus}"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+      <Border x:Name="Surface" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ArcWpf.Radius.Control}" BorderThickness="1" BorderBrush="Transparent">
+        <ContentPresenter x:Name="Presenter" HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}"/>
+      </Border>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+    </Style.Resources>
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:Pagination}">
+      <Grid x:Name="PART_Surface">
+        <Canvas IsHitTestVisible="False">
+          <Border x:Name="PART_Mark" Visibility="Collapsed" Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Control}" Effect="{DynamicResource ArcWpf.Shadow.Resting}"/>
+        </Canvas>
+        <arc:PaginationPanel x:Name="PART_PagesHost"/>
+        <Canvas x:Name="PART_ExitLayer" IsHitTestVisible="False"/>
+      </Grid>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>

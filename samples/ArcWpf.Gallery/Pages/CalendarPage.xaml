@@ -1,0 +1,13 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.CalendarPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel HorizontalAlignment="Left" MaxWidth="560">
+    <TextBlock Text="Calendar" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4"/>
+    <TextBlock Text="独立日历；DatePicker 复用同一套原生模板" Margin="0,0,0,24"/>
+    <arc:Calendar x:Name="DeliveryCalendar" Width="328" ShowToday="True" HorizontalAlignment="Left" AutomationProperties.Name="Delivery date"/>
+    <TextBlock Text="{Binding SelectedDate, ElementName=DeliveryCalendar, StringFormat=已选择：{0:d}, TargetNullValue=请选择配送日期}" Margin="0,16,0,24"/>
+    <TextBlock Text="扩展验证：固定月份、范围与禁用日期" FontWeight="SemiBold" Margin="0,0,0,12"/>
+    <arc:Calendar Width="328" DisplayDate="2026-06-15" SelectedDate="2026-06-15" DisplayDateStart="2026-06-01" DisplayDateEnd="2026-06-30" HorizontalAlignment="Left" AutomationProperties.Name="Bounded calendar">
+      <arc:Calendar.BlackoutDates><CalendarDateRange Start="2026-06-20" End="2026-06-22"/></arc:Calendar.BlackoutDates>
+    </arc:Calendar>
+    <TextBlock Text="连续选择日期可观察圆盘移动；Reduced/Off 直接切换。月份翻页动效暂缓，实际窗口与多 DPI 待验收。" TextWrapping="Wrap" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+  </StackPanel>
+</UserControl>

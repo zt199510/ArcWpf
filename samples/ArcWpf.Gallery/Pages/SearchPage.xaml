@@ -1,0 +1,16 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.SearchPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel MaxWidth="540" HorizontalAlignment="Stretch">
+    <TextBlock Text="Search" FontSize="26" FontWeight="Medium" Margin="0,0,0,6"/>
+    <TextBlock Text="原生输入、Escape 清空与清除按钮动效" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24"/>
+    <arc:Search x:Name="MemberSearch" Label="Search members" Placeholder="Name or email" Text="{Binding Query, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}"/>
+    <TextBlock Text="扩展验证：实时过滤（业务侧实现）" FontWeight="Medium" Margin="0,24,0,12"/>
+    <Grid MinHeight="90">
+      <ItemsControl VerticalAlignment="Top" ItemsSource="{Binding Matches, RelativeSource={RelativeSource AncestorType=UserControl}}"><ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" Margin="0,5"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+      <TextBlock x:Name="EmptyState" Text="没有匹配成员" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Visibility="Collapsed" Margin="0,8" VerticalAlignment="Top"/>
+    </Grid>
+    <arc:Search Label="只读查询" Text="Read-only query" IsReadOnly="True" Margin="0,24,0,0"/>
+    <arc:Search Label="禁用查询" Text="Disabled query" IsEnabled="False" Margin="0,16,0,0"/>
+    <arc:Search Label="验证状态" Text="invalid query" ErrorMessage="示例验证提示" Margin="0,16,0,0"/>
+    <TextBlock Text="清除后可 Ctrl+Z 撤销。切换顶部动效级别可检查 Full / Reduced / Off。IME、多 DPI 与读屏待验收。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,24,0,0"/>
+  </StackPanel>
+</UserControl>

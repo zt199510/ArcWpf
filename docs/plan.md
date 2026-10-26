@@ -1,5 +1,13 @@
 # ArcWpf 实施计划
 
+2026-10-26：Pagination收到用户“没问题上传代码”，记录当前版本用户确认；专项未测与全量回归失败仍保留，见验证记录。
+
+2026-10-26：用户反馈 Search“现在控件没问题了”，记录当前动效/占位修复版本用户确认；不扩展为IME、DPI或读屏专项通过。按用户指令开始 Pagination，实现范围见[规格](components/Pagination.md)。
+
+2026-10-26 用户确认“Calendar 已经完成”，覆盖当前Calendar及标题左右12 DIP留白版本；保留未执行的专项记录，不推断所有DPI/读屏通过。开始Search，来源Arc Search field，见[规格](components/Search.md)。
+
+Search已完成来源冻结、原生Input派生控件、清除入口及动效、Gallery实时过滤和5项专项测试；真实输入/鼠标清除/焦点回归已观察。IME完整交互、多DPI、读屏和动效观感待验收；完整回归中的Calendar时序失败见[Search验证记录](verification/2026-10-26-search.md)。
+
 日期：2026-10-25。状态：M1 实现进行中。目标是先验证可持续的 WPF 实现路径，再逐组移植控件；不以生成文件数量代表完成度。
 
 ## 1. 默认决策
@@ -317,7 +325,8 @@ Toast收到用户“没问题”，记录当前版本通过。
 
 - [x] 冻结 Arc Pagination 页面、Markdown、Registry、CSS、共享动效令牌和许可页；见 `tests/Baselines/References/2026-10-26-pagination`。
 - [x] 完成 [Pagination 参考卡](references/components/Pagination.md) 与 [组件规格](components/Pagination.md)。
-- [ ] Pagination 原生控件、Gallery、测试与实际窗口验收尚未开始。
+- [x] Pagination原生控件、主题、Gallery及7项专项测试已实现并通过；最终窗口鼠标/键盘与明暗、窄宽布局已观察。
+- [ ] 多DPI、读屏、逐帧视觉和性能专项待验收；全量回归仍有既有失败，见[验证记录](verification/2026-10-26-pagination.md)。
 
 来源结论：受控 1-based 页码、最多五页窗口、边界禁用、Tab/Enter/Space、共享当前页标记、窗口滑动和 Reduced motion 已固定；省略号、首尾快捷按钮、每页大小和异步加载不在首期范围。
 
@@ -364,6 +373,13 @@ Progress 首版只覆盖已知比例的线性任务进度；不确定进度、�
 NumberInput 首版暂缓拖拽标签、极限回弹、数字滚轮动画和 limitHint 文案。
 
 ## DatePicker 开发（2026-10-26）
+
+2026-10-26 用户追加：创建独立 Calendar，让 DatePicker 复用 Calendar 样式。此前弹层内部仍是系统默认外观，不能视为 Calendar 视觉完成。来源、范围见 [Calendar规格](components/Calendar.md)；本次补齐日历模板与状态，spring范围沿用暂缓约定。
+
+- [x] Calendar来源冻结、原生控件与共享样式、Gallery和专项测试。
+- [x] 用户追加Calendar选中动画：共享圆盘移动/进入/清除；替代此前选中动画暂缓项，月份翻页仍单独暂缓。渲染帧回归通过，实际观感待验收。
+- [x] DatePicker复用Calendar样式，Today头部、Clear底栏及286 DIP内部实际宽度修复。
+- [ ] Calendar/DatePicker真实鼠标键盘、IME、跨屏DPI和辅助技术专项验收；见[验证记录](verification/2026-10-26-calendar.md)。
 
 - [x] 冻结 Arc Date picker 页面、Markdown、Registry JSON 与许可/快照哈希；见 [参考卡](references/components/DatePicker.md)。
 - [x] 完成 [DatePicker 规格](components/DatePicker.md)，明确 WPF 原生日期、文化格式、绑定、验证、键盘和 BlackoutDates 契约。

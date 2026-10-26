@@ -1,5 +1,9 @@
 # Third-party notices
 
+## Search 补充（2026-10-26）
+
+Search参考Arc免费Search field Registry（https://uiarc.dev/r/search-field.json）及motion tokens，适用下文Arc MIT许可。冻结源码、CSS、Markdown、许可页与SHA-256在`tests/Baselines/References/2026-10-26-search`。图标按Search/X几何重绘为WPF Path；无React/Motion/Lucide运行依赖。原生编辑和动画适配为项目实现。
+
 ## Arc
 
 ArcWpf.Core/ArcThemeResources.cs 的设计令牌及 ArcWpf.Controls/Button 的外观与动效参数参考并改编自 Arc 的 foundation.css、button.module.css、button.tsx。来源 URL、采集时间与哈希见 docs/references/2026-10-25-initial.manifest.json；冻结原文位于 tests/Baselines/References/2026-10-25-initial/arc。
@@ -100,6 +104,15 @@ Accordion 的单开结构、FAQ 文案、Chevron 几何和高度动效参考 Arc
 
 ExpandableCard 的摘要卡结构、宽度变化、Chevron 几何和展开动效参考 Arc 免费 ExpandableCard Registry、Markdown 页面及 motion-tokens，适用上文 Arc MIT 声明。2026-10-26-expandable-card 为项目采集批次；文件、来源和 SHA-256 见 `tests/Baselines/References/2026-10-26-expandable-card/manifest.json`。WPF 原生 ContentControl、ToggleButton、ExpandCollapse Provider 和动效适配为项目实现；未引入 React/Radix/Motion/Lucide 运行依赖，参考源码与 CSS 未复制进产品。
 
+## Calendar 补充（2026-10-26）
+
+Calendar 的布局和状态参考 Arc 免费 Calendar Registry（https://uiarc.dev/r/calendar.json），适用本文 Arc MIT 声明；来源、展开文件、许可页及SHA-256见 `tests/Baselines/References/2026-10-26-calendar`。React/Motion/Lucide仅为参考依赖，未引入产品。Today hook未随该Registry发布，跨午夜更新暂缓。WPF部件契约参考 dotnet/wpf v10.0.0 `Calendar.xaml`、`Calendar.cs` 和 `DatePicker.cs`（MIT，.NET Foundation）；产品模板为本项目编写，未复制系统模板实现。
+
 ## Menu 补充
 
 Menu 的短命令列表、Popup 锚定、条目状态和键盘交互参考 Arc 免费 Dropdown Menu Registry、Markdown 页面及 motion-tokens，适用上文 Arc MIT 声明。2026-10-26-menu 为项目采集批次；文件、来源和 SHA-256 见 `tests/Baselines/References/2026-10-26-menu/manifest.json`。WPF Popup、Button、ListBox、ICommand 和自动化语义为项目实现；未引入 React/Radix/Motion/Lucide 运行依赖。
+
+
+## Pagination 补充（2026-10-26）
+
+Pagination行为、几何和动效参考Arc免费Registry、Markdown、CSS和motion-tokens，适用本文Arc MIT声明。冻结批次为tests/Baselines/References/2026-10-26-pagination；补充CSS来源及哈希见docs/references/components/Pagination.md。原生WPF按钮、布局Panel、事件、自动化与动画适配为本项目实现；未引入React/Motion/Lucide运行依赖，箭头为自绘矢量。

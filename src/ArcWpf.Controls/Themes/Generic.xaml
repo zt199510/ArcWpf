@@ -4,6 +4,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Button/Themes/ButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Switch/Themes/SwitchTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Input/Themes/InputTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Search/Themes/SearchTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Textarea/Themes/TextareaTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Popover/Themes/PopoverTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CheckBox/Themes/CheckBoxTheme.xaml" />
@@ -24,7 +25,9 @@
   <ResourceDictionary Source="/ArcWpf.Controls;component/List/Themes/ListTheme.xaml" />
   <ResourceDictionary Source="/ArcWpf.Controls;component/Progress/Themes/ProgressTheme.xaml" />
   <ResourceDictionary Source="/ArcWpf.Controls;component/NumberInput/Themes/NumberInputTheme.xaml" />
+  <ResourceDictionary Source="/ArcWpf.Controls;component/Calendar/Themes/CalendarTheme.xaml" />
   <ResourceDictionary Source="/ArcWpf.Controls;component/DatePicker/Themes/DatePickerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Pagination/Themes/PaginationTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

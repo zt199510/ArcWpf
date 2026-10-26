@@ -1,0 +1,70 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style x:Key="ArcWpf.Search.ClearFocus" TargetType="Control"><Setter Property="Template"><Setter.Value><ControlTemplate><Border BorderBrush="{DynamicResource ArcWpf.Brush.Focus}" BorderThickness="1" CornerRadius="12"/></ControlTemplate></Setter.Value></Setter></Style>
+  <Style TargetType="{x:Type arc:Search}">
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}" />
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+    <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+    <Setter Property="AutomationProperties.LiveSetting" Value="Polite" />
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Template"><Setter.Value>
+      <ControlTemplate TargetType="{x:Type arc:Search}">
+        <StackPanel>
+          <TextBlock x:Name="PART_Label" Text="{TemplateBinding Label}" Margin="0,0,0,8" FontSize="14" FontWeight="Medium" LineHeight="20" LineStackingStrategy="BlockLineHeight" Foreground="{TemplateBinding Foreground}" TextWrapping="Wrap" />
+          <Grid>
+            <Border x:Name="Surface" MinHeight="44" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="18" Padding="12,0">
+              <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="18"/><ColumnDefinition Width="8"/><ColumnDefinition/><ColumnDefinition Width="8"/><ColumnDefinition Width="24"/></Grid.ColumnDefinitions>
+                <Path x:Name="SearchIcon" Width="18" Height="18" VerticalAlignment="Center" Stroke="{DynamicResource ArcWpf.Brush.TextMuted}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 15.75,15.75 L 11.5,11.5 M 12.75,7.5 A 5.25,5.25 0 1 1 2.25,7.5 A 5.25,5.25 0 1 1 12.75,7.5" IsHitTestVisible="False"/>
+                <Border x:Name="PART_ClearVisual" Grid.Column="4" Width="24" Height="24" VerticalAlignment="Center" Opacity="0">
+                  <Button x:Name="PART_Clear" Width="24" Height="24" Background="Transparent" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FocusVisualStyle="{StaticResource ArcWpf.Search.ClearFocus}" AutomationProperties.Name="Clear search" Command="{x:Static arc:Search.ClearCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                    <Button.Template><ControlTemplate TargetType="Button"><Border x:Name="ClearSurface" Background="{TemplateBinding Background}" CornerRadius="12"><Path x:Name="ClearIcon" Width="16" Height="16" Data="M 4,4 L 12,12 M 12,4 L 4,12" Stroke="{TemplateBinding Foreground}" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template>
+                  </Button>
+                </Border>
+                <!-- Compensate TextBoxView's native 2-DIP horizontal text inset. -->
+                <ScrollViewer x:Name="PART_ContentHost" Grid.Column="2" Focusable="False" Margin="-2,0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                  <ScrollViewer.Template>
+                    <ControlTemplate TargetType="ScrollViewer">
+                      <!-- TextBox supplies Padding to its host; apply it only here. -->
+                      <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Margin="{TemplateBinding Padding}"
+                                              Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              CanContentScroll="{TemplateBinding CanContentScroll}" />
+                    </ControlTemplate>
+                  </ScrollViewer.Template>
+                </ScrollViewer>
+                <TextBlock x:Name="Watermark" Grid.Column="2" Text="{TemplateBinding Placeholder}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"
+                           Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Visibility="Collapsed" IsHitTestVisible="False" Focusable="False" />
+              </Grid>
+            </Border>
+          </Grid>
+          <TextBlock x:Name="DescriptionText" Text="{TemplateBinding Description}" Margin="0,8,0,0" FontSize="12" LineHeight="18" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextWrapping="Wrap" />
+          <TextBlock x:Name="ErrorText" Text="{TemplateBinding EffectiveErrorMessage}" Margin="0,8,0,0" FontSize="12" LineHeight="18" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.Danger}" TextWrapping="Wrap" />
+        </StackPanel>
+        <ControlTemplate.Triggers>
+          <Trigger Property="Label" Value=""><Setter TargetName="PART_Label" Property="Visibility" Value="Collapsed" /></Trigger>
+          <Trigger Property="Label" Value="{x:Null}"><Setter TargetName="PART_Label" Property="Visibility" Value="Collapsed" /></Trigger>
+          <Trigger Property="Description" Value=""><Setter TargetName="DescriptionText" Property="Visibility" Value="Collapsed" /></Trigger>
+          <Trigger Property="Description" Value="{x:Null}"><Setter TargetName="DescriptionText" Property="Visibility" Value="Collapsed" /></Trigger>
+          <Trigger Property="HasError" Value="False"><Setter TargetName="ErrorText" Property="Visibility" Value="Collapsed" /></Trigger>
+          <Trigger Property="IsPlaceholderVisible" Value="True"><Setter TargetName="Watermark" Property="Visibility" Value="Visible" /></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".5" /></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Setter.Value></Setter>
+    <Style.Triggers>
+      <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsMouseOver" Value="True" /><Condition Property="IsEnabled" Value="True" /></MultiTrigger.Conditions><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Foreground}" /></MultiTrigger>
+      <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Foreground}" /></Trigger>
+      <Trigger Property="HasError" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Danger}" /></Trigger>
+      <Trigger Property="IsEnabled" Value="False"><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}" /></Trigger>
+    </Style.Triggers>
+  </Style>
+</ResourceDictionary>

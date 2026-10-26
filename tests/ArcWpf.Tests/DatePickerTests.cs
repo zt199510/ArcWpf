@@ -30,7 +30,9 @@ public sealed class DatePickerTests
         Assert.IsNotNull(picker.Template.FindName("PART_TextBox", picker));
         Assert.IsNotNull(picker.Template.FindName("PART_Button", picker));
         Assert.IsNotNull(picker.Template.FindName("PART_Popup", picker));
-        Assert.IsNotNull(picker.Template.FindName("PART_Calendar", picker));
+        var host = (System.Windows.Controls.ContentControl)picker.Template.FindName("PART_CalendarHost", picker)!;
+        var calendar = (System.Windows.Controls.Calendar)host.Content;
+        Assert.AreSame(picker.BlackoutDates, calendar.BlackoutDates);
     });
 
     [TestMethod]
@@ -50,12 +52,40 @@ public sealed class DatePickerTests
         picker.ShowToday = true;
         picker.SelectedDate = new DateTime(2026, 6, 15);
         Layout(picker);
-        var today = (System.Windows.Controls.Button)picker.Template.FindName("PART_Today", picker)!;
+        var calendar = (System.Windows.Controls.Calendar)((System.Windows.Controls.ContentControl)picker.Template.FindName("PART_CalendarHost", picker)!).Content;
         var clear = (System.Windows.Controls.Button)picker.Template.FindName("PART_Clear", picker)!;
-        today.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+        ArcWpf.Controls.Calendar.SelectTodayCommand.Execute(null, calendar);
         Assert.AreEqual(DateTime.Today, picker.SelectedDate);
         clear.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
         Assert.IsNull(picker.SelectedDate);
+    });
+
+    [TestMethod]
+    public void DropDownButtonOpensNativePopup() => Sta.Run(() =>
+    {
+        var picker = Create();
+        var window = new Window { Content = picker, Width = 400, Height = 240, ShowActivated = false };
+        window.Show();
+        Layout(picker);
+        var button = (System.Windows.Controls.Button)picker.Template.FindName("PART_Button", picker)!;
+        var popup = (System.Windows.Controls.Primitives.Popup)picker.Template.FindName("PART_Popup", picker)!;
+        button.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+        Sta.Pump();
+        Assert.IsTrue(picker.IsDropDownOpen);
+        Assert.IsTrue(popup.IsOpen);
+        popup.IsOpen = false;
+        Sta.Pump();
+        var textBox = (System.Windows.Controls.Primitives.DatePickerTextBox)picker.Template.FindName("PART_TextBox", picker)!;
+        textBox.Focus();
+        textBox.Text = "12/15/2026";
+        var source = System.Windows.PresentationSource.FromVisual(textBox)!;
+        textBox.RaiseEvent(new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice, source, 0, System.Windows.Input.Key.Enter) { RoutedEvent = System.Windows.Input.Keyboard.KeyDownEvent });
+        Assert.IsNotNull(picker.SelectedDate);
+        picker.SetCurrentValue(ArcDatePicker.IsDropDownOpenProperty, true);
+        Sta.Pump();
+        Assert.IsTrue(popup.IsOpen);
+        picker.SetCurrentValue(ArcDatePicker.IsDropDownOpenProperty, false);
+        window.Close();
     });
 
     private static ArcDatePicker Create()
@@ -64,6 +94,39 @@ public sealed class DatePickerTests
         picker.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/ArcWpf.Controls;component/DatePicker/Themes/DatePickerTheme.xaml", UriKind.Relative) });
         return picker;
     }
+
+    [TestMethod]
+    public void ClearKeepsBindingAndTodayRespectsBlackout() => Sta.Run(() =>
+    {
+        var source = new ArcDatePicker { SelectedDate = DateTime.Today.AddDays(-1) };
+        var picker = Create();
+        picker.SetBinding(ArcDatePicker.SelectedDateProperty, new System.Windows.Data.Binding("SelectedDate") { Source = source, Mode = System.Windows.Data.BindingMode.TwoWay });
+        picker.BlackoutDates.Add(new System.Windows.Controls.CalendarDateRange(DateTime.Today));
+        Layout(picker);
+        var calendar = (System.Windows.Controls.Calendar)((System.Windows.Controls.ContentControl)picker.Template.FindName("PART_CalendarHost", picker)!).Content;
+        Assert.IsFalse(ArcWpf.Controls.Calendar.SelectTodayCommand.CanExecute(null, calendar));
+        ArcWpf.Controls.Calendar.SelectTodayCommand.Execute(null, calendar);
+        Assert.AreEqual(source.SelectedDate, picker.SelectedDate);
+        var clear = (System.Windows.Controls.Button)picker.Template.FindName("PART_Clear", picker)!;
+        clear.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+        Assert.IsNotNull(picker.GetBindingExpression(ArcDatePicker.SelectedDateProperty));
+        Assert.IsNull(source.SelectedDate);
+    });
+
+    [TestMethod]
+    public void CultureParsingAndInvalidInputKeepNativeValidation() => Sta.Run(() =>
+    {
+        var picker = Create();
+        picker.Language = System.Windows.Markup.XmlLanguage.GetLanguage("en-GB");
+        Layout(picker);
+        picker.Text = "31/12/2026";
+        Assert.AreEqual(new DateTime(2026, 12, 31), picker.SelectedDate);
+        var errors = 0;
+        picker.DateValidationError += (_, e) => { errors++; e.ThrowException = false; };
+        picker.Text = "not a date";
+        Assert.AreEqual(1, errors);
+        Assert.AreEqual(new DateTime(2026, 12, 31), picker.SelectedDate);
+    });
 
     private static void Layout(FrameworkElement element)
     {

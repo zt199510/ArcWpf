@@ -1,0 +1,18 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.PaginationPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="Pagination" FontSize="26" FontWeight="Medium" Margin="0,0,0,6"/>
+    <TextBlock Text="最多五个页码，当前页标记与页码窗口联动" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,24"/>
+    <arc:Pagination x:Name="MainPagination" PageCount="12" Page="{Binding CurrentPage, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+    <TextBlock Text="{Binding CurrentPage, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat=当前第 {0} 页 / 共 12 页}" Margin="0,12,0,24"/>
+    <TextBlock Text="扩展验证" FontWeight="Medium" Margin="0,0,0,12"/>
+    <TextBlock Text="窄容器换行（116 DIP）" Margin="0,0,0,8"/>
+    <arc:Pagination Width="116" PageCount="12" Page="6" Label="Narrow pagination" Margin="0,0,0,20"/>
+    <TextBlock Text="仅一页 / 禁用" Margin="0,0,0,8"/>
+    <arc:Pagination PageCount="1" Margin="0,0,0,12"/>
+    <arc:Pagination PageCount="12" Page="6" IsEnabled="False" Margin="0,0,0,20"/>
+    <TextBlock Text="动态页数（0 表示空态）" Margin="0,0,0,8"/>
+    <Slider x:Name="Count" Minimum="0" Maximum="12" Value="12" TickFrequency="1" IsSnapToTickEnabled="True" Width="276" HorizontalAlignment="Left"/>
+    <arc:Pagination PageCount="{Binding Value, ElementName=Count}" Page="8" Margin="0,8,0,16"/>
+    <TextBlock Text="Tab 切换按钮，Enter / 空格翻页。顶部可切换主题及动效级别。多 DPI 和读屏专项待验收。" TextWrapping="Wrap" MaxWidth="540" HorizontalAlignment="Left" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+  </StackPanel>
+</UserControl>

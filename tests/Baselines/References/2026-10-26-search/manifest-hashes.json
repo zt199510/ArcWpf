@@ -1,0 +1,26 @@
+[
+  {
+    "path": "license.html",
+    "sha256": "641409D3208A93C1867F51D3794BCF3639333B76FEFC04955EAF3CD8C59A8BA6"
+  },
+  {
+    "path": "motion.json",
+    "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141"
+  },
+  {
+    "path": "search-field.json",
+    "sha256": "406C01F957792DDDC9333B76C8EF402D60E3D73F989A66D52FC246E0E45128AA"
+  },
+  {
+    "path": "search-field.md",
+    "sha256": "2C5BA83C6DC91383E62B55FEAF2F9081EDE41315002A0904A64AB909E3AF05FB"
+  },
+  {
+    "path": "registry/components/search-field/search-field.module.css",
+    "sha256": "3B74EBB74A675AB8A0202D9234B8865FDD0D26033F056AA6E3DE9BC9BFFACCE2"
+  },
+  {
+    "path": "registry/components/search-field/search-field.tsx",
+    "sha256": "D93A8D0778C83D33793BF3FE7E5B206A5D0C6E50948B83F39777B89899392D93"
+  }
+]
