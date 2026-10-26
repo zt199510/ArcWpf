@@ -40,6 +40,11 @@ public sealed class ArcThemeResources : ResourceDictionary
             ["ControlGlyph"] = dark ? .19 : 1, ["AccentStrong"] = dark ? .91 : .24
         };
         foreach (var pair in neutrals) { PutBrush(pair.Key, Oklch(pair.Value, 0, 0)); }
+        // Slider-specific tokens from the frozen 2026-10-26 foundation; existing controls keep their palette.
+        PutBrush("ControlFill", Oklch(dark ? .62 : .23, 0, 0));
+        var sliderBorder = Colors.Black; sliderBorder.A = (byte)Math.Round(255 * (dark ? .3 : .07)); PutBrush("SliderThumbBorder", sliderBorder);
+        var sliderShadow = new DropShadowEffect { Color = Colors.Black, BlurRadius = 2, ShadowDepth = 1, Direction = 270, Opacity = dark ? .35 : .14 };
+        sliderShadow.Freeze(); this["ArcWpf.Shadow.SliderThumb"] = sliderShadow;
         var overlayColor = Oklch(.1, 0, 0); overlayColor.A = (byte)Math.Round(255 * .46); PutBrush("DialogOverlay", overlayColor);
         var closeColor = Oklch(neutrals["SurfaceMuted"], 0, 0); closeColor.A = 128; PutBrush("DialogClose", closeColor);
         PutBrush("TooltipBorder", Oklch(neutrals["Background"] * .14 + neutrals["Foreground"] * .86, 0, 0));

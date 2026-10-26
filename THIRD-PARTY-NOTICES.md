@@ -125,3 +125,25 @@ MultiSelect 的结构、标签与 +N、几何和逐项动效参考 Arc 免费 Mu
 ## ComboBox 补充（2026-10-26）
 
 ComboBox 的内联编辑、关键词过滤、单选结构、几何与逐项动效参考 Arc 免费 Combobox Registry、Markdown、CSS 与 motion-tokens，适用本文 Arc MIT 声明。冻结批次、URL与SHA-256见 `tests/Baselines/References/2026-10-26-combobox/manifest.json`，许可页同时冻结。WPF Input/TextBox、ListBox、Popup、模板与自动化适配为本项目实现，未引入React/Motion/Lucide运行依赖。
+
+## Slider 补充（2026-10-26）
+
+Slider的结构、几何、滚动数字/数位身份、阻力、速度投射与动效参数参考并改编自Arc免费Slider Registry/CSS/Motion/Foundation，适用上文Arc MIT许可。项目采集批次及哈希见`tests/Baselines/References/2026-10-26-slider/manifest.json`；没有官方版本号。WPF Slider.cs仅作原生API依据，固定dotnet/wpf v10.0.0（MIT，.NET Foundation），未复制其实现。未引入React/Motion运行依赖。
+
+Gallery的Volume图标按冻结页面中Lucide volume-2轮廓改编为WPF Path；该几何版本由page.html的哈希固定，未打包Lucide运行库。Lucide许可全文冻结于同批`lucide-LICENSE`，适用ISC部分：
+
+ISC License
+
+Copyright (c) 2026 Lucide Icons and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.

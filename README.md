@@ -227,3 +227,14 @@ ComboBox 用法（可搜索单选，SelectedValue 默认双向绑定）：
 Options 使用 `IEnumerable<ComboBoxOption>`，例如 `new ComboBoxOption("cet", "Central European", Keywords: ["zurich", "berlin"])`。输入按标签和关键词过滤；查询与选择分离，Enter提交，Escape丢弃查询，清除后重新打开列表。可绑定QueryText；Text是当前编辑/显示文字，不作为选中值绑定。
 
 Gallery → ComboBox，或参数 `--page=combobox`。本轮只运行ComboBox专项，9/9通过；实际交互由用户人工验收，不做computer-use。见[规格](docs/components/ComboBox.md)、[参考卡](docs/references/components/ComboBox.md)、[验证记录](docs/verification/2026-10-26-combobox.md)。
+
+Slider 用法（水平单滑块，Value 默认双向绑定）：
+
+~~~xml
+<arc:Slider Label="Volume" Minimum="0" Maximum="100" Step="1"
+            Value="{Binding Volume}" ValueFormat="0'%'" />
+~~~
+
+支持轨道点击/拖动、方向键/Shift方向/Page/Home/End、步长吸附、拖动回弹、数值气泡与滚动读数。`ValueChanged`实时通知，`ValueCommitted`在正常拖动释放或有效键盘/命令/刻度选择时通知；外部赋值不合成提交事件。可用`Marks`设置刻度，`StartContent`/`EndContent`放装饰或按钮。双滑块、垂直和专用触摸手势不在本次范围。
+
+Gallery → Slider，或参数`--page=slider`。只运行Slider专项，11/11通过；未使用computer-use，实际界面由用户人工测试。见[规格](docs/components/Slider.md)、[参考卡](docs/references/components/Slider.md)及[验证记录](docs/verification/2026-10-26-slider.md)。

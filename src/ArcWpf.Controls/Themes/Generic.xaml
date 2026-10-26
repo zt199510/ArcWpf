@@ -30,5 +30,6 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Pagination/Themes/PaginationTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/MultiSelect/Themes/MultiSelectTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ComboBox/Themes/ComboBoxTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Slider/Themes/SliderTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
