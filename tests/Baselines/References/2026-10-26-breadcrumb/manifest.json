@@ -1,0 +1,24 @@
+{
+  "component": "Breadcrumb",
+  "batch": "2026-10-26-breadcrumb",
+  "collectedAt": "2026-10-26",
+  "sources": [
+    { "url": "https://uiarc.dev/components/breadcrumb", "kind": "page", "file": "page.html" },
+    { "url": "https://uiarc.dev/components/breadcrumb/markdown", "kind": "documentation", "file": "breadcrumb.md" },
+    { "url": "https://uiarc.dev/r/breadcrumb.json", "kind": "registry", "file": "breadcrumb.json" },
+    { "url": "https://uiarc.dev/r/arc-motion-tokens.json", "kind": "motion-dependency", "file": "motion.json" },
+    { "url": "https://uiarc.dev/license", "kind": "license", "file": "license.html" }
+  ],
+  "files": [
+    "breadcrumb.json",
+    "breadcrumb.md",
+    "page.html",
+    "motion.json",
+    "license.html",
+    "lib/arc-provider.tsx",
+    "registry/components/breadcrumb/breadcrumb.tsx",
+    "registry/components/breadcrumb/breadcrumb.module.css"
+  ],
+  "reuse": "behavior-and-visual-reference-only; no React, Motion, lucide, ArcLink, or source code copied into ArcWpf",
+  "licenseNote": "The source page marks Breadcrumb Free. The captured license page states Free components are MIT licensed; verify current license before any direct reuse."
+}

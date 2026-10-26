@@ -320,3 +320,10 @@ Toast收到用户“没问题”，记录当前版本通过。
 - [ ] Pagination 原生控件、Gallery、测试与实际窗口验收尚未开始。
 
 来源结论：受控 1-based 页码、最多五页窗口、边界禁用、Tab/Enter/Space、共享当前页标记、窗口滑动和 Reduced motion 已固定；省略号、首尾快捷按钮、每页大小和异步加载不在首期范围。
+
+## Breadcrumb 开发（2026-10-26）
+
+- [x] 冻结 Arc Breadcrumb 页面、Markdown、Registry、CSS、ArcProvider、共享动效令牌和许可页；见 `tests/Baselines/References/2026-10-26-breadcrumb`。
+- [x] 完成 [Breadcrumb 参考卡](references/components/Breadcrumb.md) 与 [组件规格](components/Breadcrumb.md)。
+- [x] 原生 `Breadcrumb` / `BreadcrumbItem`、命令项、当前项、禁用项、Chevron 分隔符、Gallery 和程序化测试已接入。
+- [ ] 新项进入动效、AutomationPeer、实际窗口视觉、焦点、DPI 和性能验收待补。

@@ -19,6 +19,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Accordion/Themes/AccordionTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableCard/Themes/ExpandableCardTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Breadcrumb/Themes/BreadcrumbTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

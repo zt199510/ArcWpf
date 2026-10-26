@@ -38,6 +38,7 @@
         <arc:TabItem Header="Accordion"><pages:AccordionPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
         <arc:TabItem Header="ExpandableCard"><pages:ExpandableCardPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
         <arc:TabItem Header="Menu"><pages:MenuPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
+        <arc:TabItem Header="Breadcrumb"><pages:BreadcrumbPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
         <arc:TabItem Header="Form"><pages:FormLayoutPage VerticalAlignment="Top" HorizontalAlignment="Stretch" /></arc:TabItem>
       </arc:Tabs>
     </ScrollViewer>

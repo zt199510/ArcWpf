@@ -1,0 +1,34 @@
+[
+  {
+    "path": "breadcrumb.json",
+    "sha256": "4b67b62e4475678c6d78539f20aacdfec106edba9898a313a85d2f6c58c4414c"
+  },
+  {
+    "path": "breadcrumb.md",
+    "sha256": "56bf5cba750f4ed0e08986dcd5ab05dbd7c37b635ffc6939dbeea9fdbbd65d4d"
+  },
+  {
+    "path": "license.html",
+    "sha256": "48c4d61576b53c48830b6bea160770325d9ba4bbc427dc3b72e407f5dfb67705"
+  },
+  {
+    "path": "motion.json",
+    "sha256": "7675ddd97de675c8890ab7809cedca3c67eb6cdbe55de6ee9ceaea3ac1776016"
+  },
+  {
+    "path": "page.html",
+    "sha256": "309831eaa2227bb036c8906948be21b564daea103b71e8fae9b2fe9a7b5284a4"
+  },
+  {
+    "path": "lib/arc-provider.tsx",
+    "sha256": "cfe36067cd21a71e264a977413ff7b19b73bbb9010c036cc5a32f7a7ed919b8d"
+  },
+  {
+    "path": "registry/components/breadcrumb/breadcrumb.module.css",
+    "sha256": "0f5dac534a2c8c17bb270370027d2cd31e02a0ce360b1f79347856e7dc4a0dd1"
+  },
+  {
+    "path": "registry/components/breadcrumb/breadcrumb.tsx",
+    "sha256": "c0db2177cea8c64812d5d4d1c6c9eb588453b77950a744d579d7d19d58dd3251"
+  }
+]
