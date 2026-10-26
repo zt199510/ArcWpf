@@ -28,14 +28,7 @@
   <ResourceDictionary Source="/ArcWpf.Controls;component/Calendar/Themes/CalendarTheme.xaml" />
   <ResourceDictionary Source="/ArcWpf.Controls;component/DatePicker/Themes/DatePickerTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Pagination/Themes/PaginationTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/MultiSelect/Themes/MultiSelectTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ComboBox/Themes/ComboBoxTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
-
-
-
-
-
-
-
-
-

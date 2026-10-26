@@ -387,3 +387,21 @@ NumberInput 首版暂缓拖拽标签、极限回弹、数字滚轮动画和 limi
 - [ ] 实际窗口的 Popup、焦点、中文输入、视觉、DPI、读屏和性能验收。
 
 首期暂缓日期分段滚动、spring 动效、JS 函数型 disabledDates 与响应式 CSS 精确复制；`ShowToday` 和 `Clear` 已映射为 WPF 模板按钮并更新 `SelectedDate`。
+
+## MultiSelect 开发（2026-10-26）
+
+按用户指令开始 MultiSelect 端到端实现；来源 Multi-select 已冻结。搜索和逐标签删除为 WPF 扩展；[规格](components/MultiSelect.md)。状态实现中，未提交/推送。
+
+
+MultiSelect 本次实现已建立：多选绑定、标签与移除、+N、搜索过滤、原生列表/Popup键盘焦点、逐项动效与Gallery。用户反馈标签遮挡后已修正；10项专项通过，实际效果待用户复验。按用户最新要求停止 computer-use，后续窗口由用户人工测试。关联回归存在Select动效测试失败，不宣称全量通过。详见[验证记录](verification/2026-10-26-multiselect.md)。
+
+
+### MultiSelect 用户确认（2026-10-26）
+
+标签遮挡修正后收到用户“测试没问题”，记录当前版本人工测试通过；专项未测及既有Select回归失败保留。下一项建议为ComboBox（可搜索单选下拉），复用Search、Select和Popup经验；尚未开始实现，不因建议自动扩展本次范围。
+
+## ComboBox 开发（2026-10-26）
+
+用户授权开始可搜索单选下拉ComboBox；测试仅限ComboBox专项，不运行其他控件/全量回归，不使用computer-use。来源已冻结，[规格](components/ComboBox.md)。实现中，实际窗口由用户人工验收。
+
+ComboBox本次实现完成：输入/关键词过滤、SelectedValue双向绑定、清除、禁用/只读、验证、原生编辑与UIA、Popup及逐项动效、Gallery主样本和扩展样本。最终ComboBox专项9/9通过；仅编译测试工程的依赖，未执行其他控件测试或全量回归。实际IME、鼠标滚动/条目命中、多DPI和动态观感待用户人工测试，未使用computer-use。见[验证记录](verification/2026-10-26-combobox.md)；不将程序化通过标为完整视觉验收，未提交/推送。

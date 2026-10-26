@@ -1,0 +1,48 @@
+{
+  "batch": "2026-10-26-multi-select",
+  "officialVersion": null,
+  "sources": [
+    "https://uiarc.dev/components/multi-select/markdown",
+    "https://uiarc.dev/components/multi-select",
+    "https://uiarc.dev/r/multi-select.json",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license",
+    "https://uiarc.dev/r/arc-foundation.json"
+  ],
+  "license": "Free components MIT; captured license.html",
+  "reuse": "Behavior/visual reference only; no React/Motion/Lucide implementation shipped",
+  "files": [
+    {
+      "file": "license.html",
+      "sha256": "641409d3208a93c1867f51d3794bcf3639333b76fefc04955eaf3cd8c59a8ba6"
+    },
+    {
+      "file": "motion.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141"
+    },
+    {
+      "file": "multi-select.json",
+      "sha256": "f8adaa6283a63c63646403a680a15cf6077e1407f95ad2f80ac30c4b5bf00841"
+    },
+    {
+      "file": "multi-select.md",
+      "sha256": "fdabc4e3761738d89f1fe49eb0dada657d6f691ea47541758bcaa9668c4a3af9"
+    },
+    {
+      "file": "page.html",
+      "sha256": "813d89b2e9f2372a89c3c7fee534a9c7ed559091b8a82a8b5f88285194e69bdb"
+    },
+    {
+      "file": "registry/components/multi-select/multi-select.module.css",
+      "sha256": "6bf5c9137cc0816d5d2f27836a95cae9add60334d39865d9fceabeeb72c5a451"
+    },
+    {
+      "file": "registry/components/multi-select/multi-select.tsx",
+      "sha256": "08fbcb055525cb74a24895fabb4ee20938764b08b177a5b24dc2e5704fff08ca"
+    },
+    {
+      "file": "foundation.json",
+      "sha256": "562567f96cdb9086839466c87c7add1cacf624e70e36d7bd038d1607d5a84b64"
+    }
+  ]
+}

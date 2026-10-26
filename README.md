@@ -204,3 +204,26 @@ Toasts.Show("Changes saved", "Synced to all devices.");
 ~~~
 
 ToastHost支持多条通知和DismissAll；Toast支持IsOpen绑定、手动Close和Closing事件。首期未加入滑动、动作按钮和类型变体。新增4项测试，全量145项通过；实际窗口待验收。见[Toast规格](docs/components/Toast.md)与[验证记录](docs/verification/2026-10-26-toast.md)。
+
+
+MultiSelect 用法（原生多选列表与 Search；SelectedValues 默认双向绑定）：
+
+~~~xml
+<arc:MultiSelect Label="Labels" Options="{Binding LabelOptions}"
+                 SelectedValues="{Binding SelectedLabels}" MaxVisible="2" />
+~~~
+
+Options 使用 `IEnumerable<MultiSelectOption>`，例如 `new MultiSelectOption("bug", "Bug")`；SelectedLabels 为可通知属性的 `IList<string>`。用户选择回写新的去重集合；外部 ObservableCollection 增删会刷新，普通列表需重新赋值。默认支持搜索与标签删除；`IsSearchEnabled="False" CanRemoveTags="False"` 对照原版。窄宽度会自动将多余标签合并到 +N，MaxVisible 是上限。
+
+Gallery → MultiSelect，或启动时传 `--page=multi-select`。见[规格](docs/components/MultiSelect.md)、[参考卡](docs/references/components/MultiSelect.md)、[验证记录](docs/verification/2026-10-26-multiselect.md)。实际交互由用户人工验收，未提交或推送。
+
+ComboBox 用法（可搜索单选，SelectedValue 默认双向绑定）：
+
+~~~xml
+<arc:ComboBox Label="Time zone" Options="{Binding TimeZones}"
+              SelectedValue="{Binding SelectedZone}" />
+~~~
+
+Options 使用 `IEnumerable<ComboBoxOption>`，例如 `new ComboBoxOption("cet", "Central European", Keywords: ["zurich", "berlin"])`。输入按标签和关键词过滤；查询与选择分离，Enter提交，Escape丢弃查询，清除后重新打开列表。可绑定QueryText；Text是当前编辑/显示文字，不作为选中值绑定。
+
+Gallery → ComboBox，或参数 `--page=combobox`。本轮只运行ComboBox专项，9/9通过；实际交互由用户人工验收，不做computer-use。见[规格](docs/components/ComboBox.md)、[参考卡](docs/references/components/ComboBox.md)、[验证记录](docs/verification/2026-10-26-combobox.md)。

@@ -11,7 +11,7 @@ namespace ArcWpf.Controls;
 
 [TemplatePart(Name="PART_Popup",Type=typeof(Popup))]
 [TemplatePart(Name="PART_Trigger",Type=typeof(FrameworkElement))]
-public partial class Select:ComboBox
+public partial class Select:System.Windows.Controls.ComboBox
 {
     public static readonly DependencyProperty LabelProperty=DependencyProperty.Register(nameof(Label),typeof(string),typeof(Select),new FrameworkPropertyMetadata(string.Empty));
     public static readonly DependencyProperty DescriptionProperty=DependencyProperty.Register(nameof(Description),typeof(string),typeof(Select),new FrameworkPropertyMetadata(string.Empty));

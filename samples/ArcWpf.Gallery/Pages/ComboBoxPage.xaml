@@ -1,0 +1,17 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ComboBoxPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="32" MaxWidth="720" HorizontalAlignment="Stretch">
+    <TextBlock Text="ComboBox" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,12"/>
+    <TextBlock Text="文档主例 · Time zone；输入 zurich / berlin / san francisco 可按别名搜索。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,0,0,24"/>
+    <arc:ComboBox x:Name="Reference" Width="400" HorizontalAlignment="Left" Label="Time zone"/>
+    <Separator Margin="0,28"/>
+    <TextBlock Text="绑定与中文搜索" FontSize="18" Margin="0,0,0,16"/>
+    <arc:ComboBox x:Name="Picker" Label="选择时区" Description="输入过滤；方向键切换；Enter 选择；Escape 丢弃查询。" Placeholder="搜索或选择…" EmptyMessage="没有匹配的时区" SelectedValue="{Binding Zone,Mode=TwoWay}"/>
+    <TextBlock Text="{Binding Summary}" Margin="0,12,0,8"/>
+    <StackPanel Orientation="Horizontal"><arc:Button Content="外部选择 Pacific" Click="SelectPacific" Margin="0,0,8,0"/><arc:Button Content="清空选中值" Click="ClearZone"/></StackPanel>
+    <TextBlock Text="窄宽度 / 长标签" FontSize="18" Margin="0,24,0,12"/>
+    <arc:ComboBox x:Name="Narrow" Width="180" HorizontalAlignment="Left" Label="180 DIP"/>
+    <arc:ComboBox x:Name="ReadOnlyPicker" Label="只读" IsReadOnly="True" Margin="0,24,0,0"/>
+    <arc:ComboBox x:Name="DisabledPicker" Label="禁用" IsEnabled="False" Margin="0,24,0,0"/>
+    <arc:ComboBox x:Name="InvalidPicker" Label="验证错误" ErrorMessage="请选择一个有效时区" Margin="0,24,0,0"/>
+  </StackPanel>
+</UserControl>

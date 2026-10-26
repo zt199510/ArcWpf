@@ -1,0 +1,47 @@
+{
+  "batch": "2026-10-26-combobox",
+  "officialVersion": null,
+  "sources": [
+    "https://uiarc.dev/components/combobox",
+    "https://uiarc.dev/components/combobox/markdown",
+    "https://uiarc.dev/r/combobox.json",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/r/arc-foundation.json",
+    "https://uiarc.dev/license"
+  ],
+  "license": "Free component; captured license confirms MIT; behavior/visual reference only",
+  "files": [
+    {
+      "file": "combobox.json",
+      "sha256": "a0632ef5ca8cd3a3a528319c2a02ee881bc3b95e896af76e72d78e7a7da81569"
+    },
+    {
+      "file": "combobox.md",
+      "sha256": "f33193262490321c1f43aa127135c6237fab225b9fae694582850f02149bd9bc"
+    },
+    {
+      "file": "foundation.json",
+      "sha256": "562567f96cdb9086839466c87c7add1cacf624e70e36d7bd038d1607d5a84b64"
+    },
+    {
+      "file": "license.html",
+      "sha256": "ba8660a313fd8c48503feada7bd233d447104ef9c22dd43678cf026621ace24a"
+    },
+    {
+      "file": "motion.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141"
+    },
+    {
+      "file": "page.html",
+      "sha256": "54ed9722f8b2c8d2256105a056b18166495f4974b52357bea7da8b2ac5e0570e"
+    },
+    {
+      "file": "registry/components/combobox/combobox.module.css",
+      "sha256": "d6515c41a6d61e713100ae5f2723d50a6afa2622629d685728dcf13d85a8f896"
+    },
+    {
+      "file": "registry/components/combobox/combobox.tsx",
+      "sha256": "12ae9a73956f4d4854259396fd377aa63321db18198e8816db5b1791ff9a56b7"
+    }
+  ]
+}

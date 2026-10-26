@@ -24,7 +24,7 @@ public partial class MainWindow : Window
         {
             Group("basic", "基础", ("button", "Button", new ButtonPage()), ("switch", "Switch", new SwitchPage()), ("input", "Input", new InputPage()), ("textarea", "Textarea", new TextareaPage()), ("search", "Search", new SearchPage()), ("calendar", "Calendar", new CalendarPage()), ("date-picker", "DatePicker", new DatePickerPage())),
             Group("feedback", "反馈", ("alert", "Alert", new AlertPage()), ("popover", "Popover", new PopoverPage()), ("dialog", "Dialog", new DialogPage()), ("tooltip", "Tooltip", new TooltipPage()), ("toast", "Toast", new ToastPage()), ("toast-stack", "ToastStack", new ToastStackPage())),
-            Group("navigation", "选择与导航", ("checkbox", "CheckBox", new CheckBoxPage()), ("radio", "RadioButton", new RadioButtonPage()), ("select", "Select", new SelectPage()), ("tabs", "Tabs", new TabsPage()), ("drawer", "Drawer", new DrawerPage()), ("breadcrumb", "Breadcrumb", new BreadcrumbPage()), ("pagination", "Pagination", new PaginationPage()), ("tree-view", "TreeView", new TreeViewPage())),
+            Group("navigation", "选择与导航", ("checkbox", "CheckBox", new CheckBoxPage()), ("radio", "RadioButton", new RadioButtonPage()), ("select", "Select", new SelectPage()), ("multi-select", "MultiSelect", new MultiSelectPage()), ("combobox", "ComboBox", new ComboBoxPage()), ("tabs", "Tabs", new TabsPage()), ("drawer", "Drawer", new DrawerPage()), ("breadcrumb", "Breadcrumb", new BreadcrumbPage()), ("pagination", "Pagination", new PaginationPage()), ("tree-view", "TreeView", new TreeViewPage())),
             Group("layout", "布局", ("accordion", "Accordion", new AccordionPage()), ("expandable-card", "ExpandableCard", new ExpandableCardPage()), ("menu", "Menu", new MenuPage()), ("form", "Form", new FormLayoutPage()), ("list", "List", new ListPage()), ("progress", "Progress", new ProgressPage()), ("number-input", "NumberInput", new NumberInputPage()))
         };
 
@@ -42,7 +42,8 @@ public partial class MainWindow : Window
 
         NavigationTree.Nodes = roots;
         NavigationTree.DefaultExpandedIds = new ObservableCollection<string>(roots.Select(x => x.Id));
-        PageHost.Content = _pages["button"];
+        var requestedPage = Environment.GetCommandLineArgs().FirstOrDefault(arg => arg.StartsWith("--page=", StringComparison.Ordinal))?[7..];
+        PageHost.Content = requestedPage is not null && _pages.TryGetValue(requestedPage, out var requested) ? requested : _pages["button"];
     }
 
     private void NavigationSelected(object? sender, TreeNodeEventArgs e)
@@ -64,10 +65,9 @@ public partial class MainWindow : Window
 
     private void ChangeMotion(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ComboBox picker && picker.SelectedIndex >= 0) ArcMotion.SetLevel(this, (ArcMotionLevel)picker.SelectedIndex);
+        if (sender is System.Windows.Controls.ComboBox picker && picker.SelectedIndex >= 0) ArcMotion.SetLevel(this, (ArcMotionLevel)picker.SelectedIndex);
     }
 
     private static NavigationGroup Group(string id, string label, params (string Id, string Label, FrameworkElement Page)[] items) => new(id, label, items);
     private sealed record NavigationGroup(string Id, string Label, IReadOnlyList<(string Id, string Label, FrameworkElement Page)> Items);
 }
-

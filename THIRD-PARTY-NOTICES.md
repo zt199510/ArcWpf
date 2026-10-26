@@ -116,3 +116,12 @@ Menu 的短命令列表、Popup 锚定、条目状态和键盘交互参考 Arc �
 ## Pagination 补充（2026-10-26）
 
 Pagination行为、几何和动效参考Arc免费Registry、Markdown、CSS和motion-tokens，适用本文Arc MIT声明。冻结批次为tests/Baselines/References/2026-10-26-pagination；补充CSS来源及哈希见docs/references/components/Pagination.md。原生WPF按钮、布局Panel、事件、自动化与动画适配为本项目实现；未引入React/Motion/Lucide运行依赖，箭头为自绘矢量。
+
+
+## MultiSelect 补充（2026-10-26）
+
+MultiSelect 的结构、标签与 +N、几何和逐项动效参考 Arc 免费 Multi-select Registry、Markdown、CSS 与 motion-tokens，适用本文 Arc MIT 声明。冻结文件、URL 和 SHA-256 见 `tests/Baselines/References/2026-10-26-multi-select/manifest.json`；许可页同时冻结。WPF Control、ListBox、Search、Popup 与模板为本项目实现；未引入 React/Motion/Lucide 运行依赖。搜索、逐标签删除、有限滚动及窄宽度自适应折叠是本次扩展。
+
+## ComboBox 补充（2026-10-26）
+
+ComboBox 的内联编辑、关键词过滤、单选结构、几何与逐项动效参考 Arc 免费 Combobox Registry、Markdown、CSS 与 motion-tokens，适用本文 Arc MIT 声明。冻结批次、URL与SHA-256见 `tests/Baselines/References/2026-10-26-combobox/manifest.json`，许可页同时冻结。WPF Input/TextBox、ListBox、Popup、模板与自动化适配为本项目实现，未引入React/Motion/Lucide运行依赖。

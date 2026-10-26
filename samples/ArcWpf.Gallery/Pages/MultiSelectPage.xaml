@@ -1,0 +1,17 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.MultiSelectPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel Margin="32" MaxWidth="720" HorizontalAlignment="Stretch">
+    <TextBlock Text="MultiSelect" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,12"/>
+    <TextBlock Text="文档主例 · Labels；原版最多显示两项与 +N。" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,0,0,24"/>
+    <arc:MultiSelect x:Name="Reference" Width="400" HorizontalAlignment="Left" Label="Labels" IsSearchEnabled="False" CanRemoveTags="False"/>
+    <Separator Margin="0,28"/>
+    <TextBlock Text="WPF 扩展 · 搜索、标签删除和双向绑定" FontSize="18" Margin="0,0,0,16"/>
+    <arc:MultiSelect x:Name="Picker" Label="项目标签" Description="输入过滤；方向键导航；Enter/Space 多选；Escape 关闭。" SearchPlaceholder="搜索标签" Placeholder="选择标签" EmptyText="没有匹配项" SelectedValues="{Binding Values,Mode=TwoWay}"/>
+    <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,12,0,8"/>
+    <StackPanel Orientation="Horizontal"><arc:Button Content="外部替换" Click="ReplaceValues" Margin="0,0,8,0"/><arc:Button Content="清空" Click="ClearValues"/></StackPanel>
+    <TextBlock Text="窄宽度 / 长标签" Margin="0,24,0,12" FontSize="18"/>
+    <arc:MultiSelect x:Name="Narrow" Width="180" HorizontalAlignment="Left" Label="180 DIP"/>
+    <arc:MultiSelect x:Name="ReadOnlyPicker" Margin="0,24,0,0" Label="只读" IsReadOnly="True"/>
+    <arc:MultiSelect x:Name="DisabledPicker" Margin="0,24,0,0" Label="禁用" IsEnabled="False"/>
+    <arc:MultiSelect x:Name="InvalidPicker" Margin="0,24,0,0" Label="验证错误"/>
+  </StackPanel>
+</UserControl>
