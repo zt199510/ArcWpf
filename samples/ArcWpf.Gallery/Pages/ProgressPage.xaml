@@ -1,0 +1,16 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ProgressPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel MaxWidth="640" HorizontalAlignment="Left">
+    <TextBlock Text="Progress" FontSize="26" FontWeight="Medium" /><TextBlock Text="展示已知任务的完成进度" Margin="0,6,0,22" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+    <Border Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="16" Padding="20" Margin="0,0,0,24">
+      <StackPanel>
+        <TextBlock Text="Animated upload" FontSize="16" FontWeight="Medium" />
+        <TextBlock Text="点击开始，观察进度条和百分比同步过渡" Margin="0,5,0,16" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" />
+        <arc:Progress x:Name="AnimatedProgress" Label="Uploading report.pdf" ShowValue="True" Margin="0,0,0,16" />
+        <StackPanel Orientation="Horizontal"><arc:Button x:Name="StartButton" Content="开始上传" Click="StartUpload" /><TextBlock x:Name="AnimatedStatus" Margin="14,7,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" /></StackPanel>
+      </StackPanel>
+    </Border>
+    <arc:Progress Label="Uploading report.pdf" Value="68" ShowValue="True" Margin="0,0,0,24" />
+    <arc:Progress Label="Completed" Value="100" ShowValue="True" Margin="0,0,0,24" />
+    <arc:Progress Label="Preparing" Value="0" ShowValue="True" />
+  </StackPanel>
+</UserControl>

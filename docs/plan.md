@@ -327,3 +327,47 @@ Toast收到用户“没问题”，记录当前版本通过。
 - [x] 完成 [Breadcrumb 参考卡](references/components/Breadcrumb.md) 与 [组件规格](components/Breadcrumb.md)。
 - [x] 原生 `Breadcrumb` / `BreadcrumbItem`、命令项、当前项、禁用项、Chevron 分隔符、Gallery 和程序化测试已接入。
 - [ ] 新项进入动效、AutomationPeer、实际窗口视觉、焦点、DPI 和性能验收待补。
+
+## TreeView 来源与规格（2026-10-26）
+
+- [x] 冻结 Arc Tree view 页面、Markdown、Registry、CSS、共享动效令牌和许可页；见 `tests/Baselines/References/2026-10-26-tree-view`。
+- [x] 完成 [TreeView 参考卡](references/components/TreeView.md) 与 [组件规格](components/TreeView.md)。
+- [ ] TreeView 原生控件、Gallery、测试与实际窗口验收尚未开始。
+
+来源结论：节点树、受控/非受控展开、可见行键盘导航、单选、18 DIP 层级缩进、36px 行高、标签省略号和 Reduced motion 已固定；多选、懒加载、虚拟化、拖拽和搜索不在首期范围。
+
+## List 开发（2026-10-26）
+
+- [x] 确认 Arc 公开目录没有独立 List 条目，按 WPF 原生 ListBox 组合建立 ArcWpf List。
+- [x] 实现 List/ListItem、单选、滚动、标题/说明/图标、禁用项和键盘行为。
+- [x] Gallery 与 3 项程序化测试已接入。
+- [ ] 实际窗口视觉、焦点、滚动条和 DPI 验收。
+
+List 首版属于 ArcWpf 的 WPF 原生补充控件，不将其描述为 Arc 源码移植。后续可根据使用反馈增加分组、多选、拖拽或虚拟化。
+
+## Progress 开发（2026-10-26）
+
+- [x] 冻结 Arc Progress Markdown、Registry 入口和许可说明。
+- [x] 实现确定值、Max 夹取、标签、百分比、完成态、禁用态和 Full/Reduced/Off 视觉更新。
+- [x] 接入 Gallery 与 3 项 Progress 专项测试。
+- [ ] 实际窗口视觉、辅助技术和 DPI 验收。
+
+Progress 首版只覆盖已知比例的线性任务进度；不确定进度、圆环、分段和取消操作暂缓。
+
+## NumberInput 开发（2026-10-26）
+
+- [x] 冻结 Arc Number field 规格、Registry 入口和许可说明。
+- [x] 实现有界值、步进按钮、键盘调整、Enter/Escape、前后缀和说明文本。
+- [x] 接入 Gallery 与 3 项 NumberInput 专项测试。
+- [ ] 实际窗口输入、焦点、中文环境、主题和 DPI 验收。
+
+NumberInput 首版暂缓拖拽标签、极限回弹、数字滚轮动画和 limitHint 文案。
+
+## DatePicker 开发（2026-10-26）
+
+- [x] 冻结 Arc Date picker 页面、Markdown、Registry JSON 与许可/快照哈希；见 [参考卡](references/components/DatePicker.md)。
+- [x] 完成 [DatePicker 规格](components/DatePicker.md)，明确 WPF 原生日期、文化格式、绑定、验证、键盘和 BlackoutDates 契约。
+- [x] 实现 Arc 风格原生 `DatePicker`、标签/说明/占位符、Today/Clear、Popup/Calendar 主题模板，接入 Gallery 与专项测试。
+- [ ] 实际窗口的 Popup、焦点、中文输入、视觉、DPI、读屏和性能验收。
+
+首期暂缓日期分段滚动、spring 动效、JS 函数型 disabledDates 与响应式 CSS 精确复制；`ShowToday` 和 `Clear` 已映射为 WPF 模板按钮并更新 `SelectedDate`。

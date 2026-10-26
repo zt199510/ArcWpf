@@ -1,0 +1,23 @@
+{
+  "component": "TreeView",
+  "batch": "2026-10-26-tree-view",
+  "collectedAt": "2026-10-26",
+  "sources": [
+    { "url": "https://uiarc.dev/components/tree-view", "kind": "page", "file": "page.html" },
+    { "url": "https://uiarc.dev/components/tree-view/markdown", "kind": "documentation", "file": "tree-view.md" },
+    { "url": "https://uiarc.dev/r/tree-view.json", "kind": "registry", "file": "tree-view.json" },
+    { "url": "https://uiarc.dev/r/arc-motion-tokens.json", "kind": "motion-dependency", "file": "motion.json" },
+    { "url": "https://uiarc.dev/license", "kind": "license", "file": "license.html" }
+  ],
+  "files": [
+    "tree-view.json",
+    "tree-view.md",
+    "page.html",
+    "motion.json",
+    "license.html",
+    "registry/components/tree-view/tree-view.tsx",
+    "registry/components/tree-view/tree-view.module.css"
+  ],
+  "reuse": "behavior-and-visual-reference-only; no React, Motion, lucide, or source code copied into ArcWpf",
+  "licenseNote": "The source page marks Tree view Free. The captured license page states Free components are MIT licensed; verify current license before any direct reuse."
+}

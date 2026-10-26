@@ -1,0 +1,11 @@
+{
+  "component": "Progress",
+  "collectedAt": "2026-10-26",
+  "sources": [
+    "https://uiarc.dev/components/progress/markdown",
+    "https://uiarc.dev/r/progress.json",
+    "https://uiarc.dev/license"
+  ],
+  "reuse": "Behavior and visual reference only; no upstream source copied.",
+  "license": "Arc marks Progress Free; Arc license page states Free components are MIT."
+}

@@ -20,8 +20,14 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableCard/Themes/ExpandableCardTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Breadcrumb/Themes/BreadcrumbTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TreeView/Themes/TreeViewTheme.xaml" />
+  <ResourceDictionary Source="/ArcWpf.Controls;component/List/Themes/ListTheme.xaml" />
+  <ResourceDictionary Source="/ArcWpf.Controls;component/Progress/Themes/ProgressTheme.xaml" />
+  <ResourceDictionary Source="/ArcWpf.Controls;component/NumberInput/Themes/NumberInputTheme.xaml" />
+  <ResourceDictionary Source="/ArcWpf.Controls;component/DatePicker/Themes/DatePickerTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
+
 
 
 

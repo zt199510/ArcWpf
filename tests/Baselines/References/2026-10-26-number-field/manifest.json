@@ -1,0 +1,7 @@
+{
+  "component": "NumberInput",
+  "sourceComponent": "Number field",
+  "collectedAt": "2026-10-26",
+  "sources": ["https://uiarc.dev/components/number-field/markdown", "https://uiarc.dev/r/number-field.json", "https://uiarc.dev/license"],
+  "reuse": "Behavior and visual reference only; no upstream source copied."
+}
