@@ -42,4 +42,4 @@
 
 完整组件开发与视觉缺陷修复按 [复刻与交付规则](docs/replication-workflow.md) 执行。组件事实集中在docs/references/components/，范围与完整度在对应组件规格；使用 [参考卡模板](docs/templates/reference-baseline.md)、[组件规格模板](docs/templates/component-spec.md) 和 [任务提示模板](docs/templates/component-task-prompt.md)。
 
-先定位外形/内部布局/状态动效/Gallery层级，再修改；不要以构建测试替代视觉结论。Button、Switch已有对应版本的用户通过反馈，Input最新起点修复尚待用户确认。状态以验证记录为准。
+先定位外形/内部布局/状态动效/Gallery层级，再修改；不要以构建测试替代视觉结论。Button、Switch、Input已有对应版本的用户通过反馈；2026-10-27用户确认Input最新起点修复及Select动效回归可标为通过。状态以验证记录为准。

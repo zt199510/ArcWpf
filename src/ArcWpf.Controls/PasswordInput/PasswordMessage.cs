@@ -14,8 +14,9 @@ internal sealed class PasswordMessage : Grid
     private readonly OwnedMotion _motion = new();
     private string _text = "";
     private bool _initial = true;
+    private readonly double _wordExitSeconds;
     internal bool IsMotionRunning => _motion.IsRunning;
-    internal PasswordMessage() { ClipToBounds = true; Height = 0; VerticalAlignment = VerticalAlignment.Top; Children.Add(_live); Children.Add(_exits); Unloaded += (_, _) => Stop(); }
+    internal PasswordMessage(double wordExitSeconds = .18) { _wordExitSeconds = wordExitSeconds; ClipToBounds = true; Height = 0; VerticalAlignment = VerticalAlignment.Top; Children.Add(_live); Children.Add(_exits); Unloaded += (_, _) => Stop(); }
     internal void SetText(string text, bool animate)
     {
         var level = ArcMotion.GetLevel(this); bool full = level == ArcMotionLevel.Full;
@@ -33,9 +34,9 @@ internal sealed class PasswordMessage : Grid
                 _exits.Children.Add(word.Box); Canvas.SetLeft(word.Box, point.X); Canvas.SetTop(word.Box, point.Y);
             }
             if (!animate || !full) { _exits.Children.Remove(word.Box); _words.Remove(pair.Key); continue; }
-            _motion.Double(word.Move, TranslateTransform.YProperty, -TextBlock.GetFontSize(this) * .35, .18, true);
-            _motion.Double(word.Blur, BlurEffect.RadiusProperty, 2, .18, true);
-            _motion.Double(word.Box, OpacityProperty, 0, .18, true, completed: () => { if (!_live.Children.Contains(word.Box)) { _exits.Children.Remove(word.Box); _words.Remove(pair.Key); } });
+            _motion.Double(word.Move, TranslateTransform.YProperty, -TextBlock.GetFontSize(this) * .35, _wordExitSeconds, true);
+            _motion.Double(word.Blur, BlurEffect.RadiusProperty, 2, _wordExitSeconds, true);
+            _motion.Double(word.Box, OpacityProperty, 0, _wordExitSeconds, true, completed: () => { if (!_live.Children.Contains(word.Box)) { _exits.Children.Remove(word.Box); _words.Remove(pair.Key); } });
         }
         _live.Children.Clear();
         for (int i = 0; i < parts.Length; i++)

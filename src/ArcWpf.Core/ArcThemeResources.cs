@@ -53,6 +53,11 @@ public sealed class ArcThemeResources : ResourceDictionary
         double dangerL = dark ? .76 : .54;
         double dangerC = dark ? .2 : .21;
         PutBrush("Danger", Oklch(dangerL, dangerC, 25));
+        // OTP input: frozen 2026-10-27 foundation accent and srgb danger/surface mix.
+        var otpAccent = Oklch(dark ? .8 : .33, 0, 0); PutBrush("Accent", otpAccent);
+        otpAccent.A = (byte)Math.Round(255 * (dark ? .13 : .1)); PutBrush("AccentSubtle", otpAccent);
+        var otpDanger = Oklch(dangerL, dangerC, 25); var otpSurface = Oklch(neutrals["Surface"], 0, 0);
+        PutBrush("OTPErrorSurface", Color.FromRgb((byte)Math.Round(otpDanger.R*.07+otpSurface.R*.93), (byte)Math.Round(otpDanger.G*.07+otpSurface.G*.93), (byte)Math.Round(otpDanger.B*.07+otpSurface.B*.93)));
         PutBrush("AlertSuccess", Oklch(dark ? .72 : .42, dark ? .14 : .16, 145));
         PutBrush("AlertWarning", Oklch(dark ? .82 : .54, dark ? .16 : .18, 82));
         // color-mix(in oklab, danger 55%, surface-muted), with a neutral second color.

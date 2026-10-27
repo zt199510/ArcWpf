@@ -1,0 +1,18 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.OTPInputPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="32" TextElement.Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+    <TextBlock Text="OTPInput" FontSize="32" FontWeight="Bold"/>
+    <TextBlock Text="验证码输入 · 数字输入与连续粘贴" Margin="0,8,0,28" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <arc:OTPInput x:Name="Reference" Label="Verification code" Description="We sent a 6-digit code to your email." Width="400" HorizontalAlignment="Left"/>
+    <Separator Margin="0,28"/>
+    <TextBlock Text="输入、绑定与完成通知" FontSize="20" Margin="0,0,0,20"/>
+    <arc:OTPInput x:Name="Editable" Label="邮箱验证码" Description="输入六位数字，或直接粘贴验证码。" Value="{Binding Code, Mode=TwoWay}" Completed="CodeCompleted"/>
+    <TextBlock Text="{Binding Code, StringFormat=当前值：{0}}" Margin="0,10,0,4"/>
+    <TextBlock x:Name="Status" Text="等待输入" Margin="0,0,0,12"/>
+    <WrapPanel Margin="0,0,0,20"><arc:Button Content="填入演示值" Click="Fill" Margin="0,0,8,8"/><arc:Button Content="清空" Click="Clear" Margin="0,0,8,8"/><arc:Button Content="切换错误" Click="ToggleError" Margin="0,0,8,8"/><arc:Button Content="切换说明" Click="ToggleDescription" Margin="0,0,8,8"/></WrapPanel>
+    <arc:OTPInput Label="四位 PIN" Length="4" Margin="0,0,0,24"/>
+    <arc:OTPInput Label="180 DIP 窄宽" Width="180" HorizontalAlignment="Left" Description="格子缩小，保持整行可见。" Margin="0,0,0,24"/>
+    <arc:OTPInput Label="禁用" Value="123456" IsEnabled="False" Margin="0,0,0,24"/>
+    <arc:OTPInput Label="只读" Value="246810" IsReadOnly="True" Margin="0,0,0,24"/>
+    <arc:OTPInput Label="错误" Value="123456" ErrorMessage="验证码不正确，请重试。"/>
+  </StackPanel></ScrollViewer>
+</UserControl>

@@ -13,6 +13,7 @@ Windows NT 10.0.26200，SDK 10.0.402，net10.0-windows。布局与离屏图记�
 - `dotnet build ArcWpf.slnx --no-restore -v minimal`：成功，0错误；已有12项其他组件/测试警告。
 - `dotnet test tests/ArcWpf.Tests/ArcWpf.Tests.csproj --no-restore --filter FullyQualifiedName~MultiSelectTests --logger "trx;LogFileName=multiselect-final.trx" --results-directory artifacts/multi-select`：10/10通过。
 - 关联选择过滤器包括 MultiSelectTests、SearchTests、SelectTests、PopoverTests、SampleWindowsLoadXaml；当时共42项，41通过，1失败。失败为既有 `SelectTests.RetargetedMenuMotionDoesNotRunStaleCloseCompletion`，组跑实测closed为1而期望0；独立复跑为motion.IsRunning未清理。相关代码未修改，未归因或宣称已解决。见 related-final.trx、select-recheck.trx。
+  后续状态（2026-10-27）：SelectTests/MultiSelectTests过滤器22/22通过，包含该动效回归；用户明确确认可调整为成功，当前问题已关闭。上述失败保留为历史证据，详见[Select最新记录](2026-10-26-select.md#动效回归关闭与用户确认2026-10-27)。
 - 没有重跑全量基线；上一轮Dialog两项持续失败、Calendar时序偶发失败仍以Pagination记录为准。
 
 ## 程序化证据

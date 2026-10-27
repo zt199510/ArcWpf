@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="{x:Type arc:OTPDigit}">
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    <Setter Property="Foreground" Value="Transparent"/><Setter Property="CaretBrush" Value="{DynamicResource ArcWpf.Brush.Accent}"/>
+    <Setter Property="SelectionOpacity" Value="0"/><Setter Property="SelectionTextBrush" Value="Transparent"/><Setter Property="FontSize" Value="18"/><Setter Property="TextAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:OTPDigit}">
+      <Grid><Border x:Name="PART_Surface" CornerRadius="18" BorderThickness="1"/>
+        <ScrollViewer x:Name="PART_ContentHost" Margin="1" VerticalAlignment="Center" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled"/>
+        <Grid x:Name="PART_Glyphs" IsHitTestVisible="False" ClipToBounds="True"/>
+      </Grid>
+    </ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/></Trigger>
+      <Trigger Property="HasDigit" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Accent}"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.AccentSubtle}"/></Trigger>
+      <Trigger Property="HasError" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.OTPErrorSurface}"/></Trigger>
+      <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".48"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/></Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style TargetType="{x:Type arc:OTPInput}">
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/><Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/>
+    <Setter Property="AutomationProperties.LiveSetting" Value="Assertive"/><Setter Property="IsTabStop" Value="False"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:OTPInput}">
+      <StackPanel>
+        <TextBlock x:Name="LabelText" Text="{TemplateBinding Label}" FontWeight="Medium" Margin="0,0,0,8" TextWrapping="Wrap"/>
+        <Grid x:Name="PART_InputHost" Height="48" HorizontalAlignment="Left">
+          <Grid x:Name="PART_Row" HorizontalAlignment="Left"/>
+          <Border x:Name="PART_Ring" Height="48" HorizontalAlignment="Left" BorderThickness="1" CornerRadius="18" IsHitTestVisible="False"/>
+        </Grid>
+        <Grid x:Name="PART_DescriptionHost" TextBlock.FontSize="12" TextBlock.Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+        <Grid x:Name="PART_ErrorHost" TextBlock.FontSize="12" TextBlock.Foreground="{DynamicResource ArcWpf.Brush.Danger}" AutomationProperties.LiveSetting="Assertive"/>
+      </StackPanel>
+      <ControlTemplate.Triggers><Trigger Property="Label" Value=""><Setter TargetName="LabelText" Property="Visibility" Value="Collapsed"/></Trigger></ControlTemplate.Triggers>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>
+

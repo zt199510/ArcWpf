@@ -1,0 +1,43 @@
+{
+  "files": [
+    {
+      "file": "foundation.json",
+      "sha256": "562567F96CDB9086839466C87C7ADD1CACF624E70E36D7BD038D1607D5A84B64"
+    },
+    {
+      "file": "license.html",
+      "sha256": "BA8660A313FD8C48503FEADA7BD233D447104EF9C22DD43678CF026621ACE24A"
+    },
+    {
+      "file": "motion.json",
+      "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141"
+    },
+    {
+      "file": "otp-input.json",
+      "sha256": "607095B85BC09B4DDD8A8D171F5BD12B2ACC2BFAB34F6173B88D93E2D65F05B1"
+    },
+    {
+      "file": "otp-input.md",
+      "sha256": "2063F2469A3454B0FAFD028D400F0C8C0DFB0A975D8253DCB8168576E0D1C9E3"
+    },
+    {
+      "file": "otp-input.module.css",
+      "sha256": "CEF6B088BD0D26C9A5AC650F1041C778A764AA73B7BDBF799A8CD00CB9577AF4"
+    },
+    {
+      "file": "otp-input.tsx",
+      "sha256": "EF5E50F8512FF190EE55FCBE66386E35E3733E6CB3206F7BE974FBF99E2F3D3D"
+    }
+  ],
+  "sources": [
+    "https://uiarc.dev/r/otp-input.json",
+    "https://uiarc.dev/components/blocks/otp-input/markdown",
+    "https://uiarc.dev/license",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/r/arc-foundation.json"
+  ],
+  "capturedAt": "2026-10-27T09:52:26.4827855+08:00",
+  "officialVersion": null,
+  "batch": "2026-10-27-otp-input",
+  "license": "Arc free MIT"
+}

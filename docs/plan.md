@@ -1,5 +1,7 @@
 # ArcWpf 实施计划
 
+2026-10-27：用户反馈“应该没问题了可以调整成功 input 也是”，确认当前Select动效回归及Input最新起点修复通过，关闭这两项待确认事项。Select相关过滤器本次22/22通过；未重跑Input或全量测试，专项未测边界保留。见[Select记录](verification/2026-10-26-select.md)、[Input记录](verification/2026-10-25-input.md)。下文此前失败与待确认描述为历史状态，以本条及验证记录最新章节为准。
+
 2026-10-26：Pagination收到用户“没问题上传代码”，记录当前版本用户确认；专项未测与全量回归失败仍保留，见验证记录。
 
 2026-10-26：用户反馈 Search“现在控件没问题了”，记录当前动效/占位修复版本用户确认；不扩展为IME、DPI或读屏专项通过。按用户指令开始 Pagination，实现范围见[规格](components/Pagination.md)。
@@ -124,7 +126,7 @@ Input首版已完成：原生TextBox编辑模板、标签/占位/说明/显式�
 - [x] 归档三张用户图片及SHA-256，不将未知截图环境猜成固定DPI。
 - [x] 完善Popover参考卡与规格v2补充：文档样本、宿主风险、坐标/焦点/生命周期合同。
 - [ ] Popover代码实现与相应验证；不属于本轮规范工作。
-- [ ] Input最新修复用户确认；没有把旧控件通过反馈扩展到Input。
+- [x] Input最新修复用户确认（2026-10-27用户明确确认，见Input验证记录）。
 
 本轮没有修改控件代码或Gallery。新的“同源主示例+扩展区”规范优先用于下一组件；Button现有中文分组的差异已记录，未以规范优化为由重做已确认页面。
 
@@ -138,7 +140,7 @@ Input首版已完成：原生TextBox编辑模板、标签/占位/说明/显式�
 - [x] 静态官网HTML补充与来源哈希记录。
 - [ ] 实际窗口焦点/外部输入/跨DPI/视觉验收，依用户既定要求延期。
 
-M1四组件代码均已建立，M1整体验收尚未完成。Popover优先等待用户测试；Input最新对齐修复也仍待确认。上文“仅规范未实现”描述为此前阶段记录，以本节为当前Popover状态。
+M1四组件代码均已建立，M1整体验收尚未完成。此处原记录Popover及Input待用户确认；Input最新对齐修复已于2026-10-27获用户确认，见Input验证记录。上文“仅规范未实现”描述为此前阶段记录。
 
 ## Popover 用户确认与下一组件建议（2026-10-25）
 
@@ -398,7 +400,7 @@ MultiSelect 本次实现已建立：多选绑定、标签与移除、+N、搜索
 
 ### MultiSelect 用户确认（2026-10-26）
 
-标签遮挡修正后收到用户“测试没问题”，记录当前版本人工测试通过；专项未测及既有Select回归失败保留。下一项建议为ComboBox（可搜索单选下拉），复用Search、Select和Popup经验；尚未开始实现，不因建议自动扩展本次范围。
+标签遮挡修正后收到用户“测试没问题”，记录当前版本人工测试通过；专项未测保留。此前Select回归失败已于2026-10-27复跑通过并获用户确认关闭，见Select验证记录。此时下一项建议为ComboBox（可搜索单选下拉），复用Search、Select和Popup经验；当时尚未开始实现，不因建议自动扩展本次范围。
 
 ## ComboBox 开发（2026-10-26）
 
@@ -417,3 +419,11 @@ Slider本次实现完成：水平单滑块、原生范围/命令/UIA、步长与
 按用户授权开始PasswordInput，范围为密码遮蔽/显示、原生输入与显式取值、标签/说明/错误/禁用、眼睛图标及消息动效、Gallery。只运行PasswordInput专项，不做computer-use，实际界面由用户人工测试。WPF PasswordBox为sealed，采用Control组合PasswordBox与显式显示编辑器，不增加默认双向明文DP；[规格](components/PasswordInput.md)。实现中，密码强度不在范围。
 
 PasswordInput本次实现完成：原生遮蔽/显示编辑、显式密码与SecureString副本、生命周期明文清理、验证与自动化、眼睛/resolve/消息动效、Gallery。最终专项11/11通过，只执行PasswordInput测试；明暗离屏图已检查，实际IME、Tab/Space、鼠标交互、多DPI与读屏由用户人工验收，未使用computer-use。见[验证记录](verification/2026-10-27-password-input.md)。未提交/推送。
+
+## OTPInput 开发（2026-10-27）
+
+用户确认PasswordInput完成后授权开始OTPInput。数字验证码，默认六位、可配置长度、粘贴、导航、完成事件、状态动效及Gallery；只运行OTPInput专项，不用computer-use，实际界面用户人工验收。见[规格](components/OTPInput.md)。实现中。
+
+OTPInput本次实现完成：默认六位/1..12长度、数字过滤与粘贴、原生编辑器/导航、双向Value与用户完成事件、禁用/只读、填充与错误状态、ring/glyph/消息动效及Gallery。最终OTPInput专项8/8通过，明暗离屏已检查；未运行其他控件测试，不使用computer-use，真实界面待用户人工验收。见[验证记录](verification/2026-10-27-otp-input.md)。未提交/推送。
+
+2026-10-27：用户确认OTPInput“我这边测试没问题”，记录本次交付版本人工测试通过；未明确覆盖的专项边界保留，见[验证记录](verification/2026-10-27-otp-input.md)。

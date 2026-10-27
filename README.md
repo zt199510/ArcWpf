@@ -2,7 +2,7 @@
 
 将 Arc 的视觉语言与交互体验实现为 .NET 10 WPF 原生控件库。
 
-当前已建立解决方案并实现 Button 首版：Primary / Secondary / Ghost / Danger，三种尺寸、命令、加载状态、明暗主题、按压反馈、内容切换、宽度与颜色过渡及减少动效。Switch 首版已加入，包含两态绑定、标签、命令、按压伸长和可反向弹簧。Input首版已加入原生文本编辑、标签、占位、说明和验证错误。Popover、CheckBox、RadioButton/RadioGroup、Select/SelectItem、Tabs/TabItem首版已实现。截图与实际交互观察按用户要求暂缓；本版尚未完成视觉和输入验收。
+当前已建立解决方案，控件包括 Button、Switch、Input、Popover、CheckBox、RadioButton/RadioGroup、Select/SelectItem、Tabs/TabItem、DatePicker、Breadcrumb 等；下方提供部分组件的接入示例，完整范围见[实施计划](docs/plan.md)。各组件的实现完整度、用户确认及未测专项以对应规格和验证记录为准。
 
 ## 构建与运行
 
@@ -15,13 +15,15 @@ dotnet test tests/ArcWpf.Tests/ArcWpf.Tests.csproj -c Release --no-build
 dotnet run --project samples/ArcWpf.Gallery/ArcWpf.Gallery.csproj
 ~~~
 
+测试总数与结果以当前提交实际运行输出为准。各组件验证记录中的数量属于对应日期和构建的历史结果；后续存在专项运行及全量回归失败，不能把历史通过数量作为当前全量通过结论。本次 README 更新未重跑全量测试。
+
 独立消费示例：
 
 ~~~powershell
 dotnet run --project samples/ArcWpf.Consumer/ArcWpf.Consumer.csproj
 ~~~
 
-Gallery 通过 Button / Switch / Input / Popover / CheckBox / RadioButton / Select / Tabs 页签浏览组件，支持主题/动效等级切换、状态和绑定示例。
+Gallery 通过分组导航浏览组件，包含 DatePicker、Breadcrumb 等页面，支持主题/动效等级切换、状态和绑定示例。可用启动参数 `--page=date-picker` 或 `--page=breadcrumb` 直接打开对应页面。
 
 ## 在 WPF 应用中接入
 
@@ -60,6 +62,7 @@ IsLoading 保留内容测量并阻止控件发起的 Click/Command；不阻止�
 - [Button 首版验证记录](docs/verification/2026-10-25-button.md)：已测与未测范围。
 - [实施计划](docs/plan.md)、[架构规范](docs/architecture.md)、[共同契约](docs/components/contracts.md)。
 - [Button](docs/components/Button.md)、[Switch](docs/components/Switch.md)、[Input](docs/components/Input.md)、[Popover](docs/components/Popover.md)。
+- [DatePicker](docs/components/DatePicker.md)、[Breadcrumb](docs/components/Breadcrumb.md)。
 - [来源报告](docs/references/2026-10-25-initial.md)、[第三方许可](THIRD-PARTY-NOTICES.md)。
 - [智能体入口](AGENTS.md)：项目 Skills 位于 .agents/skills，随仓库维护。
 
@@ -72,7 +75,7 @@ Switch 用法（IsChecked 默认双向绑定）：
 <arc:Switch Content="接收通知" IsChecked="{Binding Notifications}" />
 ~~~
 
-Button 已收到用户测试通过反馈；Switch 仍待实际界面验收，详见 [Switch 验证记录](docs/verification/2026-10-25-switch.md)。
+Button、Switch 已收到对应版本的用户测试通过反馈，详见 [Switch 验证记录](docs/verification/2026-10-25-switch.md)。
 
 Input用法（默认Text绑定移焦更新；实时验证需显式指定UpdateSourceTrigger）：
 
@@ -82,7 +85,7 @@ Input用法（默认Text绑定移焦更新；实时验证需显式指定UpdateSo
            Description="用于接收账户通知。" ErrorMessage="{Binding EmailError}" />
 ~~~
 
-Switch已收到用户测试通过反馈。Input实际编辑验收待做，见 [Input验证记录](docs/verification/2026-10-25-input.md)。
+Input当前版本（含输入与占位起点修复）已于2026-10-27获用户确认通过；IME、DPI等专项边界见 [Input验证记录](docs/verification/2026-10-25-input.md)。
 
 ## 后续复刻工作入口
 
@@ -90,7 +93,7 @@ Switch已收到用户测试通过反馈。Input实际编辑验收待做，见 [I
 - [参考基准模板](docs/templates/reference-baseline.md)、[组件规格模板](docs/templates/component-spec.md)、[可复用任务提示](docs/templates/component-task-prompt.md)。
 - 参考卡：[Button](docs/references/components/Button.md)、[Switch](docs/references/components/Switch.md)、[Input](docs/references/components/Input.md)、[Popover](docs/references/components/Popover.md)。
 
-当前Button/Switch已有用户通过反馈；Input最新输入与占位对齐修复已通过程序化回归，待用户确认。Popover已完成代码及程序化测试，实际窗口与视觉验收待做。
+当前Button/Switch/Input已有对应版本的用户通过反馈。Popover已完成代码及程序化测试，实际窗口与视觉验收情况见对应验证记录。
 
 ## Popover 用法
 
@@ -148,7 +151,7 @@ Gallery → RadioButton；[规格](docs/components/RadioButton.md)、[参考卡]
 
 对象数据源可使用ItemsSource、DisplayMemberPath和SelectedValuePath；未选中时显示Placeholder。禁用项设置SelectItem.IsEnabled=false，禁用字段设置Select.IsEnabled=false。这是不可编辑单选控件，不是搜索框或多选框。MaxDropDownHeight默认320，较长列表使用原生滚动条。
 
-Gallery → Select；[规格](docs/components/Select.md)、[参考卡](docs/references/components/Select.md)、[验证记录](docs/verification/2026-10-26-select.md)。当前程序化验证通过，实际窗口和视觉待验收。
+Gallery → Select；[规格](docs/components/Select.md)、[参考卡](docs/references/components/Select.md)、[验证记录](docs/verification/2026-10-26-select.md)。当前版本已获用户确认通过，2026-10-27动效回归已关闭；专项未测边界保留。
 
 
 Tabs用法（继承原生TabControl，SelectedIndex/SelectedItem/SelectedValue绑定）：
@@ -162,7 +165,7 @@ Tabs用法（继承原生TabControl，SelectedIndex/SelectedItem/SelectedValue�
 </arc:Tabs>
 ~~~
 
-当前支持水平顶端标签、选中框与内容/高度过渡、溢出滚动、RTL和动效等级。Tabs新增14项程序化测试，全量110项通过；实际窗口尚待用户验收。见[Tabs规格](docs/components/Tabs.md)和[验证记录](docs/verification/2026-10-26-tabs.md)。
+当前支持水平顶端标签、选中框与内容/高度过渡、溢出滚动、RTL和动效等级。Tabs交付时新增14项程序化测试；该阶段测试结果及实际窗口验收边界见[Tabs规格](docs/components/Tabs.md)和[验证记录](docs/verification/2026-10-26-tabs.md)。
 
 Dialog用法：用DialogHost包住窗口内容，在Dialog属性声明对话框并绑定IsOpen。也可创建Dialog后调用Show(触发按钮或页面)，由其寻找祖先Host。
 
@@ -180,7 +183,7 @@ Dialog用法：用DialogHost包住窗口内容，在Dialog属性声明对话框�
 </arc:DialogHost>
 ~~~
 
-支持Closing取消关闭、遮罩/Escape关闭、进退场及标题说明切换动效；模态范围为Host。Dialog新增16项测试，全量126项通过；实际窗口待验收。见[规格](docs/components/Dialog.md)与[验证记录](docs/verification/2026-10-26-dialog.md)。Gallery已新增Dialog页。
+支持Closing取消关闭、遮罩/Escape关闭、进退场及标题说明切换动效；模态范围为Host。Dialog交付时新增16项测试；该阶段测试结果及实际窗口验收边界见[规格](docs/components/Dialog.md)与[验证记录](docs/verification/2026-10-26-dialog.md)。Gallery已新增Dialog页。
 
 Tooltip用法：包裹可聚焦触发控件，Tip提供补充文字，Side默认Top，也支持Bottom/Left/Right。
 
@@ -191,7 +194,7 @@ Tooltip用法：包裹可聚焦触发控件，Tip提供补充文字，Side默认
 </arc:Tooltip>
 ~~~
 
-无需DialogHost；支持悬停/焦点、Escape、共享延迟、文案和尺寸动效。提示内不放交互控件；图标按钮仍需AutomationProperties.Name。Gallery已新增Tooltip页，F2示例可观察动态文案。新增15项测试，全量141项通过；实际窗口仍待验收，见[Tooltip规格](docs/components/Tooltip.md)与[验证记录](docs/verification/2026-10-26-tooltip.md)。
+无需DialogHost；支持悬停/焦点、Escape、共享延迟、文案和尺寸动效。提示内不放交互控件；图标按钮仍需AutomationProperties.Name。Gallery已新增Tooltip页，F2示例可观察动态文案。交付时新增15项测试；该阶段测试结果及实际窗口验收边界见[Tooltip规格](docs/components/Tooltip.md)与[验证记录](docs/verification/2026-10-26-tooltip.md)。
 
 Toast用法：在页面放置ToastHost，通过Show创建通知。默认4.5秒自动关闭，Duration=0可关闭计时。
 
@@ -203,7 +206,44 @@ Toast用法：在页面放置ToastHost，通过Show创建通知。默认4.5秒�
 Toasts.Show("Changes saved", "Synced to all devices.");
 ~~~
 
-ToastHost支持多条通知和DismissAll；Toast支持IsOpen绑定、手动Close和Closing事件。首期未加入滑动、动作按钮和类型变体。新增4项测试，全量145项通过；实际窗口待验收。见[Toast规格](docs/components/Toast.md)与[验证记录](docs/verification/2026-10-26-toast.md)。
+ToastHost支持多条通知和DismissAll；Toast支持IsOpen绑定、手动Close和Closing事件。首期未加入滑动、动作按钮和类型变体。Toast交付时新增4项测试；该阶段测试结果及实际窗口验收边界见[Toast规格](docs/components/Toast.md)与[验证记录](docs/verification/2026-10-26-toast.md)。
+
+## DatePicker 用法
+
+~~~xml
+<arc:DatePicker Label="开始日期" Placeholder="请选择日期"
+                Description="输入日期后按 Enter 提交，或打开日历选择。"
+                SelectedDate="{Binding StartDate, Mode=TwoWay}"
+                ShowToday="True" />
+~~~
+
+StartDate使用可通知的`DateTime?`属性。保留WPF原生日期编辑、文化格式、`DisplayDateStart`/`DisplayDateEnd`、`BlackoutDates`及验证行为；输入框Enter提交，Alt+Down打开日历。弹层复用Arc Calendar样式，`ShowToday`控制今天入口，清除按钮将SelectedDate置空并保留绑定。日期分段滚动及DatePicker专用spring动效暂缓。
+
+Gallery → DatePicker，或参数`--page=date-picker`。共享样式阶段DatePicker 7项、Calendar 5项专项通过；实际Popup键鼠、IME、跨DPI和读屏仍有待验项目。见[规格](docs/components/DatePicker.md)、[参考卡](docs/references/components/DatePicker.md)、[弹出修复记录](docs/verification/2026-10-26-datepicker-fix.md)及[共享样式验证记录](docs/verification/2026-10-26-calendar.md)。
+
+## Breadcrumb 用法
+
+~~~xml
+<arc:Breadcrumb Label="页面路径" Items="{Binding BreadcrumbItems}" />
+~~~
+
+在视图模型中创建路径集合（OpenWorkspaceCommand、OpenSettingsCommand为应用提供的ICommand）：
+
+~~~csharp
+public ObservableCollection<BreadcrumbItem> BreadcrumbItems { get; }
+
+// 在视图模型构造函数中初始化：
+BreadcrumbItems = new ObservableCollection<BreadcrumbItem>
+{
+    new() { Label = "Workspace", Command = OpenWorkspaceCommand },
+    new() { Label = "Settings", Command = OpenSettingsCommand },
+    new() { Label = "Billing" }
+};
+~~~
+
+上述C#使用`System.Collections.ObjectModel`和`ArcWpf.Controls`命名空间。Items为`ObservableCollection<BreadcrumbItem>`，支持动态更新路径。BreadcrumbItem的Command是普通CLR属性，在模型中赋值。最后一项自动作为当前页，不可激活；其他项通过Command及CommandParameter连接应用导航，并触发ItemInvoked。可用IsEnabled禁用路径项；窄容器允许整项换行。控件不自动执行URI或路由导航。
+
+Gallery → Breadcrumb，或参数`--page=breadcrumb`。交付阶段4项专项通过；新增项8 DIP/blur进入动效、自定义AutomationPeer尚未补齐，实际窗口布局、键盘、DPI及动效观感待验收。见[规格](docs/components/Breadcrumb.md)、[参考卡](docs/references/components/Breadcrumb.md)及[验证记录](docs/verification/2026-10-26-breadcrumb.md)。
 
 
 MultiSelect 用法（原生多选列表与 Search；SelectedValues 默认双向绑定）：
@@ -249,3 +289,14 @@ PasswordInput 用法（原生密码编辑与显示切换）：
 通过 `LoginPassword.Password` 显式读写，或 `using var password = LoginPassword.SecurePassword;` 取得独立副本；`SetSecurePassword` 复制输入，`Clear()` 清空。`PasswordChanged` 不携带密码内容。Password不是依赖属性，不支持默认明文双向绑定；显示时编辑器包含明文，隐藏/禁用/卸载清理显示编辑器及撤销记录。`IsPasswordRevealed` 支持双向绑定。
 
 Gallery → PasswordInput，或参数 `--page=password-input`。只执行PasswordInput专项，11/11通过；实际界面由用户人工测试，不使用computer-use。见[规格](docs/components/PasswordInput.md)、[参考卡](docs/references/components/PasswordInput.md)及[验证记录](docs/verification/2026-10-27-password-input.md)。
+
+OTPInput 用法（数字验证码，默认六位）：
+
+~~~xml
+<arc:OTPInput Label="验证码" Length="6" Value="{Binding VerificationCode}"
+              Description="请输入邮件中的六位验证码" Completed="OnCodeCompleted" />
+~~~
+
+`Value` 默认双向绑定，只保留ASCII数字并限制到Length（1..12）；输入替换当前格并前进，粘贴从当前格连续填充，支持左右/Home/End与退格/Delete。`Completed` 仅在用户输入产生新的完整值时触发，程序赋值不触发业务提交。错误通过 `ErrorMessage` 显示；支持禁用、只读、`Clear()` 和 `FocusDigit(index)`。
+
+Gallery → OTPInput，或 `--page=otp-input`。本轮仅执行OTPInput专项；实际界面由用户人工测试，不使用computer-use。见[规格](docs/components/OTPInput.md)、[参考卡](docs/references/components/OTPInput.md)与[验证记录](docs/verification/2026-10-27-otp-input.md)。

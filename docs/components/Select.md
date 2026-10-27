@@ -1,6 +1,6 @@
 # Select：M2 规格
 
-状态：代码与程序化验证完成，待用户验收。来源见[参考卡](../references/components/Select.md)。不做可编辑输入、多选、搜索框或分组列表。
+状态：当前版本用户确认通过；2026-10-27动效回归已按用户确认关闭，专项未测边界保留，见[验证记录](../verification/2026-10-26-select.md)。来源见[参考卡](../references/components/Select.md)。不做可编辑输入、多选、搜索框或分组列表。
 
 ## API与行为
 
@@ -35,4 +35,4 @@ WPF滚动条替代源站滚动按钮，自定义项模板跳过文字滚动过�
 
 ## 实施收口
 
-代码位于src/ArcWpf.Controls/Select，Gallery与Consumer已接入。新增12项、全量96项程序化测试通过。完整证据和未测边界见 [验证记录](../verification/2026-10-26-select.md)。原生Popup实际窗口及视觉仍待验收。
+代码位于src/ArcWpf.Controls/Select，Gallery与Consumer已接入。首版新增12项、当时全量96项程序化测试通过。2026-10-27选择测试过滤器22/22通过，包含此前失败的动效回归；用户确认可标为成功，当前问题关闭。完整证据和未测专项边界见 [验证记录](../verification/2026-10-26-select.md)。

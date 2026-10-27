@@ -151,3 +151,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ## PasswordInput 补充（2026-10-27）
 
 PasswordInput的布局、眼睛路径/斜线遮罩、切换及消息动效参考并改编自Arc免费Password field Registry/CSS及motion/foundation，适用上文Arc MIT许可。冻结批次、URL与SHA-256见`tests/Baselines/References/2026-10-27-password-input/manifest.json`；无官方版本号。WPF PasswordBox及其AutomationPeer来源固定dotnet/wpf v10.0.0（MIT，.NET Foundation），用于核对原生机制，未复制其实现。未引入React/Motion运行依赖。
+
+## OTPInput 补充（2026-10-27）
+
+OTPInput的槽布局、焦点框、数字进退/粘贴波次、错误摇动和消息动效参考并改编自Arc免费OTP input Registry/CSS与motion/foundation，适用上文Arc MIT许可。冻结文件、URL与SHA-256见`tests/Baselines/References/2026-10-27-otp-input/manifest.json`，无官方版本号。WPF原生TextBox、组合模板及业务完成事件为本项目实现，未引入React/Motion运行依赖。
