@@ -155,3 +155,7 @@ PasswordInput的布局、眼睛路径/斜线遮罩、切换及消息动效参考
 ## OTPInput 补充（2026-10-27）
 
 OTPInput的槽布局、焦点框、数字进退/粘贴波次、错误摇动和消息动效参考并改编自Arc免费OTP input Registry/CSS与motion/foundation，适用上文Arc MIT许可。冻结文件、URL与SHA-256见`tests/Baselines/References/2026-10-27-otp-input/manifest.json`，无官方版本号。WPF原生TextBox、组合模板及业务完成事件为本项目实现，未引入React/Motion运行依赖。
+
+## SegmentedControl 补充（2026-10-27）
+
+SegmentedControl的外框/项结构、共享背景、文字颜色过渡、边缘渐变与显露规则参考并改编自Arc免费Segmented control Registry/CSS及motion/foundation，适用上文Arc MIT许可。冻结批次、URL与SHA-256见`tests/Baselines/References/2026-10-27-segmented-control/manifest.json`；无官方版本号。WPF原生ListBox/SelectionItem及模板适配为本项目实现。Gallery的列表/网格为基本线条与矩形自绘，不引入额外图标素材或React/Motion运行依赖。

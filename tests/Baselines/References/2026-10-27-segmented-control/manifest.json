@@ -1,0 +1,43 @@
+{
+  "license": "Arc free MIT",
+  "sources": [
+    "https://uiarc.dev/r/segmented-control.json",
+    "https://uiarc.dev/components/segmented-control/markdown",
+    "https://uiarc.dev/license",
+    "https://uiarc.dev/r/arc-foundation.json",
+    "https://uiarc.dev/r/arc-motion-tokens.json"
+  ],
+  "capturedAt": "2026-10-27T10:23:24.5563570+08:00",
+  "officialVersion": null,
+  "batch": "2026-10-27-segmented-control",
+  "files": [
+    {
+      "sha256": "562567F96CDB9086839466C87C7ADD1CACF624E70E36D7BD038D1607D5A84B64",
+      "file": "foundation.json"
+    },
+    {
+      "sha256": "BA8660A313FD8C48503FEADA7BD233D447104EF9C22DD43678CF026621ACE24A",
+      "file": "license.html"
+    },
+    {
+      "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141",
+      "file": "motion.json"
+    },
+    {
+      "sha256": "02CA9D645E6EED2B6561CC0359398EAE05FF6E203841B31E69D63C5E68E89D08",
+      "file": "segmented-control.json"
+    },
+    {
+      "sha256": "5E25E11E0950ED4C09B0D65D4FDF418132DAF9CA095AADC3E8126657E8D60CF7",
+      "file": "segmented-control.md"
+    },
+    {
+      "sha256": "5C201EA88B4F704B065A5B96B78B79156FF3C8C45CA6C37B0B285F9BBCD84881",
+      "file": "segmented-control.module.css"
+    },
+    {
+      "sha256": "A9C98018DB4C44DF6C65DCBACC1A748D74F0BF03610D721763EBC9D13D647138",
+      "file": "segmented-control.tsx"
+    }
+  ]
+}

@@ -300,3 +300,18 @@ OTPInput 用法（数字验证码，默认六位）：
 `Value` 默认双向绑定，只保留ASCII数字并限制到Length（1..12）；输入替换当前格并前进，粘贴从当前格连续填充，支持左右/Home/End与退格/Delete。`Completed` 仅在用户输入产生新的完整值时触发，程序赋值不触发业务提交。错误通过 `ErrorMessage` 显示；支持禁用、只读、`Clear()` 和 `FocusDigit(index)`。
 
 Gallery → OTPInput，或 `--page=otp-input`。本轮仅执行OTPInput专项；实际界面由用户人工测试，不使用computer-use。见[规格](docs/components/OTPInput.md)、[参考卡](docs/references/components/OTPInput.md)与[验证记录](docs/verification/2026-10-27-otp-input.md)。
+
+SegmentedControl 用法（水平互斥选择，沿用WPF原生选择绑定）：
+
+~~~xml
+<arc:SegmentedControl Label="Range" SelectedValuePath="Tag"
+                      SelectedValue="{Binding Range, Mode=TwoWay}">
+  <arc:SegmentedItem Content="Day" Tag="day" />
+  <arc:SegmentedItem Content="Week" Tag="week" />
+  <arc:SegmentedItem Content="Month" Tag="month" />
+</arc:SegmentedControl>
+~~~
+
+也支持ItemsSource/ItemTemplate，`SegmentedItem.Icon`与`Accessory`可放非交互图标或徽标。方向键循环选择并跳过禁用项，Home/End到首末，Tab进入选中项；窄宽下内部横向滚动。`OptionIntent`在鼠标或焦点到达选项时通知，参数Item为对应数据项；它不代表选择已经改变。Label仅作为可访问名称，不生成可见标题。
+
+Gallery → SegmentedControl，或启动参数 `--page=segmented-control`。只运行SegmentedControl专项，8/8通过；未使用computer-use，实际窗口待用户人工验收。见[规格](docs/components/SegmentedControl.md)、[参考卡](docs/references/components/SegmentedControl.md)和[验证记录](docs/verification/2026-10-27-segmented-control.md)。

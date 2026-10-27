@@ -1,0 +1,29 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.SegmentedControlPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="32" TextElement.Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+    <TextBlock Text="SegmentedControl" FontSize="32" FontWeight="Bold"/>
+    <TextBlock Text="分段选择器 · 在少量互斥选项间切换" Margin="0,8,0,28" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <arc:SegmentedControl x:Name="Reference" Label="Range" SelectedValuePath="Tag" SelectedValue="week">
+      <arc:SegmentedItem Content="Day" Tag="day"/><arc:SegmentedItem Content="Week" Tag="week"/><arc:SegmentedItem Content="Month" Tag="month"/>
+    </arc:SegmentedControl>
+    <Separator Margin="0,28"/>
+    <TextBlock Text="数据绑定与到达通知" FontSize="20" Margin="0,0,0,16"/>
+    <arc:SegmentedControl x:Name="Editable" Label="时间范围" ItemsSource="{Binding Options}" SelectedValuePath="Id" SelectedValue="{Binding Selected, Mode=TwoWay}" OptionIntent="OnIntent">
+      <arc:SegmentedControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding Label}"/></DataTemplate></arc:SegmentedControl.ItemTemplate>
+    </arc:SegmentedControl>
+    <TextBlock Text="{Binding Selected, StringFormat=当前选择：{0}}" Margin="0,10,0,4"/>
+    <TextBlock x:Name="IntentText" Text="悬停或聚焦选项以查看通知" Margin="0,0,0,12"/>
+    <WrapPanel Margin="0,0,0,20"><arc:Button Content="选中月" Click="SelectMonth" Margin="0,0,8,8"/><arc:Button Content="增减选项" Click="ToggleOption" Margin="0,0,8,8"/></WrapPanel>
+    <TextBlock Text="图标和附加内容" FontSize="20" Margin="0,0,0,16"/>
+    <arc:SegmentedControl Label="显示方式" SelectedIndex="0" Margin="0,0,0,24">
+      <arc:SegmentedItem Content="列表"><arc:SegmentedItem.Icon><Path Data="M 1,3 H 15 M 1,8 H 15 M 1,13 H 15" Width="16" Height="16" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.5"/></arc:SegmentedItem.Icon></arc:SegmentedItem>
+      <arc:SegmentedItem Content="网格"><arc:SegmentedItem.Icon><Path Data="M 1,1 H 6 V 6 H 1 Z M 10,1 H 15 V 6 H 10 Z M 1,10 H 6 V 15 H 1 Z M 10,10 H 15 V 15 H 10 Z" Width="16" Height="16" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.3"/></arc:SegmentedItem.Icon><arc:SegmentedItem.Accessory><Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="6" Padding="4,1"><TextBlock Text="8" FontSize="11"/></Border></arc:SegmentedItem.Accessory></arc:SegmentedItem>
+    </arc:SegmentedControl>
+    <TextBlock Text="禁用项与整组禁用" Margin="0,0,0,10"/>
+    <arc:SegmentedControl Label="权限" SelectedIndex="0" Margin="0,0,0,12"><arc:SegmentedItem Content="查看"/><arc:SegmentedItem Content="编辑" IsEnabled="False"/><arc:SegmentedItem Content="管理"/></arc:SegmentedControl>
+    <arc:SegmentedControl Label="禁用示例" SelectedIndex="1" IsEnabled="False" Margin="0,0,0,24"><arc:SegmentedItem Content="日"/><arc:SegmentedItem Content="周"/><arc:SegmentedItem Content="月"/></arc:SegmentedControl>
+    <TextBlock Text="190 DIP 窄宽 / 溢出滚动" Margin="0,0,0,10"/>
+    <arc:SegmentedControl x:Name="Narrow" Label="报表范围" Width="190" SelectedIndex="0" Margin="0,0,0,24"><arc:SegmentedItem Content="今天"/><arc:SegmentedItem Content="最近一周"/><arc:SegmentedItem Content="最近一个月"/><arc:SegmentedItem Content="自定义范围"/></arc:SegmentedControl>
+    <TextBlock Text="从右到左" Margin="0,0,0,10"/>
+    <arc:SegmentedControl Label="RTL" FlowDirection="RightToLeft" SelectedIndex="1"><arc:SegmentedItem Content="Day"/><arc:SegmentedItem Content="Week"/><arc:SegmentedItem Content="Month"/></arc:SegmentedControl>
+  </StackPanel></ScrollViewer>
+</UserControl>

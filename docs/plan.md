@@ -427,3 +427,11 @@ PasswordInput本次实现完成：原生遮蔽/显示编辑、显式密码与Sec
 OTPInput本次实现完成：默认六位/1..12长度、数字过滤与粘贴、原生编辑器/导航、双向Value与用户完成事件、禁用/只读、填充与错误状态、ring/glyph/消息动效及Gallery。最终OTPInput专项8/8通过，明暗离屏已检查；未运行其他控件测试，不使用computer-use，真实界面待用户人工验收。见[验证记录](verification/2026-10-27-otp-input.md)。未提交/推送。
 
 2026-10-27：用户确认OTPInput“我这边测试没问题”，记录本次交付版本人工测试通过；未明确覆盖的专项边界保留，见[验证记录](verification/2026-10-27-otp-input.md)。
+
+## SegmentedControl 开发（2026-10-27）
+
+用户授权开始水平单选分段选择器：文字/图标、绑定、滑动背景、键盘与禁用、溢出滚动和Gallery。仅运行SegmentedControl专项，不用computer-use，实际界面用户人工测试。来源已冻结，见[规格](components/SegmentedControl.md)，实现中。
+
+SegmentedControl本次实现完成：原生单选与绑定、动态项、图标/附加内容、OptionIntent、键盘/禁用/RTL、共享滑动背景与文字色、溢出滚动/渐变和Gallery。最终专项8/8通过，明暗及RTL离屏检查通过；不使用computer-use，实际界面待用户人工验收。见[验证记录](verification/2026-10-27-segmented-control.md)。未提交/推送。
+
+2026-10-27 SegmentedControl黑框修正：用户截图反馈选择后多出深色轮廓，定位为额外FocusVisualStyle；已移除该装饰，保留原版选中背景和细边框。实际效果待用户复验。

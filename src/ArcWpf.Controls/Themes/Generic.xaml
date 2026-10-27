@@ -33,5 +33,6 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Slider/Themes/SliderTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/PasswordInput/Themes/PasswordInputTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/OTPInput/Themes/OTPInputTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/SegmentedControl/Themes/SegmentedControlTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
