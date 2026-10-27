@@ -1,0 +1,20 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.AvatarGroupPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="32" TextElement.Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+    <TextBlock Text="AvatarGroup" FontSize="32" FontWeight="Bold"/><TextBlock Text="头像组 · 团队成员、参与者与溢出计数" Margin="0,8,0,24"/>
+    <TextBlock Text="来源文档示例 · Editors / Max 3" FontSize="20"/>
+    <Border Margin="0,16" Padding="48" CornerRadius="18" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}"><arc:AvatarGroup x:Name="Reference" Members="{Binding Team}" Max="3" Label="Editors" HorizontalAlignment="Center"/></Border>
+    <TextBlock Text="Maya Chen、Leo Park、Sara Ruiz、Tom Hale、Ines Ma。Maya使用项目原创示意图。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Separator Margin="0,24"/><TextBlock Text="扩展测试 · 三种尺寸" FontSize="20" Margin="0,0,0,28"/>
+    <StackPanel Orientation="Horizontal" Margin="16,0,0,28"><arc:AvatarGroup Members="{Binding Team}" Size="Small" Max="3" Margin="0,0,40,0"/><arc:AvatarGroup Members="{Binding Team}" Max="3" Margin="0,0,40,0"/><arc:AvatarGroup Members="{Binding Team}" Size="Large" Max="3"/></StackPanel>
+    <TextBlock Text="动态集合与溢出" FontSize="20" Margin="0,0,0,32"/>
+    <arc:AvatarGroup x:Name="Editable" Members="{Binding People}" Max="{Binding VisibleLimit}" Label="Contributors" Margin="20,8,0,24"/>
+    <WrapPanel><arc:Button x:Name="AddButton" Content="添加成员" Click="Add" Margin="0,0,8,8"/><arc:Button Content="移除首位" Click="Remove" Margin="0,0,8,8"/><arc:Button Content="首位移到末尾" Click="Move" Margin="0,0,8,8"/><arc:Button Content="更新姓名 / 状态" Click="Rename" Margin="0,0,8,8"/></WrapPanel>
+    <StackPanel Orientation="Horizontal" Margin="0,12,0,12"><arc:Button Content="Max −1" Click="Decrease" Margin="0,0,8,0"/><arc:Button Content="Max +1" Click="Increase" Margin="0,0,12,0"/><TextBlock Text="{Binding VisibleLimit, StringFormat='Max = {0}'}" VerticalAlignment="Center"/></StackPanel>
+    <TextBlock Text="移入头像组查看展开、抬升、两侧让位和姓名；连续增减 Max 可检查进退打断。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <TextBlock Text="空组、Max 0、重复名字" FontSize="20" Margin="0,28,0,30"/>
+    <StackPanel Orientation="Horizontal" Margin="16,0,0,24"><arc:AvatarGroup Label="Empty" Margin="0,0,24,0"/><arc:AvatarGroup Members="{Binding Team}" Max="0" Margin="0,0,32,0"/><arc:AvatarGroup Label="Duplicate names" Members="{Binding DuplicateNames}"/></StackPanel>
+    <TextBlock Text="窄容器与 RTL" FontSize="20" Margin="0,0,0,30"/>
+    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition/></Grid.ColumnDefinitions><Border Width="100" ClipToBounds="True" HorizontalAlignment="Left"><arc:AvatarGroup Members="{Binding Team}" Max="4"/></Border><arc:AvatarGroup Grid.Column="1" Members="{Binding Team}" Max="3" FlowDirection="RightToLeft"/></Grid>
+    <TextBlock Text="顶部切换明暗与 Full / Reduced / Off。组与头像不进入 Tab；实际悬停、动态观感、多DPI及读屏由人工验收。" TextWrapping="Wrap" Margin="0,28,0,0"/>
+  </StackPanel></ScrollViewer>
+</UserControl>

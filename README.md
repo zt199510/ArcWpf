@@ -315,3 +315,36 @@ SegmentedControl 用法（水平互斥选择，沿用WPF原生选择绑定）：
 也支持ItemsSource/ItemTemplate，`SegmentedItem.Icon`与`Accessory`可放非交互图标或徽标。方向键循环选择并跳过禁用项，Home/End到首末，Tab进入选中项；窄宽下内部横向滚动。`OptionIntent`在鼠标或焦点到达选项时通知，参数Item为对应数据项；它不代表选择已经改变。Label仅作为可访问名称，不生成可见标题。
 
 Gallery → SegmentedControl，或启动参数 `--page=segmented-control`。只运行SegmentedControl专项，8/8通过；未使用computer-use，实际窗口待用户人工验收。见[规格](docs/components/SegmentedControl.md)、[参考卡](docs/references/components/SegmentedControl.md)和[验证记录](docs/verification/2026-10-27-segmented-control.md)。
+
+## Badge 用法
+
+~~~xml
+<arc:Badge Content="{Binding Status}" Tone="Success" Size="Medium" />
+~~~
+
+`Tone`：Neutral/Success/Info/Warning/Danger；`Size`：Small/Medium。`Icon`可放前置非交互内容；同类型图标需要动画替换时设置不同的`IconKey`。`IconBrush`默认跟随文字（Info默认Accent）；图标应继承TextElement.Foreground。普通文字/数字更改有滚动淡化与宽度弹簧，自定义ContentTemplate静态呈现。支持Full/Reduced/Off；不增加焦点框、点击操作或通知角标。
+
+Gallery → 反馈 → Badge，或运行 `dotnet run --project samples/ArcWpf.Gallery -- --page=badge`。只运行Badge专项，8/8通过；真实鼠标、主题与动效观感、多DPI及读屏由用户人工验收。见[规格](docs/components/Badge.md)、[参考卡](docs/references/components/Badge.md)、[验证记录](docs/verification/2026-10-27-badge.md)。
+
+## Avatar 用法
+
+~~~xml
+<arc:Avatar DisplayName="Maya Chen" Source="{Binding Portrait}"
+            Size="Large" Status="Online" />
+~~~
+
+`Size`支持Small/Medium/Large/ExtraLarge（28/36/48/88 DIP），`Status`为None/Online/Offline。`Source`是WPF ImageSource，可使用BitmapImage或DrawingImage；无图或加载失败显示姓名前两个词的首字母。加载中仅显示底色，已解码图片立即显示，异步完成后淡入；状态点支持进退，Reduced/Off立即切换。只读`Initials`、`IsImageLoading`、`HasImageError`可绑定。默认不可聚焦，UIA只读一份姓名与状态。
+
+Gallery → 反馈 → Avatar，或 `dotnet run --project samples/ArcWpf.Gallery -- --page=avatar`。Avatar专项9/9通过，明暗离屏检查已完成，实际界面由用户人工验收。见[规格](docs/components/Avatar.md)、[参考卡](docs/references/components/Avatar.md)、[验证记录](docs/verification/2026-10-27-avatar.md)。
+
+## AvatarGroup 用法
+
+~~~xml
+<arc:AvatarGroup Members="{Binding Team}" Max="3" Size="Medium" Label="Editors" />
+~~~
+
+`Team`可使用`ObservableCollection<AvatarGroupMember>`，成员包含`DisplayName`、`Source`和`Status`。支持增删/重排与成员属性更新；`Max`默认4、负数按0处理，`Size`为Small/Medium/Large，`OverflowCount`只读。只生成前Max个头像及一个`+N`项，退场期间暂留旧槽；重复姓名可用。组和头像非交互、不进入Tab，悬停显示姓名。
+
+包含槽伸缩、溢出数方向滚动、悬停扇开/抬升/邻项让位、描边和姓名提示；Reduced保持头像静止，计数淡化，Off即时。头像组本身不换行、不内置滚动，窄行可降低Max。
+
+Gallery → 反馈 → AvatarGroup，或 `dotnet run --project samples/ArcWpf.Gallery -- --page=avatar-group`。仅执行AvatarGroup专项，9/9通过，实际界面待用户人工验收。见[规格](docs/components/AvatarGroup.md)、[参考卡](docs/references/components/AvatarGroup.md)、[验证记录](docs/verification/2026-10-27-avatar-group.md)。

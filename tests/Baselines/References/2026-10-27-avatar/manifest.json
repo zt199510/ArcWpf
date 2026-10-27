@@ -1,0 +1,52 @@
+{
+  "sources": [
+    "https://uiarc.dev/r/avatar.json",
+    "https://uiarc.dev/components/avatar/markdown",
+    "https://uiarc.dev/components/avatar",
+    "https://uiarc.dev/r/arc-foundation.json",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "officialVersion": null,
+  "license": "Arc free MIT",
+  "files": [
+    {
+      "file": "arc-provider.tsx",
+      "sha256": "CFE36067CD21A71E264A977413FF7B19B73BBB9010C036CC5A32F7A7ED919B8D"
+    },
+    {
+      "file": "avatar.json",
+      "sha256": "8D128C779FA302D8ED8997B3380D651DA4F7E8000FF2F65929C7D25C7F573D7D"
+    },
+    {
+      "file": "avatar.md",
+      "sha256": "BCB15E5AC96AF93196F897069F801FDCE5701AB4BA3B797BED67A0E8E5A2B8EB"
+    },
+    {
+      "file": "avatar.module.css",
+      "sha256": "91A4769B697CF16661F33FCB51F525BE8F5338ED3F10F97DE4426195E680FEC7"
+    },
+    {
+      "file": "avatar.tsx",
+      "sha256": "53E799FC617858082D1C4CCEEFD730F9154D6A554B8606F75F870A90978B147E"
+    },
+    {
+      "file": "foundation.json",
+      "sha256": "562567F96CDB9086839466C87C7ADD1CACF624E70E36D7BD038D1607D5A84B64"
+    },
+    {
+      "file": "license.html",
+      "sha256": "BA8660A313FD8C48503FEADA7BD233D447104EF9C22DD43678CF026621ACE24A"
+    },
+    {
+      "file": "motion.json",
+      "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141"
+    },
+    {
+      "file": "page.html",
+      "sha256": "DC32A6B3815BACEFCE6D13C4CBAE486E38BD8C1ADF7A41EC18D62319173AA0F9"
+    }
+  ],
+  "batch": "2026-10-27-avatar",
+  "capturedAt": "2026-10-27T14:42:13.7171683+08:00"
+}

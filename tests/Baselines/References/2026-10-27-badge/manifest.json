@@ -1,0 +1,48 @@
+{
+  "batch": "2026-10-27-badge",
+  "files": [
+    {
+      "file": "badge.json",
+      "sha256": "1471CEB1AE9B67AA02746BE4306FF6C816A5003875AEF899BF2933A5D729E4FC"
+    },
+    {
+      "file": "badge.md",
+      "sha256": "D01681FE4F8ABF06BBB40324616BE79F6007F573AA94EDF9A6E893D4D579C103"
+    },
+    {
+      "file": "badge.module.css",
+      "sha256": "6FF77DC0A5F54B933C8DD29A98C6BBFBEF5A5B1AF04D71C47FF44A8B484CF5B6"
+    },
+    {
+      "file": "badge.tsx",
+      "sha256": "B7729DC291451785336B0F2D26DD3BD0BCC987025184686748A2E8832E08028B"
+    },
+    {
+      "file": "foundation.json",
+      "sha256": "562567F96CDB9086839466C87C7ADD1CACF624E70E36D7BD038D1607D5A84B64"
+    },
+    {
+      "file": "license.html",
+      "sha256": "BA8660A313FD8C48503FEADA7BD233D447104EF9C22DD43678CF026621ACE24A"
+    },
+    {
+      "file": "motion.json",
+      "sha256": "2ADF39247DA5320283F23C446CEA7976572C693BCADF9DC7D9C4E7E4E217B141"
+    },
+    {
+      "file": "page.html",
+      "sha256": "5960597A1CA1DCA44531CE664B5FA94DCE9A304EB8F64D9CE9CA632CC443D6D3"
+    }
+  ],
+  "license": "Arc free MIT (see license.html)",
+  "sources": [
+    "https://uiarc.dev/r/badge.json",
+    "https://uiarc.dev/components/badge",
+    "https://uiarc.dev/components/badge/markdown",
+    "https://uiarc.dev/r/arc-foundation.json",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "capturedAt": "2026-10-27T14:26:24.8676778+08:00",
+  "officialVersion": null
+}

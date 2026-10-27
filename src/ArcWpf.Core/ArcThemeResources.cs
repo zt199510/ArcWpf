@@ -62,6 +62,30 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("AlertWarning", Oklch(dark ? .82 : .54, dark ? .16 : .18, 82));
         // color-mix(in oklab, danger 55%, surface-muted), with a neutral second color.
         PutBrush("DangerDisabled", Oklch(dangerL * .55 + neutrals["SurfaceMuted"] * .45, dangerC * .55, 25));
+        // Badge CSS from the frozen 2026-10-27 registry. Mix with neutral surfaces in OKLab.
+        foreach (var tone in new[] { "Neutral", "Success", "Info", "Warning", "Danger" })
+        {
+            var (l, c, h, backgroundMix, borderMix) = tone switch
+            {
+                "Success" => (dark ? .78 : .49, dark ? .18 : .19, 150d, .10, .25),
+                "Info" => (dark ? .8 : .33, 0d, 0d, .10, .24),
+                "Warning" => (dark ? .83 : .58, dark ? .17 : .18, dark ? 80d : 75d, .11, .27),
+                "Danger" => (dangerL, dangerC, 25d, .10, .26),
+                _ => (neutrals["TextSecondary"], 0d, 0d, 0d, 0d)
+            };
+            Color Mix(double amount, string neutral) => Oklch(l * amount + neutrals[neutral] * (1 - amount), c * amount, h);
+            PutBrush($"Badge{tone}Foreground", tone == "Info" ? Oklch(neutrals["AccentStrong"], 0, 0) : Oklch(l, c, h));
+            var badgeBackground = tone == "Neutral" ? Oklch(neutrals["SurfaceMuted"], 0, 0) : Mix(backgroundMix, "Surface");
+            if (tone == "Info") { badgeBackground = Oklch(l, c, h); badgeBackground.A = (byte)Math.Round(255 * (dark ? .13 : .1)); }
+            PutBrush($"Badge{tone}Background", badgeBackground);
+            PutBrush($"Badge{tone}Border", Mix(borderMix, "Border"));
+            PutBrush($"Badge{tone}HoverBackground", Mix(.1, "Surface"));
+            PutBrush($"Badge{tone}HoverBorder", Mix(.32, "Border"));
+        }
+        // Avatar presence palette, frozen 2026-10-27 foundation/CSS.
+        PutBrush("AvatarOnline", Oklch(dark ? .78 : .49, dark ? .18 : .19, 150));
+        var avatarOutline = Oklch(neutrals["Border"], 0, 0); avatarOutline.A = (byte)Math.Round(255 * .7);
+        PutBrush("AvatarStatusOutline", avatarOutline);
         this["ArcWpf.Radius.Control"] = new CornerRadius(18);
         this["ArcWpf.Radius.Panel"] = new CornerRadius(26);
         this["ArcWpf.Radius.Pill"] = new CornerRadius(9999);
@@ -110,8 +134,3 @@ public sealed class ArcThemeResources : ResourceDictionary
             Encode(-.0041960863 * l - .7034186147 * m + 1.7076147010 * s));
     }
 }
-
-
-
-
-

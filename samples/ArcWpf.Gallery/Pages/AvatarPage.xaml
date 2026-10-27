@@ -1,0 +1,20 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.AvatarPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="32" TextElement.Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+    <TextBlock Text="Avatar" FontSize="32" FontWeight="Bold"/><TextBlock Text="头像 · 单个人员与账户标识" Margin="0,8,0,24"/>
+    <TextBlock Text="来源文档示例 · Maya Chen / Large / Online" FontSize="20"/>
+    <Border Padding="32" Margin="0,16" CornerRadius="18" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}"><StackPanel HorizontalAlignment="Center"><arc:Avatar x:Name="Reference" DisplayName="Maya Chen" Size="Large" Status="Online" Source="{Binding Portrait}" HorizontalAlignment="Center"/><TextBlock Text="Maya Chen" Margin="0,12,0,0"/></StackPanel></Border>
+    <TextBlock Text="图片为项目自绘示意图，不是原站照片。" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Separator Margin="0,24"/><TextBlock Text="扩展测试 · 四种尺寸 / 首字母" FontSize="20" Margin="0,0,0,16"/>
+    <StackPanel Orientation="Horizontal" Margin="0,0,0,24"><arc:Avatar DisplayName="Maya Chen" Size="Small" Status="Online" Margin="0,0,20,0"/><arc:Avatar DisplayName="Noah Williams" Status="Offline" Margin="0,0,20,0"/><arc:Avatar DisplayName="Alex Kim" Size="Large" Margin="0,0,20,0"/><arc:Avatar DisplayName="林 晓" Size="ExtraLarge" Status="Online"/></StackPanel>
+    <TextBlock Text="绑定、状态切换与照片" FontSize="20" Margin="0,0,0,16"/>
+    <StackPanel Orientation="Horizontal" Margin="0,0,0,16"><arc:Avatar x:Name="Editable" DisplayName="{Binding PersonName}" Source="{Binding CurrentImage}" Status="{Binding Presence}" Size="ExtraLarge" Margin="0,0,20,0"/><StackPanel VerticalAlignment="Center"><TextBlock Text="姓名"/><arc:Input Text="{Binding PersonName, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="0,6"/><TextBlock Text="{Binding Presence}"/></StackPanel></StackPanel>
+    <WrapPanel><arc:Button x:Name="StatusButton" Content="在线 / 离线 / 无状态" Click="CycleStatus" Margin="0,0,8,8"/><arc:Button Content="照片 / 首字母" Click="TogglePhoto" Margin="0,0,8,8"/></WrapPanel>
+    <TextBlock Text="图片加载测试（输入本地文件或 HTTP 图片地址）" Margin="0,20,0,10"/>
+    <arc:Input x:Name="ImageAddress" Text="" MinWidth="220" Margin="0,0,0,10"/>
+    <arc:Button Content="加载地址" Click="LoadAddress" HorizontalAlignment="Left"/>
+    <TextBlock x:Name="LoadMessage" Text="下载中只显示背景；失败恢复首字母。" TextWrapping="Wrap" Margin="0,10"/>
+    <TextBlock Text="边界示例" FontSize="20" Margin="0,20,0,16"/>
+    <StackPanel Orientation="Horizontal"><arc:Avatar DisplayName="" Margin="0,0,20,0"/><arc:Avatar DisplayName="单名" Margin="0,0,20,0"/><arc:Avatar DisplayName="😀 Developer" Margin="0,0,20,0"/><arc:Avatar DisplayName="Disabled Person" IsEnabled="False" Status="Offline"/></StackPanel>
+    <TextBlock Text="顶部切换明暗及 Full / Reduced / Off。头像不进入 Tab；状态通过姓名一起提供给辅助技术。动态观感、多DPI和实际交互由人工验收。" TextWrapping="Wrap" Margin="0,24,0,0"/>
+  </StackPanel></ScrollViewer>
+</UserControl>

@@ -1,0 +1,44 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ArcWpf.Controls">
+  <Style x:Key="AvatarDot" TargetType="Border">
+    <Setter Property="Width" Value="10"/><Setter Property="Height" Value="10"/><Setter Property="CornerRadius" Value="5"/>
+    <Setter Property="BorderThickness" Value="2"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Surface}"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/><Setter Property="VerticalAlignment" Value="Bottom"/><Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Size, RelativeSource={RelativeSource TemplatedParent}}" Value="Small"><Setter Property="Width" Value="8"/><Setter Property="Height" Value="8"/><Setter Property="CornerRadius" Value="4"/><Setter Property="BorderThickness" Value="1.5"/></DataTrigger>
+      <DataTrigger Binding="{Binding Size, RelativeSource={RelativeSource TemplatedParent}}" Value="Large"><Setter Property="Width" Value="12"/><Setter Property="Height" Value="12"/><Setter Property="CornerRadius" Value="6"/></DataTrigger>
+      <DataTrigger Binding="{Binding Size, RelativeSource={RelativeSource TemplatedParent}}" Value="ExtraLarge"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="CornerRadius" Value="7"/><Setter Property="Margin" Value="0,0,4,4"/></DataTrigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="AvatarDotOutline" TargetType="Border">
+    <!-- CSS box-shadow spread 1: overlay extends one DIP beyond the status border. -->
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.AvatarStatusOutline}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Margin" Value="-3"/><Setter Property="CornerRadius" Value="6"/><Setter Property="IsHitTestVisible" Value="False"/>
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Size, RelativeSource={RelativeSource TemplatedParent}}" Value="Small"><Setter Property="Margin" Value="-2.5"/><Setter Property="CornerRadius" Value="5"/></DataTrigger>
+      <DataTrigger Binding="{Binding Size, RelativeSource={RelativeSource TemplatedParent}}" Value="Large"><Setter Property="CornerRadius" Value="7"/></DataTrigger>
+      <DataTrigger Binding="{Binding Size, RelativeSource={RelativeSource TemplatedParent}}" Value="ExtraLarge"><Setter Property="CornerRadius" Value="8"/></DataTrigger>
+    </Style.Triggers>
+  </Style>
+  <Style TargetType="{x:Type local:Avatar}">
+    <Setter Property="Width" Value="36"/><Setter Property="Height" Value="36"/><Setter Property="FontSize" Value="12"/><Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/><Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:Avatar}">
+      <Grid x:Name="PART_Layout" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid x:Name="PART_Face">
+          <Ellipse Fill="{TemplateBinding Background}"/>
+          <TextBlock x:Name="PART_Initials" Text="{TemplateBinding Initials}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          <Image x:Name="PART_Image" Stretch="UniformToFill" IsHitTestVisible="False"/>
+          <Ellipse Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{Binding BorderThickness.Left, RelativeSource={RelativeSource TemplatedParent}}" IsHitTestVisible="False"/>
+        </Grid>
+        <Border x:Name="PART_StatusExit" Style="{StaticResource AvatarDot}" Visibility="Collapsed"><Border Style="{StaticResource AvatarDotOutline}"/></Border>
+        <Border x:Name="PART_Status" Style="{StaticResource AvatarDot}" Visibility="Collapsed"><Border Style="{StaticResource AvatarDotOutline}"/></Border>
+      </Grid>
+    </ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers>
+      <Trigger Property="Size" Value="Small"><Setter Property="Width" Value="28"/><Setter Property="Height" Value="28"/><Setter Property="FontSize" Value="10"/></Trigger>
+      <Trigger Property="Size" Value="Large"><Setter Property="Width" Value="48"/><Setter Property="Height" Value="48"/><Setter Property="FontSize" Value="14"/></Trigger>
+      <Trigger Property="Size" Value="ExtraLarge"><Setter Property="Width" Value="88"/><Setter Property="Height" Value="88"/><Setter Property="FontSize" Value="22"/></Trigger>
+    </Style.Triggers>
+  </Style>
+</ResourceDictionary>

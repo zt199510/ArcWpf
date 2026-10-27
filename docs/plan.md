@@ -441,3 +441,18 @@ SegmentedControl本次实现完成：原生单选与绑定、动态项、图标/
 用户要求先提交当前代码，再按Arc reactions页面左侧控件菜单调整Gallery。前项已提交4f11c14，未推送；导航范围见[规格](components/GalleryNavigation.md)，只改Gallery导航，不改公共TreeView。测试仅GalleryNavigation专项，不用computer-use，界面用户人工验收。
 
 导航实现完成，GalleryNavigation专项4/4通过，明暗离屏已检查，实际界面待用户验收。见[验证记录](verification/2026-10-27-gallery-navigation.md)。本次导航改动未提交。
+
+## Badge 开发（2026-10-27）
+用户授权完成Badge来源、规格、原生实现、Gallery和专项验证。仅运行Badge测试，不使用computer-use，不操作浏览器/桌面验收，实际界面用户人工测试。[规格](components/Badge.md)。来源已固定，当前实现中。复用4480e1e中的新版导航。
+
+Badge本次实现完成：五色两尺寸、Icon/IconKey、文字/数字/模板内容、绑定、UIA文字语义、文字/图标/宽度/颜色动效、Full/Reduced/Off、明暗主题与Gallery。Badge专项8/8通过，明暗与Live离屏已检查；实际窗口及多DPI/读屏/性能待用户人工验收。未执行其他控件测试或全量，未使用computer-use，未提交/推送。见[验证记录](verification/2026-10-27-badge.md)。
+
+## Avatar 开发（2026-10-27）
+用户授权开始单头像：四尺寸、图片/首字母回退、在线离线点及加载/状态动效，来源已冻结，[规格](components/Avatar.md)。保留未提交Badge改动，只运行Avatar专项，不使用computer-use，实际界面用户人工验收。实现中。
+
+Avatar本次实现完成：四尺寸、ImageSource加载与首字母回退、在线离线状态、加载/回退/状态点动效、Full/Reduced/Off、UIA与Gallery。Avatar专项9/9通过，明暗离屏已检查，未执行其他专项或全量；未使用computer-use，实际界面/读屏/多DPI/性能待用户人工验收。保留Badge未提交改动，未提交/推送。见[验证记录](verification/2026-10-27-avatar.md)。
+
+## AvatarGroup 开发（2026-10-27）
+用户授权开始头像组，复用Avatar，含重叠/溢出/槽伸缩/计数滚动/悬停展开与姓名提示；来源已冻结，[规格](components/AvatarGroup.md)。仅运行AvatarGroup专项，不使用computer-use，界面用户人工验收，保留Badge/Avatar未提交改动。实现中。
+
+AvatarGroup本次实现完成：可通知Members、三尺寸/Max/+N、重叠头像、槽伸缩/计数方向滚动、悬停展开/抬升/让位/姓名与描边、Full/Reduced/Off、UIA缓存更新及Gallery。最终AvatarGroup专项9/9通过，明暗/悬停离屏已检查；未执行其他专项或全量，不用computer-use，实际窗口/多DPI/读屏/性能待人工。保留Badge/Avatar改动，未提交/推送。见[验证记录](verification/2026-10-27-avatar-group.md)。

@@ -111,3 +111,9 @@ ArcWpf 自身许可证在发布准备时明确决定；不将参考项目的许�
 - Pagination：补充来源基准见 [参考卡](references/components/Pagination.md)；不复制上游运行时依赖。
 - Breadcrumb：补充来源基准见 [参考卡](references/components/Breadcrumb.md)；不复制上游运行时依赖。
 - TreeView：补充来源基准见 [参考卡](references/components/TreeView.md)；不复制上游运行时依赖。
+
+- Badge：2026-10-27批次来源与WPF差异见[参考卡](references/components/Badge.md)，仅免费MIT Registry，未使用TKCode.Arc。
+
+- Avatar：2026-10-27免费MIT批次与图片素材差异见[参考卡](references/components/Avatar.md)；未使用TKCode.Arc。
+
+- AvatarGroup：2026-10-27免费MIT批次见[参考卡](references/components/AvatarGroup.md)，Avatar依赖与上一轮冻结副本一致。

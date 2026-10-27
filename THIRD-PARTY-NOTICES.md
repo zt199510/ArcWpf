@@ -159,3 +159,15 @@ OTPInput的槽布局、焦点框、数字进退/粘贴波次、错误摇动和�
 ## SegmentedControl 补充（2026-10-27）
 
 SegmentedControl的外框/项结构、共享背景、文字颜色过渡、边缘渐变与显露规则参考并改编自Arc免费Segmented control Registry/CSS及motion/foundation，适用上文Arc MIT许可。冻结批次、URL与SHA-256见`tests/Baselines/References/2026-10-27-segmented-control/manifest.json`；无官方版本号。WPF原生ListBox/SelectionItem及模板适配为本项目实现。Gallery的列表/网格为基本线条与矩形自绘，不引入额外图标素材或React/Motion运行依赖。
+
+## Badge 补充（2026-10-27）
+
+Badge的五色两尺寸胶囊、前置图标/标签结构、内容滚动模糊替换、宽度morph与hover颜色参考并改编自Arc免费Badge Registry/CSS及foundation/motion，适用上文Arc MIT许可（Copyright (c) 2026 Elia Kuratli）。冻结URL、批次与SHA-256见`tests/Baselines/References/2026-10-27-badge/manifest.json`，无官方版本号。WPF ContentControl、自然布局宿主与自动化适配为项目实现；Gallery勾号与三角形为基本线段自绘，未复制图标库，未引入React/Motion依赖。TKCode.Arc未用于本组件。
+
+## Avatar 补充（2026-10-27）
+
+Avatar四档圆形布局、首字母回退、状态点及加载/状态动效参考并改编自Arc免费Avatar Registry/CSS与foundation/motion，适用上文Arc MIT许可（Copyright (c) 2026 Elia Kuratli）。冻结URL/获取时间/SHA-256见`tests/Baselines/References/2026-10-27-avatar/manifest.json`，无官方版本号。WPF ImageSource/BitmapSource事件、模板与自动化适配为本项目实现，未引入React/Motion或TKCode.Arc代码。Gallery图片是项目原创几何人像，不是原站Maya照片，不引入第三方图像资产。
+
+## AvatarGroup 补充（2026-10-27）
+
+AvatarGroup的重叠布局、头像/溢出外环、槽伸缩、方向计数滚动、悬停扇开/邻项让位和姓名提示参考并改编自Arc免费Avatar group Registry/CSS及foundation/motion，适用上文Arc MIT许可（Copyright (c) 2026 Elia Kuratli）。冻结URL/日期/SHA-256见`tests/Baselines/References/2026-10-27-avatar-group/manifest.json`。Avatar依赖与上一轮冻结JSON哈希一致；未使用TKCode.Arc，未引入React/Motion依赖。成员集合通知、WPF布局容器与UIA为项目实现；Gallery复用AvatarPage原创几何人像，不引入原站照片。
