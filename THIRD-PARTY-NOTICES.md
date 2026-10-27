@@ -147,3 +147,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+## PasswordInput 补充（2026-10-27）
+
+PasswordInput的布局、眼睛路径/斜线遮罩、切换及消息动效参考并改编自Arc免费Password field Registry/CSS及motion/foundation，适用上文Arc MIT许可。冻结批次、URL与SHA-256见`tests/Baselines/References/2026-10-27-password-input/manifest.json`；无官方版本号。WPF PasswordBox及其AutomationPeer来源固定dotnet/wpf v10.0.0（MIT，.NET Foundation），用于核对原生机制，未复制其实现。未引入React/Motion运行依赖。

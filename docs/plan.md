@@ -411,3 +411,9 @@ ComboBox本次实现完成：输入/关键词过滤、SelectedValue双向绑定�
 用户授权开始Slider，范围为水平单滑块，含步长、范围、绑定、键盘、轨道点击/拖动、标签/读数、禁用及Arc动效；只运行Slider专项，不使用computer-use。用户随后明确“我来人工测试”，实际窗口由用户验收；代理做程序化布局/时钟及离屏检查。来源已冻结，详见[规格](components/Slider.md)。双滑块范围选择与垂直变体不属于本次范围。实现中。
 
 Slider本次实现完成：水平单滑块、原生范围/命令/UIA、步长与绑定、WPF捕获手势、回弹/动量/边界反馈、数字轮与数位进退、气泡、标记/装饰、明暗主题与Gallery。最终Slider专项11/11通过，随后仅复跑2项离屏输出检查及1项气泡导出检查通过；未执行其他控件测试或全量回归。用户明确“我来人工测试”，未使用computer-use；真实拖动/键盘观感、多DPI和读屏待人工，不标记已视觉验收。见[验证记录](verification/2026-10-26-slider.md)，未提交/推送。
+
+## PasswordInput 开发（2026-10-27）
+
+按用户授权开始PasswordInput，范围为密码遮蔽/显示、原生输入与显式取值、标签/说明/错误/禁用、眼睛图标及消息动效、Gallery。只运行PasswordInput专项，不做computer-use，实际界面由用户人工测试。WPF PasswordBox为sealed，采用Control组合PasswordBox与显式显示编辑器，不增加默认双向明文DP；[规格](components/PasswordInput.md)。实现中，密码强度不在范围。
+
+PasswordInput本次实现完成：原生遮蔽/显示编辑、显式密码与SecureString副本、生命周期明文清理、验证与自动化、眼睛/resolve/消息动效、Gallery。最终专项11/11通过，只执行PasswordInput测试；明暗离屏图已检查，实际IME、Tab/Space、鼠标交互、多DPI与读屏由用户人工验收，未使用computer-use。见[验证记录](verification/2026-10-27-password-input.md)。未提交/推送。

@@ -238,3 +238,14 @@ Slider 用法（水平单滑块，Value 默认双向绑定）：
 支持轨道点击/拖动、方向键/Shift方向/Page/Home/End、步长吸附、拖动回弹、数值气泡与滚动读数。`ValueChanged`实时通知，`ValueCommitted`在正常拖动释放或有效键盘/命令/刻度选择时通知；外部赋值不合成提交事件。可用`Marks`设置刻度，`StartContent`/`EndContent`放装饰或按钮。双滑块、垂直和专用触摸手势不在本次范围。
 
 Gallery → Slider，或参数`--page=slider`。只运行Slider专项，11/11通过；未使用computer-use，实际界面由用户人工测试。见[规格](docs/components/Slider.md)、[参考卡](docs/references/components/Slider.md)及[验证记录](docs/verification/2026-10-26-slider.md)。
+
+PasswordInput 用法（原生密码编辑与显示切换）：
+
+~~~xml
+<arc:PasswordInput x:Name="LoginPassword" Label="密码" Placeholder="请输入密码"
+                   Description="用于登录账户" MaxLength="128" />
+~~~
+
+通过 `LoginPassword.Password` 显式读写，或 `using var password = LoginPassword.SecurePassword;` 取得独立副本；`SetSecurePassword` 复制输入，`Clear()` 清空。`PasswordChanged` 不携带密码内容。Password不是依赖属性，不支持默认明文双向绑定；显示时编辑器包含明文，隐藏/禁用/卸载清理显示编辑器及撤销记录。`IsPasswordRevealed` 支持双向绑定。
+
+Gallery → PasswordInput，或参数 `--page=password-input`。只执行PasswordInput专项，11/11通过；实际界面由用户人工测试，不使用computer-use。见[规格](docs/components/PasswordInput.md)、[参考卡](docs/references/components/PasswordInput.md)及[验证记录](docs/verification/2026-10-27-password-input.md)。
