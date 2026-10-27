@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using ArcWpf.Controls;
 using ArcWpf.Gallery.Pages;
+using ArcWpf.Gallery.Navigation;
+using System.Windows.Input;
 
 namespace ArcWpf.Gallery;
 
@@ -15,7 +17,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         BuildNavigation();
-        NavigationTree.Selected += NavigationSelected;
+        NavigationPanel.PageSelected += NavigationSelected;
+        PreviewKeyDown += (_, e) => { if (e.Key == Key.K && Keyboard.Modifiers == ModifierKeys.Control) { SetNavigationVisible(true); NavigationPanel.FocusSearch(); e.Handled = true; } };
     }
 
     private void BuildNavigation()
@@ -28,33 +31,42 @@ public partial class MainWindow : Window
             Group("layout", "布局", ("accordion", "Accordion", new AccordionPage()), ("expandable-card", "ExpandableCard", new ExpandableCardPage()), ("menu", "Menu", new MenuPage()), ("form", "Form", new FormLayoutPage()), ("list", "List", new ListPage()), ("progress", "Progress", new ProgressPage()), ("number-input", "NumberInput", new NumberInputPage()), ("slider", "Slider", new SliderPage()))
         };
 
-        var roots = new ObservableCollection<TreeNode>();
+        var roots = new ObservableCollection<NavigationNode>();
         foreach (var group in groups)
         {
-            var parent = new TreeNode { Id = group.Id, Label = group.Label };
+            var parent = new NavigationNode { Id = group.Id, Label = group.Label };
             foreach (var item in group.Items)
             {
-                parent.Children.Add(new TreeNode { Id = item.Id, Label = item.Label });
+                parent.Children.Add(new NavigationNode { Id = item.Id, Label = item.Label });
                 _pages[item.Id] = item.Page;
             }
             roots.Add(parent);
         }
 
-        NavigationTree.Nodes = roots;
-        NavigationTree.DefaultExpandedIds = new ObservableCollection<string>(roots.Select(x => x.Id));
+        NavigationPanel.SetGroups(roots);
         var requestedPage = Environment.GetCommandLineArgs().FirstOrDefault(arg => arg.StartsWith("--page=", StringComparison.Ordinal))?[7..];
-        PageHost.Content = requestedPage is not null && _pages.TryGetValue(requestedPage, out var requested) ? requested : _pages["button"];
+        var selected = requestedPage is not null && _pages.ContainsKey(requestedPage) ? requestedPage : "button";
+        PageHost.Content = _pages[selected];
+        NavigationPanel.SelectPage(selected);
     }
 
-    private void NavigationSelected(object? sender, TreeNodeEventArgs e)
+    private void NavigationSelected(object? sender, string id)
     {
-        if (_pages.TryGetValue(e.Node.Id, out var page)) PageHost.Content = page;
+        if (_pages.TryGetValue(id, out var page)) PageHost.Content = page;
     }
 
     private void ToggleNavigation(object sender, RoutedEventArgs e)
     {
-        _navigationVisible = !_navigationVisible;
-        NavigationColumn.Width = _navigationVisible ? new GridLength(236) : new GridLength(0);
+        SetNavigationVisible(!_navigationVisible);
+    }
+
+    private void SetNavigationVisible(bool visible)
+    {
+        if (!visible && NavigationPanel.IsKeyboardFocusWithin) Keyboard.ClearFocus();
+        _navigationVisible = visible;
+        NavigationPanel.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        NavigationColumn.Width = new GridLength(visible ? 236 : 0);
+        NavigationGap.Width = new GridLength(visible ? 20 : 0);
     }
 
     private void ToggleTheme(object sender, RoutedEventArgs e)

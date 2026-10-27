@@ -1,0 +1,15 @@
+{
+  "page": "https://uiarc.dev/components/reactions",
+  "files": [
+    {
+      "file": "page.html",
+      "sha256": "35A9A0A7EA1FE1797797C68A45F2B85A497431D3EFEF156F0AEDE8F22AA9C984"
+    },
+    {
+      "file": "sidebar.css",
+      "sha256": "26676CC4446E3C43889DDF9FC9060C623C9B6A526D5362FD7CC764D328FFEF43"
+    }
+  ],
+  "capturedAt": "2026-10-27T11:45:50.4998456+08:00",
+  "css": "https://uiarc.dev/_next/static/css/be1cfac80ec4dcdb.css"
+}

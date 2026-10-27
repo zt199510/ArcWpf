@@ -435,3 +435,9 @@ OTPInput本次实现完成：默认六位/1..12长度、数字过滤与粘贴、
 SegmentedControl本次实现完成：原生单选与绑定、动态项、图标/附加内容、OptionIntent、键盘/禁用/RTL、共享滑动背景与文字色、溢出滚动/渐变和Gallery。最终专项8/8通过，明暗及RTL离屏检查通过；不使用computer-use，实际界面待用户人工验收。见[验证记录](verification/2026-10-27-segmented-control.md)。未提交/推送。
 
 2026-10-27 SegmentedControl黑框修正：用户截图反馈选择后多出深色轮廓，定位为额外FocusVisualStyle；已移除该装饰，保留原版选中背景和细边框。实际效果待用户复验。
+
+## Gallery左侧导航（2026-10-27）
+
+用户要求先提交当前代码，再按Arc reactions页面左侧控件菜单调整Gallery。前项已提交4f11c14，未推送；导航范围见[规格](components/GalleryNavigation.md)，只改Gallery导航，不改公共TreeView。测试仅GalleryNavigation专项，不用computer-use，界面用户人工验收。
+
+导航实现完成，GalleryNavigation专项4/4通过，明暗离屏已检查，实际界面待用户验收。见[验证记录](verification/2026-10-27-gallery-navigation.md)。本次导航改动未提交。
