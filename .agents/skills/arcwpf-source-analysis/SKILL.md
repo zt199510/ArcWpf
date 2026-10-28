@@ -9,6 +9,16 @@ description: 为 ArcWpf 分析 Arc 或 TKCode.Arc 的组件来源、视觉、交
 
 先读 [来源规范](../../../docs/sources.md)；创建规格时使用 [组件模板](../../../docs/templates/component-spec.md)。查询当前组件是否已有规格，优先更新原文件。
 
+## 开工闸门（必做，不可跳过）
+
+Free 组件在写规格或代码前，必须先完成：
+
+1. 下载 `https://uiarc.dev/r/<slug>.json`、`https://uiarc.dev/r/arc-motion-tokens.json`、`https://uiarc.dev/components/<slug>/markdown`、页面 HTML 与 `https://uiarc.dev/license`。
+2. 冻结到 `tests/Baselines/References/<日期>-<slug>/`：Registry 中的 `.tsx`/`.module.css` 展开到 `registry/`，`manifest.json` 记录来源 URL、采集时间和每个文件的 SHA-256。格式参照已有批次。
+3. 参考卡链接该批次，并从源码列出：状态机（每个状态的触发和转移）、每个状态显示的文案/图标、几何与令牌、逐项动效参数。
+
+未完成闸门不得写规格或代码。只有 Pro 组件或 Registry 不可得时才可退回文档/截图/观察，并在规格开头标明“无源码，动效为推测”。
+
 ## 工作方式
 
 1. 明确组件与所需变体。读取原站文档、可用免费源码、必要截图；TKCode.Arc 作为额外实现参考。固定版本和获取时间。
