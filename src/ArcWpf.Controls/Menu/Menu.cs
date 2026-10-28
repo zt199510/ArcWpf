@@ -15,6 +15,7 @@ public sealed class MenuItem
     public object? CommandParameter { get; set; }
     public bool IsEnabled { get; set; } = true;
     public bool IsDestructive { get; set; }
+    public bool IsChecked { get; set; }
     public bool SeparatorBefore { get; set; }
     public string? InputGestureText { get; set; }
     public Visibility SeparatorVisibility => SeparatorBefore ? Visibility.Visible : Visibility.Collapsed;

@@ -1,0 +1,16 @@
+{
+  "component": "user-menu",
+  "source": {
+    "registry": "https://uiarc.dev/r/user-menu.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/user-menu/markdown",
+    "page": "https://uiarc.dev/components/user-menu",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-28",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/user-menu/user-menu.tsx": "ea41adfd5ef81396d4044a8d9d06759cd4628adcb7cd4e74c6cc6dfb98313c8f",
+    "registry/components/user-menu/user-menu.module.css": "765627540a3767d9bffc86b1cb3be2154975e41d9a561fef9cabe6dd74d0027a"
+  }
+}

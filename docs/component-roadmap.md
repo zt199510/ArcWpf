@@ -119,3 +119,9 @@ CopyButton 已开始实现，范围为 Clipboard 复制、成功反馈、Copy/Ch
 
 SplitButton 已实现主动作与 Menu Popup 组合，SplitButtonTests 2/2 通过；实际窗口待人工验收。
 
+
+
+## ContextMenu 开发（2026-10-28）
+
+ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦点归还；ContextMenuTests 3/3 通过，实际窗口待人工验收。
+

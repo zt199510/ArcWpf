@@ -66,13 +66,17 @@ public class Progress : Control
         if (_fill is null || _scale is null) return;
         var level = ArcMotion.GetLevel(this);
         var target = Percentage;
+        var current = _scale.ScaleX;
         _scale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        // Keep the logical target as the base value. Without this, clearing the
+        // previous clock restores the initial 0 value and every update animates
+        // from the beginning instead of continuing from the current fill.
+        _scale.ScaleX = target;
         if (animate && IsLoaded && level != ArcMotionLevel.Off)
         {
-            var animation = new System.Windows.Media.Animation.DoubleAnimation(target, level == ArcMotionLevel.Full ? TimeSpan.FromSeconds(.35) : TimeSpan.FromSeconds(.12)) { EasingFunction = new System.Windows.Media.Animation.CubicEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut } };
-            _scale.BeginAnimation(ScaleTransform.ScaleXProperty, animation);
+            var animation = new System.Windows.Media.Animation.DoubleAnimation(current, target, level == ArcMotionLevel.Full ? TimeSpan.FromSeconds(.35) : TimeSpan.FromSeconds(.12)) { EasingFunction = new System.Windows.Media.Animation.CubicEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut } };
+            _scale.BeginAnimation(ScaleTransform.ScaleXProperty, animation, System.Windows.Media.Animation.HandoffBehavior.SnapshotAndReplace);
         }
-        else _scale.ScaleX = target;
         if (_label is not null) _label.Text = Label;
         if (_value is not null) _value.Text = ShowValue ? (target >= 1 ? "✓" : target.ToString("P0", CultureInfo.InvariantCulture)) : string.Empty;
         AutomationProperties.SetHelpText(this, $"{target:P0}");

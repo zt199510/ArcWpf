@@ -24,6 +24,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Accordion/Themes/AccordionTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableCard/Themes/ExpandableCardTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ContextMenu/Themes/ContextMenuTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Breadcrumb/Themes/BreadcrumbTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/TreeView/Themes/TreeViewTheme.xaml" />
   <ResourceDictionary Source="/ArcWpf.Controls;component/List/Themes/ListTheme.xaml" />
@@ -42,8 +43,10 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Avatar/Themes/AvatarTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/AvatarGroup/Themes/AvatarGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/PresenceStack/Themes/PresenceStackTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/UserMenu/Themes/UserMenuTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
+
 
 
 

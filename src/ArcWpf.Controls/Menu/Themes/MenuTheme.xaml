@@ -35,14 +35,18 @@
     <Grid>
       <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
       <!-- .icon is 17 wide with a 10px gap; an item without an icon starts its label at the padding edge. -->
-      <ContentControl x:Name="ItemIcon" Grid.Column="0" Width="17" Margin="0,0,10,0" Focusable="False" IsTabStop="False" Content="{Binding Icon}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+      <Grid Grid.Column="0" Width="17" Margin="0,0,10,0" VerticalAlignment="Center">
+        <ContentControl x:Name="ItemIcon" Width="17" Focusable="False" IsTabStop="False" Content="{Binding Icon}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+        <Path x:Name="ItemCheck" Width="15" Height="15" Data="M 2,8 L 6,12 L 13,3" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1.7" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Visibility="Collapsed" />
+      </Grid>
       <TextBlock x:Name="ItemLabel" Grid.Column="1" Text="{Binding Label}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
       <TextBlock x:Name="ItemGesture" Grid.Column="2" Text="{Binding InputGestureText}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="16,0,0,0" VerticalAlignment="Center" />
     </Grid>
     <DataTemplate.Triggers>
       <DataTrigger Binding="{Binding Icon}" Value="{x:Null}"><Setter TargetName="ItemIcon" Property="Visibility" Value="Collapsed" /></DataTrigger>
+      <DataTrigger Binding="{Binding IsChecked}" Value="True"><Setter TargetName="ItemCheck" Property="Visibility" Value="Visible" /><Setter TargetName="ItemIcon" Property="Visibility" Value="Collapsed" /></DataTrigger>
       <DataTrigger Binding="{Binding InputGestureText}" Value="{x:Null}"><Setter TargetName="ItemGesture" Property="Visibility" Value="Collapsed" /></DataTrigger>
-      <DataTrigger Binding="{Binding IsDestructive}" Value="True"><Setter TargetName="ItemLabel" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /><Setter TargetName="ItemIcon" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /></DataTrigger>
+      <DataTrigger Binding="{Binding IsDestructive}" Value="True"><Setter TargetName="ItemLabel" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /><Setter TargetName="ItemIcon" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /><Setter TargetName="ItemCheck" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.Danger}" /></DataTrigger>
     </DataTemplate.Triggers>
   </DataTemplate>
   <!-- PART_ItemsHost for every menu template: no ListBox chrome, whose 1px border padding offset rows from PART_Highlight. -->
