@@ -54,6 +54,10 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("ButtonGroupSolidHighlightPressed", Oklch(MixL("Foreground", "Background", .22), 0, 0));
         PutBrush("ButtonGroupSolidDivider", Oklch(MixL("Foreground", "Background", .2), 0, 0));
         PutBrush("ButtonGroupSolidMutedInk", Oklch(MixL("Foreground", "Background", .72), 0, 0));
+        // split-button.module.css primary variant: hover foreground 88%, pressed/open 80%, trigger border-left background 18%.
+        PutBrush("SplitButtonHover", Oklch(MixL("Foreground", "Background", .12), 0, 0));
+        PutBrush("SplitButtonPressed", Oklch(MixL("Foreground", "Background", .2), 0, 0));
+        PutBrush("SplitButtonDivider", Oklch(MixL("Foreground", "Background", .18), 0, 0));
         PutBrush("TooltipBorder",Oklch(neutrals["Background"] * .14 + neutrals["Foreground"] * .86, 0, 0));
         var raised = new DropShadowEffect { Color=Colors.Black, BlurRadius=dark?22:18, ShadowDepth=dark?8:6, Direction=270, Opacity=dark?.22:.065 }; raised.Freeze(); this["ArcWpf.Shadow.Raised"]=raised;
         PutBrush("ToastSuccess", Oklch(dark ? .35 : .92, 0, 0)); PutBrush("ToastSuccessBorder", Oklch(dark ? .55 : .72, 0, 0)); PutBrush("ToastSuccessGlyph", Oklch(dark ? .82 : .32, 0, 0));
@@ -65,6 +69,8 @@ public sealed class ArcThemeResources : ResourceDictionary
         otpAccent.A = (byte)Math.Round(255 * (dark ? .13 : .1)); PutBrush("AccentSubtle", otpAccent);
         var otpDanger = Oklch(dangerL, dangerC, 25); var otpSurface = Oklch(neutrals["Surface"], 0, 0);
         PutBrush("OTPErrorSurface", Color.FromRgb((byte)Math.Round(otpDanger.R*.07+otpSurface.R*.93), (byte)Math.Round(otpDanger.G*.07+otpSurface.G*.93), (byte)Math.Round(otpDanger.B*.07+otpSurface.B*.93)));
+        // dropdown-menu.module.css .highlight[data-tone="danger"]: danger 8% over surface (sRGB approximation of the oklab mix).
+        PutBrush("MenuDangerHighlight", Color.FromRgb((byte)Math.Round(otpDanger.R*.08+otpSurface.R*.92), (byte)Math.Round(otpDanger.G*.08+otpSurface.G*.92), (byte)Math.Round(otpDanger.B*.08+otpSurface.B*.92)));
         PutBrush("AlertSuccess", Oklch(dark ? .72 : .42, dark ? .14 : .16, 145));
         PutBrush("AlertWarning", Oklch(dark ? .82 : .54, dark ? .16 : .18, 82));
         // color-mix(in oklab, danger 55%, surface-muted), with a neutral second color.

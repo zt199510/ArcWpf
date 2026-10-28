@@ -4,27 +4,48 @@
   </ResourceDictionary.MergedDictionaries>
   <ControlTemplate x:Key="ArcWpf.SplitButton.MenuTemplate" TargetType="{x:Type arc:Menu}">
     <Grid>
-      <Button x:Name="PART_Trigger" Width="36" Height="36" Foreground="{TemplateBinding Foreground}" Background="Transparent" Focusable="True" FocusVisualStyle="{x:Null}" AutomationProperties.Name="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}">
+      <!-- .trigger: 38 wide; the fill colour is driven by SplitButton (hover / pressed / open). -->
+      <Button x:Name="PART_Trigger" Width="38" Foreground="{TemplateBinding Foreground}" Background="Transparent" Focusable="True" FocusVisualStyle="{x:Null}" AutomationProperties.Name="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}">
         <Button.Template>
           <ControlTemplate TargetType="Button">
-            <Border Background="Transparent" Padding="8,0" />
+            <Border x:Name="Fill" Background="Transparent" />
           </ControlTemplate>
         </Button.Template>
       </Button>
-      <Path x:Name="PART_Chevron" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Data="M 5,7 L 12,14 L 19,7" Stroke="{TemplateBinding Foreground}" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" RenderTransformOrigin=".5,.5" />
-      <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Bottom" PlacementTarget="{Binding ElementName=PART_Trigger}" StaysOpen="True" PopupAnimation="None">
-        <Border x:Name="PART_Surface" MinWidth="208" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" ClipToBounds="True" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
+      <!-- lucide chevron-down (24 viewBox) at 16px; Menu rotates this box about its center when open. -->
+      <Viewbox x:Name="PART_Chevron" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+        <Canvas Width="24" Height="24">
+          <Path Data="M 6,9 L 12,15 L 18,9" Stroke="{TemplateBinding Foreground}" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+        </Canvas>
+      </Viewbox>
+      <!-- split-button.tsx: align="end" sideOffset={4}; SplitButton sets the offsets, Menu places it. -->
+      <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Custom" PlacementTarget="{Binding ElementName=PART_Trigger}" StaysOpen="True" PopupAnimation="None">
+        <Border x:Name="PART_Surface" MinWidth="192" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
           <Grid>
-            <Border x:Name="PART_Highlight" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="8" IsHitTestVisible="False" Visibility="Hidden" />
-            <ListBox x:Name="PART_ItemsHost" ItemsSource="{TemplateBinding Items}" ItemContainerStyle="{StaticResource ArcWpf.Menu.ItemContainerStyle}" ItemTemplate="{StaticResource ArcWpf.Menu.ItemTemplate}" Margin="0" Padding="0" ClipToBounds="True" BorderThickness="0" Background="Transparent" KeyboardNavigation.TabNavigation="Continue" Focusable="True" FocusVisualStyle="{x:Null}" />
+            <Border x:Name="PART_Highlight" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="8" IsHitTestVisible="False" Visibility="Hidden" />
+            <ListBox x:Name="PART_ItemsHost" Style="{StaticResource ArcWpf.Menu.ItemsHostStyle}" ItemsSource="{TemplateBinding Items}" />
           </Grid>
         </Border>
       </Popup>
     </Grid>
   </ControlTemplate>
 
+  <!-- .primary: label only, no own press scale or shadow; the whole pill scales and SplitButton drives the fill colour. -->
+  <ControlTemplate x:Key="ArcWpf.SplitButton.MainTemplate" TargetType="{x:Type arc:Button}">
+    <Border x:Name="Fill" Background="Transparent" Padding="{TemplateBinding Padding}">
+      <Grid>
+        <Border x:Name="PART_LabelSlot" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <ContentPresenter x:Name="Label" ContentSource="Content" RecognizesAccessKey="True" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <Image x:Name="PART_PreviousLabel" Opacity="0" IsHitTestVisible="False" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </ControlTemplate>
+
   <Style x:Key="ArcWpf.SplitButton.MainButton" TargetType="{x:Type arc:Button}">
-    <Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Background}" /><Setter Property="BorderBrush" Value="Transparent" /><Setter Property="BorderThickness" Value="0" /><Setter Property="Padding" Value="18,0" /><Setter Property="MinHeight" Value="36" /><Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Template" Value="{StaticResource ArcWpf.SplitButton.MainTemplate}" />
+    <Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Background}" /><Setter Property="BorderBrush" Value="Transparent" /><Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="16,0" /><Setter Property="MinHeight" Value="{DynamicResource ArcWpf.ControlHeight.Medium}" /><Setter Property="IsPressAnimationEnabled" Value="False" /><Setter Property="FocusVisualStyle" Value="{x:Null}" /><Setter Property="Cursor" Value="Hand" />
   </Style>
 
   <Style TargetType="{x:Type arc:SplitButton}">
@@ -39,12 +60,13 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type arc:SplitButton}">
-          <Border x:Name="PART_Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ArcWpf.Radius.Control}">
+          <Border x:Name="PART_Surface" RenderTransformOrigin=".5,.5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ArcWpf.Radius.Control}">
             <Grid>
-              <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="36" /></Grid.ColumnDefinitions>
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
               <arc:Button x:Name="PART_MainButton" Grid.Column="0" Style="{StaticResource ArcWpf.SplitButton.MainButton}" Content="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}" />
               <arc:Menu x:Name="PART_Menu" Grid.Column="1" Template="{StaticResource ArcWpf.SplitButton.MenuTemplate}" Foreground="{TemplateBinding Foreground}" Items="{Binding Items, RelativeSource={RelativeSource TemplatedParent}}" Label="{Binding MenuLabel, RelativeSource={RelativeSource TemplatedParent}}" />
-              <Border Grid.Column="1" Width="1" Height="20" HorizontalAlignment="Left" Background="{DynamicResource ArcWpf.Brush.BorderStrong}" IsHitTestVisible="False" />
+              <!-- .trigger border-left: full height, background 18% into foreground. -->
+              <Border Grid.Column="1" Width="1" HorizontalAlignment="Left" Background="{DynamicResource ArcWpf.Brush.SplitButtonDivider}" IsHitTestVisible="False" />
             </Grid>
           </Border>
           <ControlTemplate.Triggers><Trigger Property="IsEnabled" Value="False"><Setter TargetName="PART_Surface" Property="Opacity" Value=".52" /></Trigger></ControlTemplate.Triggers>
@@ -53,5 +75,3 @@
     </Setter>
   </Style>
 </ResourceDictionary>
-
-

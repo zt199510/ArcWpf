@@ -29,3 +29,5 @@ Arc 官方 Split button 页面：<https://uiarc.dev/components/split-button>（2
 ## 明确差异
 
 主动作使用 WPF `ICommand`，菜单条目使用项目 `MenuItem.Command`；不引入 React `onClick` 或 Radix trigger。实际窗口需验收主/副区域命中、Popup 对齐、键盘焦点、主题和 DPI。
+
+2026-10-28：菜单按来源 `align="end" sideOffset={4}` 对齐拆分按钮外缘，最小宽度 192；chevron 改为 16px Viewbox 矢量，原地旋转。见 [Menu 弹出层修正](../verification/2026-10-28-menu-hosted-popup.md)。同日第二轮补齐触发区宽 38、整高分隔线、悬停/按压/打开底色过渡与主动作整体 .97 按压缩放；secondary 变体与标签逐字 morph 未实现。

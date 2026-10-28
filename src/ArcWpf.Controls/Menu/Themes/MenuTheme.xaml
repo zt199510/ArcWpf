@@ -17,25 +17,46 @@
     <Setter Property="Template" Value="{StaticResource ArcWpf.Menu.TriggerTemplate}" />
     <Setter Property="FocusVisualStyle" Value="{StaticResource ArcWpf.Menu.FocusVisual}" />
   </Style>
-  <!-- Shared with ButtonGroup's chevron menu. -->
+  <!-- Shared with ButtonGroup's and SplitButton's chevron menus. The row paints nothing: PART_Highlight under the list is the only hover/selection fill. -->
   <Style x:Key="ArcWpf.Menu.ItemContainerStyle" TargetType="ListBoxItem">
-    <Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" /><Setter Property="Background" Value="Transparent" /><Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Focusable" Value="True" /><Setter Property="FocusVisualStyle" Value="{x:Null}" /><Setter Property="OverridesDefaultStyle" Value="True" /><Setter Property="ClipToBounds" Value="True" />
-    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="0" ClipToBounds="True"><ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" /></Border></ControlTemplate></Setter.Value></Setter>
-    <Style.Triggers><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="Transparent" /></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="Transparent" /></Trigger><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45" /></Trigger></Style.Triggers>
+    <Setter Property="OverridesDefaultStyle" Value="True" /><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" /><Setter Property="Background" Value="Transparent" /><Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Focusable" Value="True" /><Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem">
+      <StackPanel>
+        <!-- .separator: 1px, 4 above and below (space-1), bleeding 4 into the menu padding. -->
+        <Border Height="1" Margin="-4,4" Background="{DynamicResource ArcWpf.Brush.Border}" Visibility="{Binding SeparatorVisibility}" IsHitTestVisible="False" />
+        <!-- .item: min-height 36, padding 0 11px. PART_Row is the box the shared highlight follows. -->
+        <Border x:Name="PART_Row" Background="Transparent" MinHeight="36" Padding="11,0"><ContentPresenter VerticalAlignment="Center" /></Border>
+      </StackPanel>
+    </ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45" /></Trigger></Style.Triggers>
   </Style>
   <DataTemplate x:Key="ArcWpf.Menu.ItemTemplate">
     <Grid>
-      <Border Height="1" Margin="0,4" Background="{DynamicResource ArcWpf.Brush.Border}" Visibility="{Binding SeparatorVisibility}" />
-      <Button IsEnabled="{Binding IsEnabled}" Focusable="False" IsTabStop="False" MinHeight="36" Padding="11,0" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FocusVisualStyle="{x:Null}">
-        <Grid>
-          <Grid.ColumnDefinitions><ColumnDefinition Width="24" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-          <ContentControl Grid.Column="0" Content="{Binding Icon}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" HorizontalContentAlignment="Left" />
-          <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" /><Style.Triggers><DataTrigger Binding="{Binding IsDestructive}" Value="True"><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
-          <TextBlock Grid.Column="2" Text="{Binding InputGestureText}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="16,0,0,0" VerticalAlignment="Center" />
-        </Grid>
-      </Button>
+      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+      <!-- .icon is 17 wide with a 10px gap; an item without an icon starts its label at the padding edge. -->
+      <ContentControl x:Name="ItemIcon" Grid.Column="0" Width="17" Margin="0,0,10,0" Focusable="False" IsTabStop="False" Content="{Binding Icon}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+      <TextBlock x:Name="ItemLabel" Grid.Column="1" Text="{Binding Label}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+      <TextBlock x:Name="ItemGesture" Grid.Column="2" Text="{Binding InputGestureText}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="16,0,0,0" VerticalAlignment="Center" />
     </Grid>
+    <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding Icon}" Value="{x:Null}"><Setter TargetName="ItemIcon" Property="Visibility" Value="Collapsed" /></DataTrigger>
+      <DataTrigger Binding="{Binding InputGestureText}" Value="{x:Null}"><Setter TargetName="ItemGesture" Property="Visibility" Value="Collapsed" /></DataTrigger>
+      <DataTrigger Binding="{Binding IsDestructive}" Value="True"><Setter TargetName="ItemLabel" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /><Setter TargetName="ItemIcon" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}" /></DataTrigger>
+    </DataTemplate.Triggers>
   </DataTemplate>
+  <!-- PART_ItemsHost for every menu template: no ListBox chrome, whose 1px border padding offset rows from PART_Highlight. -->
+  <Style x:Key="ArcWpf.Menu.ItemsHostStyle" TargetType="ListBox">
+    <Setter Property="ItemContainerStyle" Value="{StaticResource ArcWpf.Menu.ItemContainerStyle}" />
+    <Setter Property="ItemTemplate" Value="{StaticResource ArcWpf.Menu.ItemTemplate}" />
+    <Setter Property="Background" Value="Transparent" /><Setter Property="BorderThickness" Value="0" /><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" />
+    <Setter Property="Focusable" Value="True" /><Setter Property="FocusVisualStyle" Value="{x:Null}" /><Setter Property="KeyboardNavigation.TabNavigation" Value="Continue" />
+    <Setter Property="ItemsPanel"><Setter.Value><ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate></Setter.Value></Setter>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBox">
+      <!-- Short command lists only (Arc: no virtualization); no ScrollViewer, so separators can bleed into the surface padding. -->
+      <ItemsPresenter />
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
   <Style TargetType="{x:Type arc:Menu}">
     <Setter Property="Focusable" Value="False" />
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" />
@@ -47,11 +68,10 @@
           <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><ContentControl Grid.Column="0" Content="{Binding Icon, RelativeSource={RelativeSource AncestorType={x:Type arc:Menu}}}" VerticalContentAlignment="Center" Margin="0,0,8,0" /><TextBlock x:Name="PART_TriggerLabel" Grid.Column="1" Text="{Binding Label, RelativeSource={RelativeSource AncestorType={x:Type arc:Menu}}}" VerticalAlignment="Center" RenderTransformOrigin=".5,.5" /><Path x:Name="PART_Chevron" Grid.Column="2" Width="12" Height="12" Margin="12,0,0,0" Data="M 3,5 L 6,8 L 9,5" Stroke="{DynamicResource ArcWpf.Brush.TextMuted}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" HorizontalAlignment="Right" VerticalAlignment="Center" IsHitTestVisible="False" RenderTransformOrigin=".5,.5" /></Grid>
         </Button>
         <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Custom" PlacementTarget="{Binding ElementName=PART_Trigger}" StaysOpen="True" PopupAnimation="None">
-          <Border x:Name="PART_Surface" MinWidth="192" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" ClipToBounds="True" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
+          <Border x:Name="PART_Surface" MinWidth="192" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
             <Grid>
-            <Border x:Name="PART_Highlight" Margin="0" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="8" IsHitTestVisible="False" Visibility="Hidden" />
-            <ListBox x:Name="PART_ItemsHost" ItemsSource="{TemplateBinding Items}" ItemContainerStyle="{StaticResource ArcWpf.Menu.ItemContainerStyle}" ItemTemplate="{StaticResource ArcWpf.Menu.ItemTemplate}" Margin="0" Padding="0" ClipToBounds="True" BorderThickness="0" Background="Transparent" KeyboardNavigation.TabNavigation="Continue" Focusable="True" FocusVisualStyle="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            </ListBox>
+            <Border x:Name="PART_Highlight" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="8" IsHitTestVisible="False" Visibility="Hidden" />
+            <ListBox x:Name="PART_ItemsHost" Style="{StaticResource ArcWpf.Menu.ItemsHostStyle}" ItemsSource="{TemplateBinding Items}" />
             </Grid>
           </Border>
         </Popup>
@@ -59,6 +79,3 @@
     </ControlTemplate></Setter.Value></Setter>
   </Style>
 </ResourceDictionary>
-
-
-
