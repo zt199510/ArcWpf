@@ -47,7 +47,14 @@ public sealed class ArcThemeResources : ResourceDictionary
         sliderShadow.Freeze(); this["ArcWpf.Shadow.SliderThumb"] = sliderShadow;
         var overlayColor = Oklch(.1, 0, 0); overlayColor.A = (byte)Math.Round(255 * .46); PutBrush("DialogOverlay", overlayColor);
         var closeColor = Oklch(neutrals["SurfaceMuted"], 0, 0); closeColor.A = 128; PutBrush("DialogClose", closeColor);
-        PutBrush("TooltipBorder", Oklch(neutrals["Background"] * .14 + neutrals["Foreground"] * .86, 0, 0));
+        // ButtonGroup color-mix(in oklab) of achromatic neutrals reduces to mixing L (frozen 2026-10-28 button-group CSS).
+        double MixL(string a, string b, double share) => neutrals[a] * (1 - share) + neutrals[b] * share;
+        PutBrush("ButtonGroupHighlightPressed", Oklch(MixL("SurfaceMuted", "BorderStrong", .3), 0, 0));
+        PutBrush("ButtonGroupSolidHighlight", Oklch(MixL("Foreground", "Background", .13), 0, 0));
+        PutBrush("ButtonGroupSolidHighlightPressed", Oklch(MixL("Foreground", "Background", .22), 0, 0));
+        PutBrush("ButtonGroupSolidDivider", Oklch(MixL("Foreground", "Background", .2), 0, 0));
+        PutBrush("ButtonGroupSolidMutedInk", Oklch(MixL("Foreground", "Background", .72), 0, 0));
+        PutBrush("TooltipBorder",Oklch(neutrals["Background"] * .14 + neutrals["Foreground"] * .86, 0, 0));
         var raised = new DropShadowEffect { Color=Colors.Black, BlurRadius=dark?22:18, ShadowDepth=dark?8:6, Direction=270, Opacity=dark?.22:.065 }; raised.Freeze(); this["ArcWpf.Shadow.Raised"]=raised;
         PutBrush("ToastSuccess", Oklch(dark ? .35 : .92, 0, 0)); PutBrush("ToastSuccessBorder", Oklch(dark ? .55 : .72, 0, 0)); PutBrush("ToastSuccessGlyph", Oklch(dark ? .82 : .32, 0, 0));
         double dangerL = dark ? .76 : .54;

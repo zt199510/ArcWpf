@@ -78,7 +78,7 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 1. `ActionButton`：补齐 Button 与异步提交/成功状态之间的语义边界。
 2. `CopyButton`：复用 Button 的状态 morph，加入剪贴板成功/失败和键盘反馈。
-3. `ButtonGroup`、`SplitButton`：建立按钮组布局、默认动作与菜单动作组合。
+3. `ButtonGroup`（2026-10-28 已实现，待 Windows 验收）、`SplitButton`：建立按钮组布局、默认动作与菜单动作组合。
 4. `ContextMenu`、`UserMenu`：复用 Menu 的 Popup、焦点归还、Escape 和键盘导航。
 5. `HoldToConfirm`：补充危险操作确认和按住进度，复用 Reduced/Off 动效合同。
 6. `InlineEdit`：复用 Input 的编辑、提交、取消、验证和焦点归还。

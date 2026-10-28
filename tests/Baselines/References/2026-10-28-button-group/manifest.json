@@ -1,0 +1,21 @@
+{
+  "batch": "2026-10-28-button-group",
+  "kind": "project acquisition batch, not upstream release",
+  "retrieved": "2026-10-27T19:58:40.170367-07:00",
+  "sources": [
+    "https://uiarc.dev/r/button-group.json",
+    "https://uiarc.dev/components/button-group",
+    "https://uiarc.dev/components/button-group/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "files": {
+    "button-group.json": "07ad897449c6ddb383a214785d9c20588d37c795a22376b27992b1f5614196b2",
+    "button-group.md": "e14d5c819b9a446bbef6482080bddb7c86acb3a958c34998eb7c0c10ab21702b",
+    "license.html": "00440cf909971139c2ecd10896aba73e6000416a8f9582f24486a136fc666b72",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "a3cc200f391f6f6debeac0368907a723912528418eedeb2969a7d193edeb5912",
+    "registry/button-group.module.css": "660ea137acde2f4fbde2f6678e8ac52ae4b6f9abad0f094af2f42de33cea74e9",
+    "registry/button-group.tsx": "843ccf5fdec648e2045cf617286a2dca275282e2c605e1317fcd61984909396b"
+  }
+}
