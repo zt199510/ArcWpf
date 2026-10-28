@@ -95,6 +95,11 @@ public partial class Button : System.Windows.Controls.Button
         }
     }
 
+    // Derived async buttons keep focus while busy but must not answer presses.
+    private protected virtual bool IsBusy => IsLoading;
+
+    private protected void RefreshMotion() => UpdateMotion(false);
+
     private void UpdateMotion(bool animatePress)
     {
         bool active = IsLoaded && IsVisible && IsEnabled && ArcMotion.GetLevel(this) == ArcMotionLevel.Full;
@@ -107,7 +112,7 @@ public partial class Button : System.Windows.Controls.Button
             if (!spin && _rotation is not null) { _rotation.Angle = 0; }
         }
         if (_scale is null) { return; }
-        bool pressed = active && !IsLoading && IsPressAnimationEnabled && IsPressed;
+        bool pressed = active && !IsBusy && IsPressAnimationEnabled && IsPressed;
         double target = pressed ? (ActualWidth > 220 ? .985 : ActualWidth > 0 && ActualWidth <= 48 ? .96 : .97) : 1;
         double current = _scale.ScaleX;
         int generation = ++_pressGeneration;

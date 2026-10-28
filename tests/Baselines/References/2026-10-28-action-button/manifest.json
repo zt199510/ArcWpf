@@ -1,0 +1,21 @@
+{
+  "batch": "2026-10-28-action-button",
+  "kind": "project acquisition batch, not upstream release",
+  "retrieved": "2026-10-27T18:32:07.265072-07:00",
+  "sources": [
+    "https://uiarc.dev/r/action-button.json",
+    "https://uiarc.dev/components/action-button",
+    "https://uiarc.dev/components/action-button/markdown",
+    "https://uiarc.dev/r/arc-motion-tokens.json",
+    "https://uiarc.dev/license"
+  ],
+  "files": {
+    "action-button.json": "fcbca32bf24cc6e39d51d6c1bac460e3adb4225552b0b0a2063d4470aad2272a",
+    "action-button.md": "7947305204c03dcdfb3c0e7f31b803e038855fb2bb5ac40f70a5d874bc227ef4",
+    "license.html": "b7ed63c6c54f261928fa4ecb5c6a695ae8b943a820fef289b4b4c6b875add7be",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "a8975b8e2dea8f63b930383fc6b0ddc57011e3e23512cfac4dd9fa24e9aead0f",
+    "registry/action-button.module.css": "fe09236a2f499755c579bb6f28357f3d44873aa31e138e25981c39c3af0f53ca",
+    "registry/action-button.tsx": "2cb2354db41b0dd06e714a33d138cd83a6d68f12e52a6a6f0f9f85f92d300131"
+  }
+}
