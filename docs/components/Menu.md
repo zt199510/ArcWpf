@@ -4,6 +4,8 @@
 
 2026-10-27：修复触发器点击不弹出（部件类型被项目 `Button` 遮蔽）与 Popup 盖住触发器的偏移，见[修复记录](../verification/2026-10-27-menu-trigger-fix.md)。
 
+2026-10-28：修复嵌入宿主（ButtonGroup/SplitButton）时的呈现问题：条目内嵌原生 Button 的系统底色、共享高亮错位、分隔线重叠、无图标缩进等，条目样式/模板/列表宿主统一为 `ArcWpf.Menu.ItemContainerStyle`/`ItemTemplate`/`ItemsHostStyle`，同日补齐 130ms 退场（淡出 + .985，可中途反向）。见[修正记录](../verification/2026-10-28-menu-hosted-popup.md)。
+
 本项目公开类型暂命名为 `Menu`，它对应 Arc 的 **Dropdown menu**，不是 WPF 原生 `System.Windows.Controls.Menu`，也不扩展为 ContextMenu、UserMenu 或子菜单。
 
 ## Arc 原始契约

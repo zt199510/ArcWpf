@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ArcWpf.Controls;
@@ -47,6 +48,38 @@ public sealed class SplitButtonTests
         Assert.IsNull(itemStyle.Setters.OfType<Setter>().First(s => s.Property == Control.FocusVisualStyleProperty).Value);
         Assert.IsTrue(trigger.ActualWidth > 0);
     });
+
+    [TestMethod]
+    public void TriggerAndMainFillFollowHoverPressAndOpenState()
+    {
+        Sta.Run(() =>
+        {
+            var split = Create();
+            split.Items.Add(new ArcWpf.Controls.MenuItem { Label = "Save as" });
+            var host = new Window { Width = 400, Height = 240, Content = split, ShowInTaskbar = false };
+            try
+            {
+                host.Show(); host.UpdateLayout();
+                var menu = (ArcMenu)split.Template.FindName("PART_Menu", split);
+                var trigger = (System.Windows.Controls.Button)menu.Template.FindName("PART_Trigger", menu);
+                var main = (ArcButton)split.Template.FindName("PART_MainButton", split);
+                var triggerFill = (Border)trigger.Template.FindName("Fill", trigger);
+                var mainFill = (Border)main.Template.FindName("Fill", main);
+                // split-button.module.css .trigger width 38; fills inset one pixel inside the 18 radius.
+                Assert.AreEqual(38d, trigger.ActualWidth, .5);
+                Assert.AreEqual(new CornerRadius(0, 17, 17, 0), triggerFill.CornerRadius);
+                Assert.AreEqual(new CornerRadius(17, 0, 0, 17), mainFill.CornerRadius);
+                Assert.AreEqual(0, ((SolidColorBrush)triggerFill.Background).Color.A, "Rest shows the pill fill.");
+                split.IsOpen = true; Sta.Pump();
+                Assert.IsTrue(menu.IsOpen);
+                MenuTests.WaitUntil(() => !triggerFill.Background.HasAnimatedProperties);
+                Assert.AreEqual(((SolidColorBrush)split.FindResource("ArcWpf.Brush.SplitButtonPressed")).Color, ((SolidColorBrush)triggerFill.Background).Color, "Open trigger takes the pressed fill.");
+                menu.IsOpen = false; Sta.Pump();
+                Assert.IsFalse(split.IsOpen, "SplitButton follows the menu as soon as it starts closing.");
+            }
+            finally { split.IsOpen = false; host.Close(); }
+        });
+    }
 
     private static SplitButton Create()
     {

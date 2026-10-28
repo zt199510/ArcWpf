@@ -93,7 +93,9 @@ public sealed class MenuTests
                 var surface = (Border)menu.Template.FindName("PART_Surface", menu);
                 Assert.IsGreaterThanOrEqualTo(trigger.PointToScreen(new Point(0, trigger.ActualHeight)).Y, surface.PointToScreen(new Point(0, 0)).Y, "Popup opens below the trigger, not over it.");
                 trigger.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent, trigger)); Sta.Pump();
-                Assert.IsFalse(menu.IsOpen); Assert.IsFalse(popup.IsOpen);
+                Assert.IsFalse(menu.IsOpen);
+                WaitUntil(() => !popup.IsOpen);
+                Assert.IsFalse(popup.IsOpen, "The popup closes once the exit fade ends.");
             }
             finally { host.Close(); }
         });
@@ -109,6 +111,94 @@ public sealed class MenuTests
         Assert.IsTrue(style.Setters.OfType<Setter>().Any(setter => setter.Property == Control.OverridesDefaultStyleProperty && Equals(setter.Value, true)));
         Assert.IsNull(style.Setters.OfType<Setter>().First(setter => setter.Property == Control.FocusVisualStyleProperty).Value);
     });
+
+    [TestMethod]
+    public void HighlightCoversSelectedRowAndLabelsStartAtItemPadding()
+    {
+        Sta.Run(() =>
+        {
+            var menu = Create();
+            menu.Items.Add(new ArcMenuItem { Label = "Rename" });
+            menu.Items.Add(new ArcMenuItem { Label = "Duplicate" });
+            menu.Items.Add(new ArcMenuItem { Label = "Delete", IsDestructive = true, SeparatorBefore = true });
+            var host = new Window { Width = 400, Height = 320, Content = menu, ShowInTaskbar = false };
+            try
+            {
+                host.Show(); host.UpdateLayout();
+                menu.IsOpen = true; Sta.Pump();
+                var list = (ListBox)menu.Template.FindName("PART_ItemsHost", menu);
+                var highlight = (Border)menu.Template.FindName("PART_Highlight", menu);
+                list.SelectedIndex = 2; Sta.Pump();
+                var container = (ListBoxItem)list.ItemContainerGenerator.ContainerFromIndex(2);
+                var row = (FrameworkElement)container.Template.FindName("PART_Row", container);
+                // Measured on screen: a stretch-aligned highlight used to sit re-centered in the list and over the separator.
+                // Rows enter with a -4 offset; wait for that to settle, then the highlight must already be where the row rests.
+                var deadline = DateTime.UtcNow.AddSeconds(2);
+                while ((container.RenderTransform is TranslateTransform { Y: not 0 } || highlight.RenderTransform.HasAnimatedProperties) && DateTime.UtcNow < deadline) Sta.Pump();
+                var rowTop = row.PointToScreen(new Point(0, 0));
+                var shapeTop = highlight.PointToScreen(new Point(0, 0));
+                Assert.AreEqual(rowTop.Y, shapeTop.Y, .5);
+                Assert.AreEqual(rowTop.X, shapeTop.X, .5);
+                Assert.AreEqual(row.ActualHeight, highlight.ActualHeight, .5);
+                Assert.AreEqual(row.ActualWidth, highlight.ActualWidth, .5);
+                Assert.IsLessThan(container.ActualHeight, row.ActualHeight, "The separator sits above the row, outside the highlight.");
+                // No icon: the label starts at the 11px item padding, not after an empty icon column.
+                var first = (ListBoxItem)list.ItemContainerGenerator.ContainerFromIndex(0);
+                var label = FindText(first, "Rename")!;
+                Assert.AreEqual(11d, label.TranslatePoint(new Point(0, 0), first).X, .5);
+            }
+            finally { menu.IsOpen = false; host.Close(); }
+        });
+    }
+
+    [TestMethod]
+    public void CloseFadesOutBeforeThePopupLeavesAndReopenReverses()
+    {
+        Sta.Run(() =>
+        {
+            var menu = Create(); menu.Items.Add(new ArcMenuItem { Label = "Rename" });
+            var host = new Window { Width = 400, Height = 240, Content = menu, ShowInTaskbar = false };
+            try
+            {
+                host.Show(); host.UpdateLayout();
+                var popup = (Popup)menu.Template.FindName("PART_Popup", menu);
+                var surface = (Border)menu.Template.FindName("PART_Surface", menu);
+                menu.IsOpen = true; Sta.Pump();
+                WaitUntil(() => !surface.HasAnimatedProperties);
+                menu.IsOpen = false;
+                // .menu[data-state="closed"]: still mounted, fading, and no longer hit-testable.
+                Assert.IsTrue(popup.IsOpen); Assert.IsTrue(surface.HasAnimatedProperties); Assert.IsFalse(surface.IsHitTestVisible);
+                menu.IsOpen = true; Sta.Pump();
+                Assert.IsTrue(popup.IsOpen); Assert.IsTrue(surface.IsHitTestVisible);
+                WaitUntil(() => !surface.HasAnimatedProperties);
+                Assert.IsTrue(popup.IsOpen, "A reopen during the exit keeps the popup."); Assert.AreEqual(1d, surface.Opacity, .001);
+                menu.IsOpen = false;
+                WaitUntil(() => !popup.IsOpen);
+                Assert.IsFalse(popup.IsOpen); Assert.AreEqual(1d, surface.Opacity, .001, "Reset for the next open.");
+                ArcMotion.SetLevel(menu, ArcMotionLevel.Off);
+                menu.IsOpen = true; Sta.Pump(); menu.IsOpen = false;
+                Assert.IsFalse(popup.IsOpen, "Off closes at once.");
+            }
+            finally { menu.IsOpen = false; host.Close(); }
+        });
+    }
+
+    internal static void WaitUntil(Func<bool> done)
+    {
+        var deadline = DateTime.UtcNow.AddSeconds(2);
+        while (!done() && DateTime.UtcNow < deadline) Sta.Pump();
+    }
+
+    private static TextBlock? FindText(DependencyObject root, string text)
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            if (child is TextBlock block && block.Text == text) return block;
+            if (FindText(child, text) is { } found) return found;
+        }
+        return null;
+    }
 
     private static ArcMenu Create() { var menu = new ArcMenu { Label = "Actions" }; menu.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml", UriKind.Relative) }); return menu; }
     private static void Layout(FrameworkElement element) { element.Measure(new Size(500, 500)); element.Arrange(new Rect(0, 0, element.DesiredSize.Width, element.DesiredSize.Height)); element.UpdateLayout(); Sta.Pump(); }

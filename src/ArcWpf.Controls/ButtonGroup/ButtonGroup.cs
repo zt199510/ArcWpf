@@ -90,8 +90,6 @@ public class ButtonGroup : ItemsControl
         AddHandler(Keyboard.GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(FocusChanged), true);
         AddHandler(Keyboard.LostKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(FocusLost), true);
         AddHandler(Mouse.LostMouseCaptureEvent, new MouseEventHandler((_, _) => Release()), true);
-        AddHandler(Menu.OpenedEvent, new RoutedEventHandler((_, _) => MenuStateChanged()));
-        AddHandler(Menu.ClosedEvent, new RoutedEventHandler((_, _) => MenuStateChanged()));
     }
 
     private bool Vertical => Orientation == Orientation.Vertical;
@@ -132,6 +130,7 @@ public class ButtonGroup : ItemsControl
         if (_scroll is not null) { _scroll.PreviewMouseWheel += Wheel; }
         if (_menu is not null)
         {
+            _menu.OpenStateChanged += MenuOpenStateChanged;
             _menu.ApplyTemplate();
             _trigger = _menu.Template?.FindName("PART_Trigger", _menu) as System.Windows.Controls.Button;
             if (_trigger is not null)
@@ -159,6 +158,7 @@ public class ButtonGroup : ItemsControl
         StopMotion();
         if (_track is not null) { _track.LayoutUpdated -= TrackLayoutUpdated; }
         if (_scroll is not null) { _scroll.PreviewMouseWheel -= Wheel; }
+        if (_menu is not null) { _menu.OpenStateChanged -= MenuOpenStateChanged; }
         _scroll = null; _track = null; _highlight = null; _highlightFill = null; _highlightPressed = null;
         _menu = null; _trigger = null; _triggerDivider = null; _chevron = null; _chevronInk = null; _chevronMuted = null; _announcer = null;
         _shown = null;
@@ -485,6 +485,8 @@ public class ButtonGroup : ItemsControl
     }
 
     // The chevron turns over and takes the full ink while its menu is open.
+    private void MenuOpenStateChanged(object? sender, EventArgs e) => MenuStateChanged();
+
     private void MenuStateChanged()
     {
         bool open = _menu?.IsOpen == true;
