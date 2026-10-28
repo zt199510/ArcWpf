@@ -19,6 +19,8 @@ public sealed class UserMenuItem { public string Label { get; set; } = ""; publi
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 [TemplatePart(Name = "PART_Surface", Type = typeof(Border))]
 [TemplatePart(Name = "PART_Items", Type = typeof(ItemsControl))]
+[TemplatePart(Name = "PART_List", Type = typeof(Panel))]
+[TemplatePart(Name = "PART_Highlight", Type = typeof(Border))]
 public class UserMenu : Control
 {
     public static readonly DependencyProperty UserProperty = DependencyProperty.Register(nameof(User), typeof(UserMenuUser), typeof(UserMenu), new FrameworkPropertyMetadata(null, OnVisualChanged));
@@ -35,7 +37,7 @@ public class UserMenu : Control
     public static readonly RoutedEvent StatusChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserMenu));
     public static readonly RoutedEvent ThemeChangedEvent = EventManager.RegisterRoutedEvent(nameof(ThemeChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserMenu));
 
-    private System.Windows.Controls.Button? _trigger; private Popup? _popup; private Border? _surface; private ItemsControl? _items; private Window? _window; private bool _presented; private readonly OwnedMotion _motion = new();
+    private System.Windows.Controls.Button? _trigger; private Popup? _popup; private Border? _surface; private ItemsControl? _items; private Panel? _list; private Border? _highlight; private Window? _window; private bool _presented; private readonly OwnedMotion _motion = new();
     public UserMenuUser? User { get => (UserMenuUser?)GetValue(UserProperty); set => SetValue(UserProperty, value); }
     public UserMenuStatus Status { get => (UserMenuStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
     public UserMenuTheme Theme { get => (UserMenuTheme)GetValue(ThemeProperty); set => SetValue(ThemeProperty, value); }
@@ -55,14 +57,14 @@ public class UserMenu : Control
     public UserMenu() { Items.CollectionChanged += (_, _) => Refresh(); Loaded += (_, _) => Refresh(); Unloaded += (_, _) => ReleaseWindowHandler(); }
     public override void OnApplyTemplate()
     {
-        ReleaseTemplate(); base.OnApplyTemplate(); _trigger = GetTemplateChild("PART_Trigger") as System.Windows.Controls.Button; _popup = GetTemplateChild("PART_Popup") as Popup; _surface = GetTemplateChild("PART_Surface") as Border; _items = GetTemplateChild("PART_Items") as ItemsControl;
+        ReleaseTemplate(); base.OnApplyTemplate(); _trigger = GetTemplateChild("PART_Trigger") as System.Windows.Controls.Button; _popup = GetTemplateChild("PART_Popup") as Popup; _surface = GetTemplateChild("PART_Surface") as Border; _items = GetTemplateChild("PART_Items") as ItemsControl; _list = GetTemplateChild("PART_List") as Panel; _highlight = GetTemplateChild("PART_Highlight") as Border;
         if (_trigger is not null) { _trigger.Click += TriggerClick; _trigger.PreviewKeyDown += TriggerKeyDown; }
         if (_popup is not null) { _popup.Opened += PopupOpened; _popup.Closed += PopupClosed; _popup.CustomPopupPlacementCallback = PlacePopup; }
-        AddHandler(System.Windows.Controls.Button.ClickEvent, new RoutedEventHandler(ButtonClick), true); AddHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(MenuKeyDown), true); Refresh();
+        AddHandler(System.Windows.Controls.Button.ClickEvent, new RoutedEventHandler(ButtonClick), true); AddHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(MenuKeyDown), true); AddHandler(Mouse.PreviewMouseMoveEvent, new MouseEventHandler(MenuMouseMove), true); AddHandler(UIElement.MouseLeaveEvent, new MouseEventHandler(MenuMouseLeave), true); AddHandler(GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(MenuGotFocus), true); Refresh();
     }
     private static void OnVisualChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((UserMenu)d).Refresh();
     private static void OnOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var m = (UserMenu)d; if (m._popup is not null) { if ((bool)e.NewValue) m._popup.IsOpen = true; else m.ClosePopup(); } }
-    private void Refresh() { if (_items is not null) _items.ItemsSource = Items; }
+    private void Refresh() { if (_items is not null) _items.ItemsSource = Items; UpdateThemeVisuals(); }
     private void TriggerClick(object? s, RoutedEventArgs e) { SetCurrentValue(IsOpenProperty, !IsOpen); e.Handled = true; }
     private void TriggerKeyDown(object? s, KeyEventArgs e) { if (e.Key is not (Key.Down or Key.Up)) return; e.Handled = true; SetCurrentValue(IsOpenProperty, true); Dispatcher.BeginInvoke(new Action(() => FocusStop(e.Key == Key.Down ? 0 : -1)), System.Windows.Threading.DispatcherPriority.Input); }
     private void PopupOpened(object? s, EventArgs e)
@@ -74,7 +76,18 @@ public class UserMenu : Control
     private void ReleaseWindowHandler() { if (_window is not null) _window.RemoveHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OwnerMouseDown)); _window = null; }
     private void ClosePopup() { if (_popup is null) return; _motion.Stop(); _popup.IsOpen = false; }
     private void OwnerMouseDown(object? s, MouseButtonEventArgs e) { if (!_presented || e.OriginalSource is not DependencyObject source) return; if (source is Visual v && (v.IsDescendantOf(this) || (_popup?.Child is Visual child && v.IsDescendantOf(child)))) return; SetCurrentValue(IsOpenProperty, false); }
-    private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset) { double x = Align == UserMenuAlign.Start ? 0 : Align == UserMenuAlign.Center ? (targetSize.Width - popupSize.Width) / 2 : targetSize.Width - popupSize.Width; return [new CustomPopupPlacement(new Point(x, targetSize.Height + 8), PopupPrimaryAxis.None), new CustomPopupPlacement(new Point(x, -popupSize.Height - 8), PopupPrimaryAxis.None)]; }
+    private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
+    {
+        double x = Align == UserMenuAlign.Start ? 0 : Align == UserMenuAlign.Center ? (targetSize.Width - popupSize.Width) / 2 : targetSize.Width - popupSize.Width;
+        double gap = 8; bool above = false;
+        if (_trigger is not null)
+        {
+            var screen = _trigger.PointToScreen(new Point(0, 0));
+            var work = SystemParameters.WorkArea;
+            above = screen.Y + targetSize.Height + gap + popupSize.Height > work.Bottom && screen.Y - gap - popupSize.Height >= work.Top;
+        }
+        return above ? [new CustomPopupPlacement(new Point(x, -popupSize.Height - gap), PopupPrimaryAxis.Vertical), new CustomPopupPlacement(new Point(x, targetSize.Height + gap), PopupPrimaryAxis.Vertical)] : [new CustomPopupPlacement(new Point(x, targetSize.Height + gap), PopupPrimaryAxis.Vertical), new CustomPopupPlacement(new Point(x, -popupSize.Height - gap), PopupPrimaryAxis.Vertical)];
+    }
     private void ButtonClick(object? s, RoutedEventArgs e)
     {
         if (e.OriginalSource is not System.Windows.Controls.Button b || b.Tag is not string tag) return;
@@ -83,18 +96,37 @@ public class UserMenu : Control
         else if (tag.StartsWith("theme:", StringComparison.Ordinal) && Enum.TryParse<UserMenuTheme>(tag[6..], out var theme)) { SetTheme(theme); e.Handled = true; }
         else if (tag == "signout") { if (SignOutCommand?.CanExecute(SignOutCommandParameter) != false) SignOutCommand?.Execute(SignOutCommandParameter); SetCurrentValue(IsOpenProperty, false); e.Handled = true; }
     }
-    private List<System.Windows.Controls.Button> Stops() => _popup?.Child is DependencyObject root ? FindButtons(root).Where(b => b.Tag is string tag && (tag == "item" || tag.StartsWith("status:") || tag.StartsWith("theme:") || tag == "signout") && b.IsEnabled).ToList() : [];
+    private List<System.Windows.Controls.Button> Stops()
+    {
+        if (_popup?.Child is not DependencyObject root) return [];
+        var result = new List<System.Windows.Controls.Button>(); bool statusAdded = false, themeAdded = false;
+        foreach (var button in FindButtons(root).Where(b => b.IsEnabled))
+        {
+            if (button.Tag is not string tag) continue;
+            if (tag is "item" or "signout") result.Add(button);
+            else if (tag.StartsWith("status:") && !statusAdded) { result.Add(button); statusAdded = true; }
+            else if (tag.StartsWith("theme:") && !themeAdded) { result.Add(button); themeAdded = true; }
+        }
+        return result;
+    }
     private static IEnumerable<System.Windows.Controls.Button> FindButtons(DependencyObject root) { if (root is System.Windows.Controls.Button button) yield return button; for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++) foreach (var child in FindButtons(VisualTreeHelper.GetChild(root, i))) yield return child; }
     private void FocusStop(int index) { var stops = Stops(); if (stops.Count == 0) return; if (index < 0) index = stops.Count - 1; stops[Math.Clamp(index, 0, stops.Count - 1)].Focus(); }
-    private void MenuKeyDown(object? s, KeyEventArgs e) { if (!IsOpen) return; var source = e.OriginalSource as DependencyObject; var stops = Stops(); var current = source is null ? null : FindButtons(source).FirstOrDefault(); int index = current is null ? -1 : stops.IndexOf(current); if (e.Key is Key.Escape or Key.Tab) { SetCurrentValue(IsOpenProperty, false); e.Handled = true; return; } if (e.Key is not (Key.Down or Key.Up or Key.Home or Key.End) || stops.Count == 0) return; int next = e.Key == Key.Home ? 0 : e.Key == Key.End ? stops.Count - 1 : (index + (e.Key == Key.Down ? 1 : -1) + stops.Count) % stops.Count; stops[next].Focus(); e.Handled = true; }
+    private void MenuKeyDown(object? s, KeyEventArgs e) { if (!IsOpen) return; var source = e.OriginalSource as DependencyObject; var stops = Stops(); var current = FindAncestorButton(source); int index = current is null ? -1 : stops.IndexOf(current); if (e.Key is Key.Escape or Key.Tab) { SetCurrentValue(IsOpenProperty, false); e.Handled = true; return; } if (e.Key is Key.Left or Key.Right) { var group = current?.Parent as Panel; if (group is not null) { var options = FindButtons(group).Where(b => b.Tag is string t && (t.StartsWith("status:") || t.StartsWith("theme:"))).ToList(); if (options.Count > 0) { int at = Math.Max(0, options.IndexOf(current!)); int next = (at + (e.Key == Key.Right ? 1 : -1) + options.Count) % options.Count; options[next].Focus(); options[next].RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent)); e.Handled = true; } } return; } if (e.Key is not (Key.Down or Key.Up or Key.Home or Key.End) || stops.Count == 0) return; int nextStop = e.Key == Key.Home ? 0 : e.Key == Key.End ? stops.Count - 1 : (index + (e.Key == Key.Down ? 1 : -1) + stops.Count) % stops.Count; stops[nextStop].Focus(); e.Handled = true; }
+    private void MenuMouseMove(object? s, MouseEventArgs e) { if (!IsOpen || _list is null || e.OriginalSource is not DependencyObject source) return; var button = FindAncestorButton(source); if (button?.Tag is not string tag || (tag != "item" && tag != "signout")) { ClearHighlight(); return; } var point = button.TranslatePoint(new Point(0, 0), _list); _highlight!.Width = button.ActualWidth; _highlight.Height = button.ActualHeight; _highlight.Visibility = Visibility.Visible; _highlight.RenderTransform = new TranslateTransform(point.X, point.Y); }
+    private void MenuMouseLeave(object? s, MouseEventArgs e) => ClearHighlight();
+    private void MenuGotFocus(object? s, KeyboardFocusChangedEventArgs e) { if (e.NewFocus is DependencyObject d) { var button = FindAncestorButton(d); if (button?.Tag is string tag && (tag == "item" || tag == "signout") && _list is not null) { var point = button.TranslatePoint(new Point(0, 0), _list); _highlight!.Width = button.ActualWidth; _highlight.Height = button.ActualHeight; _highlight.Visibility = Visibility.Visible; _highlight.RenderTransform = new TranslateTransform(point.X, point.Y); } } }
+    private static System.Windows.Controls.Button? FindAncestorButton(DependencyObject? source) { while (source is not null) { if (source is System.Windows.Controls.Button button) return button; source = VisualTreeHelper.GetParent(source); } return null; }
+    private void ClearHighlight() { if (_highlight is not null) _highlight.Visibility = Visibility.Hidden; }
+    private void UpdateThemeVisuals() { if (_popup?.Child is not DependencyObject root) return; foreach (var button in FindButtons(root).Where(b => b.Tag is string t && t.StartsWith("theme:"))) { bool selected = button.Tag?.ToString() == $"theme:{Theme}"; button.BorderThickness = selected ? new Thickness(1) : new Thickness(0); button.BorderBrush = selected ? (Brush)TryFindResource("ArcWpf.Brush.BorderStrong")! : Brushes.Transparent; } }
     public void Invoke(UserMenuItem item) { if (!item.IsEnabled || item.Command?.CanExecute(item.CommandParameter) == false) return; item.Command?.Execute(item.CommandParameter); RaiseEvent(new UserMenuItemInvokedEventArgs(ItemInvokedEvent, this, item)); SetCurrentValue(IsOpenProperty, false); }
     public void SetStatus(UserMenuStatus status) { if (Status == status) return; SetCurrentValue(StatusProperty, status); RaiseEvent(new RoutedEventArgs(StatusChangedEvent, this)); }
     public void SetTheme(UserMenuTheme theme) { if (Theme == theme) return; SetCurrentValue(ThemeProperty, theme); RaiseEvent(new RoutedEventArgs(ThemeChangedEvent, this)); }
-    private void ReleaseTemplate() { if (_trigger is not null) { _trigger.Click -= TriggerClick; _trigger.PreviewKeyDown -= TriggerKeyDown; } if (_popup is not null) { _popup.Opened -= PopupOpened; _popup.Closed -= PopupClosed; _popup.CustomPopupPlacementCallback = null; } RemoveHandler(System.Windows.Controls.Button.ClickEvent, new RoutedEventHandler(ButtonClick)); RemoveHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(MenuKeyDown)); ReleaseWindowHandler(); _motion.Stop(); _trigger = null; _popup = null; _surface = null; _items = null; }
+    private void ReleaseTemplate() { if (_trigger is not null) { _trigger.Click -= TriggerClick; _trigger.PreviewKeyDown -= TriggerKeyDown; } if (_popup is not null) { _popup.Opened -= PopupOpened; _popup.Closed -= PopupClosed; _popup.CustomPopupPlacementCallback = null; } RemoveHandler(System.Windows.Controls.Button.ClickEvent, new RoutedEventHandler(ButtonClick)); RemoveHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(MenuKeyDown)); RemoveHandler(Mouse.PreviewMouseMoveEvent, new MouseEventHandler(MenuMouseMove)); RemoveHandler(UIElement.MouseLeaveEvent, new MouseEventHandler(MenuMouseLeave)); RemoveHandler(GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(MenuGotFocus)); ReleaseWindowHandler(); _motion.Stop(); _trigger = null; _popup = null; _surface = null; _items = null; _list = null; _highlight = null; }
     protected override AutomationPeer OnCreateAutomationPeer() => new UserMenuAutomationPeer(this);
     private sealed class UserMenuAutomationPeer(UserMenu owner) : FrameworkElementAutomationPeer(owner) { protected override string GetClassNameCore() => nameof(UserMenu); protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Menu; protected override string GetNameCore() => owner.User?.Name ?? "User menu"; }
 }
 
 public sealed class UserMenuItemInvokedEventArgs(RoutedEvent routedEvent, object source, UserMenuItem item) : RoutedEventArgs(routedEvent, source) { public UserMenuItem Item { get; } = item; }
 public class UserMenuStatusDot : Control { public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(nameof(Status), typeof(UserMenuStatus), typeof(UserMenuStatusDot), new PropertyMetadata(UserMenuStatus.Available)); public UserMenuStatus Status { get => (UserMenuStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); } static UserMenuStatusDot() { DefaultStyleKeyProperty.OverrideMetadata(typeof(UserMenuStatusDot), new FrameworkPropertyMetadata(typeof(UserMenuStatusDot))); } }
+
 
