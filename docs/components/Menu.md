@@ -1,6 +1,6 @@
 # DropdownMenu 规格
 
-状态：规格已按 Arc 页面重新核对；代码正在修正，待程序化与实际窗口验收。来源见[参考卡](../references/components/Menu.md)。
+状态：实现完成；程序化测试通过（Wine 运行器），2026-10-28 用户在 Windows 上验收 `4ef5dc9` 通过；DPI 缩放与读屏待核对。来源见[参考卡](../references/components/Menu.md)。
 
 2026-10-27：修复触发器点击不弹出（部件类型被项目 `Button` 遮蔽）与 Popup 盖住触发器的偏移，见[修复记录](../verification/2026-10-27-menu-trigger-fix.md)。
 

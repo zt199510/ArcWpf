@@ -34,7 +34,7 @@
   - ButtonGroup 页：菜单与组外缘对齐；图标 17+10 排列；Delete 危险色高亮（d46c18d9fda34d53）。
   - Menu 页：分隔线位于 Delete 上方且不进入高亮；Archive 禁用为半透明（11c6d9d037a505b3、d8f423bc0e5d0300）。
   - Wine 下 Popup 圆角外黑角为分层窗口透明不受支持，非控件问题。
-- 待 Windows 原生验收：悬停动画手感、明暗主题、DPI 缩放下的 Popup 偏移、读屏。
+- Windows 原生：2026-10-28 用户在 Windows 上测试合并版本（main `4ef5dc9`，含第二轮），反馈“没问题”，用户通过。反馈未逐项说明 DPI 缩放与读屏，这两项仍记为待核对。
 
 ## 第二轮：SplitButton 状态与 Menu 退场（同日）
 
@@ -56,3 +56,7 @@
 - 菜单进入/退场未复刻 `--menu-y` 的 5px/2.5px 位移，仅有淡入淡出与缩放。
 - 未实现 Arc 的 `secondary` 变体与主标签逐字 morph（来源 MorphText），SplitButton 公开 API 未包含这两项。
 - 颜色混合为 sRGB/中性 L 近似，不是 oklab color-mix 的精确值。
+
+## 用户验收
+
+2026-10-28：用户在 Windows 原生环境测试 `4ef5dc9`（PR #4 合并提交），确认 Menu、ButtonGroup 与 SplitButton 呈现无问题，Wine 下的黑角/退场黑帧不在 Windows 出现。DPI 缩放与读屏未单独确认。

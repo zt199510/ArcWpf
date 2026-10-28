@@ -44,3 +44,6 @@
 
 专项测量发现 Popup 条目的容器会在 WPF ListBox 生成/选择时重新获得系统默认选中绘制。Menu 现在在容器生成、Popup 打开和 SelectionChanged 路径显式归一化容器：透明 Background、无 FocusVisual、OverridesDefaultStyle，并让鼠标移动同步 SelectedIndex。相关专项 19/19 通过。
 
+## 2026-10-28 用户验收
+
+用户在 Windows 上测试 `4ef5dc9` 无问题，上方“待人工验收”中的命中、Popup 对齐、焦点与主题视为通过；多 DPI 未单独确认。详见 [Menu 弹出层修正](2026-10-28-menu-hosted-popup.md)。
