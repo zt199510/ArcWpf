@@ -221,7 +221,7 @@ public class TreeView : Control
         return null;
     }
 
-    private Button? FindButton(string id) => FindVisual(_rowsHost, item => item is Button button && button.Tag is TreeRow row && row.Node.Id == id) as Button;
+    private System.Windows.Controls.Button? FindButton(string id) => FindVisual(_rowsHost, item => item is System.Windows.Controls.Button button && button.Tag is TreeRow row && row.Node.Id == id) as System.Windows.Controls.Button;
     private static DependencyObject? FindVisual(DependencyObject? root, Func<DependencyObject, bool> match)
     {
         if (root is null) return null; if (match(root)) return root;

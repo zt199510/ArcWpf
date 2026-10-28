@@ -83,9 +83,16 @@ public sealed class MenuTests
             try
             {
                 host.Show(); host.UpdateLayout();
-                menu.IsOpen = true; Sta.Pump();
+                // Go through the real trigger: a cast to the wrong Button type once left Click unwired.
+                var trigger = (WpfButton)menu.Template.FindName("PART_Trigger", menu);
+                trigger.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent, trigger)); Sta.Pump();
                 var popup = (Popup)menu.Template.FindName("PART_Popup", menu);
                 Assert.IsTrue(menu.IsOpen); Assert.IsTrue(popup.IsOpen);
+                Assert.AreSame(trigger, popup.PlacementTarget);
+                var surface = (Border)menu.Template.FindName("PART_Surface", menu);
+                Assert.IsGreaterThanOrEqualTo(trigger.PointToScreen(new Point(0, trigger.ActualHeight)).Y, surface.PointToScreen(new Point(0, 0)).Y, "Popup opens below the trigger, not over it.");
+                trigger.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent, trigger)); Sta.Pump();
+                Assert.IsFalse(menu.IsOpen); Assert.IsFalse(popup.IsOpen);
             }
             finally { host.Close(); }
         });

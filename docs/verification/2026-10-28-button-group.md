@@ -15,3 +15,7 @@
 - ButtonGroupTests（9 项：几何、reserve 定宽、交叉淡入启动、content/Off 不动画、方向键、折叠/恢复、chevron 菜单、禁用/Peer、Gallery 页加载）：未运行，WPF 测试需 Windows。
 - MenuTests、ActionButtonTests 回归：未运行，同上。
 - 实际窗口：未运行。需在 Windows 对照网页预览检查：高亮段间滑动与出现方式、分隔线淡出、按压下沉、Share→Copied 交叉淡入、窄容器折叠、chevron 旋转与菜单对齐、明暗主题与 Solid 配色。
+
+## 2026-10-27 菜单打不开修复
+
+chevron 菜单不弹出的根因在 Menu（触发器部件类型被项目 `Button` 遮蔽），见 [Menu 触发器修复](2026-10-27-menu-trigger-fix.md)。修复后在 Wine 运行 Gallery 确认 chevron 点击弹出、旋转与对齐正常。

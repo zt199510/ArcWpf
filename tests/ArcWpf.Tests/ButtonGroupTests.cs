@@ -124,7 +124,8 @@ public sealed class ButtonGroupTests
         Assert.IsGreaterThanOrEqualTo(last.TranslatePoint(new Point(last.ActualWidth, 0), group).X - .5, trigger.TranslatePoint(new Point(0, 0), group).X);
         string? invoked = null;
         group.MenuItemInvoked += (_, e) => invoked = e.Item.Label;
-        menu.IsOpen = true; Pump(150);
+        trigger.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, trigger)); Pump(150);
+        Assert.IsTrue(menu.IsOpen, "Clicking the chevron opens the menu.");
         menu.RaiseEvent(new MenuItemInvokedEventArgs(ArcWpf.Controls.Menu.ItemInvokedEvent, menu, group.MenuItems[0]));
         Assert.AreEqual("Delete", invoked);
         menu.IsOpen = false; Pump(150);
