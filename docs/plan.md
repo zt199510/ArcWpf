@@ -472,3 +472,7 @@ PresenceStack本次独立实现完成：动态稳定Id成员、28/36/44、固定
 ## 剩余控件批次收口（2026-10-27）
 
 TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/DatePicker、List、Search 的代码、Gallery、规格和专项测试已收口。最终专项筛选 49/49 通过，记录见 [剩余控件批次验证](verification/2026-10-27-remaining-controls.md)。本批次未新增实际窗口、IME、读屏、多DPI或性能证据，统一保留“实际窗口待验收”。共享 OwnedMotion 完成帧提交和 Search 生命周期兜底已修正；全量测试中的既有失败不纳入本批次结论。
+
+## ButtonGroup 开发（2026-10-28）
+
+用户授权按新 Skill 流程复刻 ButtonGroup：先冻结 Registry 源码与参考卡，再实现。已完成代码、主题、Gallery（原版三组主例 + 扩展）与 9 项专项测试代码，解决方案构建通过；测试与实际窗口未运行（需 Windows），见[规格](components/ButtonGroup.md)与[验证记录](verification/2026-10-28-button-group.md)。

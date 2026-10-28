@@ -50,6 +50,10 @@ public class Menu : Control
     private bool _presented;
     private Window? _ownerWindow;
 
+    // Hosts that embed the trigger (ButtonGroup) align the popup to their own outer edge.
+    internal bool AlignToStart { get; set; }
+    internal double AlignOffset { get; set; }
+
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public object? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
     public bool IsOpen { get => (bool)GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
@@ -286,8 +290,8 @@ public class Menu : Control
 
     private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
-        double rightAligned = targetSize.Width - popupSize.Width;
-        return [new CustomPopupPlacement(new Point(rightAligned, 6), PopupPrimaryAxis.None), new CustomPopupPlacement(new Point(rightAligned, -popupSize.Height - 6), PopupPrimaryAxis.None)];
+        double x = AlignToStart ? -AlignOffset : targetSize.Width - popupSize.Width + AlignOffset;
+        return [new CustomPopupPlacement(new Point(x, 6), PopupPrimaryAxis.None), new CustomPopupPlacement(new Point(x, -popupSize.Height - 6), PopupPrimaryAxis.None)];
     }
 
     private MenuItem? FindItem(DependencyObject? source)

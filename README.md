@@ -301,6 +301,20 @@ OTPInput 用法（数字验证码，默认六位）：
 
 Gallery → OTPInput，或 `--page=otp-input`。本轮仅执行OTPInput专项；实际界面由用户人工测试，不使用computer-use。见[规格](docs/components/OTPInput.md)、[参考卡](docs/references/components/OTPInput.md)与[验证记录](docs/verification/2026-10-27-otp-input.md)。
 
+ButtonGroup 用法（相关操作共享一个外框，悬停高亮在分段间滑动，可附带更多操作菜单）：
+
+~~~xml
+<arc:ButtonGroup Label="Document actions" MenuLabel="More actions" MenuItemInvoked="OnMenu">
+  <arc:ButtonGroupItem Label="Share" Reserve="Share,Copied" Icon="{StaticResource Icon.Link}" Click="OnShare" />
+  <arc:ButtonGroupItem Label="Duplicate" Icon="{StaticResource Icon.CopyPlus}" Command="{Binding Duplicate}" />
+  <arc:ButtonGroup.MenuItems>
+    <arc:MenuItem Label="Delete" IsDestructive="True" />
+  </arc:ButtonGroup.MenuItems>
+</arc:ButtonGroup>
+~~~
+
+`Icon` 传 `Geometry` 时按 24 viewBox 描边绘制；`Reserve` 列出可能出现的其他文案，使确认文案不改变宽度；`IsIconOnly` 只显示图标；`Content` 显示实时值（如缩放比例）。`Variant` 为 Outline/Solid，`Size` 为 Small/Medium，`Orientation` 支持垂直；水平溢出时带图标分段自动折叠为图标（`CollapseLabels`）。见[规格](docs/components/ButtonGroup.md)。
+
 SegmentedControl 用法（水平互斥选择，沿用WPF原生选择绑定）：
 
 ~~~xml

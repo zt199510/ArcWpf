@@ -4,6 +4,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Button/Themes/ButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ActionButton/Themes/ActionButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CopyButton/Themes/CopyButtonTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ButtonGroup/Themes/ButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Switch/Themes/SwitchTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Input/Themes/InputTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Search/Themes/SearchTheme.xaml" />
