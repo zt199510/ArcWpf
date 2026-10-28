@@ -13,21 +13,35 @@ public sealed class ActionButtonTests
     public void AsyncActionTransitionsToSuccessAndResets() => Sta.Run(() => InWindow(async button =>
     {
         var calls = 0;
-        button.ResetAfterMs = 100; button.Action = async () => { calls++; await Task.Delay(20); };
+        button.ResetAfterMs = 150; button.Action = async () => { calls++; await Task.Delay(20); };
         button.Activate();
         Assert.IsTrue(button.IsPending);
+        Assert.AreEqual("Saving", button.Content);
         button.Activate();
         Assert.AreEqual(1, calls);
         Pump(80);
+        // Source goes straight from pending to success when the task settles.
         Assert.IsFalse(button.IsPending);
-        Assert.IsTrue(button.IsCompleting);
-        Assert.IsFalse(button.IsSuccess);
-        Assert.AreEqual("Saved", button.Content);
-        Pump(320);
         Assert.IsTrue(button.IsSuccess);
-        Pump(120);
+        Assert.AreEqual("Saved", button.Content);
+        Pump(250);
         Assert.IsFalse(button.IsSuccess);
         Assert.AreEqual("Save", button.Content);
+    }));
+
+    [TestMethod]
+    public void SuccessStateCanRunAgain() => Sta.Run(() => InWindow(async button =>
+    {
+        var calls = 0;
+        button.ResetAfterMs = 0; button.Action = async () => { calls++; await Task.Delay(10); };
+        button.Activate(); Pump(60);
+        Assert.IsTrue(button.IsSuccess);
+        button.Activate();
+        Assert.IsTrue(button.IsPending);
+        Assert.IsFalse(button.IsSuccess);
+        Pump(60);
+        Assert.AreEqual(2, calls);
+        await Task.CompletedTask;
     }));
 
     [TestMethod]
@@ -53,18 +67,21 @@ public sealed class ActionButtonTests
     });
 
     [TestMethod]
-    public void PendingUsesArrowExitWithoutLoadingSpinner() => Sta.Run(() => InWindow(button =>
+    public void IconSlotSwapsArrowSpinnerCheck() => Sta.Run(() => InWindow(button =>
     {
+        ArcMotion.SetLevel(button, ArcMotionLevel.Off);
         var completion = new TaskCompletionSource();
         button.Action = () => completion.Task;
         button.ApplyTemplate();
+        var arrow = (FrameworkElement)button.Template.FindName("PART_ArrowPhase", button)!;
+        var spinner = (FrameworkElement)button.Template.FindName("PART_SpinnerPhase", button)!;
+        var check = (FrameworkElement)button.Template.FindName("PART_CheckPhase", button)!;
+        Assert.AreEqual(1d, arrow.Opacity); Assert.AreEqual(0d, spinner.Opacity); Assert.AreEqual(0d, check.Opacity);
         button.Activate();
-        Assert.IsTrue(button.IsPending);
-        Assert.IsNull(button.Template.FindName("PART_Spinner", button));
-        var arrow = (System.Windows.Shapes.Path)button.Template.FindName("PART_Arrow", button)!;
-        Assert.IsLessThanOrEqualTo(1d, arrow.Opacity);
+        Assert.AreEqual(0d, arrow.Opacity); Assert.AreEqual(1d, spinner.Opacity); Assert.AreEqual(0d, check.Opacity);
         completion.SetResult();
         Pump(40);
+        Assert.AreEqual(0d, arrow.Opacity); Assert.AreEqual(0d, spinner.Opacity); Assert.AreEqual(1d, check.Opacity);
         return Task.CompletedTask;
     }));
 

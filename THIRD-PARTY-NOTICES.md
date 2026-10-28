@@ -180,3 +180,5 @@ AvatarGroup的重叠布局、头像/溢出外环、槽伸缩、方向计数滚�
 - Gallery portrait is the existing original geometric DrawingImage; no external portrait assets. Public documentation cache/hash is local under work/references/presence-stack, not redistributed in versioned baselines.
 
 PresenceStack correction: publicly served page HTML/CSS was inspected for displayed geometry and styling facts. No implementation JavaScript or authenticated Pro source was accessed. Local reference HTML/CSS remains under work/ and is not redistributed; WPF code remains independently authored.
+
+ActionButton的状态链、几何与动效参数参考Arc免费action-button Registry及motion-tokens，适用上文Arc MIT许可。2026-10-28-action-button为项目采集批次，非官方版本；文件与SHA-256见tests/Baselines/References/2026-10-28-action-button/manifest.json。箭头与勾号按lucide arrow-right/check几何重绘为WPF Path，未打包Lucide库或资产；未引入React/Motion运行库，WPF动画调度为项目实现。

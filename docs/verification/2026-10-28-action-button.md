@@ -44,3 +44,14 @@ Gallery 示例异步等待从350ms调整为1200ms（保持成功示例900ms）�
 ## 2026-10-28 三段状态链修正
 
 按用户反馈固定为：点击后箭头旋转；异步成功时文字从原文案 morph 到 SuccessLabel 并触发内部宽度收缩；280ms 过渡后停止旋转并绘制勾号。ActionButtonTests 4/4 通过。
+
+
+## 2026-10-28 按 Registry 源码重做
+
+此前各轮修正只依据文档描述推测动效，未采集源码，导致三项偏差：Pending 旋转箭头（源码为 spinner 圆环）、成功前插入 280ms “IsCompleting” 阶段（源码无此阶段）、模板缺少 PART_PreviousLabel 使 Button 文案过渡直接返回（文案实际是瞬切）。另有 Gallery Pending 文案与 Label 相同、变体无效。
+
+本次冻结 `tests/Baselines/References/2026-10-28-action-button` 并按源码重做：图标槽 arrow/spinner/check 三相交替，文案 0.1s 淡出 + 0.16s 上浮淡入，宽度 spring 0.24，勾号 0.05s 延迟后 0.24s 描绘，success 可再次执行，disabled .7，hover 阴影，pending 不按压。移除 IsCompleting；IsPending/IsSuccess 改为只读依赖属性。
+
+- 构建：Linux 上 `dotnet build ArcWpf.slnx -p:EnableWindowsTargeting=true` 0 错误，ActionButton 无新增警告。
+- ActionButtonTests（5 项）：未运行，WPF 测试需 Windows。
+- 实际窗口与 Web 中间帧对照：未运行，待用户在 Windows 验收。
