@@ -90,10 +90,10 @@
       </Button>
       <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Custom" PlacementTarget="{Binding ElementName=PART_Trigger}" StaysOpen="True" PopupAnimation="None">
         <!-- min-width 13rem from button-group.module.css .menu. -->
-        <Border x:Name="PART_Surface" MinWidth="208" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
+        <Border x:Name="PART_Surface" MinWidth="208" Padding="5" ClipToBounds="True" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
           <Grid>
             <Border x:Name="PART_Highlight" Margin="0" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="8" IsHitTestVisible="False" Visibility="Hidden" />
-            <ListBox x:Name="PART_ItemsHost" ItemsSource="{TemplateBinding Items}" ItemContainerStyle="{StaticResource ArcWpf.Menu.ItemContainerStyle}" ItemTemplate="{StaticResource ArcWpf.Menu.ItemTemplate}" BorderThickness="0" Background="Transparent" KeyboardNavigation.TabNavigation="Continue" Focusable="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+            <ListBox x:Name="PART_ItemsHost" ItemsSource="{TemplateBinding Items}" ItemContainerStyle="{StaticResource ArcWpf.Menu.ItemContainerStyle}" ItemTemplate="{StaticResource ArcWpf.Menu.ItemTemplate}" Margin="0" Padding="0" ClipToBounds="True" BorderThickness="0" Background="Transparent" KeyboardNavigation.TabNavigation="Continue" Focusable="True" FocusVisualStyle="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
           </Grid>
         </Border>
       </Popup>
@@ -168,3 +168,4 @@
     </Style.Triggers>
   </Style>
 </ResourceDictionary>
+

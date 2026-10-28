@@ -113,3 +113,9 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 CopyButton 已开始实现，范围为 Clipboard 复制、成功反馈、Copy/Check phase、文字 morph 和宽度 spring。
 
+
+
+## SplitButton 开发（2026-10-28）
+
+SplitButton 已实现主动作与 Menu Popup 组合，SplitButtonTests 2/2 通过；实际窗口待人工验收。
+

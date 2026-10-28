@@ -26,6 +26,7 @@ public sealed class MenuItem
 [TemplatePart(Name = "PART_Highlight", Type = typeof(Border))]
 [TemplatePart(Name = "PART_Surface", Type = typeof(Border))]
 [TemplatePart(Name = "PART_TriggerLabel", Type = typeof(TextBlock))]
+[TemplatePart(Name = "PART_Chevron", Type = typeof(FrameworkElement))]
 public class Menu : Control
 {
     public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(Menu), new FrameworkPropertyMetadata("Actions"));
@@ -45,6 +46,8 @@ public class Menu : Control
     private TranslateTransform? _highlightMove;
     private ScaleTransform? _surfaceScale;
     private TranslateTransform? _triggerLabelMove;
+    private FrameworkElement? _chevron;
+    private readonly RotateTransform _chevronRotation = new();
     private readonly OwnedMotion _motion = new();
     private readonly OwnedMotion _popupMotion = new();
     private readonly List<(ListBoxItem Item, OwnedMotion Motion)> _itemMotions = [];
@@ -85,6 +88,8 @@ public class Menu : Control
         _surface = GetTemplateChild("PART_Surface") as Border;
         var triggerLabel = GetTemplateChild("PART_TriggerLabel") as TextBlock;
         if (triggerLabel is not null) { _triggerLabelMove = new TranslateTransform(0, 0); triggerLabel.RenderTransform = _triggerLabelMove; }
+        _chevron = GetTemplateChild("PART_Chevron") as FrameworkElement;
+        if (_chevron is not null) { _chevron.RenderTransformOrigin = new Point(.5, .5); _chevron.RenderTransform = _chevronRotation; }
         _highlightMove = new TranslateTransform();
         if (_highlight is not null) _highlight.RenderTransform = _highlightMove;
         if (_surface is not null) { _surfaceScale = new ScaleTransform(1, 1); _surface.RenderTransformOrigin = new Point(.5, 0); _surface.RenderTransform = _surfaceScale; }
@@ -94,7 +99,7 @@ public class Menu : Control
             _trigger.Click += TriggerClick;
         }
         if (_popup is not null) { _popup.Opened += PopupOpened; _popup.Closed += PopupClosed; _popup.PlacementTarget = _trigger; _popup.CustomPopupPlacementCallback = PlacePopup; }
-        if (_itemsHost is not null) { _itemsHost.PreviewMouseLeftButtonUp += ItemsMouseUp; _itemsHost.PreviewKeyDown += ItemsKeyDown; _itemsHost.SelectionChanged += ItemsSelectionChanged; _itemsHost.PreviewMouseMove += ItemsMouseMove; }
+        if (_itemsHost is not null) { _itemsHost.PreviewMouseLeftButtonUp += ItemsMouseUp; _itemsHost.PreviewKeyDown += ItemsKeyDown; _itemsHost.SelectionChanged += ItemsSelectionChanged; _itemsHost.PreviewMouseMove += ItemsMouseMove; _itemsHost.ItemContainerGenerator.StatusChanged += ItemGeneratorStatusChanged; }
         UpdateItems();
     }
 
@@ -103,6 +108,7 @@ public class Menu : Control
         base.OnPropertyChanged(e);
         if (e.Property == ItemsProperty) UpdateItems();
         if (e.Property == LabelProperty) AnimateTriggerLabel();
+        if (e.Property == IsOpenProperty) AnimateChevron((bool)e.NewValue);
         if (e.Property == ArcMotion.LevelProperty && !IsOpen) ResetMotion();
     }
 
@@ -119,8 +125,22 @@ public class Menu : Control
 
     private void UpdateItems()
     {
-        if (_itemsHost is not null) _itemsHost.ItemsSource = Items;
+        if (_itemsHost is not null) { _itemsHost.ItemsSource = Items; NormalizeItemContainers(); }
     }
+
+    private void NormalizeItemContainers()
+    {
+        if (_itemsHost is null) return;
+        for (int i = 0; i < _itemsHost.Items.Count; i++)
+        {
+            if (_itemsHost.ItemContainerGenerator.ContainerFromIndex(i) is not ListBoxItem item) continue;
+            item.SetValue(Control.BackgroundProperty, Brushes.Transparent);
+            item.SetCurrentValue(Control.FocusVisualStyleProperty, null);
+            item.SetCurrentValue(Control.OverridesDefaultStyleProperty, true);
+        }
+    }
+
+    private void ItemGeneratorStatusChanged(object? sender, EventArgs e) => NormalizeItemContainers();
 
     private void TriggerClick(object sender, RoutedEventArgs e)
     {
@@ -135,6 +155,9 @@ public class Menu : Control
         _ownerWindow = Window.GetWindow(this);
         _ownerWindow?.AddHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OwnerPreviewMouseDown), true);
         SelectFirstEnabled();
+        _itemsHost?.UpdateLayout();
+        NormalizeItemContainers();
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(NormalizeItemContainers));
         _itemsHost?.Focus();
         UpdateHighlight(false);
         AnimatePopupIn();
@@ -166,8 +189,14 @@ public class Menu : Control
         if (FindItem(e.OriginalSource as DependencyObject) is { } item) { Invoke(item); e.Handled = true; }
     }
 
-    private void ItemsSelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateHighlight(true);
-    private void ItemsMouseMove(object sender, MouseEventArgs e) => UpdateHighlight(true);
+    private void ItemsSelectionChanged(object sender, SelectionChangedEventArgs e) { NormalizeItemContainers(); UpdateHighlight(true); }
+    private void ItemsMouseMove(object sender, MouseEventArgs e)
+    {
+        if (_itemsHost is null || FindItem(e.OriginalSource as DependencyObject) is not { } item || !item.IsEnabled) return;
+        var index = Items.IndexOf(item);
+        if (index >= 0 && _itemsHost.SelectedIndex != index) _itemsHost.SelectedIndex = index;
+        UpdateHighlight(true);
+    }
 
     private void UpdateHighlight(bool animate)
     {
@@ -216,6 +245,13 @@ public class Menu : Control
         _triggerLabelMove.Y = full ? 4 : 0;
         _popupMotion.Double(label, UIElement.OpacityProperty, 1, full ? .16 : .08, true, enter: true);
         _popupMotion.Double(_triggerLabelMove, TranslateTransform.YProperty, 0, full ? .18 : 0, full, enter: true);
+    }
+
+    private void AnimateChevron(bool open)
+    {
+        if (_chevron is null) return;
+        bool full = ArcMotion.GetLevel(this) == ArcMotionLevel.Full && IsLoaded && IsVisible;
+        _motion.Double(_chevronRotation, RotateTransform.AngleProperty, open ? 180 : 0, .22, full, spring: full);
     }
 
     private void ResetMotion()
@@ -312,10 +348,11 @@ public class Menu : Control
         if (_popup is not null) { _popup.Opened -= PopupOpened; _popup.Closed -= PopupClosed; _popup.CustomPopupPlacementCallback = null; }
         _ownerWindow?.RemoveHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OwnerPreviewMouseDown));
         _ownerWindow = null;
-        if (_itemsHost is not null) { _itemsHost.PreviewMouseLeftButtonUp -= ItemsMouseUp; _itemsHost.PreviewKeyDown -= ItemsKeyDown; _itemsHost.SelectionChanged -= ItemsSelectionChanged; _itemsHost.PreviewMouseMove -= ItemsMouseMove; }
+        if (_itemsHost is not null) { _itemsHost.PreviewMouseLeftButtonUp -= ItemsMouseUp; _itemsHost.PreviewKeyDown -= ItemsKeyDown; _itemsHost.SelectionChanged -= ItemsSelectionChanged; _itemsHost.PreviewMouseMove -= ItemsMouseMove; _itemsHost.ItemContainerGenerator.StatusChanged -= ItemGeneratorStatusChanged; }
         ResetMotion();
         _highlight = null; _highlightMove = null;
         _surface = null; _surfaceScale = null; _triggerLabelMove = null;
+        _chevron = null;
         _trigger = null; _popup = null; _itemsHost = null;
     }
 }
@@ -324,3 +361,4 @@ public sealed class MenuItemInvokedEventArgs(RoutedEvent routedEvent, object sou
 {
     public MenuItem Item { get; } = item;
 }
+

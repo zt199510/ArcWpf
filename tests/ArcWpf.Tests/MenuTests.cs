@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using ArcWpf.Controls;
 using ArcMenuItem = ArcWpf.Controls.MenuItem;
 using ArcMenu = ArcWpf.Controls.Menu;
@@ -98,8 +99,21 @@ public sealed class MenuTests
         });
     }
 
+    [TestMethod]
+    public void ItemContainersUseSharedHighlightWithoutSystemSelectionTemplate() => Sta.Run(() =>
+    {
+        var menu = Create();
+        menu.Items.Add(new ArcMenuItem { Label = "Rename" });
+        Layout(menu);
+        var style = (Style)menu.FindResource("ArcWpf.Menu.ItemContainerStyle");
+        Assert.IsTrue(style.Setters.OfType<Setter>().Any(setter => setter.Property == Control.OverridesDefaultStyleProperty && Equals(setter.Value, true)));
+        Assert.IsNull(style.Setters.OfType<Setter>().First(setter => setter.Property == Control.FocusVisualStyleProperty).Value);
+    });
+
     private static ArcMenu Create() { var menu = new ArcMenu { Label = "Actions" }; menu.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml", UriKind.Relative) }); return menu; }
     private static void Layout(FrameworkElement element) { element.Measure(new Size(500, 500)); element.Arrange(new Rect(0, 0, element.DesiredSize.Width, element.DesiredSize.Height)); element.UpdateLayout(); Sta.Pump(); }
     private sealed class Model : System.ComponentModel.INotifyPropertyChanged { private bool _open; public bool Open { get => _open; set { _open = value; PropertyChanged?.Invoke(this, new(nameof(Open))); } } public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged; }
     private sealed class DelegateCommand(Action action) : ICommand { public event EventHandler? CanExecuteChanged; public bool CanExecute(object? parameter) => false; public void Execute(object? parameter) => action(); }
 }
+
+
