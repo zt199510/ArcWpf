@@ -5,7 +5,7 @@
 - 组件名：`TreeView`
 - 用途：浏览文件夹、分类和其他嵌套层级。
 - 所属里程碑：M3 导航与展示组。
-- 状态：**来源已固定，待实现**。
+- 状态：**实现完成，程序化验证通过，实际窗口已通过用户手动验收**。
 - 来源：2026-10-26 项目采集批次，见 [参考卡](../references/components/TreeView.md) 和 [冻结清单](../../tests/Baselines/References/2026-10-26-tree-view/manifest.json)。
 - 许可：来源页面标记 Free；许可页说明 Free 组件为 MIT。仅作行为/视觉参考，不直接复制上游代码或依赖。
 
@@ -96,13 +96,15 @@
 7. 在 100%/150%/200% DPI、窄宽度和深层树下测量行高、缩进、文字省略号、分支线和无黑色焦点框。
 8. Automation 检查树名称、层级、展开/选择状态和 roving focus；切换明暗主题与 Reduced/Off。
 
-## 完整度矩阵（开发前）
+## 完整度矩阵
 
 | 交付项 | 本次范围 | 实现状态 | 验证证据 | 剩余差异/下一步 |
 |---|---|---|---|---|
-| API与绑定 | 必做 | 尚未实现 | 来源 API 已固定 | 固定 WPF 集合/只读状态类型 |
-| 控件外形与内部对齐 | 必做 | 尚未实现 | CSS 已固定 | WPF 行/缩进/图标模板 |
-| 内容组合与状态 | 必做 | 尚未实现 | TSX flatten/keyboard 已固定 | 展开、选择、禁用 |
-| 动效与打断清理 | 必做 | 尚未实现 | motion tokens/TSX 已固定 | OwnedMotion 生命周期 |
-| 输入/自动化/主题 | 必做 | 尚未实现 | Markdown Keyboard/Accessibility | AutomationPeer |
-| 原版主示例与扩展示例 | 必做 | 尚未实现 | 页面 Usage 已固定 | Gallery 文件树 + 状态扩展 |
+| API与绑定 | 必做 | 已实现 | 来源 API 已固定 | 固定 WPF 集合/只读状态类型 |
+| 控件外形与内部对齐 | 必做 | 已实现 | CSS 已固定 | WPF 行/缩进/图标模板 |
+| 内容组合与状态 | 必做 | 已实现 | TSX flatten/keyboard 已固定 | 展开、选择、禁用 |
+| 动效与打断清理 | 必做 | 已实现 | motion tokens/TSX 已固定 | OwnedMotion 生命周期 |
+| 输入/自动化/主题 | 必做 | 已实现 | Markdown Keyboard/Accessibility | AutomationPeer |
+| 原版主示例与扩展示例 | 必做 | 已实现 | 页面 Usage 已固定 | Gallery 文件树 + 状态扩展 |
+
+

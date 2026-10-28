@@ -16,7 +16,7 @@ internal sealed class OwnedMotion
         double from=(double)target.GetValue(property);
         Cancel(key); target.SetValue(property,value);
         if(!animate || Math.Abs(from-value)<.0001){completed?.Invoke();return;}
-        var timeline=new DoubleAnimationUsingKeyFrames { Duration=TimeSpan.FromSeconds(seconds+delay), FillBehavior=FillBehavior.Stop };
+        var timeline=new DoubleAnimationUsingKeyFrames { Duration=TimeSpan.FromSeconds(seconds+delay), FillBehavior=FillBehavior.HoldEnd };
         if(delay>0)timeline.KeyFrames.Add(new DiscreteDoubleKeyFrame(from,KeyTime.FromTimeSpan(TimeSpan.Zero)));
         if(spring)
         {
@@ -36,7 +36,7 @@ internal sealed class OwnedMotion
         if(animate && _active.TryGetValue(key,out var current) && Equals(current.Target,value))return;
         var from=brush.Color; Cancel(key); brush.Color=value;
         if(!animate || from==value)return;
-        var timeline=new ColorAnimationUsingKeyFrames { Duration=TimeSpan.FromSeconds(seconds),FillBehavior=FillBehavior.Stop };
+        var timeline=new ColorAnimationUsingKeyFrames { Duration=TimeSpan.FromSeconds(seconds),FillBehavior=FillBehavior.HoldEnd };
         timeline.KeyFrames.Add(new DiscreteColorKeyFrame(from,KeyTime.FromTimeSpan(TimeSpan.Zero)));
         timeline.KeyFrames.Add(new SplineColorKeyFrame(value,KeyTime.FromTimeSpan(TimeSpan.FromSeconds(seconds)),new KeySpline(.22,1,.36,1)));
         Start(key,value,timeline);
@@ -46,7 +46,16 @@ internal sealed class OwnedMotion
     private void Start((DependencyObject target,DependencyProperty property) key,object value,AnimationTimeline animation,Action? completed=null)
     {
         var entry=new Entry(value,()=>Begin(key.target,key.property,null)); _active[key]=entry;
-        animation.Completed+=(_,_)=> { if(_active.TryGetValue(key,out var active) && ReferenceEquals(active,entry)){entry.Stop();_active.Remove(key);completed?.Invoke();} };
+        animation.Completed+=(_,_)=>
+        {
+            if(_active.TryGetValue(key,out var active) && ReferenceEquals(active,entry))
+            {
+                // Commit the final value before removing the clock so a late layout/theme
+                // refresh cannot observe the last interpolated frame.
+                key.target.SetValue(key.property, value);
+                entry.Stop(); _active.Remove(key); completed?.Invoke();
+            }
+        };
         Begin(key.target,key.property,animation);
     }
     private void Cancel((DependencyObject,DependencyProperty) key) { if(_active.Remove(key,out var old))old.Stop(); }

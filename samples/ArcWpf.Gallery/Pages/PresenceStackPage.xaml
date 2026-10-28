@@ -1,0 +1,27 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.PresenceStackPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="32" TextElement.Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+    <TextBlock Text="PresenceStack" FontSize="28" FontWeight="SemiBold"/>
+    <TextBlock Text="在线成员堆叠 · 依据公开行为独立实现 WPF" Margin="0,8,0,24"/>
+    <TextBlock Text="公开行为示例" FontSize="18" FontWeight="SemiBold"/>
+    <TextBlock Text="悬停或 Tab 展开；左右键切换姓名；Enter / Space 打开完整名单。" Margin="0,8,0,0"/>
+    <StackPanel MaxWidth="640" HorizontalAlignment="Stretch" Margin="0,24,0,20">
+      <Border MinHeight="76" Padding="24,16,16,16" CornerRadius="12" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <StackPanel VerticalAlignment="Center" Margin="0,0,16,0"><TextBlock Text="Q3 launch plan" FontSize="16" FontWeight="Medium" TextTrimming="CharacterEllipsis"/><TextBlock x:Name="DemoMeta" Text="You and 5 others" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,2,0,0"/></StackPanel>
+          <arc:PresenceStack x:Name="Reference" Grid.Column="1" People="{Binding DemoPeople}" SelfId="jasmine" Align="End" IsPersonSelectionEnabled="True" PersonSelected="Selected"/>
+        </Grid>
+      </Border>
+      <WrapPanel HorizontalAlignment="Center" Margin="0,40,0,0"><arc:Button Content="Someone joins" Variant="Secondary" Size="Small" Click="DemoJoin" Margin="0,0,8,8"/><arc:Button Content="Someone leaves" Variant="Secondary" Size="Small" Click="DemoLeave" Margin="0,0,8,8"/><arc:Button Content="Change a status" Variant="Secondary" Size="Small" Click="DemoStatus" Margin="0,0,8,8"/><arc:Button x:Name="Playback" Content="Pause" Variant="Secondary" Size="Small" Click="TogglePlayback" Margin="0,0,0,8"/></WrapPanel>
+      <TextBlock Text="主示例按公开页面布局；照片使用本地原创占位，自动变化节奏为 WPF 演示设定。" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+    </StackPanel>
+    <TextBlock Text="扩展验证：动态数据" FontSize="18" Margin="0,12,0,12"/>
+    <WrapPanel Margin="0,0,0,16"><arc:Button Content="加入" Click="Join" Margin="0,0,8,8"/><arc:Button Content="离开" Click="Leave" Margin="0,0,8,8"/><arc:Button Content="重排" Click="Reorder" Margin="0,0,8,8"/><arc:Button Content="切换状态" Click="Status" Margin="0,0,8,8"/><arc:Button Content="修改说明" Click="Detail" Margin="0,0,8,8"/></WrapPanel>
+    <TextBlock x:Name="Result" Text="选择名单中的成员可查看事件结果。"/>
+    <TextBlock Text="扩展验证：尺寸、锚定及空集合" FontSize="18" FontWeight="SemiBold" Margin="0,24,0,12"/>
+    <Grid Margin="0,40,0,36"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><arc:PresenceStack People="{Binding People}" Size="Small"/><arc:PresenceStack Grid.Column="1" People="{Binding People}"/><arc:PresenceStack Grid.Column="2" People="{Binding People}" Size="Large"/></Grid>
+    <Border Background="{DynamicResource ArcWpf.Brush.Surface}" Padding="32,44,32,24"><arc:PresenceStack People="{Binding People}" Align="End" HorizontalAlignment="Right"/></Border>
+    <TextBlock Text="空集合 / Max=0（仅计数）" Margin="0,20,0,12"/>
+    <StackPanel Orientation="Horizontal"><arc:PresenceStack Margin="0,0,32,0"/><arc:PresenceStack People="{Binding People}" Max="0"/></StackPanel>
+    <TextBlock Text="使用顶部主题和动效选项检查 Light / Dark 与 Full / Reduced / Off。真实鼠标、弹层焦点及读屏待人工验收。" TextWrapping="Wrap" Margin="0,28,0,0"/>
+  </StackPanel></ScrollViewer>
+</UserControl>

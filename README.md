@@ -348,3 +348,23 @@ Gallery → 反馈 → Avatar，或 `dotnet run --project samples/ArcWpf.Gallery
 包含槽伸缩、溢出数方向滚动、悬停扇开/抬升/邻项让位、描边和姓名提示；Reduced保持头像静止，计数淡化，Off即时。头像组本身不换行、不内置滚动，窄行可降低Max。
 
 Gallery → 反馈 → AvatarGroup，或 `dotnet run --project samples/ArcWpf.Gallery -- --page=avatar-group`。仅执行AvatarGroup专项，9/9通过，实际界面待用户人工验收。见[规格](docs/components/AvatarGroup.md)、[参考卡](docs/references/components/AvatarGroup.md)、[验证记录](docs/verification/2026-10-27-avatar-group.md)。
+
+### PresenceStack（在线成员堆叠）
+
+依据 Arc 公开行为说明独立实现，不包含 Arc Pro 源码。支持动态成员、active/idle/typing、共享姓名提示、完整名单与可选人员选择。
+
+```csharp
+public ObservableCollection<PresencePerson> People { get; } =
+[
+    new("maya") { Name = "Maya Chen" },
+    new("leo") { Name = "Leo Park", Status = PresenceStatus.Typing }
+];
+```
+
+```xml
+<arc:PresenceStack People="{Binding People}" Max="4" Size="Medium"
+                   SelfId="maya" Align="End" IsPersonSelectionEnabled="True"
+                   PersonSelected="OnPersonSelected" />
+```
+
+`PresencePerson.Id` 必须稳定，集合及人员属性在 UI 线程更新。`PersonSelected` 参数为 `PresencePersonSelectedEventArgs`，通过 `Person` 获取选择对象。`IsOpen` 支持默认双向绑定；弹层需已加载的Window宿主。Gallery导航：反馈 → PresenceStack（`--page=presence-stack`）。28/36/44尺寸、Reduced/Off立即变化；完整契约见 [组件规格](docs/components/PresenceStack.md)，人工窗口验收待完成。

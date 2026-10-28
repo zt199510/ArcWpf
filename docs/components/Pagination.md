@@ -127,3 +127,5 @@ PageCount夹至非负；零页时Page=0，有页时夹至[1,PageCount]，保留W
 | 箭头按压/释放 | CSS .96/.1 ease-out，释放.58 spring | PaginationButton内部ScaleTransform | 实现；实际按住过程未单独验收，按压曲线采用standard近似 |
 
 Reduced/Off不保留空间/颜色过渡；隐藏、卸载、模板替换立即停止并清理。截图不能代替每项动态过程验收。
+
+

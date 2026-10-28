@@ -1,6 +1,6 @@
 # NumberInput 组件规格
 
-- 状态：首版已实现，程序化验证待完成，实际窗口视觉验收待做。
+- 状态：首版已实现，程序化验证通过，实际窗口视觉验收待做。
 - 来源：[Arc Number field](https://uiarc.dev/components/number-field/markdown)。
 - 范围：受边界约束的数值编辑、步进按钮、方向键、Enter/Escape、前后缀和说明文本。
 
@@ -13,4 +13,6 @@
 上下方向键按 `Step` 调整，Shift/ PageUp/PageDown 使用十倍步长，Home/End 跳到边界，Enter 提交输入，Escape 恢复当前值。到达边界时按钮禁用；禁用控件不接受编辑。
 
 首版暂缓拖拽标签、极限回弹、数字滚轮动画和 limitHint 文案。
+
+
 

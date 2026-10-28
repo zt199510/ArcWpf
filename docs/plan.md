@@ -456,3 +456,19 @@ Avatar本次实现完成：四尺寸、ImageSource加载与首字母回退、在
 用户授权开始头像组，复用Avatar，含重叠/溢出/槽伸缩/计数滚动/悬停展开与姓名提示；来源已冻结，[规格](components/AvatarGroup.md)。仅运行AvatarGroup专项，不使用computer-use，界面用户人工验收，保留Badge/Avatar未提交改动。实现中。
 
 AvatarGroup本次实现完成：可通知Members、三尺寸/Max/+N、重叠头像、槽伸缩/计数方向滚动、悬停展开/抬升/让位/姓名与描边、Full/Reduced/Off、UIA缓存更新及Gallery。最终AvatarGroup专项9/9通过，明暗/悬停离屏已检查；未执行其他专项或全量，不用computer-use，实际窗口/多DPI/读屏/性能待人工。保留Badge/Avatar改动，未提交/推送。见[验证记录](verification/2026-10-27-avatar-group.md)。
+
+## PresenceStack 来源调查（2026-10-27）
+用户授权开始后核实该组件为Arc Pro：公开文档可读，免费Registry404，未获取付费源码。此前免费范围未核实的推荐已纠正。已记录[公开来源与实施选项](references/components/PresenceStack.md)；随后用户选择公开文档独立WPF实现，见下方完成记录。
+
+2026-10-27：用户选择 PresenceStack 公开文档独立实现路线，范围见 components/PresenceStack.md；不使用 Pro 源码，开始实现。
+
+
+PresenceStack本次独立实现完成：动态稳定Id成员、28/36/44、固定宽度Start/End堆叠、状态/typing、共享标签、方向滚动、完整名单/人员选择、键盘与UIA、Full/Reduced/Off、Gallery。最终专项9/9通过，构建0错误；明暗/键盘展开/名单内容离屏已检查。未使用Pro源码，参数为公开值与明确记录的WPF设计选择。未运行其他专项或全量，不用computer-use，实际窗口/读屏/多DPI待人工验收。未提交/推送。见[验证记录](verification/2026-10-27-presence-stack.md)。
+
+2026-10-27 PresenceStack反馈修正：用户指出名单和整体示例不符；公开HTML/CSS确认后修正间距、遮挡、提示/状态、名单两行结构与左右标题计数，恢复文档卡主示例。独立输出构建和专项9/9通过；旧Gallery进程锁定常规目录，未关闭/替换，修正版在artifacts/presence-stack-correction-build。实际窗口效果待用户复验，原测试通过不代表此前视觉正确。
+
+2026-10-27 控件盘点：已建立[控件交付路线图](component-roadmap.md)。目录与Gallery已有38个对应页面；下一项为TreeView，随后Breadcrumb、Menu收口、NumberInput/Progress/Pagination验证。Tooltip和PresenceStack已实现，当前属于待用户窗口复验，不重复创建。
+
+## 剩余控件批次收口（2026-10-27）
+
+TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/DatePicker、List、Search 的代码、Gallery、规格和专项测试已收口。最终专项筛选 49/49 通过，记录见 [剩余控件批次验证](verification/2026-10-27-remaining-controls.md)。本批次未新增实际窗口、IME、读屏、多DPI或性能证据，统一保留“实际窗口待验收”。共享 OwnedMotion 完成帧提交和 Search 生命周期兜底已修正；全量测试中的既有失败不纳入本批次结论。

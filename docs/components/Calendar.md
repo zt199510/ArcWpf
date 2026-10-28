@@ -29,3 +29,5 @@
 模板必要部件遵循WPF：Calendar.PART_CalendarItem；CalendarItem.PART_HeaderButton/PART_PreviousButton/PART_NextButton/PART_MonthView(7×7)/PART_YearView(4×3)。保留 CalendarItem 创建的日期按钮与日期事件。主题资源键 `ArcWpf.Calendar.Style`、`ArcWpf.Calendar.NavigationButtonStyle`；不全局替换所有系统Calendar。
 
 验收：实际布局有42个日期格，328/286/240宽不裁剪、圆形等宽高；导航改变DisplayDate，年/十年可用；BlackoutDates拒绝选择；Today保留绑定并尊重限制；DatePicker仍使用其BlackoutDates所属原生实例，Popup打开/关闭和文化输入通过；明暗主题资源更新。实际鼠标/键盘/焦点/IME、多DPI与读屏未运行时必须标待验收。
+
+

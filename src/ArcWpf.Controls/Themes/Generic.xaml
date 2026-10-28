@@ -2,6 +2,7 @@
   <ResourceDictionary.MergedDictionaries>
 
     <ResourceDictionary Source="/ArcWpf.Controls;component/Button/Themes/ButtonTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ActionButton/Themes/ActionButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Switch/Themes/SwitchTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Input/Themes/InputTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Search/Themes/SearchTheme.xaml" />
@@ -37,5 +38,9 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Badge/Themes/BadgeTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Avatar/Themes/AvatarTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/AvatarGroup/Themes/AvatarGroupTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/PresenceStack/Themes/PresenceStackTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
+
+
+

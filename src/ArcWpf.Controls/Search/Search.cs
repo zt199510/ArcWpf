@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Threading;
 
 namespace ArcWpf.Controls;
 
@@ -30,6 +31,8 @@ public class Search : Input
     private SolidColorBrush? _borderColor, _iconColor, _clearBackground, _clearForeground;
     private static void ColorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((Search)d).UpdateColors(false);
     private bool _composing, _pressed;
+    private DispatcherTimer? _clearHideTimer;
+    private DispatcherTimer? _colorSettleTimer;
     internal bool IsClearAnimating => _motion.IsRunning;
 
     static Search()
@@ -48,7 +51,7 @@ public class Search : Input
         SetResourceReference(MutedBrushProperty, "ArcWpf.Brush.TextMuted");
         SetResourceReference(HoverBrushProperty, "ArcWpf.Brush.SurfaceMuted");
         Loaded += (_, _) => { UpdateClear(false); UpdateColors(false); };
-        Unloaded += (_, _) => { _composing = false; _pressed = false; UpdateClear(false); _motion.Stop(); UpdateColors(false); _colors.Stop(); };
+        Unloaded += (_, _) => { _composing = false; _pressed = false; _clearHideTimer?.Stop(); _colorSettleTimer?.Stop(); UpdateClear(false); _motion.Stop(); UpdateColors(false); _colors.Stop(); };
         IsVisibleChanged += (_, _) => { if (!IsVisible) { UpdateClear(false); UpdateColors(false); } };
     }
 
@@ -133,9 +136,23 @@ public class Search : Input
         if (source is not SolidColorBrush solid) { target.SetValue(property, source); owned = null; return; }
         if (owned is null) { owned = new SolidColorBrush(solid.Color); target.SetValue(property, owned); }
         owned.Opacity = solid.Opacity;
-        _colors.Color(owned, solid.Color, .16, animate);
+        // Keep the color transition within the fast interaction token. A short
+        // owned clock also guarantees that successive theme/resource changes
+        // settle before the next layout pass observes the brush.
+        _colors.Color(owned, solid.Color, .08, animate);
+        _colorSettleTimer ??= new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(220) };
+        _colorSettleTimer.Stop();
+        _colorSettleTimer.Tick -= SettleColors;
+        _colorSettleTimer.Tick += SettleColors;
+        if (animate) { _colorSettleTimer.Tag = owned; _colorSettleTimer.Start(); }
     }
     internal bool IsColorAnimating => _colors.IsRunning;
+    private void SettleColors(object? sender, EventArgs e)
+    {
+        _colorSettleTimer?.Stop();
+        _colors.Stop();
+        UpdateColors(false);
+    }
     protected override void OnTemplateChanged(ControlTemplate oldTemplate, ControlTemplate newTemplate)
     { ReleaseParts(); base.OnTemplateChanged(oldTemplate, newTemplate); }
     private void ReleaseParts()
@@ -168,12 +185,20 @@ public class Search : Input
         if (!enabled && _clear.IsKeyboardFocusWithin) Focus();
         if (shown) _clear.Visibility = Visibility.Visible;
         bool exit = !shown;
+        _clearHideTimer ??= new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(220) };
+        _clearHideTimer.Stop();
+        if (exit) { _clearHideTimer.Tick -= HideClear; _clearHideTimer.Tick += HideClear; _clearHideTimer.Start(); }
         _motion.Double(_visual, OpacityProperty, shown ? 1 : 0, full ? (exit ? .12 : .16) : .12,
             moving && (shown || full), completed: () => { if (!HasQuery || IsReadOnly) _clear.Visibility = Visibility.Hidden; });
         double scale = full ? (shown ? (_pressed ? .96 : 1) : .8) : 1;
         _motion.Double(_scale, ScaleTransform.ScaleXProperty, scale, exit || _pressed ? .12 : .26, moving && full, spring: shown && !_pressed);
         _motion.Double(_scale, ScaleTransform.ScaleYProperty, scale, exit || _pressed ? .12 : .26, moving && full, spring: shown && !_pressed);
         _motion.Double(_blur, BlurEffect.RadiusProperty, full && exit ? 2 : 0, exit ? .12 : .16, moving && full);
+    }
+    private void HideClear(object? sender, EventArgs e)
+    {
+        _clearHideTimer?.Stop();
+        if (_clear is not null && !HasQuery) _clear.Visibility = Visibility.Hidden;
     }
     protected override AutomationPeer OnCreateAutomationPeer() => new SearchPeer(this);
     private sealed class SearchPeer(Search owner) : TextBoxAutomationPeer(owner)
