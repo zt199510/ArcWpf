@@ -2,6 +2,8 @@
 
 状态：规格已按 Arc 页面重新核对；代码正在修正，待程序化与实际窗口验收。来源见[参考卡](../references/components/Menu.md)。
 
+2026-10-27：修复触发器点击不弹出（部件类型被项目 `Button` 遮蔽）与 Popup 盖住触发器的偏移，见[修复记录](../verification/2026-10-27-menu-trigger-fix.md)。
+
 本项目公开类型暂命名为 `Menu`，它对应 Arc 的 **Dropdown menu**，不是 WPF 原生 `System.Windows.Controls.Menu`，也不扩展为 ContextMenu、UserMenu 或子菜单。
 
 ## Arc 原始契约

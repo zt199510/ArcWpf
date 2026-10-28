@@ -20,7 +20,7 @@ public sealed class MenuItem
     public Visibility SeparatorVisibility => SeparatorBefore ? Visibility.Visible : Visibility.Collapsed;
 }
 
-[TemplatePart(Name = "PART_Trigger", Type = typeof(Button))]
+[TemplatePart(Name = "PART_Trigger", Type = typeof(System.Windows.Controls.Button))]
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 [TemplatePart(Name = "PART_ItemsHost", Type = typeof(ListBox))]
 [TemplatePart(Name = "PART_Highlight", Type = typeof(Border))]
@@ -36,7 +36,8 @@ public class Menu : Control
     public static readonly RoutedEvent ClosedEvent = EventManager.RegisterRoutedEvent(nameof(Closed), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Menu));
     public static readonly RoutedEvent ItemInvokedEvent = EventManager.RegisterRoutedEvent(nameof(ItemInvoked), RoutingStrategy.Bubble, typeof(EventHandler<MenuItemInvokedEventArgs>), typeof(Menu));
 
-    private Button? _trigger;
+    // The template trigger is a plain WPF Button; the bare name would mean ArcWpf.Controls.Button and never match.
+    private System.Windows.Controls.Button? _trigger;
     private Popup? _popup;
     private ListBox? _itemsHost;
     private Border? _highlight;
@@ -77,7 +78,7 @@ public class Menu : Control
     {
         ReleaseTemplate();
         base.OnApplyTemplate();
-        _trigger = GetTemplateChild("PART_Trigger") as Button;
+        _trigger = GetTemplateChild("PART_Trigger") as System.Windows.Controls.Button;
         _popup = GetTemplateChild("PART_Popup") as Popup;
         _itemsHost = GetTemplateChild("PART_ItemsHost") as ListBox;
         _highlight = GetTemplateChild("PART_Highlight") as Border;
@@ -291,7 +292,8 @@ public class Menu : Control
     private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
         double x = AlignToStart ? -AlignOffset : targetSize.Width - popupSize.Width + AlignOffset;
-        return [new CustomPopupPlacement(new Point(x, 6), PopupPrimaryAxis.None), new CustomPopupPlacement(new Point(x, -popupSize.Height - 6), PopupPrimaryAxis.None)];
+        // Offsets are relative to the trigger's top-left: below first, flip above when the screen runs out.
+        return [new CustomPopupPlacement(new Point(x, targetSize.Height + 6), PopupPrimaryAxis.None), new CustomPopupPlacement(new Point(x, -popupSize.Height - 6), PopupPrimaryAxis.None)];
     }
 
     private MenuItem? FindItem(DependencyObject? source)

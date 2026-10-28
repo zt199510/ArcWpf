@@ -35,6 +35,10 @@ description: 在 ArcWpf 中实现或修改 WPF 原生控件、依赖属性、模
 - 至少一个测试在显示的窗口中触发状态变化，断言动画时钟确实启动（`HasAnimatedProperties` 或中间值），而不只断言最终属性值。
 - 父类需要的扩展点用 `private protected` 钩子暴露（如 `IsBusy`），不复制父类逻辑。
 
+### 类型名遮蔽
+
+`ArcWpf.Controls` 自带 `Button`、`Menu`、`MenuItem`、`TreeView` 等与 WPF 同名的类型。在该命名空间内，裸写 `Button` 指项目类型，对模板中的原生 `<Button>` 做 `as Button` 恒为 null，部件静默缺失（Menu 触发器曾因此无法打开）。取原生部件时写完整名 `System.Windows.Controls.Button`（`TemplatePart` 同理），并至少有一个测试经由真实部件触发交互（如对部件 `RaiseEvent(ButtonBase.ClickEvent)`），不能只直接设置状态属性。
+
 ## 工作闭环
 
 在真实解决方案存在时执行相应构建与行为测试；新增属性至少在 Gallery 或消费示例中验证绑定和动态更新。对焦点/Popup/IME 等实际窗口场景遵循 [验证规范](../../../docs/verification.md)，构建成功不代表行为通过。
