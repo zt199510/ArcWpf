@@ -107,3 +107,9 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 每个组件继续沿用现有退出条件：规格/参考卡、主示例和边界示例、专项测试、Full/Reduced/Off 与卸载/换模板清理、最终窗口验收。此次用户已完成当前批次手动验收，因此后续记录应从上述新组件开始，不能把当前批次的程序化证据复制成新组件的窗口通过。
 
 
+
+
+## CopyButton 开发（2026-10-28）
+
+CopyButton 已开始实现，范围为 Clipboard 复制、成功反馈、Copy/Check phase、文字 morph 和宽度 spring。
+
