@@ -20,3 +20,12 @@
 
 
 
+
+## 2026-10-29 Arc 对齐修正
+
+- 根因：旧实现用 ScaleTransform.ScaleX 缩放整层填充，造成中间文字/图标横向压扁；填充宽度还受 Surface Padding 内容测量影响。
+- 修复：采用固定完整尺寸 face + PART_FillClip 外层裁剪；Progress 只改变裁剪宿主 Width。
+- 修复：确认文案淡入/上浮、勾号 dash 绘制、快速重新按住续填、旧回退时钟清理和 tone 图标颜色。
+- HoldToConfirm 专项复验：3/3 通过。
+- 实际窗口：仍待人工观察填充边界、长文案、明暗主题和 Reduced/Off。
+
