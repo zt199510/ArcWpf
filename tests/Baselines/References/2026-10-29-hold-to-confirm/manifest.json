@@ -1,0 +1,16 @@
+{
+  "component": "hold-to-confirm",
+  "source": {
+    "registry": "https://uiarc.dev/r/hold-to-confirm.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/hold-to-confirm/markdown",
+    "page": "https://uiarc.dev/components/hold-to-confirm",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-29",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/hold-to-confirm/hold-to-confirm.module.css": "1dd13d04ac68b87905adf0416c764bcd8dba0ec631a478d0fc54d3135adc335f",
+    "registry/components/hold-to-confirm/hold-to-confirm.tsx": "1d5905798dedde34e7bad029e1287a7a1620337fae3dfc3bd0d03101d06580ed"
+  }
+}
