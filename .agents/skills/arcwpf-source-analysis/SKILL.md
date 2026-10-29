@@ -17,6 +17,12 @@ Free 组件在写规格或代码前，必须先完成：
 2. 冻结到 `tests/Baselines/References/<日期>-<slug>/`：Registry 中的 `.tsx`/`.module.css` 展开到 `registry/`，`manifest.json` 记录来源 URL、采集时间和每个文件的 SHA-256。格式参照已有批次。
 3. 参考卡链接该批次，并从源码列出：状态机（每个状态的触发和转移）、每个状态显示的文案/图标、几何与令牌、逐项动效参数。
 
+参考卡还须记录：
+
+- 主示例实际传入的 props（从页面 HTML 的渲染结果确认，如 `data-name`、是否出现状态点），Gallery 主示例照此设置，不自行打开额外变体。
+- 文档与 CSS 冲突时以 CSS/源码为准，并在参考卡写明冲突（UserMenu：Markdown 写 17.5rem，CSS 为 15.5rem）。
+- 相关全局令牌的实际值，尤其决定外观取舍的值（如 `--focus-ring: transparent` 表示无焦点环）。
+
 未完成闸门不得写规格或代码。只有 Pro 组件或 Registry 不可得时才可退回文档/截图/观察，并在规格开头标明“无源码，动效为推测”。
 
 ## 工作方式

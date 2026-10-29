@@ -37,7 +37,22 @@ description: 在 ArcWpf 中实现或修改 WPF 原生控件、依赖属性、模
 
 ### 类型名遮蔽
 
-`ArcWpf.Controls` 自带 `Button`、`Menu`、`MenuItem`、`TreeView` 等与 WPF 同名的类型。在该命名空间内，裸写 `Button` 指项目类型，对模板中的原生 `<Button>` 做 `as Button` 恒为 null，部件静默缺失（Menu 触发器曾因此无法打开）。取原生部件时写完整名 `System.Windows.Controls.Button`（`TemplatePart` 同理），并至少有一个测试经由真实部件触发交互（如对部件 `RaiseEvent(ButtonBase.ClickEvent)`），不能只直接设置状态属性。
+`ArcWpf.Controls` 自带多个与 WPF 同名的类型（2026-10-28：`Button`、`CheckBox`、`RadioButton`、`ComboBox`、`ContextMenu`、`Menu`、`MenuItem`、`Slider`、`TabItem`、`TreeView`、`Calendar`、`DatePicker`，以及与 `System.Windows.Documents` 同名的 `List`、`ListItem`）。清单会随组件增加，编码前用下列命令现查，不依赖记忆：
+
+```bash
+grep -rhoE "^\s*public (sealed |abstract )?(partial )?class \w+" src/ArcWpf.Controls | awk '{print $NF}' | sort -u
+```
+
+在该命名空间内，裸写同名类型指项目类型：对模板中的原生 `<Button>` 做 `as Button` 恒为 null，`OfType<RadioButton>()`、`is RadioButton` 恒不匹配，编译不报错，部件或事件静默失效（Menu 触发器曾无法打开；UserMenu 分段按钮险些同样失效）。凡引用 WPF 原生类型一律写完整名（如 `System.Windows.Controls.RadioButton`），`TemplatePart` 同理；XAML 默认命名空间不受影响。至少有一个测试经由真实部件触发交互（如对部件 `RaiseEvent(ButtonBase.ClickEvent)` 或设置分段 `IsChecked`），不能只直接设置状态属性。
+
+### 模板内的原生按钮
+
+模板内用作行、分段、触发器的 `Button`/`RadioButton`/`ToggleButton` 必须设 `OverridesDefaultStyle=True` 并提供自有 `Template`。只改 `Background`/`BorderThickness` 去不掉系统 ButtonChrome：悬停/按压仍画灰框和蓝色底，与 Arc 的单层高亮叠加（UserMenu 前两轮的主因）。回归测试遍历可视树，断言不存在 `ButtonChrome`/`ClassicBorderDecorator` 等系统装饰。
+
+### 根尺寸与图标
+
+- 由内容决定尺寸的控件（触发器、带可选姓名/标签的按钮），Style 不得给根设 `Width`/`Height`；固定尺寸只写在内部部件上。测试断言根的实际宽度等于内容宽度，并覆盖显隐可选内容前后（UserMenu 曾固定 34/150 而裁剪 40px 触发器）。
+- 来源使用 lucide 等图标库时，按其路径数据改写为 WPF `Geometry`（保持 24 网格与 strokeWidth 换算），并在 THIRD-PARTY-NOTICES 记录；禁止用 Unicode 字符（☀ ☾ ↪ ⌄ ● 等）作为图标占位，其字形、基线随字体回退变化。
 
 ## 工作闭环
 

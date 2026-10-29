@@ -26,6 +26,10 @@ WPF 没有可直接照搬的 Avalonia Headless 测试链路。不得把构建成
 
 未适用项写原因，不把所有控件强制塞入无意义测试。测试应断言用户可见行为或稳定契约，不仅断言实现细节。
 
+### 非 Windows 环境
+
+2026-10-28 实测：Linux 容器安装 SDK 10.0.402 后，`dotnet build <项目> -p:EnableWindowsTargeting=true` 可编译 Controls、Gallery 与 Tests，用于捕获 XAML/C# 错误。WPF 测试和窗口验收无法在非 Windows 运行，记录为“未运行”，并给出 Windows 上的 `dotnet test` 命令；不能把编译成功写成测试通过。
+
 ## 3. 截图规则
 
 按 [来源规范](sources.md) 分开维护 Arc 还原目标与 ArcWpf 回归基准。首次接受 WPF 基准须对照固定 Arc 目标并记录允许差异；上游更新和修复移植偏差分别记录，不能用实时网站直接覆盖基准。

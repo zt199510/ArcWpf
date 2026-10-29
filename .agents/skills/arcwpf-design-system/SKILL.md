@@ -23,6 +23,14 @@ description: 为 ArcWpf 建立或修改语义令牌、明暗主题、强调色�
 
 交付：资源变更、映射和影响说明，以及 [验证规范](../../../docs/verification.md) 要求的真实结果和剩余限制。
 
+## 资源键必须存在
+
+`{DynamicResource}` 找不到键时不报错，只按未设置处理（多为透明）。UserMenu 的 Away 状态点、Progress 完成色都曾因 `ArcWpf.Brush.Warning`/`Success` 未定义而不可见。
+
+- 模板新引用的每个 `ArcWpf.*` 键，提交前在 `ArcThemeResources` 中确认有定义，明暗两套都要生成。
+- 回归优先用测试对相关键执行 `TryFindResource` 并断言非 null；可扩展为扫描全部 XAML 引用键的全局测试。
+- CSS `color-mix(in oklab, X N%, transparent)` 即 X 的 N% 透明度；与另一中性色混合时可按 L 线性插值（见 `ArcThemeResources` 中的 `MixL`）。组件专用混色命名为 `<组件><用途>`，不复用语义不同的全局令牌。
+
 ## 令牌与几何分开
 
 按 [复刻规则](../../../docs/replication-workflow.md) 区分语义令牌、控件尺寸计算和展示容器配置。CSS原值、WPF采用值、转换依据及证据记录在组件参考卡；依赖当前高度的胶囊半径不作为全局9999圆角直接套用。
