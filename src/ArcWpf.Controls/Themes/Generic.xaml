@@ -45,6 +45,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/PresenceStack/Themes/PresenceStackTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/UserMenu/Themes/UserMenuTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/HoldToConfirm/Themes/HoldToConfirmTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/InlineEdit/Themes/InlineEditTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

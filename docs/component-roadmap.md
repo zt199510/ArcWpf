@@ -132,3 +132,10 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 完成参考卡与规格，明确按住填充、提前松开回退、Space/Enter、失焦、禁用和 tone。
 - [x] 实现原生 WPF HoldToConfirm、主题、Gallery 和 3 项专项测试；Controls/Gallery 构建通过。
 - [ ] 实际窗口的按住观感、鼠标捕获、明暗主题、Reduced/Off、多 DPI 和触摸验收。
+
+## InlineEdit 开发（2026-10-29）
+
+- [x] 冻结 Arc Inline edit Registry、CSS、Markdown、页面、动效令牌和许可快照；见 	ests/Baselines/References/2026-10-29-inline-edit。
+- [x] 完成参考卡与规格，明确展示/编辑、Enter/Escape、失焦、异步保存、验证、失败回滚和多行模式。
+- [x] 实现原生 WPF InlineEdit、主题、Gallery 和 3 项专项测试；Controls/Gallery 构建通过。
+- [ ] 实际窗口原位尺寸、中文 IME、焦点、长文案、多行高度、明暗主题和 Reduced/Off 验收。

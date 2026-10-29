@@ -1,0 +1,16 @@
+{
+  "component": "inline-edit",
+  "source": {
+    "registry": "https://uiarc.dev/r/inline-edit.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/inline-edit/markdown",
+    "page": "https://uiarc.dev/components/inline-edit",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-29",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/inline-edit/inline-edit.module.css": "c689027c6c24a43a7cc1de2edf99812c613b0a85ae008e08fdc76caf6d1083d9",
+    "registry/components/inline-edit/inline-edit.tsx": "7040d60275c468ae819f9de96a4cf6e41d9c639fdeefe866953466afd15addb4"
+  }
+}
