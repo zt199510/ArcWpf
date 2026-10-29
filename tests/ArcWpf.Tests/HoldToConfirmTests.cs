@@ -55,6 +55,19 @@ public sealed class HoldToConfirmTests
         }));
     }
 
+    [TestMethod]
+    public void ConfirmedButtonDoesNotCaptureMouseOnLaterClick()
+    {
+        Sta.Run(() => InWindow(control =>
+        {
+            control.Confirmed = true;
+            RaiseMouse(control, Mouse.PreviewMouseDownEvent);
+            Assert.IsFalse(control.IsMouseCaptured);
+            RaiseMouse(control, Mouse.PreviewMouseUpEvent);
+            Assert.IsFalse(control.IsMouseCaptured);
+        }));
+    }
+
     private static void InWindow(Action<HoldToConfirm> action)
     {
         var control = new HoldToConfirm { Label = "Hold to delete", Width = 190, Height = 44 };

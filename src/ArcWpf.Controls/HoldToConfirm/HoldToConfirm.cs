@@ -70,12 +70,13 @@ public class HoldToConfirm : System.Windows.Controls.Button
         RefreshVisual();
     }
     protected override void OnClick() { }
-    protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e) { if (e.ChangedButton == MouseButton.Left) { e.Handled = true; Begin(HoldSource.Pointer); CaptureMouse(); _captured = true; } else base.OnPreviewMouseLeftButtonDown(e); }
-    protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e) { if (e.ChangedButton == MouseButton.Left) { e.Handled = true; ReleaseHold(); } else base.OnPreviewMouseLeftButtonUp(e); }
+    protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e) { if (e.ChangedButton == MouseButton.Left) { e.Handled = true; if (Begin(HoldSource.Pointer)) _captured = CaptureMouse(); } else base.OnPreviewMouseLeftButtonDown(e); }
+    protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e) { if (e.ChangedButton == MouseButton.Left) { e.Handled = true; if (_source != HoldSource.None) ReleaseHold(); else if (IsMouseCaptured) ReleaseMouseCapture(); } else base.OnPreviewMouseLeftButtonUp(e); }
     protected override void OnPreviewMouseMove(MouseEventArgs e) { base.OnPreviewMouseMove(e); if (_source != HoldSource.Pointer || e.MouseDevice.LeftButton != MouseButtonState.Pressed) return; var point = e.GetPosition(this); const double slack = 24; if (point.X < -slack || point.Y < -slack || point.X > ActualWidth + slack || point.Y > ActualHeight + slack) ReleaseHold(); }
     protected override void OnPreviewKeyDown(KeyEventArgs e) { base.OnPreviewKeyDown(e); if (e.Key is not (Key.Space or Key.Enter) || e.IsRepeat) return; e.Handled = true; Begin(HoldSource.Keyboard); }
     protected override void OnPreviewKeyUp(KeyEventArgs e) { base.OnPreviewKeyUp(e); if (e.Key is Key.Space or Key.Enter) { e.Handled = true; if (_source == HoldSource.Keyboard) ReleaseHold(); } }
     protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e) { base.OnLostKeyboardFocus(e); if (_source == HoldSource.Keyboard) ReleaseHold(); }
+    protected override void OnLostMouseCapture(MouseEventArgs e) { base.OnLostMouseCapture(e); _captured = false; if (_source == HoldSource.Pointer) { Stop(false); if (!IsConfirmed) Rewind(); } }
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e) { base.OnPropertyChanged(e); if (e.Property == IsEnabledProperty) { if (!IsEnabled) Stop(true); RefreshVisual(); } }
 
     private static void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((HoldToConfirm)d).RefreshVisual();
@@ -83,10 +84,11 @@ public class HoldToConfirm : System.Windows.Controls.Button
     {
         var control = (HoldToConfirm)d; if (e.NewValue is bool value) { control.Stop(true); control.SetValue(IsConfirmedPropertyKey, value); control.SetProgress(value ? 1 : 0, false); control.RefreshVisual(); }
     }
-    private void Begin(HoldSource source)
+    private bool Begin(HoldSource source)
     {
-        if (_source != HoldSource.None || IsConfirmed || !IsEnabled) return;
+        if (_source != HoldSource.None || IsConfirmed || !IsEnabled) return false;
         CaptureProgressFromVisual(); _motion.Stop(); _holdStartProgress = Progress; _source = source; _clock.Restart(); _timer.Start(); SetValue(IsHoldingPropertyKey, true); HoldChanged?.Invoke(this, true); PressTo(true);
+        return true;
     }
     private void Tick(object? sender, EventArgs e) { if (_source == HoldSource.None) return; double value = Math.Clamp(_holdStartProgress + (_clock.Elapsed.TotalMilliseconds / Duration) * (1 - _holdStartProgress), 0, 1); SetProgress(value, false); if (value >= 1) Complete(); }
     private void ReleaseHold() { if (_source == HoldSource.None) return; Stop(false); if (!IsConfirmed) Rewind(); }
