@@ -9,7 +9,7 @@ internal sealed class OwnedMotion
     private readonly Dictionary<(DependencyObject,DependencyProperty), Entry> _active = new();
     private sealed record Entry(object Target, Action Stop);
     internal bool IsRunning => _active.Count != 0;
-    internal void Double(DependencyObject target, DependencyProperty property, double value, double seconds, bool animate, bool spring=false, Action? completed=null, double delay=0, bool enter=false)
+    internal void Double(DependencyObject target, DependencyProperty property, double value, double seconds, bool animate, bool spring=false, Action? completed=null, double delay=0, bool enter=false, KeySpline? ease=null)
     {
         var key=(target,property);
         if(animate && _active.TryGetValue(key,out var current) && Equals(current.Target,value)) return;
@@ -26,7 +26,7 @@ internal sealed class OwnedMotion
         else
         {
             timeline.KeyFrames.Add(new DiscreteDoubleKeyFrame(from,KeyTime.FromTimeSpan(TimeSpan.FromSeconds(delay))));
-            timeline.KeyFrames.Add(new SplineDoubleKeyFrame(value,KeyTime.FromTimeSpan(TimeSpan.FromSeconds(seconds+delay)),enter?new KeySpline(.16,1,.3,1):new KeySpline(.22,1,.36,1)));
+            timeline.KeyFrames.Add(new SplineDoubleKeyFrame(value,KeyTime.FromTimeSpan(TimeSpan.FromSeconds(seconds+delay)),ease??(enter?new KeySpline(.16,1,.3,1):new KeySpline(.22,1,.36,1))));
         }
         Start(key,value,timeline,completed);
     }

@@ -99,6 +99,18 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("AvatarOnline", Oklch(dark ? .78 : .49, dark ? .18 : .19, 150));
         var avatarOutline = Oklch(neutrals["Border"], 0, 0); avatarOutline.A = (byte)Math.Round(255 * .7);
         PutBrush("AvatarStatusOutline", avatarOutline);
+        // --success / --warning from the frozen foundation; UserMenu presence dots and Progress completion use them.
+        PutBrush("Success", Oklch(dark ? .78 : .49, dark ? .18 : .19, 150));
+        PutBrush("Warning", Oklch(dark ? .83 : .58, dark ? .17 : .18, dark ? 80 : 75));
+        // user-menu.module.css: color-mix(in oklab, foreground N%, transparent) is the foreground at N% alpha.
+        Color Ink(double share) { var ink = Oklch(neutrals["Foreground"], 0, 0); ink.A = (byte)Math.Round(255 * share); return ink; }
+        PutBrush("UserMenuLine", Ink(.09));
+        PutBrush("UserMenuHighlight", Ink(.06));
+        PutBrush("UserMenuTrack", Ink(.05));
+        PutBrush("UserMenuPlan", Ink(.04));
+        PutBrush("UserMenuTriggerPressed", Oklch(MixL("SurfaceMuted", "Foreground", .08), 0, 0));
+        // .thumb is surface-raised in light; [data-theme="dark"] mixes foreground 20% into it and drops the shadow.
+        PutBrush("UserMenuThumb", Oklch(dark ? MixL("SurfaceRaised", "Foreground", .2) : neutrals["SurfaceRaised"], 0, 0));
         this["ArcWpf.Radius.Control"] = new CornerRadius(18);
         this["ArcWpf.Radius.Panel"] = new CornerRadius(26);
         this["ArcWpf.Radius.Pill"] = new CornerRadius(9999);

@@ -184,3 +184,5 @@ PresenceStack correction: publicly served page HTML/CSS was inspected for displa
 ActionButton的状态链、几何与动效参数参考Arc免费action-button Registry及motion-tokens，适用上文Arc MIT许可。2026-10-28-action-button为项目采集批次，非官方版本；文件与SHA-256见tests/Baselines/References/2026-10-28-action-button/manifest.json。箭头与勾号按lucide arrow-right/check几何重绘为WPF Path，未打包Lucide库或资产；未引入React/Motion运行库，WPF动画调度为项目实现。
 
 ButtonGroup的结构、几何、颜色混合、状态与动效参数参考Arc免费button-group Registry及motion-tokens，适用上文Arc MIT许可。2026-10-28-button-group为项目采集批次，非官方版本；文件与SHA-256见tests/Baselines/References/2026-10-28-button-group/manifest.json。Gallery图标按lucide几何重绘为WPF Geometry，未打包Lucide库或资产；未引入React/Radix/Motion运行库，菜单复用项目Menu，WPF布局与动画调度为项目实现。
+
+UserMenu的结构、几何、颜色混合、键盘路由与动效参数参考Arc免费user-menu Registry/CSS及motion-tokens，适用上文Arc MIT许可。2026-10-28-user-menu为项目采集批次，非官方版本；文件与SHA-256见tests/Baselines/References/2026-10-28-user-menu/manifest.json。控件与Gallery图标（sun、moon、monitor、sun-moon、log-out、chevron-down、loader-circle、user-round、settings、credit-card）按lucide 24网格路径改写为WPF Geometry，适用上文Lucide ISC许可；未打包Lucide库或资产，未引入React/Motion运行库，WPF Popup、焦点与动画调度为项目实现。
