@@ -238,3 +238,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback TagInput，支持标签胶囊、Enter/逗号添加、Backspace、删除和 MaxTags。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，TagInput 专项 3/3 通过。
 - [ ] Arc TagInput Registry/CSS 来源恢复后胶囊尺寸、输入宽度、IME 和真实窗口验收。
+
+## ShortcutRecorder 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback ShortcutRecorder，支持 Ctrl/Alt/Shift/Win 组合录制、Escape、Backspace 和焦点停止。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ShortcutRecorder 专项 3/3 通过。
+- [ ] Arc ShortcutRecorder Registry/CSS 来源恢复后键帽视觉、组合键过滤和真实窗口验收。
