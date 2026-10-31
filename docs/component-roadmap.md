@@ -214,3 +214,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 冻结两控件 Registry、CSS、Markdown、页面、动效令牌和许可；重写参考卡与规格。
 - [x] 按源码重做（含可单独使用的 FilterMenu）、Gallery 主示例与专项测试；构建 0 错误。
 - [ ] 在 Windows 运行 6 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-filter-reorder-rebuild.md)）。
+
+## PasswordStrength 开发（2026-10-31）
+
+- [x] 建立明确标记的 WPF fallback PasswordStrength，支持长度/大小写/数字/符号评分、StrengthLabel、规则提示和主题。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，PasswordStrength 专项 3/3 通过。
+- [ ] Arc PasswordStrength Registry/CSS 来源恢复后评分规则、分段颜色、动效和真实窗口验收。

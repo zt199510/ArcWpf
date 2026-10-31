@@ -54,6 +54,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Skeleton/Themes/SkeletonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/FilterToolbar/Themes/FilterToolbarTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ReorderableList/Themes/ReorderableListTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/PasswordStrength/Themes/PasswordStrengthTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 
