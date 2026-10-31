@@ -120,7 +120,7 @@ internal sealed class RangeMonth : IDisposable
         var number = new TextBlock { Text = date.Day.ToString(culture), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
         Typography.SetNumeralAlignment(number, FontNumeralAlignment.Tabular);
         var today = new Ellipse { Width = 4, Height = 4, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 5), Visibility = Visibility.Collapsed };
-        var button = new System.Windows.Controls.Button { Width = _cell, Height = _cell, Content = new Grid { Children = { span, number, today } }, Style = (Style)_owner.FindResource("ArcWpf.DateRangePicker.Day"), IsEnabled = !disabled, IsTabStop = false };
+        var button = new System.Windows.Controls.Button { Width = _cell, Height = _cell, Content = new Grid { Children = { span, number, today } }, Style = (Style)_owner.FindResource(new ComponentResourceKey(typeof(DateRangePicker), "Day")), IsEnabled = !disabled, IsTabStop = false };
         AutomationProperties.SetName(button, date.ToString("dddd, MMMM d, yyyy", culture));
         var day = new Day(date, button, span, number, today, press, disabled);
         button.Click += (_, _) => _owner.Pick(date);

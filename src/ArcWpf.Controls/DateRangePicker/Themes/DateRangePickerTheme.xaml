@@ -4,7 +4,7 @@
   <Geometry x:Key="ArcWpf.DateRangePicker.Icon.ChevronDown">M6,9 l6,6 l6,-6</Geometry>
 
   <!-- .preset: 32 DIP, radius 12, padding 0 12, text-secondary; aria-pressed is foreground/500; hover foreground on a 4% wash. -->
-  <Style x:Key="ArcWpf.DateRangePicker.Preset" TargetType="Button">
+  <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:DateRangePicker}, ResourceId=Preset}" TargetType="Button">
     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     <Setter Property="HorizontalContentAlignment" Value="Left"/>
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
@@ -21,7 +21,7 @@
   </Style>
 
   <!-- .navButton: 32 DIP pill, text-secondary; hover 6.5% wash; disabled .35. -->
-  <Style x:Key="ArcWpf.DateRangePicker.Nav" TargetType="Button">
+  <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:DateRangePicker}, ResourceId=Nav}" TargetType="Button">
     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
       <Border x:Name="Wash" CornerRadius="16" Background="Transparent"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
@@ -34,7 +34,7 @@
     </ControlTemplate></Setter.Value></Setter>
   </Style>
 
-  <Style x:Key="ArcWpf.DateRangePicker.Day" TargetType="Button">
+  <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:DateRangePicker}, ResourceId=Day}" TargetType="Button">
     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     <Setter Property="Cursor" Value="Hand"/>
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="Transparent"><ContentPresenter/></Border></ControlTemplate></Setter.Value></Setter>
@@ -42,7 +42,7 @@
   </Style>
 
   <!-- .ghost / .primary: 36 DIP, radius 18, padding 0 14, weight 500; primary min 76 DIP on accent, disabled .45. -->
-  <Style x:Key="ArcWpf.DateRangePicker.Ghost" TargetType="Button">
+  <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:DateRangePicker}, ResourceId=Ghost}" TargetType="Button">
     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     <Setter Property="Height" Value="{DynamicResource ArcWpf.ControlHeight.Small}"/>
     <Setter Property="FontWeight" Value="Medium"/>
@@ -59,7 +59,7 @@
       </ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>
-  <Style x:Key="ArcWpf.DateRangePicker.Primary" TargetType="Button" BasedOn="{StaticResource ArcWpf.DateRangePicker.Ghost}">
+  <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:DateRangePicker}, ResourceId=Primary}" TargetType="Button" BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:DateRangePicker}, ResourceId=Ghost}}">
     <Setter Property="MinWidth" Value="76"/>
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.AccentForeground}"/>
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">

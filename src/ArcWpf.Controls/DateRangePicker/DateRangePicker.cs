@@ -504,7 +504,8 @@ public class DateRangePicker : Control
         return rail;
     }
 
-    private Style PresetStyle() => (Style)FindResource("ArcWpf.DateRangePicker.Preset");
+    // Styles live in the theme dictionary; string keys there are invisible to FindResource, component keys are not.
+    private Style PresetStyle() => (Style)FindResource(new ComponentResourceKey(typeof(DateRangePicker), "Preset"));
 
     private FrameworkElement BuildCalendars()
     {
@@ -522,7 +523,7 @@ public class DateRangePicker : Control
 
     private System.Windows.Controls.Button NavButton(string icon, string name, HorizontalAlignment side, int step)
     {
-        var button = new System.Windows.Controls.Button { Width = 32, Height = 32, HorizontalAlignment = side, VerticalAlignment = VerticalAlignment.Top, Content = Icon(icon, "ArcWpf.Brush.TextSecondary"), Style = (Style)FindResource("ArcWpf.DateRangePicker.Nav"), Cursor = Cursors.Hand };
+        var button = new System.Windows.Controls.Button { Width = 32, Height = 32, HorizontalAlignment = side, VerticalAlignment = VerticalAlignment.Top, Content = Icon(icon, "ArcWpf.Brush.TextSecondary"), Style = (Style)FindResource(new ComponentResourceKey(typeof(DateRangePicker), "Nav")), Cursor = Cursors.Hand };
         AutomationProperties.SetName(button, name);
         button.Click += (_, _) => GoTo(_view.AddMonths(step));
         return button;
@@ -535,9 +536,9 @@ public class DateRangePicker : Control
         footer.Margin = new Thickness();
         border.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.BorderSubtle");
         var actions = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
-        var cancel = new System.Windows.Controls.Button { Content = "Cancel", Style = (Style)FindResource("ArcWpf.DateRangePicker.Ghost"), Margin = new Thickness(0, 0, 6, 0) };
+        var cancel = new System.Windows.Controls.Button { Content = "Cancel", Style = (Style)FindResource(new ComponentResourceKey(typeof(DateRangePicker), "Ghost")), Margin = new Thickness(0, 0, 6, 0) };
         cancel.Click += (_, _) => Close(true);
-        _apply = new System.Windows.Controls.Button { Content = "Apply", Style = (Style)FindResource("ArcWpf.DateRangePicker.Primary") };
+        _apply = new System.Windows.Controls.Button { Content = "Apply", Style = (Style)FindResource(new ComponentResourceKey(typeof(DateRangePicker), "Primary")) };
         _apply.Click += (_, _) => Apply();
         actions.Children.Add(cancel); actions.Children.Add(_apply);
         DockPanel.SetDock(actions, Dock.Right);
