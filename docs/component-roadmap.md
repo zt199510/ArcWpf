@@ -232,3 +232,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback PhoneInput，支持国家区号、数字过滤、10 位格式化和 IsValid。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，PhoneInput 专项 3/3 通过。
 - [ ] Arc PhoneInput Registry/CSS 来源恢复后国际格式、国家选择、IME 和真实窗口验收。
+
+## TagInput 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback TagInput，支持标签胶囊、Enter/逗号添加、Backspace、删除和 MaxTags。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，TagInput 专项 3/3 通过。
+- [ ] Arc TagInput Registry/CSS 来源恢复后胶囊尺寸、输入宽度、IME 和真实窗口验收。
