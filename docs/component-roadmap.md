@@ -172,3 +172,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 冻结四控件 Registry、CSS、Markdown、页面、动效令牌和许可；补参考卡。
 - [x] 按源码重做模板、行为、动效与 Gallery 主示例，重写专项测试；Controls/Gallery/Tests 构建 0 错误。
 - [ ] 在 Windows 运行 16 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-30-arc-source-rebuild.md)）。
+
+## EmptyState 开发（2026-10-31）
+
+- [x] 建立明确标记的 WPF fallback EmptyState，包含图标、标题、说明、主操作和 UIA。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，EmptyState 专项 3/3 通过。
+- [ ] Arc EmptyState Registry/CSS 来源恢复后网页参数、图标、间距和动效复核；真实窗口验收待补。
