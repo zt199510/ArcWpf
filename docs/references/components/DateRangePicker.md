@@ -1,5 +1,8 @@
 # DateRangePicker 参考卡
 
-- Arc 页面：`https://uiarc.dev/components/date-range-picker`。
-- 2026-10-31 Registry 访问被当前网络策略拒绝，未创建伪造来源快照。
-- 当前 WPF 基准复用已冻结 Calendar/DatePicker：44 DIP 字段、18 DIP 圆角、语义主题资源、原生 Calendar 键盘和 BlackoutDates。
+- 来源：`https://uiarc.dev/r/date-range-picker.json`，采集日 2026-10-30。冻结批次：[2026-10-30-date-range-picker](../../../tests/Baselines/References/2026-10-30-date-range-picker/)（tsx `93658f3a…`，css `40db1644…`，lib/use-today.ts `069a833b…`）。
+- 主示例（页面 HTML 与 demo chunk 确认）：stage `min(100%, 760px)`、居中、顶部 32px、min-height 520；value 默认今天往前 6 天至今天（7 天），maxDate 今天，boundary 为 stage，label `Date range`；下方 note `{n} days selected` / `No range selected`（14 muted、gap 12）。
+- 几何（源码确认）：trigger 44 高、padding 0 12 0 14、gap 10、weight 500（空值 400 + text-secondary），calendar-days 16 secondary、chevron 16 muted；静止 surface 为 surface-raised、1px border overlay、radius 18、resting 阴影，hover 背景 foreground 3%、border-strong。panel padding 10（compact 8）；rail 9.25rem（148）含 padding-right 10 与 border-subtle 右边线，preset 32 高 radius 12；nav 32 pill；viewport 高 60 + cell×6，cell 36（compact 为 clamp(floor((w-24)/7), 32, 42)）；两月 gap 24；标题 32 高 500；星期行 28 高 12 muted、取前 2 字；范围条高 cell-6、accent-subtle；端点 cell 内缩 3 的 accent 圆；端点文字 accent-foreground 500；today 点 4px 底 5；disabled muted .5；footer margin-top 10、padding 10 2 0 12、上边线 border-subtle；Cancel ghost / Apply primary 36 高、radius 18、padding 0 14，primary 最小 76、disabled .45。
+- 状态机：closed → open（draft=committed、anchor=null、view=end 月（双月时前一月））→ 第一次点日设 anchor（悬停预览 anchor..hover）→ 第二次点日得有序 draft → Apply 提交（只有 anchor 时提交单日）并关闭、焦点回 trigger；Cancel/Escape 关闭并回焦点；外部 pointerdown 或焦点离开关闭不提交。预设设 draft 并 reveal；active preset 仅在无 anchor 且 draft 与预设一致时。
+- 布局：months auto 时 boundary 可用宽度（减 2×8）≥712 用双月，否则 compact 单月 + 横向预设行；panel 横向 clamp 到 boundary 内 8px。
+- 动效：surface 从 trigger 盒以 physical(.48) GROW 长成 panel（radius 18→26、x 偏移），关闭以 physical(.38) SHRINK 收回；panel 内容 faceIn（opacity、y -4、blur 4，.26 enter 延迟 .07）、gone（.12）；trigger 图标 quiet（.12 / .22 延迟 .1）；值经 layoutId 从 trigger 飞到 footer 并在 Apply 时飞回；范围条 STRETCH(.3) 伸缩、端点 GLIDE(.3) 滑动并淡入；月份按方向滑动（x ±48 入、∓36 出，SLIDE(.4)，opacity .22/.14）；文字按词滚动（±.45em、blur 2、.26/.14）；预设高亮 GLIDE 滑动；root 宽度 morph spring。Reduced：尺寸跳变、无共享布局与滑动、短淡入淡出。

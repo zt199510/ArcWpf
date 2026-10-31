@@ -166,3 +166,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 实现 TimePicker 时间列表 Popup、MinuteIncrement、SelectedTime 和 ScrollArea 原生 ScrollViewer 宿主。
 - [x] 接入主题、Gallery 页面和专项测试；Controls 构建通过，专项 6/6 通过。
 - [ ] Arc Registry/CSS 来源、Gallery 完整构建、真实窗口 Popup/滚动/主题/多 DPI 验收待补。
+
+## ExpandingSearch / DateRangePicker / TimePicker / ScrollArea 源码复刻（2026-10-30）
+
+- [x] 冻结四控件 Registry、CSS、Markdown、页面、动效令牌和许可；补参考卡。
+- [x] 按源码重做模板、行为、动效与 Gallery 主示例，重写专项测试；Controls/Gallery/Tests 构建 0 错误。
+- [ ] 在 Windows 运行 16 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-30-arc-source-rebuild.md)）。

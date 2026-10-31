@@ -6,7 +6,13 @@ internal sealed class ControlSpring(double position, double visualDuration)
     public double Position { get; private set; } = position;
     public double Velocity { get; private set; }
     public double Target { get; set; } = position;
-    private readonly double _omega = 3.89 / visualDuration;
+    private double _omega = 3.89 / visualDuration;
+
+    // Retargets may switch springs (morph to open, smooth to fold) while keeping velocity.
+    public void Tune(double visualDuration) => _omega = 3.89 / visualDuration;
+
+    // motion's physical(visualDuration, 0): stiffness (2pi / 1.2vd)^2, critically damped.
+    public static double Physical(double visualDuration) => visualDuration * 1.2 * 3.89 / (2 * Math.PI);
 
     public void Snap(double value) { Target = Position = value; Velocity = 0; }
 

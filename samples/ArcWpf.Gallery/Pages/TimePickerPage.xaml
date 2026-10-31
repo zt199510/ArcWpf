@@ -1,1 +1,15 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.TimePickerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="TimePicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><arc:TimePicker x:Name="Picker" Label="Start time" MinuteIncrement="30"/><TextBlock x:Name="Status" Text="等待选择" Margin="0,16,0,0"/></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.TimePickerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="TimePicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="点击或按 Enter/Space/上下键打开列表，列表以当前时间居中；上下键循环移动，Enter 选中，Escape 关闭。较晚的时间从下方滚入，较早的从上方落下。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例：Review time，09:30，15 分钟步长，12 小时显示。演示容器宽度待核对，暂用 320 DIP。 -->
+    <arc:TimePicker x:Name="Picker" Width="320" HorizontalAlignment="Left" Label="Review time" SelectedTime="09:30:00" MinuteStep="15" Description="Local time for the review." SelectedTimeChanged="TimeChanged"/>
+    <TextBlock x:Name="Status" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <TextBlock Text="扩展：24 小时、30 分钟步长、未选择与禁用" FontWeight="Medium" Margin="0,32,0,12"/>
+    <WrapPanel>
+      <arc:TimePicker Width="220" Margin="0,0,16,16" Label="Start time" SelectedTime="14:30:00" MinuteStep="30" Format="TwentyFourHour"/>
+      <arc:TimePicker Width="220" Margin="0,0,16,16" Label="Reminder" SelectedTime="{x:Null}"/>
+      <arc:TimePicker Width="220" Margin="0,0,16,16" Label="Locked" IsEnabled="False"/>
+    </WrapPanel>
+  </StackPanel>
+</UserControl>

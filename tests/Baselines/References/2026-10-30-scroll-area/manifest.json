@@ -1,0 +1,16 @@
+{
+  "component": "scroll-area",
+  "source": {
+    "registry": "https://uiarc.dev/r/scroll-area.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/scroll-area/markdown",
+    "page": "https://uiarc.dev/components/scroll-area",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-30",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/scroll-area/scroll-area.tsx": "82c53c56af335d0a6d808ecd4cbb3c97e8fa83ca56ccd35f71605ae8dd8b0891",
+    "registry/components/scroll-area/scroll-area.module.css": "904fdc63e0f818ad95ea148637dcbdd3e1a7c29408928fae2126f26abdf21bbb"
+  }
+}

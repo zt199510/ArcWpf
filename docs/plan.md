@@ -476,3 +476,7 @@ TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/Da
 ## ButtonGroup 开发（2026-10-28）
 
 用户授权按新 Skill 流程复刻 ButtonGroup：先冻结 Registry 源码与参考卡，再实现。已完成代码、主题、Gallery（原版三组主例 + 扩展）与 9 项专项测试代码，解决方案构建通过；测试与实际窗口未运行（需 Windows），见[规格](components/ButtonGroup.md)与[验证记录](verification/2026-10-28-button-group.md)。
+
+## 四控件源码复刻（2026-10-30）
+
+用户要求按 uiarc.dev 原版修复 ExpandingSearch、DateRangePicker、TimePicker、ScrollArea。Registry 已可访问并冻结；四控件按源码重做（API 有破坏性调整，见各规格），Gallery 改用源站 demo 内容。三个项目构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-30-arc-source-rebuild.md)。未提交/推送。

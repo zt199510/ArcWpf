@@ -17,3 +17,5 @@
 - Gallery 普通构建：旧 Gallery 进程仍锁定输出 DLL，未结束用户进程。
 - 来源 Registry：当前网络策略拒绝访问，未伪造 Registry/CSS 快照。
 
+
+> 2026-10-30 更新：来源已冻结并按源码重做，见 [源码复刻验证](2026-10-30-arc-source-rebuild.md)。

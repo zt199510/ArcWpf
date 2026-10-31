@@ -1,0 +1,17 @@
+{
+  "component": "date-range-picker",
+  "source": {
+    "registry": "https://uiarc.dev/r/date-range-picker.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/date-range-picker/markdown",
+    "page": "https://uiarc.dev/components/date-range-picker",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-30",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/date-range-picker/date-range-picker.tsx": "93658f3a1a4fc15fd71db90789b75d0866ecd5b5e96f45f2281599319e62f3dc",
+    "registry/lib/use-today.ts": "069a833b34cb103040013346c07ad453d235da1096ea011d2c50bd148029a3af",
+    "registry/components/date-range-picker/date-range-picker.module.css": "40db1644922b78c237b7bb726685fe100480561c178d0235b3a556bda966f7eb"
+  }
+}

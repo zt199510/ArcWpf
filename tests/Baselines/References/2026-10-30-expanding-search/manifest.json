@@ -1,0 +1,16 @@
+{
+  "component": "expanding-search",
+  "source": {
+    "registry": "https://uiarc.dev/r/expanding-search.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/expanding-search/markdown",
+    "page": "https://uiarc.dev/components/expanding-search",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-30",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/expanding-search/expanding-search.tsx": "d76550fe9c4227e5329a14ae3dc7e419103f13e26408f057c04be47ea898e2a2",
+    "registry/components/expanding-search/expanding-search.module.css": "bd66136f51a698d3e5403ad69de96a3bad22b4c6f2d59ad00d3324d661a5a71a"
+  }
+}

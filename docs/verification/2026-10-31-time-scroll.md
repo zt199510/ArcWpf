@@ -9,3 +9,5 @@
 - Controls/Gallery 构建。
 - TimePicker、ScrollArea 专项测试。
 - 实际窗口 Popup、时间列表、滚动命中、主题和多 DPI。
+
+> 2026-10-30 更新：来源已冻结并按源码重做，见 [源码复刻验证](2026-10-30-arc-source-rebuild.md)。

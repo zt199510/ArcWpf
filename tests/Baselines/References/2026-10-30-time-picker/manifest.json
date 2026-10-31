@@ -1,0 +1,16 @@
+{
+  "component": "time-picker",
+  "source": {
+    "registry": "https://uiarc.dev/r/time-picker.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/time-picker/markdown",
+    "page": "https://uiarc.dev/components/time-picker",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-30",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/time-picker/time-picker.tsx": "0acb7e628b37a1e9eff3039ce93aab24e14cb71cec4ba25ea3c684c4d9448ccf",
+    "registry/components/time-picker/time-picker.module.css": "571d5dd081caa1bb5903278489aa4c4daba9e7077a58f33b12ad0f08d1826812"
+  }
+}

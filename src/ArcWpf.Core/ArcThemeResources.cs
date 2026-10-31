@@ -121,6 +121,18 @@ public sealed class ArcThemeResources : ResourceDictionary
         this["ArcWpf.ControlHeight.Small"] = 36d;
         this["ArcWpf.ControlHeight.Medium"] = 44d;
         this["ArcWpf.ControlHeight.Large"] = 50d;
+        // 2026-10-30 frozen foundation: --border-subtle and the neutral --accent-foreground (= --background).
+        PutBrush("BorderSubtle", Oklch(dark ? .25 : .965, 0, 0));
+        PutBrush("AccentForeground", Oklch(neutrals["Background"], 0, 0));
+        // scroll-area / date-range-picker / expanding-search color-mix(in oklab, foreground N%, transparent).
+        PutBrush("ScrollAreaThumb", Ink(.30));
+        PutBrush("ScrollAreaThumbHover", Ink(.46));
+        PutBrush("RangeRailHighlight", Ink(.065));
+        PutBrush("RangePresetHover", Ink(.04));
+        PutBrush("RangeDayHover", Ink(.07));
+        PutBrush("ExpandingSearchHighlight", Ink(.06));
+        // date-range-picker trigger hover: color-mix(in oklab, foreground 3%, surface-raised).
+        PutBrush("RangeTriggerHover", Oklch(MixL("SurfaceRaised", "Foreground", .03), 0, 0));
         this["ArcWpf.Button.Padding.Small"] = new Thickness(12, 0, 12, 0);
         this["ArcWpf.Button.Padding.Medium"] = new Thickness(16, 0, 16, 0);
         this["ArcWpf.Button.Padding.Large"] = new Thickness(20, 0, 20, 0);

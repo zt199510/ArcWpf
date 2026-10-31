@@ -1,3 +1,11 @@
 <UserControl x:Class="ArcWpf.Gallery.Pages.DateRangePickerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
-  <StackPanel><TextBlock Text="DateRangePicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="选择开始和结束日期；第二次选择会关闭范围 Popup。" Margin="0,0,0,18"/><arc:DateRangePicker x:Name="Picker" Label="Project dates" Placeholder="Select dates" RangeChanged="RangeChanged"/><TextBlock x:Name="Status" Text="等待选择" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></StackPanel>
+  <StackPanel x:Name="Root">
+    <TextBlock Text="DateRangePicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="触发器长成双月面板：左侧预设，点击开始/结束日（第一次点击后悬停预览范围），Apply 应用，Cancel/Escape/外部点击不应用。方向键、Home/End、PageUp/PageDown(+Shift) 在日期间移动。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例：stage 760 DIP 居中，顶部 32 DIP；默认值为截至今天的最近 7 天，maxDate 为今天，下方显示天数。 -->
+    <StackPanel x:Name="Stage" Width="760" MinHeight="520" HorizontalAlignment="Center" Margin="0,32,0,0">
+      <arc:DateRangePicker x:Name="Picker" Label="Date range" HorizontalAlignment="Center" RangeChanged="RangeChanged"/>
+      <TextBlock x:Name="Note" Margin="0,12,0,0" HorizontalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+    </StackPanel>
+  </StackPanel>
 </UserControl>
