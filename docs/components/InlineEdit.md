@@ -24,3 +24,10 @@
 | caret-at-point 精确命中、移动端响应式 | 暂缓 | WPF 首版进入编辑默认全选；不复制 Web 媒体查询 |
 
 
+
+## 2026-10-31 Arc 对齐修正
+
+- idle frame 改为透明边框，hover 才显示 SurfaceMuted；编辑态使用 Foreground 边框和 Surface 背景。
+- 文本和编辑框右侧固定预留动作槽空间，避免进入编辑态时文字与 Check/X 重叠。
+- 增加 saving spinner、saved check、failed 状态图标；状态消息和 frame 边框按来源 tone 显示。
+

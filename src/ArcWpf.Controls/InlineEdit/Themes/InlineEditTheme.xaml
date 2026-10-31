@@ -3,14 +3,14 @@
     <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter Property="HorizontalAlignment" Value="Left"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:InlineEdit}">
       <StackPanel x:Name="PART_Root" Margin="-9,0,0,0">
         <Grid MinWidth="0">
-          <Border x:Name="PART_Frame" Panel.ZIndex="0" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="8" Padding="8,3"/>
-          <Button x:Name="PART_Display" Panel.ZIndex="1" Content="" Background="Transparent" BorderThickness="0" Padding="8,3" HorizontalContentAlignment="Left" FocusVisualStyle="{x:Null}"/>
-          <TextBox x:Name="PART_Editor" Panel.ZIndex="2" Visibility="Collapsed" Background="Transparent" BorderThickness="0" Padding="8,3" Foreground="{TemplateBinding Foreground}" TextWrapping="NoWrap" VerticalContentAlignment="Center" FocusVisualStyle="{x:Null}"/>
+          <Border x:Name="PART_Frame" Panel.ZIndex="0" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="8" Padding="8,3,66,3"/>
+          <Button x:Name="PART_Display" Panel.ZIndex="1" Content="" Background="Transparent" BorderThickness="0" Padding="8,3,66,3" HorizontalContentAlignment="Left" FocusVisualStyle="{x:Null}"/>
+          <TextBox x:Name="PART_Editor" Panel.ZIndex="2" Visibility="Collapsed" Background="Transparent" BorderThickness="0" Padding="8,3,66,3" Foreground="{TemplateBinding Foreground}" TextWrapping="NoWrap" VerticalContentAlignment="Center" FocusVisualStyle="{x:Null}"/>
           <StackPanel x:Name="PART_Actions" Panel.ZIndex="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,6,0" Visibility="Collapsed">
             <Button x:Name="PART_Save" Width="28" Height="28" Content="✓" Padding="0" Background="{DynamicResource ArcWpf.Brush.Foreground}" Foreground="{DynamicResource ArcWpf.Brush.Background}" BorderThickness="0" FocusVisualStyle="{x:Null}"/>
             <Button x:Name="PART_Cancel" Width="28" Height="28" Content="×" Padding="0" Margin="4,0,0,0" Background="{DynamicResource ArcWpf.Brush.Surface}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" FocusVisualStyle="{x:Null}"/>
           </StackPanel>
-          <Border x:Name="PART_Spinner" Width="14" Height="14" HorizontalAlignment="Right" Margin="0,0,6,0" Visibility="Collapsed" BorderBrush="{DynamicResource ArcWpf.Brush.TextMuted}" BorderThickness="1.5" CornerRadius="7"/>
+          <TextBlock x:Name="PART_StatusIcon" Width="18" HorizontalAlignment="Right" Margin="0,0,10,0" Visibility="Collapsed" FontWeight="Bold" VerticalAlignment="Center"/><Border x:Name="PART_Spinner" Width="14" Height="14" HorizontalAlignment="Right" Margin="0,0,6,0" Visibility="Collapsed" BorderBrush="{DynamicResource ArcWpf.Brush.TextMuted}" BorderThickness="1.5" CornerRadius="7"/>
         </Grid>
         <TextBlock x:Name="PART_Message" TextWrapping="Wrap" Margin="9,6,8,4" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.Danger}" Visibility="Collapsed"/>
       </StackPanel>

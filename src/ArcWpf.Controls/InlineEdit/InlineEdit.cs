@@ -18,6 +18,7 @@ public enum InlineEditPhase { Idle, Saving, Saved, Failed }
 [TemplatePart(Name = "PART_Cancel", Type = typeof(System.Windows.Controls.Button))]
 [TemplatePart(Name = "PART_Message", Type = typeof(TextBlock))]
 [TemplatePart(Name = "PART_Spinner", Type = typeof(FrameworkElement))]
+[TemplatePart(Name = "PART_StatusIcon", Type = typeof(TextBlock))]
 public class InlineEdit : Control
 {
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(string), typeof(InlineEdit), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
@@ -42,7 +43,7 @@ public class InlineEdit : Control
     private System.Windows.Controls.TextBox? _editor;
     private Border? _frame;
     private Panel? _actions;
-    private TextBlock? _message; private FrameworkElement? _spinner;
+    private TextBlock? _message, _statusIcon; private FrameworkElement? _spinner;
     private string _committed = string.Empty;
     private string _draft = string.Empty;
     private int _saveGeneration;
@@ -71,7 +72,7 @@ public class InlineEdit : Control
     public override void OnApplyTemplate()
     {
         ReleaseTemplate(); base.OnApplyTemplate();
-        _display = GetTemplateChild("PART_Display") as System.Windows.Controls.Button; _editor = GetTemplateChild("PART_Editor") as System.Windows.Controls.TextBox; _frame = GetTemplateChild("PART_Frame") as Border; _actions = GetTemplateChild("PART_Actions") as Panel; _save = GetTemplateChild("PART_Save") as System.Windows.Controls.Button; _cancel = GetTemplateChild("PART_Cancel") as System.Windows.Controls.Button; _message = GetTemplateChild("PART_Message") as TextBlock; _spinner = GetTemplateChild("PART_Spinner") as FrameworkElement;
+        _display = GetTemplateChild("PART_Display") as System.Windows.Controls.Button; _editor = GetTemplateChild("PART_Editor") as System.Windows.Controls.TextBox; _frame = GetTemplateChild("PART_Frame") as Border; _actions = GetTemplateChild("PART_Actions") as Panel; _save = GetTemplateChild("PART_Save") as System.Windows.Controls.Button; _cancel = GetTemplateChild("PART_Cancel") as System.Windows.Controls.Button; _message = GetTemplateChild("PART_Message") as TextBlock; _spinner = GetTemplateChild("PART_Spinner") as FrameworkElement; _statusIcon = GetTemplateChild("PART_StatusIcon") as TextBlock;
         if (_display is not null) _display.Click += DisplayClick;
         if (_editor is not null) { _editor.TextChanged += EditorChanged; _editor.PreviewKeyDown += EditorKeyDown; }
         if (_save is not null) _save.Click += SaveClick;
@@ -88,9 +89,10 @@ public class InlineEdit : Control
     {
         if (!_templateReady) return; bool editing = IsEditing; string text = editing ? _draft : Value; if (_display is not null) { _display.Content = string.IsNullOrEmpty(text) ? Placeholder : text; _display.IsEnabled = !ReadOnly && Phase != InlineEditPhase.Saving; _display.Visibility = editing ? Visibility.Collapsed : Visibility.Visible; }
         if (_editor is not null) { _editor.Text = _draft; _editor.Visibility = editing ? Visibility.Visible : Visibility.Collapsed; _editor.AcceptsReturn = Multiline; _editor.TextWrapping = Multiline ? TextWrapping.Wrap : TextWrapping.NoWrap; _editor.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled; _editor.MinLines = Multiline ? 1 : 1; }
-        if (_frame is not null) { _frame.Visibility = editing || Phase is InlineEditPhase.Failed or InlineEditPhase.Saving or InlineEditPhase.Saved ? Visibility.Visible : Visibility.Collapsed; _frame.BorderBrush = Error.Length > 0 || Phase == InlineEditPhase.Failed ? (Brush?)TryFindResource("ArcWpf.Brush.Danger") : (Brush?)TryFindResource(editing ? "ArcWpf.Brush.Foreground" : "ArcWpf.Brush.SurfaceMuted"); _frame.Background = editing ? (Brush?)TryFindResource("ArcWpf.Brush.Surface") : Brushes.Transparent; }
+        if (_frame is not null) { _frame.Visibility = Visibility.Visible; _frame.BorderBrush = Error.Length > 0 || Phase == InlineEditPhase.Failed ? (Brush?)TryFindResource("ArcWpf.Brush.Danger") : editing ? (Brush?)TryFindResource("ArcWpf.Brush.Foreground") : Brushes.Transparent; _frame.Background = editing ? (Brush?)TryFindResource("ArcWpf.Brush.Surface") : Brushes.Transparent; }
         if (_actions is not null) _actions.Visibility = editing && Phase != InlineEditPhase.Saving ? Visibility.Visible : Visibility.Collapsed;
         if (_spinner is not null) _spinner.Visibility = Phase == InlineEditPhase.Saving ? Visibility.Visible : Visibility.Collapsed;
+        if (_statusIcon is not null) { _statusIcon.Visibility = Phase is InlineEditPhase.Saved or InlineEditPhase.Failed ? Visibility.Visible : Visibility.Collapsed; _statusIcon.Text = Phase == InlineEditPhase.Saved ? "✓" : "!"; _statusIcon.Foreground = Phase == InlineEditPhase.Saved ? (Brush?)TryFindResource("ArcWpf.Brush.AlertSuccess") : (Brush?)TryFindResource("ArcWpf.Brush.Danger"); }
         if (_message is not null) { _message.Text = Error; _message.Visibility = string.IsNullOrEmpty(Error) ? Visibility.Collapsed : Visibility.Visible; }
     }
     private void DisplayClick(object? sender, RoutedEventArgs e) { if (!ReadOnly && Phase != InlineEditPhase.Saving) BeginEdit(); e.Handled = true; }

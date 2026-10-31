@@ -20,3 +20,11 @@
 未使用 computer-use；程序化结果与真实窗口验收分开记录。
 
 
+
+## 2026-10-31 Arc 对齐修正
+
+- 根因：旧模板 idle 直接显示边框，hover 不呈现 muted surface；动作槽覆盖文本，saving/saved 没有来源对应的状态槽。
+- 修复：透明 idle frame、hover muted surface、66px 右侧预留、saving spinner、saved/failed 状态图标和失败边框。
+- InlineEdit 专项复验：3/3 通过。
+- 实际窗口：仍待人工复核原位尺寸、动作槽位置、长文案和多行高度。
+
