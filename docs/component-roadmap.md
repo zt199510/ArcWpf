@@ -144,3 +144,25 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 
 - [x] 对照冻结源码重做两控件模板与行为，Gallery 主示例改为源站内容；解决方案构建通过。
 - [ ] 在 Windows 上运行 HoldToConfirmTests（7）/InlineEditTests（6）并完成实际窗口验收（本机无法运行 WPF）。
+
+## ExpandingSearch 开发（2026-10-31）
+
+- [x] 实现 collapsed/expanded 搜索触发器、输入、清除、Escape、Enter、焦点归还和宽度动效。
+- [x] 接入主题、Gallery 和 3 项专项测试。
+- [ ] Arc ExpandingSearch Registry/CSS 来源冻结待网络恢复；真实窗口比例、输入起点、主题和 Reduced/Off 待验收。
+
+## ExpandingSearch 截图对照修正（2026-10-31）
+
+- [x] 展开后补齐 Recent 信息面板、条目图标、标题和元数据，面板与输入框同步展开宽度。
+- [ ] Arc Registry/CSS 来源冻结和真实窗口比例、输入起点、主题、Reduced/Off 验收待补。
+
+## DateRangePicker 开发（2026-10-31）
+
+- [x] 基于 ArcWpf Calendar/DatePicker 实现双 Calendar Popup、范围选择、边界、BlackoutDates、Clear、Gallery 和 3 项专项测试。
+- [ ] Arc DateRangePicker Registry/CSS 来源冻结、范围 band/hover 预览、真实窗口比例、Popup 焦点、多 DPI 和主题验收待补。
+
+## TimePicker / ScrollArea 开发（2026-10-31）
+
+- [x] 实现 TimePicker 时间列表 Popup、MinuteIncrement、SelectedTime 和 ScrollArea 原生 ScrollViewer 宿主。
+- [x] 接入主题、Gallery 页面和专项测试；Controls 构建通过，专项 6/6 通过。
+- [ ] Arc Registry/CSS 来源、Gallery 完整构建、真实窗口 Popup/滚动/主题/多 DPI 验收待补。

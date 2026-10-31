@@ -46,6 +46,10 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/UserMenu/Themes/UserMenuTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/HoldToConfirm/Themes/HoldToConfirmTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/InlineEdit/Themes/InlineEditTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandingSearch/Themes/ExpandingSearchTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/DateRangePicker/Themes/DateRangePickerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TimePicker/Themes/TimePickerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ScrollArea/Themes/ScrollAreaTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

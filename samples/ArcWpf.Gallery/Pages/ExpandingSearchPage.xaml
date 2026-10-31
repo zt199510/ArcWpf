@@ -1,0 +1,8 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ExpandingSearchPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ExpandingSearch" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="点击搜索图标展开；Escape 清除，再次按 Escape 收起。" Margin="0,0,0,18"/>
+    <arc:ExpandingSearch x:Name="Search" Placeholder="Search components" WidthExpanded="320" Submitted="Submitted"/>
+    <TextBlock x:Name="Status" Text="等待搜索" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+  </StackPanel>
+</UserControl>
