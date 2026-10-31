@@ -226,3 +226,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback MoneyInput，支持货币符号、DecimalDigits、边界和原生 TextBox 编辑。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，MoneyInput 专项 3/3 通过。
 - [ ] Arc MoneyInput Registry/CSS 来源恢复后文化格式、负数、中间态和真实窗口验收。
+
+## PhoneInput 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback PhoneInput，支持国家区号、数字过滤、10 位格式化和 IsValid。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，PhoneInput 专项 3/3 通过。
+- [ ] Arc PhoneInput Registry/CSS 来源恢复后国际格式、国家选择、IME 和真实窗口验收。

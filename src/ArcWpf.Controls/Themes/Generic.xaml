@@ -56,6 +56,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ReorderableList/Themes/ReorderableListTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/PasswordStrength/Themes/PasswordStrengthTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/MoneyInput/Themes/MoneyInputTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/PhoneInput/Themes/PhoneInputTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 
