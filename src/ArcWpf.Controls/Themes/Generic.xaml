@@ -59,6 +59,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/PhoneInput/Themes/PhoneInputTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/TagInput/Themes/TagInputTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ShortcutRecorder/Themes/ShortcutRecorderTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ChipGroup/Themes/ChipGroupTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

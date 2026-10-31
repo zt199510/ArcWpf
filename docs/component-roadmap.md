@@ -244,3 +244,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback ShortcutRecorder，支持 Ctrl/Alt/Shift/Win 组合录制、Escape、Backspace 和焦点停止。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ShortcutRecorder 专项 3/3 通过。
 - [ ] Arc ShortcutRecorder Registry/CSS 来源恢复后键帽视觉、组合键过滤和真实窗口验收。
+
+## ChipGroup 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback ChipGroup，支持多选 Chip、禁用、键盘和 SelectionCommitted。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ChipGroup 专项 3/3 通过。
+- [ ] Arc ChipGroup Registry/CSS 来源恢复后胶囊尺寸、选中动效、响应式布局和真实窗口验收。
