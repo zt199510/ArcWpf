@@ -9,3 +9,5 @@ Arc EmptyState Registry 当前网络访问被拒绝，未伪造网页参数；�
 - Controls/Gallery 构建。
 - EmptyState 专项测试。
 - 实际窗口图标、间距、主题、按钮命中和 Reduced/Off。
+
+> 2026-10-31 更新：来源已冻结并按源码重做，见 [源码复刻验证](2026-10-31-empty-state-skeleton-rebuild.md)。

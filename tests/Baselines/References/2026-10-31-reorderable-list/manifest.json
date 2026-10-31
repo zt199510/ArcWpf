@@ -1,0 +1,16 @@
+{
+  "component": "reorderable-list",
+  "source": {
+    "registry": "https://uiarc.dev/r/reorderable-list.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/reorderable-list/markdown",
+    "page": "https://uiarc.dev/components/reorderable-list",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/reorderable-list/reorderable-list.tsx": "3521ec8b6f86aac4cee154f45d020bfa3cd55ed0de2c575d722d9510910f239e",
+    "registry/components/reorderable-list/reorderable-list.module.css": "a09dd01e594479604f14fb0aeb5b0bae4eea9cf5a4b4372498d9dbe962ec699c"
+  }
+}

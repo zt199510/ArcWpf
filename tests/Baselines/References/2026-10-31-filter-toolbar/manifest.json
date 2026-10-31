@@ -1,0 +1,16 @@
+{
+  "component": "filter-toolbar",
+  "source": {
+    "registry": "https://uiarc.dev/r/filter-toolbar.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/filter-toolbar/markdown",
+    "page": "https://uiarc.dev/components/filter-toolbar",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/filter-toolbar/filter-toolbar.tsx": "90fbd7b5dfca993bb6992cda514d7c17df406fcf63ecf2c04712a20c538ed1db",
+    "registry/components/filter-toolbar/filter-toolbar.module.css": "b24254c41e9113d0765773381a17c7eca246ed533bcb0c6e711d25e34746b250"
+  }
+}

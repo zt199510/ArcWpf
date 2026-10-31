@@ -58,6 +58,8 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("SplitButtonHover", Oklch(MixL("Foreground", "Background", .12), 0, 0));
         PutBrush("SplitButtonPressed", Oklch(MixL("Foreground", "Background", .2), 0, 0));
         PutBrush("SplitButtonDivider", Oklch(MixL("Foreground", "Background", .18), 0, 0));
+        // skeleton.module.css: color-mix(in oklab, var(--border-strong) 38%, var(--surface)).
+        PutBrush("SkeletonFill", Oklch(MixL("Surface", "BorderStrong", .38), 0, 0));
         PutBrush("TooltipBorder",Oklch(neutrals["Background"] * .14 + neutrals["Foreground"] * .86, 0, 0));
         var raised = new DropShadowEffect { Color=Colors.Black, BlurRadius=dark?22:18, ShadowDepth=dark?8:6, Direction=270, Opacity=dark?.22:.065 }; raised.Freeze(); this["ArcWpf.Shadow.Raised"]=raised;
         PutBrush("ToastSuccess", Oklch(dark ? .35 : .92, 0, 0)); PutBrush("ToastSuccessBorder", Oklch(dark ? .55 : .72, 0, 0)); PutBrush("ToastSuccessGlyph", Oklch(dark ? .82 : .32, 0, 0));
@@ -108,6 +110,9 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("UserMenuHighlight", Ink(.06));
         PutBrush("UserMenuTrack", Ink(.05));
         PutBrush("UserMenuPlan", Ink(.04));
+        // filter-toolbar.module.css: menu highlight foreground 6%; closed trigger press mixes surface-muted with border 55%.
+        PutBrush("FilterMenuHighlight", Ink(.06));
+        PutBrush("FilterMenuPressed", Oklch(MixL("SurfaceMuted", "Border", .55), 0, 0));
         PutBrush("UserMenuTriggerPressed", Oklch(MixL("SurfaceMuted", "Foreground", .08), 0, 0));
         // .thumb is surface-raised in light; [data-theme="dark"] mixes foreground 20% into it and drops the shadow.
         PutBrush("UserMenuThumb", Oklch(dark ? MixL("SurfaceRaised", "Foreground", .2) : neutrals["SurfaceRaised"], 0, 0));

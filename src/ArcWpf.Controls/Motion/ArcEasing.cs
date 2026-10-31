@@ -58,6 +58,8 @@ internal static class ArcEasing
     // Arc motion tokens: ease.enter / ease.standard.
     public static readonly IEasingFunction Enter = Frozen(new BezierEase(.16, 1, .3, 1));
     public static readonly IEasingFunction Standard = Frozen(new BezierEase(.22, 1, .36, 1));
+    // ease.inOut (--ease-in-out): for elements that move while already on screen.
+    public static readonly IEasingFunction InOut = Frozen(new BezierEase(.65, 0, .35, 1));
 
     // Critically damped spring sampled over a fixed window; 3.89/visualDuration matches ControlSpring.
     public static IEasingFunction Spring(double visualDuration, double windowSeconds) => Frozen(new CriticalSpringEase(3.89 / visualDuration * windowSeconds));

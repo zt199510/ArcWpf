@@ -1,0 +1,16 @@
+{
+  "component": "empty-state",
+  "source": {
+    "registry": "https://uiarc.dev/r/empty-state.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/empty-state/markdown",
+    "page": "https://uiarc.dev/components/empty-state",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/empty-state/empty-state.tsx": "e99e39c02b03e77738e8e8a69d12f24b6e9d5b3b66f12f1425cec32700fa69ef",
+    "registry/components/empty-state/empty-state.module.css": "e65e4c4b6e3bd31b8925cb6a5d58e8c4826ffca6efb100f786c70428f98afc1a"
+  }
+}

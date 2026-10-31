@@ -1,1 +1,14 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.EmptyStatePage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><arc:EmptyState Width="520" Height="260" Icon="□" Title="No projects yet" Description="Create a project to start organizing your work." ActionContent="Create project"/></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.EmptyStatePage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="EmptyState" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="保持控件挂载并修改属性在状态间变形：文案原位滚动、高度弹簧适配，新图标带轻微模糊弹入。点击 Create view / Undo 切换。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例：Saved views，No saved views ⇄ View created（预览区宽度待核对，暂用 720 DIP）。 -->
+    <Border MaxWidth="720" MinHeight="132" HorizontalAlignment="Stretch">
+      <arc:EmptyState x:Name="State" Label="Saved views" IconStrokeThickness="1.75">
+        <arc:EmptyState.Action>
+          <arc:Button x:Name="Toggle" Size="Small" Click="ToggleClick"/>
+        </arc:EmptyState.Action>
+      </arc:EmptyState>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -1,1 +1,31 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.SkeletonPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="Skeleton" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="展示矩形、文本和头像占位；切换动效模式观察 shimmer。" Margin="0,0,0,18"/><StackPanel Orientation="Horizontal"><arc:Skeleton Shape="Circle" Margin="0,0,14,0"/><StackPanel><arc:Skeleton Shape="Text" Width="220" Margin="0,0,0,8"/><arc:Skeleton Shape="Text" Width="160"/></StackPanel></StackPanel></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.SkeletonPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="Skeleton" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="占位块以错开的波浪缓慢脉动；加载完成后占位淡出、内容上移 4 DIP 进入，高度从占位弹簧过渡到内容。1.6 秒后自动加载，Reload 重来。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例：.skeletonWrap min(100%, 380px)，1px border，radius 16，padding 20，surface。 -->
+    <Border MaxWidth="380" HorizontalAlignment="Center" BorderThickness="1" CornerRadius="16" Padding="20" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+      <StackPanel Width="338">
+        <arc:Skeleton x:Name="Summary" Label="Loading project summary" Lines="3" HasAvatar="True">
+          <DockPanel>
+            <arc:Avatar DisplayName="Emma Collins" Size="Large" Width="44" Height="44" VerticalAlignment="Top" Margin="0,0,16,0"/>
+            <StackPanel Margin="0,2,0,0">
+              <TextBlock Text="Quarterly launch" FontSize="14" FontWeight="Medium" LineHeight="19.6" LineStackingStrategy="BlockLineHeight"/>
+              <TextBlock Text="Emma shared the final interaction pass. Three files are ready for review." Margin="0,4,0,0" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+            </StackPanel>
+          </DockPanel>
+        </arc:Skeleton>
+        <Border Margin="0,16,0,0" Padding="0,12,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
+          <DockPanel>
+            <arc:Button DockPanel.Dock="Right" Content="Reload" Variant="Ghost" Size="Small" Click="ReloadClick"/>
+            <TextBlock x:Name="Status" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          </DockPanel>
+        </Border>
+      </StackPanel>
+    </Border>
+    <TextBlock Text="扩展：无内容时只显示占位（1 行、6 行）" FontWeight="Medium" Margin="0,32,0,12"/>
+    <StackPanel MaxWidth="380" HorizontalAlignment="Left" Width="380">
+      <arc:Skeleton Lines="1"/>
+      <arc:Skeleton Lines="6" Margin="0,24,0,0"/>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

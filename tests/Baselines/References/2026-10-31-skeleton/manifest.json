@@ -1,0 +1,16 @@
+{
+  "component": "skeleton",
+  "source": {
+    "registry": "https://uiarc.dev/r/skeleton.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/skeleton/markdown",
+    "page": "https://uiarc.dev/components/skeleton",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/skeleton/skeleton.tsx": "73b97715698fa54f6f0eaeefb6a8d795977297dd998439d1e595361e5da6d3b5",
+    "registry/components/skeleton/skeleton.module.css": "ba4b3fa1d7f9df341c4c3a5e302d43178015f15030715ddb3ced2116cecf0588"
+  }
+}

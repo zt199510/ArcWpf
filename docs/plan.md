@@ -480,3 +480,11 @@ TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/Da
 ## 四控件源码复刻（2026-10-30）
 
 用户要求按 uiarc.dev 原版修复 ExpandingSearch、DateRangePicker、TimePicker、ScrollArea。Registry 已可访问并冻结；四控件按源码重做（API 有破坏性调整，见各规格），Gallery 改用源站 demo 内容。三个项目构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-30-arc-source-rebuild.md)。未提交/推送。
+
+## EmptyState / Skeleton 源码复刻（2026-10-31）
+
+用户拉取新增控件后要求对照 Arc 修复。远程实际只新增 EmptyState、Skeleton 两个；已冻结来源并按源码重做（API 有破坏性调整，见规格），构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-31-empty-state-skeleton-rebuild.md)。
+
+## FilterToolbar / ReorderableList 源码复刻（2026-10-31）
+
+拉取 d8bc0f0、7e8103f 后按 Arc 源码重做两控件（API 破坏性调整见规格），构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-31-filter-reorder-rebuild.md)。
