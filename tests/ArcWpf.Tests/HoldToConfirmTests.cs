@@ -1,6 +1,9 @@
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using ArcWpf.Controls;
 
@@ -65,6 +68,61 @@ public sealed class HoldToConfirmTests
             Assert.IsFalse(control.IsMouseCaptured);
             RaiseMouse(control, Mouse.PreviewMouseUpEvent);
             Assert.IsFalse(control.IsMouseCaptured);
+        }));
+    }
+
+    [TestMethod]
+    public void PressScalesWholeButtonSoFillStaysAligned()
+    {
+        Sta.Run(() => InWindow(control =>
+        {
+            var root = (FrameworkElement)control.Template.FindName("PART_Root", control)!;
+            var surface = (FrameworkElement)control.Template.FindName("PART_Surface", control)!;
+            RaiseMouse(control, Mouse.PreviewMouseDownEvent);
+            Pump(400);
+            Assert.IsInstanceOfType<ScaleTransform>(root.RenderTransform);
+            Assert.AreEqual(.97, ((ScaleTransform)root.RenderTransform).ScaleX, .005);
+            Assert.IsTrue(surface.RenderTransform is null || surface.RenderTransform.Value.IsIdentity);
+            RaiseMouse(control, Mouse.PreviewMouseUpEvent);
+        }));
+    }
+
+    [TestMethod]
+    public void ConfirmingMorphsLabelAndDrawsCheck()
+    {
+        Sta.Run(() => InWindow(control =>
+        {
+            control.Duration = 60; control.ConfirmedLabel = "Deleted";
+            var label = (TextBlock)control.Template.FindName("PART_Label", control)!;
+            var check = (FrameworkElement)control.Template.FindName("PART_Check", control)!;
+            var icon = (FrameworkElement)control.Template.FindName("PART_Icon", control)!;
+            var path = (Shape)control.Template.FindName("PART_CheckPath", control)!;
+            RaiseMouse(control, Mouse.PreviewMouseDownEvent);
+            Pump(900);
+            Assert.IsTrue(control.IsConfirmed);
+            Assert.AreEqual("Deleted", label.Text);
+            Assert.AreEqual(1d, check.Opacity, .01);
+            Assert.AreEqual(0d, icon.Opacity, .01);
+            Assert.AreEqual(0d, path.StrokeDashOffset, .01);
+            Assert.AreEqual(1d, control.Progress, .01);
+        }));
+    }
+
+    [TestMethod]
+    public void DeclinedControlledConfirmationRewinds()
+    {
+        Sta.Run(() => InWindow(control =>
+        {
+            control.Duration = 60; control.Confirmed = false;
+            var calls = 0;
+            control.ConfirmedRaised += (_, _) => calls++;
+            RaiseMouse(control, Mouse.PreviewMouseDownEvent);
+            Pump(1100);
+            Assert.AreEqual(1, calls);
+            Assert.IsFalse(control.IsConfirmed);
+            Assert.AreEqual(0d, ((FrameworkElement)control.Template.FindName("PART_FillClip", control)!).ActualWidth, .5);
+            control.ClearValue(HoldToConfirm.ConfirmedProperty);
+            Assert.IsFalse(control.IsConfirmed);
         }));
     }
 

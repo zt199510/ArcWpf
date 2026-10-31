@@ -2,7 +2,18 @@
   <StackPanel>
     <TextBlock Text="HoldToConfirm" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
     <TextBlock Text="按住按钮完成危险操作；提前松开会回退。也可按住 Space 或 Enter。" TextWrapping="Wrap" Margin="0,0,0,18"/>
-    <StackPanel Orientation="Horizontal"><arc:HoldToConfirm x:Name="Delete" Label="Hold to delete project" ConfirmedLabel="Deleted" Tone="Danger" Duration="1200" ConfirmedRaised="DeleteConfirmed" HoldChanged="HoldChanged"/><arc:HoldToConfirm x:Name="Neutral" Label="Hold to archive" ConfirmedLabel="Archived" Tone="Neutral" Duration="900" Margin="12,0,0,0" ConfirmedRaised="ArchiveConfirmed"/></StackPanel>
+    <!-- Arc 主示例：accent 色 "Hold to delete"，下方提示随按住状态切换。 -->
+    <StackPanel HorizontalAlignment="Center" Margin="0,12,0,0">
+      <arc:HoldToConfirm x:Name="Delete" Label="Hold to delete" ConfirmedLabel="Deleted" HorizontalAlignment="Center" ConfirmedRaised="DeleteConfirmed" HoldChanged="HoldChanged"/>
+      <TextBlock x:Name="Hint" Text="Hold for 1.2 seconds, or hold Space" HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+      <Button x:Name="Reset" Content="Reset" HorizontalAlignment="Center" Margin="0,10,0,0" Visibility="Collapsed" Click="ResetClick"/>
+    </StackPanel>
+    <!-- 扩展示例：tone 与受控重置。 -->
+    <TextBlock Text="Tone" FontWeight="Medium" Margin="0,32,0,10"/>
+    <StackPanel Orientation="Horizontal">
+      <arc:HoldToConfirm x:Name="Danger" Label="Hold to delete project" ConfirmedLabel="Deleted" Tone="Danger" Duration="1500" ConfirmedRaised="ExtensionConfirmed"/>
+      <arc:HoldToConfirm x:Name="Neutral" Label="Hold to archive" ConfirmedLabel="Archived" Tone="Neutral" Duration="900" Margin="12,0,0,0" ConfirmedRaised="ExtensionConfirmed"/>
+    </StackPanel>
     <TextBlock x:Name="Status" Text="等待操作" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
   </StackPanel>
 </UserControl>

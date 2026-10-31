@@ -1,37 +1,36 @@
 # HoldToConfirm 组件规格
 
-状态：实现完成，HoldToConfirmTests 3/3 通过；实际窗口待人工验收。来源冻结于 `tests/Baselines/References/2026-10-29-hold-to-confirm/`。
+状态：已按冻结源码重做（2026-10-31），Linux 环境仅完成编译；HoldToConfirmTests 7 项未运行，实际窗口待人工验收。来源冻结于 `tests/Baselines/References/2026-10-29-hold-to-confirm/`（2026-10-31 复核与线上 registry 一致）。
 
 ## API
 
-`HoldToConfirm : System.Windows.Controls.Button` 保留 WPF Button 的命令、键盘和 UI Automation 语义，并增加：
+`HoldToConfirm : System.Windows.Controls.Button` 保留 WPF Button 的键盘和 UI Automation 语义，并增加：
 
-- `Label`、`ConfirmedLabel`：Idle 与完成态文案。
+- `Label`、`ConfirmedLabel`（默认 `Done`）：Idle 与完成态文案。
 - `Duration`：按住时长，默认 1200ms。
-- `Tone`：`Accent`、`Danger`、`Neutral`。
-- `Confirmed`：可选受控完成态；未设置时控件自行保持完成态。
+- `Tone`：`Accent`（默认）、`Danger`、`Neutral`。
+- `IconData`：前置图标几何（24 单位网格，描边 1.75），默认 lucide trash-2；对应源码 `icon`。
+- `Confirmed`：可选受控完成态；`false` 重置，清除后交还控件自管。完成时若受控值仍为 `false`，填充回退（源码“parent declined”）。
 - `IsConfirmed`、`IsHolding`、`Progress`：只读状态。
-- `ConfirmCommand` / `ConfirmCommandParameter`：完成后调用。
-- `ConfirmedRaised`：完成路由事件；`HoldChanged` 报告按住开始/结束。
+- `ConfirmCommand` / `ConfirmCommandParameter`、`ConfirmedRaised`：完成回调；`HoldChanged`：按住开始/结束。
+- `FillBrush`、`OnFillBrush`、`DangerBrush`：主题输入，样式以 DynamicResource 提供。
 
 ## 范围矩阵
 
-| 交付项 | 状态 | 证据/剩余差异 |
-|---|---|---|
-| 按住填充与完成回调 | 已实现 | HoldToConfirmTests 通过；窗口观感待验收 |
-| 提前松开、移出 24 DIP 回退 | 已实现 | OwnedMotion spring；窗口观感待验收 |
-| Space/Enter、失焦、禁用 | 已实现 | 专项覆盖部分；窗口焦点待验收 |
-| Accent/Danger/Neutral 与明暗主题 | 已实现 | 语义资源；窗口待验收 |
-| 确认态勾号、文案与填充层 | 已实现 | WPF 模板适配；图标绘制与来源不同 |
-| touch vibration、移动端响应式 | 暂缓 | WPF 桌面首期不模拟 navigator.vibrate 与 640px bottom sheet |
+| 交付项 | 范围 | 实现状态 | 证据 / 剩余差异 |
+|---|---|---|---|
+| 线性填充、完成回调、提前松开 smooth 弹簧回退、快速重按续填 | 必做 | 已实现 | 源码确认；测试未运行 |
+| 移出 24 DIP 取消、Space/Enter 按住、失焦取消、禁用 | 必做 | 已实现 | 源码确认；窗口待验收 |
+| 按压缩放 .97（宽 >220 为 .985，snappy 弹簧）作用于整个按钮含填充层 | 必做 | 已实现 | 旧版只缩放 Surface，填充层错位 |
+| 文字在填充边缘换色（双 face + 直边裁剪，填充覆盖边框、自带圆角） | 必做 | 已实现 | 源码确认 |
+| 完成：文案 popLayout 交叉（上浮 .3em + blur 4→0 / 退场 -.3em + blur 2）、标签宽度 morph 弹簧 .42 | 必做 | 已实现 | 旧版宽度瞬跳、无退场文字 |
+| 图标切换：scale .6→1 snappy、opacity/blur .16；勾号 pathLength .32s 延迟 .08 绘制 | 必做 | 已实现 | 旧版勾号 dash 偏移导致不可见 |
+| 受控 `Confirmed`：外部完成时填充 smooth 弹簧到满，重置时回退 | 必做 | 已实现 | 旧版瞬跳 |
+| Tone：accent/neutral 描边 border-strong，danger 文字/图标 danger、描边 danger 32% 混入 border | 必做 | 已实现 | color-mix(oklab) 以 sRGB 近似 |
+| Hover：填充色 6% 混入 surface，.16s 过渡；完成态不显示 hover、光标恢复箭头 | 必做 | 已实现 | 旧版用 SurfaceMuted 且无过渡 |
+| 禁用 opacity .5（含填充层）.16s 过渡 | 必做 | 已实现 | |
+| 屏幕阅读器提示 “Press and hold for N seconds…”、完成播报 | 必做 | 已实现 | HelpText + LiveRegionChanged 适配 aria-describedby / role=status |
+| Reduced：无按压缩放/回退弹簧，文案图标仅淡入淡出；Off：直接终态 | 必做 | 已实现 | |
+| touch vibration | 不适用 | — | WPF 桌面无 navigator.vibrate |
 
-来源 React/Motion 代码仅作为行为和视觉证据，不直接复用；WPF 实现独立保留原生 Button/Automation 能力。
-
-
-## 2026-10-29 Arc 对齐修正
-
-- 填充层改为固定完整尺寸的反色 face，外层 clip host 按 Progress 改变宽度；不再横向缩放文字和图标。
-- 确认文案和图标加入来源对应的淡入/上浮过渡；确认勾号使用 StrokeDashOffset 绘制。
-- 提前松开后的快速重新按住从当前可见填充位置继续；开始新 hold 会停止旧回退时钟。
-- Tone 颜色同时作用于基础图标/文字和填充层。
-
+来源 React/Motion 代码仅作为行为与视觉证据，未直接复用。弹簧窗口按项目约定取 visualDuration × 2.07。

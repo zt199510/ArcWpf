@@ -1,9 +1,17 @@
 <UserControl x:Class="ArcWpf.Gallery.Pages.InlineEditPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
     <TextBlock Text="InlineEdit" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
-    <TextBlock Text="点击名称进入编辑；Enter 保存，Escape 取消，模拟异步失败会回滚并显示错误。" TextWrapping="Wrap" Margin="0,0,0,18"/>
-    <arc:InlineEdit x:Name="NameEdit" Value="Project Atlas" Label="Project name" Placeholder="Name" Variant="Title"/>
-    <arc:InlineEdit x:Name="DescriptionEdit" Value="A short project description" Label="Description" Multiline="True" Variant="Body" Margin="0,18,0,0"/>
-    <TextBlock x:Name="Status" Text="等待操作" Margin="0,16,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <TextBlock Text="点击文字进入编辑，光标落在点击处；Enter 保存，Escape 取消。打开 Fail the next save 可查看失败回滚与重试。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例：Project settings 面板，title + 多行 body，底部为失败开关与活动行。 -->
+    <StackPanel MaxWidth="460" HorizontalAlignment="Left" Width="460">
+      <TextBlock Text="Project name" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,0,0,4"/>
+      <arc:InlineEdit x:Name="NameEdit" Value="Atlas web app" Label="Project name"/>
+      <TextBlock Text="Description" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,18,0,4"/>
+      <arc:InlineEdit x:Name="DescriptionEdit" Value="Offline-first field notes for the Atlas survey team. Drafts sync the moment a connection returns." Label="Description" Multiline="True" Variant="Body"/>
+      <DockPanel Margin="0,22,0,0">
+        <arc:Switch x:Name="FailNext" Content="Fail the next save" DockPanel.Dock="Left"/>
+        <TextBlock x:Name="Activity" Text="Last edited by Emma Collins on Mon 15 Sep" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+      </DockPanel>
+    </StackPanel>
   </StackPanel>
 </UserControl>

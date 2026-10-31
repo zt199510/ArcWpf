@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
 using ArcWpf.Controls;
@@ -46,6 +47,62 @@ public sealed class InlineEditTests
             var editor = (System.Windows.Controls.TextBox)edit.Template.FindName("PART_Editor", edit)!;
             display.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent)); Sta.Pump(); editor.Text = " "; RaiseKey(editor, Key.Enter); Sta.Pump();
             Assert.IsTrue(edit.IsEditing); Assert.AreEqual("Required", edit.Error); Assert.AreEqual("Original", edit.Value);
+        }));
+    }
+
+    [TestMethod]
+    public void FrameHugsTextAndFieldCoversDisplay()
+    {
+        Sta.Run(() => InWindow(edit =>
+        {
+            var box = (InlineEditBox)edit.Template.FindName("PART_Box", edit)!;
+            var display = (System.Windows.Controls.Button)edit.Template.FindName("PART_Display", edit)!;
+            var editor = (System.Windows.Controls.TextBox)edit.Template.FindName("PART_Editor", edit)!;
+            var frame = (Border)edit.Template.FindName("PART_Frame", edit)!;
+            Assert.AreEqual(display.ActualWidth, frame.ActualWidth, .5);
+            Assert.IsTrue(display.ActualWidth < edit.ActualWidth - 60, "the frame hugs the text instead of filling the row");
+            display.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent)); Pump(1000);
+            Assert.AreEqual(display.ActualWidth, editor.ActualWidth, .5);
+            Assert.AreEqual(display.ActualHeight, editor.ActualHeight, .5);
+            Assert.AreEqual(display.ActualWidth, box.FrameWidth, .5, "the frame settles on the field width");
+        }));
+    }
+
+    [TestMethod]
+    public void FailedSaveRollsBackAndOffersRetry()
+    {
+        Sta.Run(() => InWindow(edit =>
+        {
+            edit.SaveAsync = value => Task.FromException(new InvalidOperationException("offline"));
+            var display = (System.Windows.Controls.Button)edit.Template.FindName("PART_Display", edit)!;
+            var editor = (System.Windows.Controls.TextBox)edit.Template.FindName("PART_Editor", edit)!;
+            var host = (Panel)edit.Template.FindName("PART_MessageHost", edit)!;
+            display.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent)); Sta.Pump(); editor.Text = "Renamed"; RaiseKey(editor, Key.Enter); Pump(120);
+            Assert.AreEqual(InlineEditPhase.Failed, edit.Phase);
+            Assert.AreEqual("Original", edit.Value);
+            Assert.IsFalse(edit.IsEditing);
+            var message = host.Children.OfType<FrameworkElement>().First(child => child is not Canvas);
+            var text = message is Panel panel ? panel.Children.OfType<TextBlock>().First() : (TextBlock)message;
+            var retry = text.Inlines.OfType<Hyperlink>().Single();
+            StringAssert.Contains(new TextRange(text.ContentStart, text.ContentEnd).Text, "Couldn\u2019t save \u201cRenamed\u201d, so the last saved name is back.");
+            retry.DoClick(); Sta.Pump();
+            Assert.IsTrue(edit.IsEditing);
+            Assert.AreEqual("Renamed", editor.Text);
+        }));
+    }
+
+    [TestMethod]
+    public void ExternalValueIsIgnoredWhileEditing()
+    {
+        Sta.Run(() => InWindow(edit =>
+        {
+            var display = (System.Windows.Controls.Button)edit.Template.FindName("PART_Display", edit)!;
+            var editor = (System.Windows.Controls.TextBox)edit.Template.FindName("PART_Editor", edit)!;
+            display.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent)); Sta.Pump(); editor.Text = "Typing";
+            edit.Value = "From server"; Sta.Pump();
+            Assert.AreEqual("Typing", editor.Text);
+            RaiseKey(editor, Key.Escape); Sta.Pump();
+            Assert.AreEqual("From server", edit.Value);
         }));
     }
 
