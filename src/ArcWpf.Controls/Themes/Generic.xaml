@@ -51,6 +51,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/TimePicker/Themes/TimePickerTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ScrollArea/Themes/ScrollAreaTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/EmptyState/Themes/EmptyStateTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Skeleton/Themes/SkeletonTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

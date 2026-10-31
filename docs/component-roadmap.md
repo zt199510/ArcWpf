@@ -178,3 +178,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback EmptyState，包含图标、标题、说明、主操作和 UIA。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，EmptyState 专项 3/3 通过。
 - [ ] Arc EmptyState Registry/CSS 来源恢复后网页参数、图标、间距和动效复核；真实窗口验收待补。
+
+## Skeleton 开发（2026-10-31）
+
+- [x] 建立明确标记的 WPF fallback Skeleton，支持 Rectangle/Text/Circle、Fill、CornerRadius 和 Full/Reduced/Off shimmer。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，Skeleton 专项 3/3 通过。
+- [ ] Arc Skeleton Registry/CSS 来源恢复后网页参数、shimmer 和真实窗口验收。
