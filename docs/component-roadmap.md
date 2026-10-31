@@ -220,3 +220,9 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback PasswordStrength，支持长度/大小写/数字/符号评分、StrengthLabel、规则提示和主题。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，PasswordStrength 专项 3/3 通过。
 - [ ] Arc PasswordStrength Registry/CSS 来源恢复后评分规则、分段颜色、动效和真实窗口验收。
+
+## MoneyInput 开发（2026-10-31）
+
+- [x] 建立明确标记的 WPF fallback MoneyInput，支持货币符号、DecimalDigits、边界和原生 TextBox 编辑。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，MoneyInput 专项 3/3 通过。
+- [ ] Arc MoneyInput Registry/CSS 来源恢复后文化格式、负数、中间态和真实窗口验收。
