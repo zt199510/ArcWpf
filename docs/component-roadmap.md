@@ -184,3 +184,15 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 建立明确标记的 WPF fallback Skeleton，支持 Rectangle/Text/Circle、Fill、CornerRadius 和 Full/Reduced/Off shimmer。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，Skeleton 专项 3/3 通过。
 - [ ] Arc Skeleton Registry/CSS 来源恢复后网页参数、shimmer 和真实窗口验收。
+
+## FilterToolbar 开发（2026-10-31）
+
+- [x] 建立明确标记的 WPF fallback FilterToolbar，包含搜索、筛选胶囊、活动状态和 Clear all。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，FilterToolbar 专项 3/3 通过。
+- [ ] Arc FilterToolbar Registry/CSS 来源恢复后网页参数、响应式布局和真实窗口验收。
+
+## FilterToolbar 开发（2026-10-31）
+
+- [x] 建立明确标记的 WPF fallback FilterToolbar，包含搜索、筛选胶囊、活动状态和 Clear all。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，FilterToolbar 专项 3/3 通过。
+- [ ] Arc FilterToolbar Registry/CSS 来源恢复后网页参数、响应式布局和真实窗口验收。
