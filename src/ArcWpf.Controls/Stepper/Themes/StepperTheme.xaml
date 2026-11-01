@@ -6,20 +6,22 @@
       <ItemsControl x:Name="PART_Items">
         <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate><DataTemplate>
-          <Button IsEnabled="{Binding IsEnabled}" Margin="0,0,18,0" Padding="0" Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}">
+          <Button IsEnabled="{Binding IsSelectable}" Margin="0,0,18,0" Padding="0" Background="Transparent" BorderThickness="0">
+            <Button.Template><ControlTemplate TargetType="Button"><Border Background="Transparent" SnapsToDevicePixels="True"><ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template>
             <StackPanel Orientation="Horizontal">
               <Border x:Name="MarkSurface" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1">
                 <TextBlock x:Name="MarkText" Text="{Binding Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
               </Border>
               <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
                 <TextBlock Text="{Binding Title}" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
-                <TextBlock Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                <TextBlock x:Name="DescriptionText" Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
               </StackPanel>
             </StackPanel>
           </Button>
           <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsCurrent}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Background}"/></DataTrigger>
             <DataTrigger Binding="{Binding IsComplete}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.AccentSubtle}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/></DataTrigger>
+            <DataTrigger Binding="{Binding IsError}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter TargetName="DescriptionText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/></DataTrigger>
           </DataTemplate.Triggers>
         </DataTemplate></ItemsControl.ItemTemplate>
       </ItemsControl>
