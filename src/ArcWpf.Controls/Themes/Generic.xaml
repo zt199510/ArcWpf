@@ -62,6 +62,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ChipGroup/Themes/ChipGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Rating/Themes/RatingTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ColorPicker/Themes/ColorPickerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/BottomSheet/Themes/BottomSheetTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

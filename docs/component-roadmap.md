@@ -222,3 +222,9 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 - [x] 冻结 8 个 Registry 源码、CSS、页面 demo、动效令牌和许可（含 ColorPicker 依赖的 text-morph）；重写参考卡与规格。
 - [x] 按源码重做控件、Gallery 主示例（源 demo 内容）与专项测试；Controls/Gallery/Tests 构建 0 错误。
 - [ ] 在 Windows 运行专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-input-batch-rebuild.md)）。
+
+## BottomSheet 开发（2026-11-01）
+
+- [x] 基于 Drawer/DrawerHost 实现 BottomSheet，复用遮罩、Escape、外部点击、焦点归还和 Bottom 动效。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，BottomSheet 专项 3/3 通过。
+- [ ] Arc BottomSheet Registry/CSS 来源恢复后 detent、safe-area、拖拽和真实窗口验收。
