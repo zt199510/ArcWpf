@@ -49,7 +49,7 @@ public class Stepper : Control
     }
     private void StepClicked(object sender, RoutedEventArgs e)
     {
-        if (!AllowStepClick || e.OriginalSource is not Button { DataContext: StepView view } || !view.IsEnabled) return;
+        if (!AllowStepClick || e.OriginalSource is not System.Windows.Controls.Button { DataContext: StepView view } || !view.IsEnabled) return;
         SetCurrentValue(CurrentIndexProperty, view.Index);
         e.Handled = true;
     }

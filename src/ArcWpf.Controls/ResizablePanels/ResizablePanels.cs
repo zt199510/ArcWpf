@@ -36,6 +36,7 @@ public class ResizablePanels : Control
         {
             _splitter.DragDelta -= SplitMoved;
             _splitter.DragCompleted -= SplitCompleted;
+            _splitter.PreviewKeyDown -= SplitKeyDown;
         }
         _edgeMotion.Stop();
         base.OnApplyTemplate();
@@ -48,6 +49,7 @@ public class ResizablePanels : Control
             _splitter.RenderTransform = _edgeOffset;
             _splitter.DragDelta += SplitMoved;
             _splitter.DragCompleted += SplitCompleted;
+            _splitter.PreviewKeyDown += SplitKeyDown;
         }
         ApplyRatio();
     }
@@ -62,7 +64,23 @@ public class ResizablePanels : Control
         _edgeMotion.Double(_edgeOffset, TranslateTransform.XProperty, 0, .26, true, spring: true);
     }
     private void LayoutSizeChanged(object sender, SizeChangedEventArgs e) => ApplyRatio();
-    private void SplitCompleted(object sender, DragCompletedEventArgs e)
+    private void SplitCompleted(object sender, DragCompletedEventArgs e) => SyncRatioFromColumns();
+    private void SplitKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (_layout is not { ColumnDefinitions.Count: 3 } layout || e.Key is not (System.Windows.Input.Key.Left or System.Windows.Input.Key.Right or System.Windows.Input.Key.Home or System.Windows.Input.Key.End)) return;
+        double available = layout.ActualWidth - layout.ColumnDefinitions[1].ActualWidth;
+        if (available <= 0) return;
+        double target = e.Key switch
+        {
+            System.Windows.Input.Key.Left => layout.ColumnDefinitions[0].ActualWidth - 10,
+            System.Windows.Input.Key.Right => layout.ColumnDefinitions[0].ActualWidth + 10,
+            System.Windows.Input.Key.Home => MinLeft,
+            _ => available - MinRight
+        };
+        SetCurrentValue(SplitRatioProperty, Math.Clamp(target, MinLeft, Math.Max(MinLeft, available - MinRight)) / available);
+        e.Handled = true;
+    }
+    private void SyncRatioFromColumns()
     {
         if (_layout is not { ColumnDefinitions.Count: 3 } layout) return;
         double available = layout.ActualWidth - layout.ColumnDefinitions[1].ActualWidth;

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Input;
 namespace ArcWpf.Tests;
 [TestClass] public sealed class ResizablePanelsTests
 {
@@ -39,6 +40,24 @@ namespace ArcWpf.Tests;
             var offset = (TranslateTransform)splitter.RenderTransform;
             Assert.IsTrue(offset.HasAnimatedProperties);
             Assert.AreEqual(160d, grid.ColumnDefinitions[0].ActualWidth, .5);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void KeyboardResizeUpdatesBoundRatio() => Sta.Run(() =>
+    {
+        var panels = new ResizablePanels { Width = 500, Height = 160, SplitRatio = .5, MinLeft = 100, MinRight = 100 };
+        var window = new Window { Content = panels, Width = 560, Height = 220, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); panels.UpdateLayout();
+            var splitter = (GridSplitter)panels.Template.FindName("PART_Splitter", panels)!;
+            var grid = (Grid)panels.Template.FindName("PART_Layout", panels)!;
+            splitter.Focus();
+            var source = PresentationSource.FromVisual(splitter)!;
+            splitter.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice, source, 0, Key.Right) { RoutedEvent = Keyboard.PreviewKeyDownEvent });
+            Sta.Pump(); panels.UpdateLayout();
+            Assert.AreEqual(grid.ColumnDefinitions[0].ActualWidth / (grid.ActualWidth - 6), panels.SplitRatio, .02);
+            Assert.IsGreaterThan(.5, panels.SplitRatio);
         }
         finally { window.Close(); }
     });

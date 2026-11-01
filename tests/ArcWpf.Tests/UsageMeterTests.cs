@@ -39,4 +39,27 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void FullMotionSettlesAndReleasesClock() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 300, Used = 25, Limit = 100 };
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var window = new System.Windows.Window { Content = meter, Width = 360, Height = 120, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var fill = (System.Windows.Controls.Border)meter.Template.FindName("PART_Fill", meter)!;
+            var scale = (System.Windows.Media.ScaleTransform)fill.RenderTransform;
+            meter.Used = 75;
+            Assert.IsTrue(scale.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(600) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(.75, scale.ScaleX, .01);
+            Assert.IsFalse(scale.HasAnimatedProperties);
+            meter.WarningThreshold = .7;
+            Assert.AreEqual(.75, scale.ScaleX, .01);
+        }
+        finally { window.Close(); }
+    });
 }
