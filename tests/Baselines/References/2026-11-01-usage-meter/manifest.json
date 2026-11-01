@@ -1,0 +1,21 @@
+{
+  "component": "usage-meter",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/usage-meter.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/usage-meter/markdown",
+    "page.html": "https://uiarc.dev/components/usage-meter",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "5d88813821452d850eaa66e3d4d575a893e8111de29ee892fb831f470f27bba7",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "e614e9323389a10a78969b139ce2a8027247268cabe70698ca22d58e9c604496",
+    "registry.json": "e38833337da9e2f2de87cafed54472a0cf5c73cc08e29c3894d2b74e1f504794",
+    "registry/components/usage-meter/usage-meter.module.css": "a5570a22c9ec41d73ad088a6dc66b3b0199b1e53ccb2c46cca5d5e86143881d1",
+    "registry/components/usage-meter/usage-meter.tsx": "3dafab782abe29de6cdcb49cf0d4dfc1b31bddd0bf6c8aa7dad035bbbb461bbd"
+  },
+  "errors": []
+}

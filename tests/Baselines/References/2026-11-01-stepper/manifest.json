@@ -1,0 +1,21 @@
+{
+  "component": "stepper",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/stepper.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/stepper/markdown",
+    "page.html": "https://uiarc.dev/components/stepper",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "21e6cf961f903ad570102b37cfa4d398f06898bc7d39c4e1d86fbfa0fc953815",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "63ca46088827d24e160bbaa98183f736c7469bcdae3f5b9e9b61aebacb9f6d14",
+    "registry.json": "ec68ecaf041ad57cd7e8da2ebf614ded3026f8dc506e41e28fc9f7509967b921",
+    "registry/components/stepper/stepper.module.css": "3762deb9d9cda692a33c81510c811cae11aebadcd82ce58d4ea3b84b3ed5c569",
+    "registry/components/stepper/stepper.tsx": "7b4034915b0902b16e6dd2e54dfae4ce40fd9b2d4fd09e736f9e196d97fc6c17"
+  },
+  "errors": []
+}

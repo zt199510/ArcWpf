@@ -1,0 +1,21 @@
+{
+  "component": "card",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/card.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/card/markdown",
+    "page.html": "https://uiarc.dev/components/card",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "a499c8c7f6ae3bd48a3f5b798d3309b56ffa11bae246b4cdc42aa0911bd1d685",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "5cfb7877265a583955a947bfd70b8c9e96418efe080621827597f02d1ffe3289",
+    "registry.json": "84a8876167b9d06062e75ba0bbbc79d4183b7c8cb2d7362bc271037e4d4e69d1",
+    "registry/components/card/card.module.css": "70bd80f3f6245f519691edf4e4c4217d99fb477cf9a1305ba1e3a5b1111f5dea",
+    "registry/components/card/card.tsx": "1e82f064e152aefefb9b34e89e019cca31919ce9ddcd84b480a88775fd4ad638"
+  },
+  "errors": []
+}

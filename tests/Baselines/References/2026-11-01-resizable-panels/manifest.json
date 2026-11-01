@@ -1,0 +1,21 @@
+{
+  "component": "resizable-panels",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/resizable-panels.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/resizable-panels/markdown",
+    "page.html": "https://uiarc.dev/components/resizable-panels",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "b779b158e5222a86d18bf9ec875a4e6c23eb50c36e12d9b11ea9aafbddbfe380",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "4e9e91d4b0291dc7ea7de4ff04b5e764593aac1f2378aa414ae9fad55df273cd",
+    "registry.json": "f4540fe73762ec090597d648487af78c4b347a77a09fb52f492f9d16435f8a08",
+    "registry/components/resizable-panels/resizable-panels.module.css": "3d695c6a6a634b4422258005d230d3ae85dd0512966a01ff96f5d2b6575ae747",
+    "registry/components/resizable-panels/resizable-panels.tsx": "398523f0602c829ef3f2f3899a3b0ca673324dd6b41cf872450a59514e6e42bd"
+  },
+  "errors": []
+}

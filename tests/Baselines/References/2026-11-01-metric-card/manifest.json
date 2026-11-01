@@ -1,0 +1,21 @@
+{
+  "component": "metric-card",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/metric-card.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/metric-card/markdown",
+    "page.html": "https://uiarc.dev/components/metric-card",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "63df9aab41ba3c676f67566a18c8fe820e5a0f07a44e562f1ea600484bb1482e",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "082e34959b86c0c8ba8bb6e8a82b8f19b5408a44c7a1fe1ce5f778b2df856727",
+    "registry.json": "e068e8a22452cceecfab21acd8eccf7347bedee1a02ac736e2744702078deb87",
+    "registry/components/metric-card/metric-card.module.css": "733ad2b10292f583f11a7b4e21c09b0d9334bfff15c8abb52baab965dc851235",
+    "registry/components/metric-card/metric-card.tsx": "ac550e49b6e9f680f32a694dd27cb42597795465d4709f2418230fbbde865906"
+  },
+  "errors": []
+}

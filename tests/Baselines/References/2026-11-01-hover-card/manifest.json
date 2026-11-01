@@ -1,0 +1,21 @@
+{
+  "component": "hover-card",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/hover-card.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/hover-card/markdown",
+    "page.html": "https://uiarc.dev/components/hover-card",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "27acd52d999f1c3462e67ce571e378de36e5bfde3e9c61907c38514a49767ab3",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "0823a104a622aa8e2cc00894af69149de0af77d19549e85940447484b07c3d64",
+    "registry.json": "de801a662cee36bb651f3a2c427b6628ee114166508ea0ccc0049e7627491503",
+    "registry/components/hover-card/hover-card.module.css": "2a847a6020215674247678354139cb7a9b7b5311f86f0a7d6403a3575c83ba2d",
+    "registry/components/hover-card/hover-card.tsx": "8fe88d6df8541251d9827336614a5f7a87026992eb66a42d8f71679d274d89c2"
+  },
+  "errors": []
+}
