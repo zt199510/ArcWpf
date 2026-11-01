@@ -228,3 +228,9 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 - [x] 基于 Drawer/DrawerHost 实现 BottomSheet，复用遮罩、Escape、外部点击、焦点归还和 Bottom 动效。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，BottomSheet 专项 3/3 通过。
 - [ ] Arc BottomSheet Registry/CSS 来源恢复后 detent、safe-area、拖拽和真实窗口验收。
+
+## HoverCard 开发（2026-11-01）
+
+- [x] 基于 Tooltip/Popover 生命周期实现 HoverCard，支持 hover 延迟打开/关闭、Escape 和四向 Popup。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，HoverCard 专项 3/3 通过。
+- [ ] Arc HoverCard Registry/CSS 来源恢复后延迟、碰撞、焦点、真实窗口和主题验收。
