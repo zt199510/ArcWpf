@@ -252,3 +252,9 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 - [x] 建立明确标记的 WPF fallback Stepper，支持步骤列表、CurrentIndex、Next/Previous 和 UIA 状态。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，Stepper 专项筛选通过。
 - [ ] Arc Stepper Registry/CSS 来源恢复后连接线、选中动效、键盘和真实窗口验收。
+
+## UsageMeter 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback UsageMeter，支持 Used/Limit、Percentage、WarningThreshold、Unit 和 UIA。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，UsageMeter 专项 3/3 通过。
+- [ ] Arc UsageMeter Registry/CSS 来源恢复后数字排版、阈值颜色、动效和真实窗口验收。
