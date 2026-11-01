@@ -1,4 +1,5 @@
 <UserControl x:Class="ArcWpf.Gallery.Pages.ResizablePanelsPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
   <arc:ResizablePanels Height="360" Width="640" SplitRatio=".22" DefaultSplitRatio=".22" MinLeft="160" MinRight="80" CanCollapseLeft="True">
     <arc:ResizablePanels.LeftContent><Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="16"><StackPanel>
       <TextBlock Text="Folders" FontSize="14" FontWeight="Medium" Margin="0,0,0,16"/>
@@ -11,4 +12,18 @@
       <TextBlock Text="Project files" FontWeight="Medium"/><TextBlock Text="Alex Wu · Monday" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,2,0,0"/>
     </StackPanel></Border></arc:ResizablePanels.RightContent>
   </arc:ResizablePanels>
+  <arc:ResizablePanels Height="240" Width="640" Label="Workspace" Margin="0,24,0,0">
+    <arc:ResizablePanels.Panels>
+      <arc:ResizablePanel Id="navigation" Label="Navigation" DefaultSize="22" MinSize="120" Collapsible="True">
+        <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="16"><StackPanel><TextBlock Text="Navigation" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="Overview"/><TextBlock Text="Reports" Margin="0,12,0,0"/></StackPanel></Border>
+      </arc:ResizablePanel>
+      <arc:ResizablePanel Id="workspace" Label="Workspace" DefaultSize="48" MinSize="160">
+        <Border Background="{DynamicResource ArcWpf.Brush.Surface}" Padding="16"><StackPanel><TextBlock Text="Workspace" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="Current work and recent files" TextWrapping="Wrap"/></StackPanel></Border>
+      </arc:ResizablePanel>
+      <arc:ResizablePanel Id="inspector" Label="Inspector" DefaultSize="30" MinSize="120" Collapsible="True">
+        <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="16"><StackPanel><TextBlock Text="Inspector" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="Details"/></StackPanel></Border>
+      </arc:ResizablePanel>
+    </arc:ResizablePanels.Panels>
+  </arc:ResizablePanels>
+  </StackPanel>
 </UserControl>

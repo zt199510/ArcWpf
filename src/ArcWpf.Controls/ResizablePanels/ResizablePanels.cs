@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace ArcWpf.Controls;
 
-public class ResizablePanels : Control
+public partial class ResizablePanels : Control
 {
     public static readonly DependencyProperty LeftContentProperty = DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(ResizablePanels));
     public static readonly DependencyProperty RightContentProperty = DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(ResizablePanels));
@@ -39,7 +39,17 @@ public class ResizablePanels : Control
     private ContentPresenter? _leftPresenter, _rightPresenter;
     private ButtonBase? _restoreButton;
     static ResizablePanels() { DefaultStyleKeyProperty.OverrideMetadata(typeof(ResizablePanels), new FrameworkPropertyMetadata(typeof(ResizablePanels))); }
-    public ResizablePanels() { Unloaded += (_, _) => { _edgeMotion.Stop(); if (_edgeOffset is not null) _edgeOffset.X = 0; _dragging = false; _overshoot = 0; }; }
+    public ResizablePanels()
+    {
+        Panels.CollectionChanged += PanelsChanged;
+        Unloaded += (_, _) =>
+        {
+            _edgeMotion.Stop();
+            if (_edgeOffset is not null) _edgeOffset.X = 0;
+            _dragging = false; _overshoot = 0;
+            StopMultiMotion();
+        };
+    }
     private static void OnVisualChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var panels = (ResizablePanels)d;
@@ -57,9 +67,11 @@ public class ResizablePanels : Control
         }
         finally { panels._updatingCollapse = false; }
         panels.ApplyRatio();
+        if (panels.Panels.Count == 0) panels.RaiseLayoutChanged();
     }
     public override void OnApplyTemplate()
     {
+        ReleaseMulti();
         if (_layout is not null) _layout.SizeChanged -= LayoutSizeChanged;
         if (_splitter is not null)
         {
@@ -89,7 +101,7 @@ public class ResizablePanels : Control
             _splitter.MouseDoubleClick += SplitDoubleClicked;
         }
         if (_restoreButton is not null) _restoreButton.Click += RestoreClicked;
-        ApplyRatio();
+        if (Panels.Count > 0) BuildMulti(); else ApplyRatio();
     }
     private void SplitMoved(object sender, DragDeltaEventArgs e)
     {
@@ -143,10 +155,12 @@ public class ResizablePanels : Control
     }
     public void Reset()
     {
+        if (Panels.Count > 0) { ResetMulti(); return; }
         SetCurrentValue(IsLeftCollapsedProperty, false);
         SetCurrentValue(IsRightCollapsedProperty, false);
         SetCurrentValue(SplitRatioProperty, DefaultSplitRatio);
         ApplyRatio();
+        RaiseLayoutChanged();
     }
     private void SplitKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
@@ -197,6 +211,7 @@ public class ResizablePanels : Control
             _ => available - rightMin
         };
         SetCurrentValue(SplitRatioProperty, Math.Clamp(target, leftMin, Math.Max(leftMin, available - rightMin)) / available);
+        RaiseLayoutChanged();
         e.Handled = true;
     }
     private void SyncRatioFromColumns()
@@ -207,6 +222,7 @@ public class ResizablePanels : Control
         _updating = true;
         try { SetCurrentValue(SplitRatioProperty, layout.ColumnDefinitions[0].ActualWidth / available); }
         finally { _updating = false; }
+        RaiseLayoutChanged();
     }
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
@@ -215,10 +231,12 @@ public class ResizablePanels : Control
         {
             _edgeMotion.Stop();
             if (_edgeOffset is not null) _edgeOffset.X = 0;
+            StopMultiMotion();
         }
     }
     private void ApplyRatio()
     {
+        if (Panels.Count > 0) { ApplyMultiLayout(); return; }
         if (_layout is not { ColumnDefinitions.Count: 3 } layout) return;
         double available = layout.ActualWidth - layout.ColumnDefinitions[1].ActualWidth;
         if (available <= 0) return;
@@ -241,5 +259,5 @@ public class ResizablePanels : Control
         }
     }
     protected override AutomationPeer OnCreateAutomationPeer() => new ResizablePanelsPeer(this);
-    private sealed class ResizablePanelsPeer(ResizablePanels owner) : FrameworkElementAutomationPeer(owner) { protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Pane; protected override string GetNameCore() => "Resizable panels"; }
+    private sealed class ResizablePanelsPeer(ResizablePanels owner) : FrameworkElementAutomationPeer(owner) { protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Group; protected override string GetNameCore() => owner.Label; }
 }
