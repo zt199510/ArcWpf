@@ -309,6 +309,71 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void SegmentsRevealOnceAfterEnteringScrollViewport() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 300, Limit = 50, Unit = "GB" };
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 20 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "media", Label = "Media", Value = 10 });
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var stack = new System.Windows.Controls.StackPanel();
+        stack.Children.Add(new System.Windows.Controls.Border { Height = 500 });
+        stack.Children.Add(meter);
+        var scroll = new System.Windows.Controls.ScrollViewer { Content = stack, Width = 380, Height = 180, VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto };
+        var window = new Window { Content = scroll, Width = 470, Height = 240, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
+            var first = (System.Windows.Controls.Border)canvas.Children[0];
+            var ticker = ((System.Windows.Controls.Grid)meter.Template.FindName("PART_NumberHost", meter)!).Children.OfType<OdometerNumber>().Single();
+            Assert.AreEqual(0d, first.Width, .01);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            Assert.AreEqual(0, ticker.DigitColumns["i1"].Digit);
+            meter.Segments[0].Value = 25;
+            Assert.AreEqual(0d, first.Width, .01);
+            Assert.AreEqual(0, ticker.DigitColumns["i0"].Digit);
+            scroll.ScrollToVerticalOffset(380); Sta.Pump();
+            Assert.AreEqual(0d, first.Width, .01);
+            scroll.ScrollToVerticalOffset(450); Sta.Pump();
+            Assert.IsTrue(first.HasAnimatedProperties);
+            Assert.IsTrue(ticker.IsMotionRunning);
+            Assert.AreEqual(3, ticker.DigitColumns["i1"].Digit);
+            Assert.AreEqual(5, ticker.DigitColumns["i0"].Digit);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(900) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsTrue(first.Width > 0);
+            Assert.IsFalse(first.HasAnimatedProperties);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            scroll.ScrollToVerticalOffset(0); scroll.ScrollToVerticalOffset(450); Sta.Pump();
+            Assert.IsFalse(first.HasAnimatedProperties);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void ReducedMotionShowsOffscreenSegmentsWithoutRevealClock() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 300, Limit = 50, Unit = "GB" };
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 20 });
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Reduced);
+        var stack = new System.Windows.Controls.StackPanel();
+        stack.Children.Add(new System.Windows.Controls.Border { Height = 500 });
+        stack.Children.Add(meter);
+        var scroll = new System.Windows.Controls.ScrollViewer { Content = stack, Width = 380, Height = 180 };
+        var window = new Window { Content = scroll, Width = 470, Height = 240, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
+            var first = (System.Windows.Controls.Border)canvas.Children[0];
+            var ticker = ((System.Windows.Controls.Grid)meter.Template.FindName("PART_NumberHost", meter)!).Children.OfType<OdometerNumber>().Single();
+            Assert.IsTrue(first.Width > 0);
+            Assert.IsFalse(first.HasAnimatedProperties);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            Assert.AreEqual(2, ticker.DigitColumns["i1"].Digit);
+        }
+        finally { window.Close(); }
+    });
     [TestMethod] public void FillTracksValueAndOffSettlesImmediately() => Sta.Run(() =>
     {
         var meter = new UsageMeter { Width = 300, Used = 25, Limit = 100 };

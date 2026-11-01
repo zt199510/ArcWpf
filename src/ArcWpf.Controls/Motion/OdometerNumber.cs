@@ -14,10 +14,12 @@ internal sealed class OdometerNumber : UserControl
     private readonly Dictionary<string, DigitColumn> _digits = [];
     private readonly Dictionary<string, DigitColumn> _retiring = [];
     private readonly Dictionary<string, TextBlock> _symbols = [];
+    private readonly Dictionary<string, int> _pendingTargets = [];
     private readonly OwnedMotion _layoutMotion = new();
     private string _text = string.Empty;
     private double _value;
     private bool _revealed;
+    internal bool RevealOnLoad { get; set; } = true;
     internal bool IsMotionRunning => _layoutMotion.IsRunning || _digits.Values.Any(column => column.IsMotionRunning);
     internal IReadOnlyDictionary<string, DigitColumn> DigitColumns => _digits;
 
@@ -28,27 +30,20 @@ internal sealed class OdometerNumber : UserControl
         IsHitTestVisible = false;
         Loaded += (_, _) =>
         {
-            if (_revealed) return;
-            _revealed = true;
-            if (ArcMotion.GetLevel(this) != ArcMotionLevel.Full) return;
-            foreach (var column in _digits.Values)
-            {
-                int target = column.Digit;
-                column.Jump(0);
-                column.Update(target, _value < 0 ? -1 : 1, true);
-            }
+            if (RevealOnLoad) Reveal();
         };
         Unloaded += (_, _) => Stop();
     }
     internal void Set(double value, string text, bool animate)
     {
-        if (!double.IsFinite(value)) { Stop(); _track.Children.Clear(); _digits.Clear(); _symbols.Clear(); _text = string.Empty; return; }
+        if (!double.IsFinite(value)) { Stop(); _track.Children.Clear(); _digits.Clear(); _symbols.Clear(); _pendingTargets.Clear(); _text = string.Empty; return; }
         if (_text == text && _value == value) return;
         int direction = value >= _value ? 1 : -1;
         _value = value;
         _text = text;
         bool moving = animate && _revealed && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full;
         var parts = Parse(text);
+        if (!_revealed) _pendingTargets.Clear();
         var needed = parts.Where(part => part.Digit).Select(part => part.Key).ToHashSet();
         var neededSymbols = parts.Where(part => !part.Digit).Select(part => part.Key).ToHashSet();
         foreach (var key in _symbols.Keys.Where(key => !neededSymbols.Contains(key)).ToArray()) _symbols.Remove(key);
@@ -72,13 +67,15 @@ internal sealed class OdometerNumber : UserControl
                 continue;
             }
             int digit = (int)char.GetNumericValue(part.Character);
+            int shown = _revealed ? digit : 0;
+            if (!_revealed) _pendingTargets[part.Key] = digit;
             if (!_digits.TryGetValue(part.Key, out var column))
             {
                 if (_retiring.Remove(part.Key, out var restored)) { column = restored; entering.Add(column); }
-                else { column = new DigitColumn(digit, this); if (moving) { column.Root.Width = 0; column.Root.Opacity = 0; entering.Add(column); } }
+                else { column = new DigitColumn(shown, this); if (moving) { column.Root.Width = 0; column.Root.Opacity = 0; entering.Add(column); } }
                 _digits.Add(part.Key, column);
             }
-            updates.Add((column, digit));
+            updates.Add((column, shown));
             ordered.Add(column.Root);
         }
         foreach (var (key, column) in _retiring.ToArray())
@@ -119,6 +116,18 @@ internal sealed class OdometerNumber : UserControl
         _retiring.Clear();
         foreach (var column in _digits.Values) { column.Root.Width = column.NaturalWidth; column.Root.Opacity = 1; }
         foreach (var column in _digits.Values) column.Stop();
+    }
+    internal void Reveal()
+    {
+        if (_revealed) return;
+        _revealed = true;
+        bool animate = ArcMotion.GetLevel(this) == ArcMotionLevel.Full && IsLoaded;
+        foreach (var (key, column) in _digits)
+        {
+            int target = _pendingTargets.TryGetValue(key, out var digit) ? digit : column.Digit;
+            column.Update(target, _value < 0 ? -1 : 1, animate);
+        }
+        _pendingTargets.Clear();
     }
     private TextBlock MakeText(string text)
     {

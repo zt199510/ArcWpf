@@ -106,7 +106,8 @@ public partial class UsageMeter : Control
     public UsageMeter()
     {
         Segments.CollectionChanged += SegmentsChanged;
-        Unloaded += (_, _) => { _motion.Stop(); StopNumberMotion(); StopBadgeMotion(); };
+        Loaded += (_, _) => StartRevealTracking();
+        Unloaded += (_, _) => { _motion.Stop(); StopNumberMotion(); StopBadgeMotion(); StopRevealTracking(); };
         AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
     }
     private void SegmentsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -121,6 +122,7 @@ public partial class UsageMeter : Control
         RebuildSegments();
         RebuildLegend();
         Refresh();
+        StartRevealTracking();
     }
     private void SegmentChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -150,7 +152,7 @@ public partial class UsageMeter : Control
         _ticker = null;
         if (_numberHost is not null)
         {
-            _ticker = new OdometerNumber { FontSize = 28, FontWeight = FontWeights.Medium };
+            _ticker = new OdometerNumber { FontSize = 28, FontWeight = FontWeights.Medium, RevealOnLoad = false };
             _ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
             _ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
             _numberHost.Children.Add(_ticker);
@@ -175,6 +177,7 @@ public partial class UsageMeter : Control
         RebuildSegments();
         RebuildLegend();
         Refresh(false);
+        if (_revealed) RevealNumbers(); else StartRevealTracking();
     }
     private static void OnVisualChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((UsageMeter)d).Refresh();
     private void Refresh() => Refresh(true);
@@ -238,6 +241,18 @@ public partial class UsageMeter : Control
         double span = Math.Max(Math.Max(Total, Limit), 1e-6);
         double cumulative = 0;
         bool moving = animate && IsLoaded && IsVisible && ArcMotion.GetLevel(this) == ArcMotionLevel.Full;
+        if (!_revealed && ArcMotion.GetLevel(this) == ArcMotionLevel.Full)
+        {
+            foreach (var (_, visual) in _segmentVisuals)
+            {
+                _motion.Double(visual, Canvas.LeftProperty, 0, 0, false);
+                _motion.Double(visual, WidthProperty, 0, 0, false);
+            }
+            if (_overTint is not null) _motion.Double(_overTint, OpacityProperty, 0, 0, false);
+            if (_overHatch is not null) _motion.Double(_overHatch, OpacityProperty, 0, 0, false);
+            if (_limitMarker is not null) _motion.Double(_limitMarker, OpacityProperty, 0, 0, false);
+            return;
+        }
         for (int index = 0; index < _segmentVisuals.Count; index++)
         {
             var (segment, visual) = _segmentVisuals[index];
@@ -245,8 +260,9 @@ public partial class UsageMeter : Control
             double size = segment.Value / span * width;
             double remaining = Math.Max(0, width - left - size);
             double visibleSize = Math.Max(0, size - Math.Min(2, Math.Min(size, remaining)));
-            _motion.Double(visual, Canvas.LeftProperty, left, .42, moving, spring: true);
-            _motion.Double(visual, WidthProperty, visibleSize, .42, moving, spring: true);
+            double delay = moving && _revealing ? index * .07 : 0;
+            _motion.Double(visual, Canvas.LeftProperty, left, .42, moving, spring: true, delay: delay);
+            _motion.Double(visual, WidthProperty, visibleSize, .42, moving, spring: true, delay: delay);
             cumulative += segment.Value;
         }
         double limitX = Math.Clamp(Limit / span * width, 0, width);
@@ -257,7 +273,7 @@ public partial class UsageMeter : Control
             Canvas.SetLeft(_overTint, limitX);
             _overTint.Width = overWidth;
             _overTint.IsHitTestVisible = false;
-            _motion.Double(_overTint, OpacityProperty, Status == UsageMeterStatus.Over ? .45 : 0, .16, moving);
+            _motion.Double(_overTint, OpacityProperty, Status == UsageMeterStatus.Over ? .45 : 0, .16, moving, delay: _revealing ? Segments.Count * .07 : 0);
         }
         if (_overHatch is not null)
         {
@@ -265,14 +281,14 @@ public partial class UsageMeter : Control
             Canvas.SetLeft(_overHatch, limitX);
             _overHatch.Width = overWidth;
             _overHatch.IsHitTestVisible = false;
-            _motion.Double(_overHatch, OpacityProperty, Status == UsageMeterStatus.Over ? 1 : 0, .16, moving);
+            _motion.Double(_overHatch, OpacityProperty, Status == UsageMeterStatus.Over ? 1 : 0, .16, moving, delay: _revealing ? Segments.Count * .07 : 0);
         }
         if (_limitMarker is not null)
         {
             _limitMarker.Visibility = Visibility.Visible;
             Canvas.SetLeft(_limitMarker, Math.Max(0, limitX - 1));
             _limitMarker.IsHitTestVisible = false;
-            _motion.Double(_limitMarker, OpacityProperty, Status == UsageMeterStatus.Over ? 1 : 0, .16, moving);
+            _motion.Double(_limitMarker, OpacityProperty, Status == UsageMeterStatus.Over ? 1 : 0, .16, moving, delay: _revealing ? Segments.Count * .07 : 0);
         }
     }
     private void ClearLegend()
@@ -311,7 +327,7 @@ public partial class UsageMeter : Control
             heading.Children.Add(swatch);
             heading.Children.Add(label);
             var value = new TextBlock { Visibility = Visibility.Collapsed };
-            var ticker = new OdometerNumber { FontSize = 16, FontWeight = FontWeights.Medium };
+            var ticker = new OdometerNumber { FontSize = 16, FontWeight = FontWeights.Medium, RevealOnLoad = false };
             ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
             ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
             var unit = new TextBlock { FontSize = 14, Margin = new Thickness(4, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
@@ -337,6 +353,7 @@ public partial class UsageMeter : Control
         if (_rovingIndex >= _legendEntries.Count) _rovingIndex = 0;
         if (_pinnedId is not null && !_legendEntries.Any(entry => entry.Id == _pinnedId)) _pinnedId = null;
         UpdateLegend();
+        if (_revealed && IsLoaded) RevealNumbers();
     }
     private void UpdateLegend()
     {
@@ -443,7 +460,7 @@ public partial class UsageMeter : Control
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.Property == ArcMotion.LevelProperty && _motion is not null) { _motion.Stop(); StopNumberMotion(); StopBadgeMotion(); Refresh(false); }
+        if (e.Property == ArcMotion.LevelProperty && _motion is not null) { _motion.Stop(); StopNumberMotion(); StopBadgeMotion(); Refresh(false); StartRevealTracking(); }
     }
     protected override AutomationPeer OnCreateAutomationPeer() => new UsageMeterPeer(this);
     private sealed class UsageMeterPeer(UsageMeter owner) : FrameworkElementAutomationPeer(owner)
