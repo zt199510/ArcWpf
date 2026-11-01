@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Controls.Primitives;
 
 namespace ArcWpf.Controls;
 
@@ -23,11 +24,35 @@ public class Stepper : Control
     public bool AllowStepClick { get => (bool)GetValue(AllowStepClickProperty); set => SetValue(AllowStepClickProperty, value); }
     public ObservableCollection<StepperStep> Steps { get; } = [];
     public event RoutedEventHandler CurrentStepChanged { add => AddHandler(CurrentStepChangedEvent, value); remove => RemoveHandler(CurrentStepChangedEvent, value); }
+    private sealed record StepView(StepperStep Step, int Index, bool IsCurrent, bool IsComplete)
+    {
+        public string Title => Step.Title;
+        public string Description => Step.Description;
+        public bool IsEnabled => Step.IsEnabled;
+        public string Mark => IsComplete ? "✓" : (Index + 1).ToString(System.Globalization.CultureInfo.CurrentCulture);
+    }
     static Stepper() { DefaultStyleKeyProperty.OverrideMetadata(typeof(Stepper), new FrameworkPropertyMetadata(typeof(Stepper))); }
     public Stepper() { Steps.CollectionChanged += (_, _) => Refresh(); }
-    public override void OnApplyTemplate() { base.OnApplyTemplate(); _items = GetTemplateChild("PART_Items") as ItemsControl; Refresh(); }
+    public override void OnApplyTemplate()
+    {
+        if (_items is not null) _items.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(StepClicked));
+        base.OnApplyTemplate();
+        _items = GetTemplateChild("PART_Items") as ItemsControl;
+        if (_items is not null) _items.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(StepClicked));
+        Refresh();
+    }
     private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var c = (Stepper)d; c.Refresh(); c.RaiseEvent(new RoutedEventArgs(CurrentStepChangedEvent, c)); }
-    private void Refresh() { if (_items is not null) _items.ItemsSource = Steps; }
+    private void Refresh()
+    {
+        if (_items is not null)
+            _items.ItemsSource = Steps.Select((step, index) => new StepView(step, index, index == CurrentIndex, index < CurrentIndex)).ToArray();
+    }
+    private void StepClicked(object sender, RoutedEventArgs e)
+    {
+        if (!AllowStepClick || e.OriginalSource is not Button { DataContext: StepView view } || !view.IsEnabled) return;
+        SetCurrentValue(CurrentIndexProperty, view.Index);
+        e.Handled = true;
+    }
     public void Next() { if (CurrentIndex < Steps.Count - 1) SetCurrentValue(CurrentIndexProperty, CurrentIndex + 1); }
     public void Previous() { if (CurrentIndex > 0) SetCurrentValue(CurrentIndexProperty, CurrentIndex - 1); }
     protected override AutomationPeer OnCreateAutomationPeer() => new StepperPeer(this);

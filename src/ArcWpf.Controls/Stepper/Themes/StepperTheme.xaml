@@ -1,1 +1,28 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ArcWpf.Controls"><Style TargetType="{x:Type local:Stepper}"><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:Stepper}"><ItemsControl x:Name="PART_Items"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel><ItemsControl.ItemTemplate><DataTemplate><StackPanel Orientation="Horizontal" Margin="0,0,18,0"><Border Width="28" Height="28" CornerRadius="14" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1"><TextBlock Text="✓" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Border><StackPanel Margin="8,0,0,0"><TextBlock Text="{Binding Title}" FontWeight="Medium"/><TextBlock Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel></StackPanel></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></ControlTemplate></Setter.Value></Setter></Style></ResourceDictionary>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="{x:Type local:Stepper}">
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:Stepper}">
+      <ItemsControl x:Name="PART_Items">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate><DataTemplate>
+          <Button IsEnabled="{Binding IsEnabled}" Margin="0,0,18,0" Padding="0" Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}">
+            <StackPanel Orientation="Horizontal">
+              <Border x:Name="MarkSurface" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1">
+                <TextBlock x:Name="MarkText" Text="{Binding Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+              </Border>
+              <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Title}" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+                <TextBlock Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+              </StackPanel>
+            </StackPanel>
+          </Button>
+          <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsCurrent}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Background}"/></DataTrigger>
+            <DataTrigger Binding="{Binding IsComplete}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.AccentSubtle}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/></DataTrigger>
+          </DataTemplate.Triggers>
+        </DataTemplate></ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>
