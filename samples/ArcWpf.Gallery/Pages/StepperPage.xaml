@@ -1,8 +1,43 @@
 <UserControl x:Class="ArcWpf.Gallery.Pages.StepperPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
     <TextBlock Text="Stepper" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
-    <arc:Stepper x:Name="Stepper" CurrentIndex="1" MaxWidth="640"/>
-    <StackPanel Orientation="Horizontal" Margin="0,18,0,0"><Button Content="Previous" Click="Previous"/><Button Content="Next" Click="Next" Margin="8,0,0,0"/></StackPanel>
-    <arc:Stepper x:Name="VerticalStepper" Orientation="Vertical" Details="Current" CurrentIndex="1" Width="280" HorizontalAlignment="Left" Margin="0,36,0,0"/>
+    <!-- Arc 主示例（stepper_demo）：最大 760 宽的向导卡片，四步，第二步为当前步；横向时步骤在上，纵向时左栏 192。 -->
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Border Style="{DynamicResource Gallery.DemoCard}" MaxWidth="760" VerticalAlignment="Center">
+        <StackPanel>
+          <DockPanel LastChildFill="False" Margin="0,0,0,20">
+            <TextBlock DockPanel.Dock="Left" Text="Set up your workspace" FontSize="16" FontWeight="Medium" VerticalAlignment="Center"/>
+            <arc:SegmentedControl x:Name="Layout" DockPanel.Dock="Right" Label="Orientation" SelectedValuePath="Tag" SelectedValue="horizontal" SelectionChanged="LayoutChanged">
+              <arc:SegmentedItem Content="Horizontal" Tag="horizontal"/><arc:SegmentedItem Content="Vertical" Tag="vertical"/>
+            </arc:SegmentedControl>
+          </DockPanel>
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition x:Name="StepsColumn" Width="*"/><ColumnDefinition x:Name="PanelColumn" Width="Auto"/></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <arc:Stepper x:Name="Steps" CurrentIndex="1"/>
+            <Border x:Name="PanelHost" Grid.Row="1" Margin="0,24,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
+              <StackPanel>
+                <Grid MinHeight="128">
+                  <StackPanel x:Name="WorkspacePane">
+                    <arc:Input x:Name="WorkspaceName" Label="Workspace name" Placeholder="Northwind Studio" TextChanged="NameChanged"/>
+                    <TextBlock FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"><Run Text="meridian.example/" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><Run x:Name="Slug" Text="your-workspace"/></TextBlock>
+                  </StackPanel>
+                  <StackPanel x:Name="OtherPane" Visibility="Collapsed">
+                    <TextBlock x:Name="PaneTitle" FontSize="14" FontWeight="Medium"/>
+                    <TextBlock x:Name="PaneDescription" FontSize="12" Margin="0,2,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextWrapping="Wrap"/>
+                  </StackPanel>
+                </Grid>
+                <Border Margin="0,20,0,0" Padding="0,16,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
+                  <DockPanel LastChildFill="False">
+                    <arc:Button x:Name="Back" DockPanel.Dock="Left" Content="Back" Variant="Secondary" Click="BackClick"/>
+                    <arc:Button DockPanel.Dock="Right" Content="Continue" Click="ContinueClick"/>
+                  </DockPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </Border>
   </StackPanel>
 </UserControl>

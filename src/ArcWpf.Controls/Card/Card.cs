@@ -289,7 +289,7 @@ public partial class MetricCard : Card
         if (_valueBlock is not null) _valueBlock.RenderTransform = _valueMove;
         if (_numberHost is not null)
         {
-            _ticker = new OdometerNumber { FontSize = 30, FontWeight = FontWeights.Medium, Visibility = double.IsFinite(NumericValue) ? Visibility.Visible : Visibility.Collapsed };
+            _ticker = new OdometerNumber { FontSize = 36, FontWeight = FontWeights.Medium, Visibility = double.IsFinite(NumericValue) ? Visibility.Visible : Visibility.Collapsed };
             _ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
             _ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
             _numberHost.Children.Add(_ticker);

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
@@ -79,7 +80,7 @@ public partial class UsageMeter : Control
     private Border? _overTint;
     private Rectangle? _overHatch;
     private Border? _limitMarker;
-    private WrapPanel? _legend;
+    private UniformGrid? _legend;
     private readonly List<(UsageMeterSegment Segment, Border Visual)> _segmentVisuals = [];
     private readonly List<LegendEntry> _legendEntries = [];
     private string? _hoveredId, _focusedId, _pinnedId;
@@ -152,7 +153,7 @@ public partial class UsageMeter : Control
         _ticker = null;
         if (_numberHost is not null)
         {
-            _ticker = new OdometerNumber { FontSize = 28, FontWeight = FontWeights.Medium, RevealOnLoad = false };
+            _ticker = new OdometerNumber { FontSize = 36, FontWeight = FontWeights.Medium, RevealOnLoad = false };
             _ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
             _ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
             _numberHost.Children.Add(_ticker);
@@ -163,7 +164,8 @@ public partial class UsageMeter : Control
         _overTint = GetTemplateChild("PART_OverTint") as Border;
         _overHatch = GetTemplateChild("PART_OverHatch") as Rectangle;
         _limitMarker = GetTemplateChild("PART_LimitMarker") as Border;
-        _legend = GetTemplateChild("PART_Legend") as WrapPanel;
+        _legend = GetTemplateChild("PART_Legend") as UniformGrid;
+        if (_legend is not null) _legend.SizeChanged += (_, _) => FitLegendColumns();
         _segmentVisuals.Clear();
         if (_track is not null) _track.SizeChanged += TrackSizeChanged;
         if (_segmentsCanvas is not null)
@@ -201,7 +203,7 @@ public partial class UsageMeter : Control
         UpdateBadge(statusText, animate);
         if (previousStatus != status && IsLoaded)
             UIElementAutomationPeer.FromElement(this)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
-        SetValue(CaptionPropertyKey, $"{Unit} of {Format(Limit)} used".Trim());
+        SetValue(CaptionPropertyKey, $"{Unit} of {LimitText} used".Trim());
         if (_fill is not null) _fill.Visibility = Segments.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         if (_segmentsCanvas is not null) _segmentsCanvas.Visibility = Segments.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         if (_scale is not null)
@@ -214,6 +216,7 @@ public partial class UsageMeter : Control
         UpdateTrack(animate);
         UpdateLegend();
     }
+    private string LimitText => Regex.Replace(Format(Limit), @"[.,]0+(?= |$)", "");
     private string Format(double value) => $"{Math.Round(value, Decimals).ToString($"F{Decimals}", CultureInfo.CurrentCulture)} {Unit}".Trim();
     private void RebuildSegments()
     {
@@ -319,7 +322,7 @@ public partial class UsageMeter : Control
         {
             bool remainder = index == Segments.Count;
             string id = remainder ? "free" : Segments[index].Id;
-            var swatch = new Border { Width = 10, Height = 10, CornerRadius = new CornerRadius(3), Margin = new Thickness(0, 0, 8, 0) };
+            var swatch = new Border { Width = 10, Height = 10, CornerRadius = new CornerRadius(3), Margin = new Thickness(1, 0, 9, 0) };
             swatch.SetResourceReference(Border.BackgroundProperty, remainder ? "ArcWpf.Brush.UsageTrack" : $"ArcWpf.Brush.UsageSegment{Math.Min(index, 3)}");
             var label = new TextBlock { TextWrapping = TextWrapping.Wrap, MaxWidth = 130, FontSize = 14 };
             label.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextSecondary");
@@ -332,15 +335,15 @@ public partial class UsageMeter : Control
             ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
             var unit = new TextBlock { FontSize = 14, Margin = new Thickness(4, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             unit.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextSecondary");
-            var amount = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(18, 2, 0, 0) };
+            var amount = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(20, 2, 0, 0) };
             amount.Children.Add(ticker);
             amount.Children.Add(unit);
             var content = new StackPanel();
             content.Children.Add(heading);
             content.Children.Add(value);
             content.Children.Add(amount);
-            var button = new ToggleButton { Tag = id, Content = content, HorizontalContentAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 2, 2) };
-            button.Style = TryFindResource("ArcWpf.UsageMeter.LegendButton") as Style;
+            var button = new ToggleButton { Tag = id, Content = content, HorizontalContentAlignment = HorizontalAlignment.Left, Margin = new Thickness(1) };
+            button.Style = _legend.TryFindResource("ArcWpf.UsageMeter.LegendButton") as Style;
             button.Click += LegendClicked;
             button.MouseEnter += LegendMouseEnter;
             button.MouseLeave += LegendMouseLeave;
@@ -350,10 +353,17 @@ public partial class UsageMeter : Control
             _legend.Children.Add(button);
             _legendEntries.Add(new LegendEntry(id, button, label, value, ticker, unit, swatch));
         }
+        FitLegendColumns();
         if (_rovingIndex >= _legendEntries.Count) _rovingIndex = 0;
         if (_pinnedId is not null && !_legendEntries.Any(entry => entry.Id == _pinnedId)) _pinnedId = null;
         UpdateLegend();
         if (_revealed && IsLoaded) RevealNumbers();
+    }
+    private void FitLegendColumns()
+    {
+        if (_legend is null) return;
+        int count = Math.Max(1, _legendEntries.Count);
+        _legend.Columns = _legend.ActualWidth <= 0 ? count : Math.Clamp((int)(_legend.ActualWidth / 110), 1, count);
     }
     private void UpdateLegend()
     {
@@ -378,7 +388,7 @@ public partial class UsageMeter : Control
             visual.Opacity = active is null || segment.Id == active ? 1 : .28;
         if (_value is null) return;
         double displayValue = Total;
-        if (active is null) { _value.Text = Format(Total); SetValue(CaptionPropertyKey, $"{Unit} of {Format(Limit)} used".Trim()); }
+        if (active is null) { _value.Text = Format(Total); SetValue(CaptionPropertyKey, $"{Unit} of {LimitText} used".Trim()); }
         else if (active == "free")
         {
             displayValue = Status == UsageMeterStatus.Over ? Over : Free;
@@ -392,7 +402,8 @@ public partial class UsageMeter : Control
             double share = Limit > 0 ? Math.Round(segment.Value / Limit * 100) : 0;
             SetValue(CaptionPropertyKey, $"{Unit} in {segment.Label} · {share}% of plan".Trim());
         }
-        _ticker?.Set(displayValue, _value.Text, true);
+        // The caption carries the unit (usage-meter.tsx), so the rolling digits are the number alone.
+        _ticker?.Set(displayValue, Math.Round(displayValue, Decimals).ToString($"F{Decimals}", CultureInfo.CurrentCulture), true);
     }
     private void LegendClicked(object sender, RoutedEventArgs e)
     {

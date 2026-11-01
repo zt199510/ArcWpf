@@ -9,3 +9,5 @@
 `CanCollapseLeft/Right`、双向 `IsLeftCollapsed/IsRightCollapsed`、`DefaultSplitRatio` 与 `Reset()` 提供双栏折叠/恢复。越界拖动达到 `max(min * .5, 40)` 阈值后折叠；折叠列宽归零、内容不命中、分隔条显示恢复按钮。Left/Right 每次移动 16 DIP，Shift 为 64 DIP；Home/End 到两侧边界，继续越界可折叠，Enter 折叠/恢复，双击恢复默认比例。连续按键以目标 `SplitRatio` 计算，避免在下一帧布局前丢步。
 
 多栏模式由每个面板的 DefaultSize 归一化为份额，在 Grid 中为每对相邻面板生成分隔条与恢复按钮；拖拽只更新相邻两栏，结束后发布 `Shares`。默认折叠面板恢复其配置份额；窗口宽度不足全部 MinSize 时按比例缩小下限，面板内容裁剪于本栏。动态分隔条复用双栏模板的 1 DIP 线与 6 DIP 命中区。释放时取最近 90ms 的拖拽样本，末次样本超过 50ms 则不投影；按来源 `velocity / 1000 * .99 / (1 - .99)` 仅决定折叠，不推动普通分栏位置。当前收放列宽立即更新；来源的收放宽度弹簧、触摸捕获实测和逐分隔条 UIA RangeValue 仍未实现或验收。
+
+2026-11-01 布局对照：见[验证记录](../verification/2026-11-01-layout-alignment.md)。程序化检查与离屏渲染已有结果，真实窗口待复验。

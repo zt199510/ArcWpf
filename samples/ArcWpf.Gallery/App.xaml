@@ -1,3 +1,14 @@
 <Application x:Class="ArcWpf.Gallery.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:core="clr-namespace:ArcWpf;assembly=ArcWpf.Core" StartupUri="MainWindow.xaml">
-  <Application.Resources><ResourceDictionary><ResourceDictionary.MergedDictionaries><core:ArcThemeResources /></ResourceDictionary.MergedDictionaries></ResourceDictionary></Application.Resources>
+  <Application.Resources><ResourceDictionary><ResourceDictionary.MergedDictionaries><core:ArcThemeResources /></ResourceDictionary.MergedDictionaries>
+    <!-- Arc docs preview canvas (docs_canvas): a bordered muted panel that centers the demo. Padding is clamp(18, 3.5vw, 44) at the Gallery's 1000 wide window. -->
+    <Style x:Key="Gallery.PreviewCanvas" TargetType="Border">
+      <Setter Property="MinHeight" Value="520"/><Setter Property="Padding" Value="35"/><Setter Property="CornerRadius" Value="26"/><Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/>
+    </Style>
+    <!-- The surface every Arc demo card shares: border, radius-surface 34, padding 24. -->
+    <Style x:Key="Gallery.DemoCard" TargetType="Border">
+      <Setter Property="Padding" Value="24"/><Setter Property="CornerRadius" Value="34"/><Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/>
+    </Style>
+  </ResourceDictionary></Application.Resources>
 </Application>

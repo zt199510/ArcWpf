@@ -1,8 +1,8 @@
 <UserControl x:Class="ArcWpf.Gallery.Pages.CardPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
     <TextBlock Text="Card" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
-    <StackPanel Orientation="Horizontal">
-      <arc:Card x:Name="ProjectCard" Width="320" Title="Harbour redesign" Description="New booking flow and room pages." Meta="Maya Chen" Status="Updated 2 hours ago">
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}"><StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <arc:Card x:Name="ProjectCard" Width="320" HorizontalAlignment="Center" Title="Harbour redesign" Description="New booking flow and room pages." Meta="Maya Chen" Status="Updated 2 hours ago">
         <arc:Card.Media>Harbour preview</arc:Card.Media>
         <arc:Card.MediaTemplate><DataTemplate>
           <Grid Height="128" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}">
@@ -12,10 +12,10 @@
           </Grid>
         </DataTemplate></arc:Card.MediaTemplate>
         <arc:Card.Avatar><Border Width="32" Height="32" CornerRadius="16" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}"><TextBlock Text="MC" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/></Border></arc:Card.Avatar>
-        <arc:Card.Action><Button Content="Open" Click="OpenProject" Padding="8,4"/></arc:Card.Action>
-        <arc:Card.Details><TextBlock Text="Scope, milestones, and open questions for the booking flow." TextWrapping="Wrap"/></arc:Card.Details>
+        <arc:Card.Action><arc:Button Content="Open" Variant="Secondary" Size="Small" Click="OpenProject"/></arc:Card.Action>
+        <arc:Card.Details><TextBlock Text="Scope, milestones, and open questions." TextWrapping="Wrap"/></arc:Card.Details>
       </arc:Card>
-      <arc:MetricCard Width="220" Margin="16,0,0,0" Label="Uptime" NumericValue="99.9" Suffix="%" Context="Last 30 days" Change="+0.2%"/>
-    </StackPanel>
+      <arc:MetricCard Width="380" Margin="0,24,0,0" Label="Uptime" NumericValue="99.9" Suffix="%" Context="Last 30 days" Change="+0.2%"/>
+    </StackPanel></Border>
   </StackPanel>
 </UserControl>

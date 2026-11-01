@@ -330,4 +330,27 @@ namespace ArcWpf.Tests;
             if (FindButton(System.Windows.Media.VisualTreeHelper.GetChild(root, i)) is { } child) return child;
         return null;
     }
+
+    // stepper.module.css: a 28 marker starts on the edge, the last column is auto so it ends on the far edge, and the connector stops 8 short of each disc.
+    [TestMethod] public void HorizontalGeometryFollowsTheSourceColumns() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { CurrentIndex = 1 };
+        foreach (var title in new[] { "Profile", "Workspace", "Team", "Review" }) stepper.Steps.Add(new StepperStep { Title = title, Description = "Name and web address" });
+        var window = new Window { Content = stepper, Width = 700, Height = 300, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.UpdateLayout();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            FrameworkElement Part(int index, string name) => (FrameworkElement)items.ItemTemplate.FindName(name, (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(index)!)!;
+            double Left(FrameworkElement element) => element.TranslatePoint(new Point(), stepper).X;
+            Assert.AreEqual(0d, Left(Part(0, "MarkSurface")), .5);
+            Assert.AreEqual(28d, Part(0, "MarkSurface").ActualWidth, .5);
+            var last = (FrameworkElement)items.ItemContainerGenerator.ContainerFromIndex(3)!;
+            Assert.AreEqual(stepper.ActualWidth, Left(last) + last.ActualWidth, 1);
+            var connector = Part(0, "Connector");
+            Assert.AreEqual(36d, Left(connector), .5);
+            Assert.AreEqual(8d, Left(Part(1, "MarkSurface")) - (Left(connector) + connector.ActualWidth), .5);
+        }
+        finally { window.Close(); }
+    });
 }

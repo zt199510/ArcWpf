@@ -20,3 +20,5 @@
 - 字符列上下羽化以 OpacityMask 近似 CSS mask。
 - 货币名称与符号取自内置 en-US 表（无 Intl.NumberFormat）。
 - 菜单在窗口外点击时随窗口失活关闭。
+
+2026-11-01 布局对照：见[验证记录](../verification/2026-11-01-layout-alignment.md)。程序化检查与离屏渲染已有结果，真实窗口待复验。

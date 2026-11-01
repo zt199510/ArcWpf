@@ -58,7 +58,7 @@ namespace ArcWpf.Tests;
         {
             window.Show(); Sta.Pump(); meter.UpdateLayout();
             var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
-            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var legend = (System.Windows.Controls.Primitives.UniformGrid)meter.Template.FindName("PART_Legend", meter)!;
             var value = (System.Windows.Controls.TextBlock)meter.Template.FindName("PART_Value", meter)!;
             Assert.IsGreaterThan(0d, canvas.ActualWidth);
             Assert.HasCount(4, legend.Children);
@@ -89,7 +89,7 @@ namespace ArcWpf.Tests;
         try
         {
             window.Show(); Sta.Pump();
-            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var legend = (System.Windows.Controls.Primitives.UniformGrid)meter.Template.FindName("PART_Legend", meter)!;
             var first = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
             var second = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[1];
             first.Focus();
@@ -201,7 +201,7 @@ namespace ArcWpf.Tests;
         try
         {
             window.Show(); Sta.Pump();
-            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var legend = (System.Windows.Controls.Primitives.UniformGrid)meter.Template.FindName("PART_Legend", meter)!;
             var first = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
             var content = (System.Windows.Controls.StackPanel)first.Content;
             var amount = (System.Windows.Controls.StackPanel)content.Children[2];
@@ -235,7 +235,7 @@ namespace ArcWpf.Tests;
         try
         {
             window.Show(); Sta.Pump();
-            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var legend = (System.Windows.Controls.Primitives.UniformGrid)meter.Template.FindName("PART_Legend", meter)!;
             var first = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
             first.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, first));
             meter.UpdateLayout();
@@ -411,6 +411,38 @@ namespace ArcWpf.Tests;
             Assert.IsFalse(scale.HasAnimatedProperties);
             meter.WarningThreshold = .7;
             Assert.AreEqual(.75, scale.ScaleX, .01);
+        }
+        finally { window.Close(); }
+    });
+
+    // Regression: the legend style was a string key in Generic.xaml that code could not find, so the buttons fell back to default chrome; the readout also repeated the unit.
+    [TestMethod] public void LegendKeepsArcStyleAndReadoutShowsOneUnit() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 510, Label = "Storage", Limit = 15, Unit = "GB" };
+        meter.Segments.Add(new UsageMeterSegment { Id = "documents", Label = "Documents", Value = 4.2 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "photos", Label = "Photos", Value = 5.1 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "backups", Label = "Backups", Value = 3.1 });
+        var window = new System.Windows.Window { Content = meter, Width = 600, Height = 400, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); meter.UpdateLayout();
+            var legend = (System.Windows.Controls.Primitives.UniformGrid)meter.Template.FindName("PART_Legend", meter)!;
+            var button = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
+            Assert.IsNotNull(button.Style);
+            Assert.AreEqual(12d, ((System.Windows.Controls.Border)button.Template.FindName("Surface", button)!).CornerRadius.TopLeft);
+            Assert.AreEqual(4, legend.Columns);
+            Assert.AreEqual("GB of 15 GB used", meter.Caption);
+            var ticker = ((System.Windows.Controls.Grid)meter.Template.FindName("PART_NumberHost", meter)!).Children.OfType<OdometerNumber>().Single();
+            static IEnumerable<System.Windows.Controls.TextBlock> Texts(System.Windows.DependencyObject parent)
+            {
+                for (int index = 0; index < System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent); index++)
+                {
+                    var child = System.Windows.Media.VisualTreeHelper.GetChild(parent, index);
+                    if (child is System.Windows.Controls.TextBlock text) yield return text;
+                    foreach (var nested in Texts(child)) yield return nested;
+                }
+            }
+            Assert.IsFalse(Texts(ticker).Any(text => text.Text.Contains('G')), "The rolling digits must not repeat the caption's unit.");
         }
         finally { window.Close(); }
     });

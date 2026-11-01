@@ -457,4 +457,20 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+
+    // card.module.css has no resting shadow; metric-card.module.css uses radius-surface and the counter's text-3xl.
+    [TestMethod] public void SurfacesFollowTheirOwnSourceTokens() => Sta.Run(() =>
+    {
+        var card = new Card { Title = "Harbour redesign" };
+        var metric = new MetricCard { Label = "Uptime", NumericValue = 99.9, Context = "Last 30 days" };
+        var window = new Window { Content = new System.Windows.Controls.StackPanel { Children = { card, metric } }, Width = 600, Height = 500, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            Assert.IsNull(((System.Windows.Controls.Border)card.Template.FindName("PART_Surface", card)!).Effect);
+            Assert.AreEqual(34d, ((System.Windows.Controls.Border)metric.Template.FindName("PART_Surface", metric)!).CornerRadius.TopLeft);
+            Assert.AreEqual(36d, ((System.Windows.Controls.TextBlock)metric.Template.FindName("PART_Value", metric)!).FontSize);
+        }
+        finally { window.Close(); }
+    });
 }

@@ -1,6 +1,50 @@
 <UserControl x:Class="ArcWpf.Gallery.Pages.ResizablePanelsPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
-  <arc:ResizablePanels Height="360" Width="640" SplitRatio=".22" DefaultSplitRatio=".22" MinLeft="160" MinRight="80" CanCollapseLeft="True">
+    <TextBlock Text="ResizablePanels" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <!-- Arc 主示例（resizable-panels_demo）：最大 720 宽、320 高、圆角 26 的窗口，Sidebar 24 / Content 46 / Details 30。 -->
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Grid MaxWidth="720" Height="320" VerticalAlignment="Center">
+        <Border x:Name="WindowMask" CornerRadius="26" Background="{DynamicResource ArcWpf.Brush.Surface}"/>
+        <Grid>
+          <Grid.OpacityMask><VisualBrush Visual="{Binding ElementName=WindowMask}"/></Grid.OpacityMask>
+          <arc:ResizablePanels Label="Three panes">
+            <arc:ResizablePanels.Panels>
+                <arc:ResizablePanel Id="sidebar" Label="Sidebar" DefaultSize="24" MinSize="96" Collapsible="True">
+                  <Border Padding="16" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" x:Name="SidebarPane">
+                    <StackPanel>
+                      <TextBlock Text="Sidebar" FontSize="14" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                      <TextBlock x:Name="SidebarWidth" FontSize="12" Margin="0,2,0,16" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                      <StackPanel x:Name="SidebarLines"/>
+                    </StackPanel>
+                  </Border>
+                </arc:ResizablePanel>
+                <arc:ResizablePanel Id="content" Label="Content" DefaultSize="46" MinSize="140">
+                  <Border Padding="16" Background="{DynamicResource ArcWpf.Brush.Surface}" x:Name="ContentPane">
+                    <StackPanel>
+                      <TextBlock Text="Content" FontSize="14" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                      <TextBlock x:Name="ContentWidth" FontSize="12" Margin="0,2,0,16" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                      <StackPanel x:Name="ContentLines"/>
+                    </StackPanel>
+                  </Border>
+                </arc:ResizablePanel>
+                <arc:ResizablePanel Id="details" Label="Details" DefaultSize="30" MinSize="120" Collapsible="True">
+                  <Border Padding="16" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" x:Name="DetailsPane">
+                    <StackPanel>
+                      <TextBlock Text="Details" FontSize="14" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                      <TextBlock x:Name="DetailsWidth" FontSize="12" Margin="0,2,0,16" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                      <StackPanel x:Name="DetailsLines"/>
+                    </StackPanel>
+                  </Border>
+                </arc:ResizablePanel>
+            </arc:ResizablePanels.Panels>
+          </arc:ResizablePanels>
+        </Grid>
+        <Border CornerRadius="26" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" IsHitTestVisible="False"/>
+      </Grid>
+    </Border>
+    <!-- 扩展示例：双栏 API，复用文档 Usage 的 Folders / Messages。 -->
+    <TextBlock Text="双栏 API" FontSize="14" FontWeight="Medium" Margin="0,28,0,0"/>
+    <arc:ResizablePanels Height="280" Margin="0,8,0,0" SplitRatio=".22" DefaultSplitRatio=".22" MinLeft="160" MinRight="80" CanCollapseLeft="True">
     <arc:ResizablePanels.LeftContent><Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="16"><StackPanel>
       <TextBlock Text="Folders" FontSize="14" FontWeight="Medium" Margin="0,0,0,16"/>
       <TextBlock Text="Inbox" Margin="0,0,0,12"/><TextBlock Text="Starred" Margin="0,0,0,12"/><TextBlock Text="Drafts"/>
@@ -11,19 +55,6 @@
       <TextBlock Text="Launch checklist" FontWeight="Medium"/><TextBlock Text="Product team · Yesterday" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,2,0,18"/>
       <TextBlock Text="Project files" FontWeight="Medium"/><TextBlock Text="Alex Wu · Monday" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,2,0,0"/>
     </StackPanel></Border></arc:ResizablePanels.RightContent>
-  </arc:ResizablePanels>
-  <arc:ResizablePanels Height="240" Width="640" Label="Workspace" Margin="0,24,0,0">
-    <arc:ResizablePanels.Panels>
-      <arc:ResizablePanel Id="navigation" Label="Navigation" DefaultSize="22" MinSize="120" Collapsible="True">
-        <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="16"><StackPanel><TextBlock Text="Navigation" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="Overview"/><TextBlock Text="Reports" Margin="0,12,0,0"/></StackPanel></Border>
-      </arc:ResizablePanel>
-      <arc:ResizablePanel Id="workspace" Label="Workspace" DefaultSize="48" MinSize="160">
-        <Border Background="{DynamicResource ArcWpf.Brush.Surface}" Padding="16"><StackPanel><TextBlock Text="Workspace" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="Current work and recent files" TextWrapping="Wrap"/></StackPanel></Border>
-      </arc:ResizablePanel>
-      <arc:ResizablePanel Id="inspector" Label="Inspector" DefaultSize="30" MinSize="120" Collapsible="True">
-        <Border Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Padding="16"><StackPanel><TextBlock Text="Inspector" FontWeight="Medium" Margin="0,0,0,14"/><TextBlock Text="Details"/></StackPanel></Border>
-      </arc:ResizablePanel>
-    </arc:ResizablePanels.Panels>
   </arc:ResizablePanels>
   </StackPanel>
 </UserControl>

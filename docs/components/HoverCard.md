@@ -17,3 +17,5 @@
 真实 Windows 鼠标穿越、焦点外观、四边碰撞、明暗主题、Reduced/Off、100/150/200% DPI 与读屏需要与程序化证据分开记录。
 
 当前 Popup 外框承担阴影留白与鼠标跨缝命中，卡片宽度上限 296 DIP，长内容在内部 ScrollViewer 滚动。触发器 ContentPresenter 不再新增 Tab 停靠点，由原生子按钮/链接承载焦点；外部窗口点击即时关闭且不抢回触发器焦点。Popup 框架显式继承控件的 DataContext、FlowDirection 与 ArcMotion.Level。窗口位置/尺寸/DPI、锚点布局和内容尺寸变化触发重排；来源 12 DIP 碰撞区域和实际翻转已在显示窗口中测量。触摸合成鼠标事件的抑制已编码，物理触摸仍待验收。
+
+2026-11-01 布局对照：见[验证记录](../verification/2026-11-01-layout-alignment.md)。程序化检查与离屏渲染已有结果，真实窗口待复验。

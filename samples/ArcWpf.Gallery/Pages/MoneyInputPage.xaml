@@ -2,25 +2,29 @@
   <StackPanel>
     <TextBlock Text="MoneyInput" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
     <TextBlock Text="输入时数字按位分组且光标不跳动，缺失的小数位以淡色占位；快捷加额与方向键使数字按位滚动；超出余额时金额侧向回弹、范围文字闪黄；货币菜单高亮滑动。" TextWrapping="Wrap" Margin="0,0,0,18"/>
-    <!-- Arc 主示例（MoneyInputDemo 80715）：460 宽付款卡片，Pay Jasmine Brooks，余额按币种扣减。 -->
-    <Border Width="460" HorizontalAlignment="Left" Padding="24" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" CornerRadius="34">
-      <StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-          <arc:Avatar DisplayName="Jasmine Brooks" Width="40" Height="40" VerticalAlignment="Center" Margin="0,0,12,0"/>
-          <StackPanel VerticalAlignment="Center">
-            <TextBlock Text="Pay Jasmine Brooks" FontSize="18" FontWeight="Medium"/>
-            <TextBlock Text="Studio lunch, Thursday" Margin="0,2,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+    <!-- Arc 主示例（money-input_demo）：居中画布内 460 宽、最小 460 高且内容靠上的付款卡片，Pay Jasmine Brooks，余额按币种扣减。 -->
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Grid Width="460" MinHeight="460" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Style="{DynamicResource Gallery.DemoCard}" VerticalAlignment="Top">
+          <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+              <arc:Avatar DisplayName="Jasmine Brooks" Width="40" Height="40" VerticalAlignment="Center" Margin="0,0,12,0"/>
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Pay Jasmine Brooks" FontSize="18" FontWeight="Medium"/>
+                <TextBlock Text="Studio lunch, Thursday" FontSize="14" Margin="0,2,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+              </StackPanel>
+            </StackPanel>
+            <arc:MoneyInput x:Name="Amount" Label="Amount" Description="Arrow keys step by 1, Shift by 10" Minimum="100" ValueChanged="AmountChanged"/>
+            <Border Margin="0,20,0,0" Padding="0,16,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
+              <DockPanel LastChildFill="False">
+                <TextBlock DockPanel.Dock="Left" FontSize="12" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}">Balance <Run x:Name="Balance" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/></TextBlock>
+                <arc:Button x:Name="Pay" DockPanel.Dock="Right" Click="PayClick"/>
+              </DockPanel>
+            </Border>
+            <TextBlock x:Name="Sent" FontSize="12" Padding="0,12,0,0" Visibility="Collapsed" Foreground="{DynamicResource ArcWpf.Brush.Success}"/>
           </StackPanel>
-        </StackPanel>
-        <arc:MoneyInput x:Name="Amount" Label="Amount" Description="Arrow keys step by 1, Shift by 10" Minimum="100" ValueChanged="AmountChanged"/>
-        <Border Margin="0,20,0,0" Padding="0,16,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
-          <DockPanel LastChildFill="False">
-            <TextBlock x:Name="Balance" DockPanel.Dock="Left" FontSize="12" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
-            <arc:Button x:Name="Pay" DockPanel.Dock="Right" Click="PayClick"/>
-          </DockPanel>
         </Border>
-        <TextBlock x:Name="Sent" FontSize="12" Padding="0,12,0,0" Visibility="Collapsed" Foreground="{DynamicResource ArcWpf.Brush.Success}"/>
-      </StackPanel>
+      </Grid>
     </Border>
   </StackPanel>
 </UserControl>

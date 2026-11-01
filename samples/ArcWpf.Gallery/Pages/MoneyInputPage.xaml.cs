@@ -27,7 +27,7 @@ public partial class MoneyInputPage : UserControl
         long balance = _balances[info.Code];
         Amount.Maximum = balance;
         Amount.QuickAdd = info.Code == "JPY" ? [1000, 5000] : [10, 50, 100];
-        Balance.Text = $"Balance {info.Format(balance)}";
+        Balance.Text = info.Format(balance);
         long? value = Amount.Value;
         Pay.Content = value is long amount && amount > 0 ? $"Pay {info.Format(amount)}" : "Pay";
         Pay.IsEnabled = !_paying && value is long minor && minor >= 100 && minor <= balance;

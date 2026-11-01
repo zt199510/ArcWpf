@@ -195,8 +195,8 @@ public class MoneyInput : Control
         {
             _menu.Placement = PlacementMode.Custom;
             _menu.PlacementTarget = _control;
-            // The menu opens 8 DIP below the shell with its right edge on the shell's right edge.
-            _menu.CustomPopupPlacementCallback = (popup, target, _) => [new CustomPopupPlacement(new Point(target.Width - popup.Width, target.Height + 8), PopupPrimaryAxis.None)];
+            // The menu opens 8 DIP below the shell with its right edge on the shell's padding edge (right: -8 from the anchor); the surface sits 10 inside the popup to leave room for its shadow.
+            _menu.CustomPopupPlacementCallback = (popup, target, _) => [new CustomPopupPlacement(new Point(target.Width - popup.Width + 9, target.Height + 8), PopupPrimaryAxis.None)];
             BindingOperations.SetBinding(_menu.Child, ArcMotion.LevelProperty, new Binding { Source = this, Path = new PropertyPath(ArcMotion.LevelProperty) });
         }
         if (_list is not null)
