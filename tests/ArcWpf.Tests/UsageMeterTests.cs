@@ -145,9 +145,103 @@ namespace ArcWpf.Tests;
             var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
             var visual = (System.Windows.Controls.Border)canvas.Children[0];
             var light = ((System.Windows.Media.SolidColorBrush)visual.Background).Color;
+            var numberHost = (System.Windows.Controls.Grid)meter.Template.FindName("PART_NumberHost", meter)!;
+            var ticker = numberHost.Children.OfType<OdometerNumber>().Single();
+            var digitStrip = (System.Windows.Controls.Canvas)System.Windows.Media.VisualTreeHelper.GetChild(ticker.DigitColumns["i0"].Root, 0);
+            var digit = (System.Windows.Controls.TextBlock)digitStrip.Children[10];
+            var lightDigit = ((System.Windows.Media.SolidColorBrush)digit.Foreground).Color;
             theme.Mode = ArcWpf.ArcThemeMode.Dark;
             Sta.Pump();
             Assert.AreNotEqual(light, ((System.Windows.Media.SolidColorBrush)visual.Background).Color);
+            Assert.AreNotEqual(lightDigit, ((System.Windows.Media.SolidColorBrush)digit.Foreground).Color);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void ReadoutDigitColumnsRollThroughCarryAndReleaseClocks() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 320, Used = 99, Limit = 100, Decimals = 0 };
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var window = new System.Windows.Window { Content = meter, Width = 400, Height = 260, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var host = (System.Windows.Controls.Grid)meter.Template.FindName("PART_NumberHost", meter)!;
+            var ticker = host.Children.OfType<OdometerNumber>().Single();
+            var readout = (System.Windows.Controls.TextBlock)meter.Template.FindName("PART_Value", meter)!;
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(550) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            meter.Used = 100;
+            Assert.AreEqual("100", readout.Text);
+            Assert.AreEqual(0, ticker.DigitColumns["i0"].Digit);
+            Assert.AreEqual(0, ticker.DigitColumns["i1"].Digit);
+            Assert.IsTrue(ticker.IsMotionRunning);
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(900) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            meter.Used = 99;
+            Assert.AreEqual(9, ticker.DigitColumns["i0"].Digit);
+            Assert.AreEqual(9, ticker.DigitColumns["i1"].Digit);
+            ArcMotion.SetLevel(meter, ArcMotionLevel.Off);
+            Assert.IsFalse(ticker.IsMotionRunning);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void LegendCategoryValueRollsWithoutRecreatingItsButton() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 340, Limit = 50, Unit = "GB", Decimals = 0 };
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 20 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "media", Label = "Media", Value = 10 });
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var window = new System.Windows.Window { Content = meter, Width = 430, Height = 280, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var first = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
+            var content = (System.Windows.Controls.StackPanel)first.Content;
+            var amount = (System.Windows.Controls.StackPanel)content.Children[2];
+            var ticker = (OdometerNumber)amount.Children[0];
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            meter.Segments[0].Value = 21;
+            Assert.AreSame(first, legend.Children[0]);
+            Assert.AreEqual(1, ticker.DigitColumns["i0"].Digit);
+            Assert.IsTrue(ticker.IsMotionRunning);
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            Assert.AreEqual("GB", ((System.Windows.Controls.TextBlock)amount.Children[1]).Text);
+            meter.Segments[0].Value = 22;
+            Assert.IsTrue(ticker.IsMotionRunning);
+            ArcMotion.SetLevel(meter, ArcMotionLevel.Off);
+            Assert.IsFalse(ticker.IsMotionRunning);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void NarrowCaptionUsesRemainingWidthWithoutOverflow() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 220, Limit = 50, Unit = "GB" };
+        meter.Segments.Add(new UsageMeterSegment { Id = "archives", Label = "Long-term media archives and imported files", Value = 21.4 });
+        var window = new System.Windows.Window { Content = meter, Width = 310, Height = 320, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var first = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
+            first.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, first));
+            meter.UpdateLayout();
+            var caption = (System.Windows.Controls.TextBlock)meter.Template.FindName("PART_Caption", meter)!;
+            Assert.IsTrue(caption.Text.Contains("Long-term media archives", StringComparison.Ordinal));
+            Assert.IsTrue(caption.ActualWidth > 0);
+            Assert.IsTrue(caption.TranslatePoint(new System.Windows.Point(), meter).X + caption.ActualWidth <= meter.ActualWidth + 1);
         }
         finally { window.Close(); }
     });

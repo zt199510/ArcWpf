@@ -71,6 +71,8 @@ public class UsageMeter : Control
     private ScaleTransform? _scale;
     private readonly OwnedMotion _motion = new();
     private TextBlock? _value;
+    private Grid? _numberHost;
+    private OdometerNumber? _ticker;
     private readonly HashSet<UsageMeterSegment> _observed = [];
     private Border? _track;
     private Canvas? _segmentsCanvas;
@@ -82,7 +84,7 @@ public class UsageMeter : Control
     private readonly List<LegendEntry> _legendEntries = [];
     private string? _hoveredId, _focusedId, _pinnedId;
     private int _rovingIndex;
-    private sealed record LegendEntry(string Id, ToggleButton Button, TextBlock Label, TextBlock Value, Border Swatch);
+    private sealed record LegendEntry(string Id, ToggleButton Button, TextBlock Label, TextBlock Value, OdometerNumber Ticker, TextBlock Unit, Border Swatch);
     public double Used { get => (double)GetValue(UsedProperty); set => SetValue(UsedProperty, value); }
     public double Limit { get => (double)GetValue(LimitProperty); set => SetValue(LimitProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
@@ -104,7 +106,7 @@ public class UsageMeter : Control
     public UsageMeter()
     {
         Segments.CollectionChanged += SegmentsChanged;
-        Unloaded += (_, _) => _motion.Stop();
+        Unloaded += (_, _) => { _motion.Stop(); StopNumberMotion(); };
         AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
     }
     private void SegmentsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -128,6 +130,7 @@ public class UsageMeter : Control
     public override void OnApplyTemplate()
     {
         _motion.Stop();
+        _ticker?.Stop();
         if (_track is not null) _track.SizeChanged -= TrackSizeChanged;
         if (_segmentsCanvas is not null)
         {
@@ -139,6 +142,16 @@ public class UsageMeter : Control
         base.OnApplyTemplate();
         _fill = GetTemplateChild("PART_Fill") as Border;
         _value = GetTemplateChild("PART_Value") as TextBlock;
+        _numberHost = GetTemplateChild("PART_NumberHost") as Grid;
+        _ticker = null;
+        if (_numberHost is not null)
+        {
+            _ticker = new OdometerNumber { FontSize = 28, FontWeight = FontWeights.Medium };
+            _ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
+            _ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
+            _numberHost.Children.Add(_ticker);
+        }
+        if (_value is not null && _ticker is not null) _value.Visibility = Visibility.Collapsed;
         _track = GetTemplateChild("PART_Track") as Border;
         _segmentsCanvas = GetTemplateChild("PART_Segments") as Canvas;
         _overTint = GetTemplateChild("PART_OverTint") as Border;
@@ -266,9 +279,15 @@ public class UsageMeter : Control
             entry.Button.GotKeyboardFocus -= LegendFocused;
             entry.Button.LostKeyboardFocus -= LegendBlurred;
             entry.Button.PreviewKeyDown -= LegendKeyDown;
+            entry.Ticker.Stop();
         }
         _legendEntries.Clear();
         _legend?.Children.Clear();
+    }
+    private void StopNumberMotion()
+    {
+        _ticker?.Stop();
+        foreach (var entry in _legendEntries) entry.Ticker.Stop();
     }
     private void RebuildLegend()
     {
@@ -285,10 +304,19 @@ public class UsageMeter : Control
             var heading = new StackPanel { Orientation = Orientation.Horizontal };
             heading.Children.Add(swatch);
             heading.Children.Add(label);
-            var value = new TextBlock { FontSize = 16, FontWeight = FontWeights.Medium, Margin = new Thickness(18, 2, 0, 0) };
+            var value = new TextBlock { Visibility = Visibility.Collapsed };
+            var ticker = new OdometerNumber { FontSize = 16, FontWeight = FontWeights.Medium };
+            ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
+            ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
+            var unit = new TextBlock { FontSize = 14, Margin = new Thickness(4, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            unit.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextSecondary");
+            var amount = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(18, 2, 0, 0) };
+            amount.Children.Add(ticker);
+            amount.Children.Add(unit);
             var content = new StackPanel();
             content.Children.Add(heading);
             content.Children.Add(value);
+            content.Children.Add(amount);
             var button = new ToggleButton { Tag = id, Content = content, HorizontalContentAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 2, 2) };
             button.Style = TryFindResource("ArcWpf.UsageMeter.LegendButton") as Style;
             button.Click += LegendClicked;
@@ -298,7 +326,7 @@ public class UsageMeter : Control
             button.LostKeyboardFocus += LegendBlurred;
             button.PreviewKeyDown += LegendKeyDown;
             _legend.Children.Add(button);
-            _legendEntries.Add(new LegendEntry(id, button, label, value, swatch));
+            _legendEntries.Add(new LegendEntry(id, button, label, value, ticker, unit, swatch));
         }
         if (_rovingIndex >= _legendEntries.Count) _rovingIndex = 0;
         if (_pinnedId is not null && !_legendEntries.Any(entry => entry.Id == _pinnedId)) _pinnedId = null;
@@ -315,6 +343,8 @@ public class UsageMeter : Control
             double amount = remainder ? Status == UsageMeterStatus.Over ? Over : Free : Segments[index].Value;
             entry.Label.Text = remainder ? Status == UsageMeterStatus.Over ? OverLabel : FreeLabel : Segments[index].Label;
             entry.Value.Text = Format(amount);
+            entry.Ticker.Set(amount, Math.Round(amount, Decimals).ToString($"F{Decimals}", CultureInfo.CurrentCulture), true);
+            entry.Unit.Text = Unit;
             entry.Button.IsChecked = entry.Id == _pinnedId;
             entry.Button.Opacity = active is null || entry.Id == active ? 1 : .45;
             entry.Button.IsTabStop = index == _rovingIndex;
@@ -324,18 +354,22 @@ public class UsageMeter : Control
         foreach (var (segment, visual) in _segmentVisuals)
             visual.Opacity = active is null || segment.Id == active ? 1 : .28;
         if (_value is null) return;
+        double displayValue = Total;
         if (active is null) { _value.Text = Format(Total); SetValue(CaptionPropertyKey, $"{Unit} of {Format(Limit)} used".Trim()); }
         else if (active == "free")
         {
-            _value.Text = Format(Status == UsageMeterStatus.Over ? Over : Free);
+            displayValue = Status == UsageMeterStatus.Over ? Over : Free;
+            _value.Text = Format(displayValue);
             SetValue(CaptionPropertyKey, $"{Unit} {(Status == UsageMeterStatus.Over ? "over the limit" : "free")}".Trim());
         }
         else if (Segments.FirstOrDefault(segment => segment.Id == active) is { } segment)
         {
+            displayValue = segment.Value;
             _value.Text = Format(segment.Value);
             double share = Limit > 0 ? Math.Round(segment.Value / Limit * 100) : 0;
             SetValue(CaptionPropertyKey, $"{Unit} in {segment.Label} · {share}% of plan".Trim());
         }
+        _ticker?.Set(displayValue, _value.Text, true);
     }
     private void LegendClicked(object sender, RoutedEventArgs e)
     {
@@ -403,7 +437,7 @@ public class UsageMeter : Control
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.Property == ArcMotion.LevelProperty && _motion is not null) { _motion.Stop(); Refresh(false); }
+        if (e.Property == ArcMotion.LevelProperty && _motion is not null) { _motion.Stop(); StopNumberMotion(); Refresh(false); }
     }
     protected override AutomationPeer OnCreateAutomationPeer() => new UsageMeterPeer(this);
     private sealed class UsageMeterPeer(UsageMeter owner) : FrameworkElementAutomationPeer(owner)

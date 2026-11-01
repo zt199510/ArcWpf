@@ -53,26 +53,136 @@ namespace ArcWpf.Tests;
         {
             window.Show(); Sta.Pump();
             var value = (System.Windows.Controls.TextBlock)card.Template.FindName("PART_Value", card)!;
-            var move = (System.Windows.Media.TranslateTransform)value.RenderTransform;
+            var host = (System.Windows.Controls.Grid)card.Template.FindName("PART_NumberHost", card)!;
+            var ticker = host.Children.OfType<OdometerNumber>().Single();
+            Assert.AreEqual(Visibility.Collapsed, value.Visibility);
             card.NumericValue = 30;
-            Assert.IsTrue(value.HasAnimatedProperties);
+            Assert.IsTrue(ticker.IsMotionRunning);
+            Assert.AreEqual(3, ticker.DigitColumns["i1"].Digit);
+            Assert.AreEqual(0, ticker.DigitColumns["i0"].Digit);
             var frame = new System.Windows.Threading.DispatcherFrame();
-            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(450) };
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
             timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
             timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
             Assert.AreEqual("30k", value.Text);
-            Assert.AreEqual(0d, move.Y, .01);
-            Assert.AreEqual(1d, value.Opacity, .01);
-            Assert.IsFalse(value.HasAnimatedProperties);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            ticker.UpdateLayout();
+            Assert.IsTrue(ticker.ActualWidth > 0 && ticker.ActualHeight > 0);
+            var bitmap = new System.Windows.Media.Imaging.RenderTargetBitmap((int)Math.Ceiling(ticker.ActualWidth), (int)Math.Ceiling(ticker.ActualHeight), 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+            bitmap.Render(ticker);
+            var pixels = new byte[bitmap.PixelWidth * bitmap.PixelHeight * 4];
+            bitmap.CopyPixels(pixels, bitmap.PixelWidth * 4, 0);
+            Assert.IsTrue(pixels.Where((_, index) => index % 4 == 3).Any(alpha => alpha > 0), "Digit canvas must render visible glyph pixels.");
+            double before = ticker.DigitColumns["i0"].Position;
             card.NumericValue = 29;
             var sampleFrame = new System.Windows.Threading.DispatcherFrame();
-            var sampleTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(40) };
+            var sampleTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
             sampleTimer.Tick += (_, _) => { sampleTimer.Stop(); sampleFrame.Continue = false; };
             sampleTimer.Start(); System.Windows.Threading.Dispatcher.PushFrame(sampleFrame);
-            Assert.IsTrue(move.Y < 0, $"Downward value should enter from above, Y={move.Y}");
+            Assert.IsTrue(ticker.DigitColumns["i0"].Position > before, $"before={before}, now={ticker.DigitColumns["i0"].Position}, running={ticker.IsMotionRunning}");
             ArcMotion.SetLevel(card, ArcMotionLevel.Off);
-            Assert.AreEqual(0d, move.Y, .001);
-            Assert.IsFalse(value.HasAnimatedProperties);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            Assert.AreEqual(9, ticker.DigitColumns["i0"].Digit);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void MetricCarryColumnGrowsAndRetiresWithoutResidualVisual() => Sta.Run(() =>
+    {
+        var card = new MetricCard { Width = 420, Label = "Requests", NumericValue = 99 };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var window = new Window { Content = card, Width = 500, Height = 250, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var host = (System.Windows.Controls.Grid)card.Template.FindName("PART_NumberHost", card)!;
+            var ticker = host.Children.OfType<OdometerNumber>().Single();
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            card.NumericValue = 100;
+            var hundreds = ticker.DigitColumns["i2"];
+            Assert.IsTrue(hundreds.Root.HasAnimatedProperties);
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(900) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(hundreds.NaturalWidth, hundreds.Root.Width, .01);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            card.NumericValue = 99;
+            Assert.IsTrue(hundreds.Root.HasAnimatedProperties);
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(900) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            Assert.IsNull(hundreds.Root.Parent);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void RapidMetricRetargetKeepsDigitColumnsInCycle() => Sta.Run(() =>
+    {
+        var card = new MetricCard { Width = 420, Label = "Requests", NumericValue = 98 };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var window = new Window { Content = card, Width = 500, Height = 250, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var host = (System.Windows.Controls.Grid)card.Template.FindName("PART_NumberHost", card)!;
+            var ticker = host.Children.OfType<OdometerNumber>().Single();
+            for (int value = 99; value <= 120; value++) card.NumericValue = value;
+            Assert.AreEqual(0, ticker.DigitColumns["i0"].Digit);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(900) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(ticker.IsMotionRunning);
+            Assert.AreEqual("120", ((System.Windows.Controls.TextBlock)card.Template.FindName("PART_Value", card)!).Text);
+            Assert.IsTrue(ticker.DigitColumns["i0"].Position < 0);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void NumericValueCanReturnToLegacyStringWithoutLosingTemplate() => Sta.Run(() =>
+    {
+        var card = new MetricCard { Width = 320, Label = "Count", Value = "42", NumericValue = 42 };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Off);
+        var window = new Window { Content = card, Width = 400, Height = 230, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var text = (System.Windows.Controls.TextBlock)card.Template.FindName("PART_Value", card)!;
+            var host = (System.Windows.Controls.Grid)card.Template.FindName("PART_NumberHost", card)!;
+            var ticker = host.Children.OfType<OdometerNumber>().Single();
+            Assert.AreEqual(Visibility.Collapsed, text.Visibility);
+            card.NumericValue = double.NaN;
+            Assert.AreEqual("42", text.Text);
+            Assert.AreEqual(Visibility.Visible, text.Visibility);
+            Assert.AreEqual(Visibility.Collapsed, ticker.Visibility);
+            card.NumericValue = 42;
+            Assert.AreEqual(Visibility.Collapsed, text.Visibility);
+            Assert.AreEqual(Visibility.Visible, ticker.Visibility);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void MetricTemplateReplacementReleasesOldDigitVisual() => Sta.Run(() =>
+    {
+        var card = new MetricCard { Width = 320, Label = "Count", NumericValue = 24 };
+        var window = new Window { Content = card, Width = 400, Height = 230, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var original = card.Template;
+            var oldHost = (System.Windows.Controls.Grid)card.Template.FindName("PART_NumberHost", card)!;
+            var oldTicker = oldHost.Children.OfType<OdometerNumber>().Single();
+            card.Template = new System.Windows.Controls.ControlTemplate(typeof(MetricCard)) { VisualTree = new FrameworkElementFactory(typeof(System.Windows.Controls.Border)) };
+            card.ApplyTemplate();
+            card.NumericValue = 30;
+            Assert.IsFalse(oldTicker.IsMotionRunning);
+            card.Template = original;
+            card.ApplyTemplate(); Sta.Pump();
+            var host = (System.Windows.Controls.Grid)card.Template.FindName("PART_NumberHost", card)!;
+            Assert.AreEqual("30", ((System.Windows.Controls.TextBlock)card.Template.FindName("PART_Value", card)!).Text);
+            Assert.AreNotSame(oldTicker, host.Children.OfType<OdometerNumber>().Single());
         }
         finally { window.Close(); }
     });

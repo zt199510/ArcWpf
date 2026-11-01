@@ -57,7 +57,9 @@
               <TextBlock x:Name="TrendText" Text="{TemplateBinding DisplayChange}" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
             </Border>
           </Grid>
-          <TextBlock x:Name="PART_Value" Text="{TemplateBinding DisplayValue}" FontSize="30" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+          <Grid x:Name="PART_NumberHost">
+            <TextBlock x:Name="PART_Value" Text="{TemplateBinding DisplayValue}" FontSize="30" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+          </Grid>
           <TextBlock x:Name="ContextText" Text="{TemplateBinding Context}" Margin="0,16,0,0" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextTrimming="CharacterEllipsis"/>
           <ContentPresenter x:Name="MetricBody" Content="{TemplateBinding Content}" Margin="0,14,0,0"/>
           <ContentPresenter x:Name="MetricFooter" Content="{TemplateBinding Footer}" Margin="0,14,0,0"/>

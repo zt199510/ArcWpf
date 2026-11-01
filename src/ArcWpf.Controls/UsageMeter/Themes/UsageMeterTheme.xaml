@@ -33,10 +33,11 @@
             <TextBlock Text="{TemplateBinding StatusText}" FontSize="12" FontWeight="Medium" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
           </Border>
         </Grid>
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-          <TextBlock x:Name="PART_Value" FontSize="28" FontWeight="Medium" VerticalAlignment="Bottom"/>
-          <TextBlock Text="{TemplateBinding Caption}" FontSize="14" Margin="8,0,0,2" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis"/>
-        </StackPanel>
+        <Grid Margin="0,0,0,16">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+          <Grid x:Name="PART_NumberHost" VerticalAlignment="Bottom"><TextBlock x:Name="PART_Value" FontSize="28" FontWeight="Medium" VerticalAlignment="Bottom"/></Grid>
+          <TextBlock x:Name="PART_Caption" Grid.Column="1" Text="{TemplateBinding Caption}" FontSize="14" Margin="8,0,0,2" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis"/>
+        </Grid>
         <Grid Height="24" Margin="0,0,0,10">
           <Border x:Name="PART_Track" Height="14" VerticalAlignment="Center" CornerRadius="7" Background="{DynamicResource ArcWpf.Brush.UsageTrack}" ClipToBounds="True">
             <Grid>

@@ -232,6 +232,8 @@ public class MetricCard : Card
     private static readonly DependencyPropertyKey IsCompactPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCompact), typeof(bool), typeof(MetricCard), new PropertyMetadata(false));
     public static readonly DependencyProperty IsCompactProperty = IsCompactPropertyKey.DependencyProperty;
     private TextBlock? _valueBlock;
+    private Grid? _numberHost;
+    private OdometerNumber? _ticker;
     private TranslateTransform? _valueMove;
     private readonly OwnedMotion _valueMotion = new();
     private int _valueDirection = 1;
@@ -250,14 +252,26 @@ public class MetricCard : Card
     public bool IsPositiveChange => (bool)GetValue(IsPositiveChangeProperty);
     public bool IsCompact => (bool)GetValue(IsCompactProperty);
     static MetricCard() { DefaultStyleKeyProperty.OverrideMetadata(typeof(MetricCard), new FrameworkPropertyMetadata(typeof(MetricCard))); }
-    public MetricCard() { RefreshMetric(); Unloaded += (_, _) => _valueMotion.Stop(); }
+    public MetricCard() { RefreshMetric(); Unloaded += (_, _) => { _valueMotion.Stop(); _ticker?.Stop(); }; }
     public override void OnApplyTemplate()
     {
         _valueMotion.Stop();
+        _ticker?.Stop();
         base.OnApplyTemplate();
         _valueBlock = GetTemplateChild("PART_Value") as TextBlock;
+        _numberHost = GetTemplateChild("PART_NumberHost") as Grid;
+        _ticker = null;
         _valueMove = _valueBlock is null ? null : new TranslateTransform();
         if (_valueBlock is not null) _valueBlock.RenderTransform = _valueMove;
+        if (_numberHost is not null)
+        {
+            _ticker = new OdometerNumber { FontSize = 30, FontWeight = FontWeights.Medium, Visibility = double.IsFinite(NumericValue) ? Visibility.Visible : Visibility.Collapsed };
+            _ticker.SetResourceReference(ForegroundProperty, "ArcWpf.Brush.Foreground");
+            _ticker.SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Body");
+            _numberHost.Children.Add(_ticker);
+            if (double.IsFinite(NumericValue)) _ticker.Set(NumericValue, DisplayValue, false);
+        }
+        if (_valueBlock is not null) _valueBlock.Visibility = double.IsFinite(NumericValue) ? Visibility.Collapsed : Visibility.Visible;
     }
     private static void OnMetricChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -265,6 +279,11 @@ public class MetricCard : Card
         if (e.Property == NumericValueProperty && e.OldValue is double oldValue && double.IsFinite(oldValue))
             card._valueDirection = (double)e.NewValue < oldValue ? -1 : 1;
         card.RefreshMetric();
+        bool numeric = double.IsFinite(card.NumericValue);
+        if (card._valueBlock is not null) card._valueBlock.Visibility = numeric ? Visibility.Collapsed : Visibility.Visible;
+        if (card._ticker is not null) card._ticker.Visibility = numeric ? Visibility.Visible : Visibility.Collapsed;
+        if (double.IsFinite(card.NumericValue)) card._ticker?.Set(card.NumericValue, card.DisplayValue, true);
+        else card._ticker?.Stop();
     }
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
@@ -272,6 +291,15 @@ public class MetricCard : Card
         if (e.Property == TitleProperty || e.Property == ValueProperty) RefreshMetric();
         if (e.Property == DisplayValueProperty && _valueBlock is not null && _valueMove is not null && IsLoaded)
         {
+            bool numeric = double.IsFinite(NumericValue);
+            _valueBlock.Visibility = numeric ? Visibility.Collapsed : Visibility.Visible;
+            if (_ticker is not null)
+            {
+                _ticker.Visibility = numeric ? Visibility.Visible : Visibility.Collapsed;
+                if (numeric) _ticker.Set(NumericValue, DisplayValue, true);
+                else _ticker.Stop();
+            }
+            if (numeric) { _valueMotion.Stop(); return; }
             bool animate = ArcMotion.GetLevel(this) == ArcMotionLevel.Full;
             _valueMotion.Stop();
             _valueBlock.Opacity = animate ? 0 : 1;
@@ -282,6 +310,7 @@ public class MetricCard : Card
         if (e.Property == ArcMotion.LevelProperty && ArcMotion.GetLevel(this) != ArcMotionLevel.Full)
         {
             _valueMotion.Stop();
+            _ticker?.Stop();
             if (_valueBlock is not null) _valueBlock.Opacity = 1;
             if (_valueMove is not null) _valueMove.Y = 0;
         }
