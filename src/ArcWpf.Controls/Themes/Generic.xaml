@@ -64,6 +64,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ColorPicker/Themes/ColorPickerTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/BottomSheet/Themes/BottomSheetTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/HoverCard/Themes/HoverCardTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ResizablePanels/Themes/ResizablePanelsTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

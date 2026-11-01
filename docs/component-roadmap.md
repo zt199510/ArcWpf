@@ -234,3 +234,9 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 - [x] 基于 Tooltip/Popover 生命周期实现 HoverCard，支持 hover 延迟打开/关闭、Escape 和四向 Popup。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，HoverCard 专项 3/3 通过。
 - [ ] Arc HoverCard Registry/CSS 来源恢复后延迟、碰撞、焦点、真实窗口和主题验收。
+
+## ResizablePanels 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback ResizablePanels，复用 GridSplitter，支持左右内容、比例、最小宽度和键盘/鼠标调整。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ResizablePanels 专项 3/3 通过。
+- [ ] Arc ResizablePanels Registry/CSS 来源恢复后拖拽把手、边界回弹、比例持久化和真实窗口验收。
