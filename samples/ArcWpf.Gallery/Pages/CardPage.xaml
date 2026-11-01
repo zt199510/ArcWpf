@@ -2,7 +2,19 @@
   <StackPanel>
     <TextBlock Text="Card" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
     <StackPanel Orientation="Horizontal">
-      <arc:Card Width="260" Title="Project Atlas" Description="A short project description"><TextBlock Text="Card content"/></arc:Card>
+      <arc:Card x:Name="ProjectCard" Width="320" Title="Harbour redesign" Description="New booking flow and room pages." Meta="Maya Chen" Status="Updated 2 hours ago">
+        <arc:Card.Media>Harbour preview</arc:Card.Media>
+        <arc:Card.MediaTemplate><DataTemplate>
+          <Grid Height="128" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}">
+            <Border Width="210" Height="98" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="8,8,0,0" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" Padding="12">
+              <StackPanel><TextBlock Text="Find a room" FontSize="13" FontWeight="Medium"/><Border Height="13" Margin="0,9,0,0" CornerRadius="4" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Grid Margin="0,7,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="8"/><ColumnDefinition/></Grid.ColumnDefinitions><Border Height="13" CornerRadius="4" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Border Grid.Column="2" Height="13" CornerRadius="4" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}"/></Grid></StackPanel>
+            </Border>
+          </Grid>
+        </DataTemplate></arc:Card.MediaTemplate>
+        <arc:Card.Avatar><Border Width="32" Height="32" CornerRadius="16" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}"><TextBlock Text="MC" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/></Border></arc:Card.Avatar>
+        <arc:Card.Action><Button Content="Open" Click="OpenProject" Padding="8,4"/></arc:Card.Action>
+        <arc:Card.Details><TextBlock Text="Scope, milestones, and open questions for the booking flow." TextWrapping="Wrap"/></arc:Card.Details>
+      </arc:Card>
       <arc:MetricCard Width="220" Margin="16,0,0,0" Label="Uptime" NumericValue="99.9" Suffix="%" Context="Last 30 days" Change="+0.2%"/>
     </StackPanel>
   </StackPanel>

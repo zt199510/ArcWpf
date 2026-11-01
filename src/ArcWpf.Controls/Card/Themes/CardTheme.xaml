@@ -5,18 +5,42 @@
     <Setter Property="BorderThickness" Value="1"/>
     <Setter Property="Padding" Value="20"/>
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:Card}">
-      <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="26" Padding="{TemplateBinding Padding}" Effect="{DynamicResource ArcWpf.Shadow.Resting}">
+      <Border x:Name="PART_Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="26" Effect="{DynamicResource ArcWpf.Shadow.Resting}">
         <StackPanel>
-          <TextBlock Text="{TemplateBinding Title}" FontSize="18" FontWeight="Medium" TextWrapping="Wrap"/>
-          <TextBlock x:Name="CardDescription" Text="{TemplateBinding Description}" Margin="0,8,0,0" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" TextWrapping="Wrap"/>
-          <ContentPresenter x:Name="CardBody" Content="{TemplateBinding Content}" Margin="0,14,0,0"/>
-          <ContentPresenter x:Name="CardFooter" Content="{TemplateBinding Footer}" Margin="0,20,0,0"/>
+          <Border x:Name="PART_MediaHost" MinHeight="112" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" CornerRadius="26,26,0,0" ClipToBounds="True">
+            <ContentPresenter Content="{TemplateBinding Media}" ContentTemplate="{TemplateBinding MediaTemplate}"/>
+          </Border>
+          <StackPanel Margin="{TemplateBinding Padding}">
+            <TextBlock x:Name="CardTitle" Text="{TemplateBinding Title}" FontSize="18" FontWeight="Medium" TextWrapping="Wrap"/>
+            <Button x:Name="PART_TitleButton" Content="{TemplateBinding Title}" FontSize="18" FontWeight="Medium" HorizontalAlignment="Left" Padding="0" Background="Transparent" BorderThickness="0" Visibility="Collapsed">
+              <Button.Template><ControlTemplate TargetType="Button"><Border Background="Transparent"><ContentPresenter/></Border></ControlTemplate></Button.Template>
+            </Button>
+            <TextBlock x:Name="CardDescription" Text="{TemplateBinding Description}" Margin="0,8,0,0" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" TextWrapping="Wrap"/>
+            <ContentPresenter x:Name="CardBody" Content="{TemplateBinding Content}" Margin="0,14,0,0"/>
+            <Grid x:Name="CardByline" Margin="0,20,0,0">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+              <Border x:Name="AvatarHost" Width="32" Height="32" CornerRadius="16" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" ClipToBounds="True"><ContentPresenter Content="{TemplateBinding Avatar}"/></Border>
+              <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+                <TextBlock x:Name="MetaText" Text="{TemplateBinding Meta}" FontSize="12" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                <TextBlock x:Name="PART_StatusText" Text="{TemplateBinding Status}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextTrimming="CharacterEllipsis"/>
+              </StackPanel>
+              <ContentPresenter x:Name="PART_ActionHost" Grid.Column="2" Content="{TemplateBinding Action}" VerticalAlignment="Center"/>
+            </Grid>
+            <ContentPresenter x:Name="CardFooter" Content="{TemplateBinding Footer}" Margin="0,20,0,0"/>
+          </StackPanel>
         </StackPanel>
       </Border>
       <ControlTemplate.Triggers>
+        <Trigger Property="Media" Value="{x:Null}"><Setter TargetName="PART_MediaHost" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="HasDetails" Value="True"><Setter TargetName="CardTitle" Property="Visibility" Value="Collapsed"/><Setter TargetName="PART_TitleButton" Property="Visibility" Value="Visible"/></Trigger>
         <Trigger Property="Description" Value=""><Setter TargetName="CardDescription" Property="Visibility" Value="Collapsed"/></Trigger>
         <Trigger Property="Content" Value="{x:Null}"><Setter TargetName="CardBody" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="HasByline" Value="False"><Setter TargetName="CardByline" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="Avatar" Value="{x:Null}"><Setter TargetName="AvatarHost" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="Meta" Value=""><Setter TargetName="MetaText" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="Status" Value=""><Setter TargetName="PART_StatusText" Property="Visibility" Value="Collapsed"/></Trigger>
         <Trigger Property="Footer" Value="{x:Null}"><Setter TargetName="CardFooter" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="IsPointerHover" Value="True"><Setter TargetName="PART_Surface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}"/><Setter TargetName="PART_Surface" Property="Effect" Value="{DynamicResource ArcWpf.Shadow.Raised}"/></Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>

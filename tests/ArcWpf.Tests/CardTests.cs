@@ -76,4 +76,113 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void CardMediaBylineAndDetailsUseDialogHost() => Sta.Run(() =>
+    {
+        var card = new Card
+        {
+            Width = 320,
+            Title = "Harbour redesign",
+            Description = "New booking flow and room pages.",
+            Media = new System.Windows.Controls.Border { Height = 120 },
+            Avatar = new System.Windows.Controls.TextBlock { Text = "MC" },
+            Meta = "Maya Chen",
+            Status = "Updated 2 hours ago",
+            Action = new System.Windows.Controls.Button { Content = "Open" },
+            Details = new System.Windows.Controls.TextBlock { Text = "Scope, milestones, and open questions." }
+        };
+        var host = new DialogHost { Content = card };
+        var window = new System.Windows.Window { Content = host, Width = 550, Height = 550, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); card.UpdateLayout();
+            var media = (System.Windows.FrameworkElement)card.Template.FindName("PART_MediaHost", card)!;
+            var byline = (System.Windows.Controls.Grid)card.Template.FindName("CardByline", card)!;
+            var title = (System.Windows.Controls.Button)card.Template.FindName("PART_TitleButton", card)!;
+            Assert.IsTrue(media.ActualHeight >= 112);
+            Assert.AreEqual(Visibility.Visible, byline.Visibility);
+            Assert.AreEqual(Visibility.Visible, title.Visibility);
+            title.Focus();
+            title.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, title));
+            Assert.IsTrue(card.IsOpen);
+            Assert.IsNotNull(host.Dialog);
+            Assert.IsTrue(host.Dialog.IsPresented);
+            host.Dialog.Close();
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(350) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(card.IsOpen);
+            Assert.IsTrue(title.IsKeyboardFocused);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void CardWithoutDetailsKeepsStaticTitleAndNoEmptyFooter() => Sta.Run(() =>
+    {
+        var card = new Card { Width = 280, Title = "Project Atlas" };
+        var window = new System.Windows.Window { Content = card, Width = 360, Height = 200, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            Assert.AreEqual(Visibility.Collapsed, ((System.Windows.Controls.Button)card.Template.FindName("PART_TitleButton", card)!).Visibility);
+            Assert.AreEqual(Visibility.Collapsed, ((System.Windows.Controls.Grid)card.Template.FindName("CardByline", card)!).Visibility);
+            Assert.AreEqual(Visibility.Collapsed, ((System.Windows.FrameworkElement)card.Template.FindName("PART_MediaHost", card)!).Visibility);
+            Assert.IsFalse(card.HasDetails);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void CardHoverLiftsMediaAndStatusUpdatesInWindow() => Sta.Run(() =>
+    {
+        var card = new Card { Width = 300, Title = "Project", Media = new System.Windows.Controls.Border { Height = 112 }, Meta = "Maya Chen", Status = "Updated yesterday" };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var window = new System.Windows.Window { Content = card, Width = 380, Height = 330, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var surface = (System.Windows.Controls.Border)card.Template.FindName("PART_Surface", card)!;
+            var media = (System.Windows.FrameworkElement)card.Template.FindName("PART_MediaHost", card)!;
+            var status = (System.Windows.Controls.TextBlock)card.Template.FindName("PART_StatusText", card)!;
+            card.Status = "Updated 2 hours ago";
+            Assert.AreEqual("Updated 2 hours ago", status.Text);
+            Assert.IsTrue(status.HasAnimatedProperties);
+            surface.RaiseEvent(new System.Windows.Input.MouseEventArgs(System.Windows.Input.Mouse.PrimaryDevice, 0) { RoutedEvent = System.Windows.Input.Mouse.MouseEnterEvent });
+            Assert.IsTrue(card.IsPointerHover);
+            var lift = (System.Windows.Media.TranslateTransform)surface.RenderTransform;
+            var zoom = (System.Windows.Media.ScaleTransform)media.RenderTransform;
+            Assert.IsTrue(lift.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(800) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(-2d, lift.Y, .01);
+            Assert.AreEqual(1.04, zoom.ScaleX, .01);
+            Assert.IsFalse(lift.HasAnimatedProperties);
+            Assert.AreEqual(1d, status.Opacity, .01);
+            Assert.IsFalse(status.HasAnimatedProperties);
+            ArcMotion.SetLevel(card, ArcMotionLevel.Off);
+            Assert.AreEqual(0d, lift.Y, .001);
+            Assert.AreEqual(1d, zoom.ScaleX, .001);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void CardSurfaceClickOpensDetailsButNestedActionDoesNot() => Sta.Run(() =>
+    {
+        var action = new System.Windows.Controls.Button { Content = "Open action" };
+        var template = new DataTemplate { VisualTree = new FrameworkElementFactory(typeof(System.Windows.Controls.Border)) };
+        var card = new Card { Width = 320, Title = "Harbour redesign", Media = "preview", MediaTemplate = template, Action = action, Details = "Scope and milestones" };
+        var host = new DialogHost { Content = card };
+        var window = new Window { Content = host, Width = 500, Height = 450, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var surface = (System.Windows.Controls.Border)card.Template.FindName("PART_Surface", card)!;
+            action.RaiseEvent(new System.Windows.Input.MouseButtonEventArgs(System.Windows.Input.Mouse.PrimaryDevice, 0, System.Windows.Input.MouseButton.Left) { RoutedEvent = System.Windows.UIElement.MouseLeftButtonUpEvent });
+            Assert.IsFalse(card.IsOpen);
+            surface.RaiseEvent(new System.Windows.Input.MouseButtonEventArgs(System.Windows.Input.Mouse.PrimaryDevice, 0, System.Windows.Input.MouseButton.Left) { RoutedEvent = System.Windows.UIElement.MouseLeftButtonUpEvent });
+            Assert.IsTrue(card.IsOpen);
+            var body = (System.Windows.Controls.StackPanel)host.Dialog!.Content;
+            Assert.HasCount(2, body.Children);
+            host.Dialog.Close();
+        }
+        finally { window.Close(); }
+    });
 }
