@@ -31,6 +31,20 @@ namespace ArcWpf.Tests;
         Assert.AreEqual("Fails", ColorMath.Grade(2));
     }
 
+    // Presses inside popup content route through the owner window; the outside check must recognise them (ColorPicker, PhoneInput, MoneyInput).
+    [TestMethod] public void PressInsidePopupContentIsNotOutside() => Sta.Run(() =>
+    {
+        var swatch = new System.Windows.Controls.Border();
+        var content = new System.Windows.Controls.Grid { Children = { new System.Windows.Controls.StackPanel { Children = { swatch } } } };
+        var popup = new System.Windows.Controls.Primitives.Popup { Child = content };
+        var trigger = new System.Windows.Controls.Button();
+        var elsewhere = new System.Windows.Controls.Border();
+        Assert.IsTrue(Outside.IsWithin(swatch, trigger, popup.Child));
+        Assert.IsTrue(Outside.IsWithin(trigger, trigger, popup.Child));
+        Assert.IsFalse(Outside.IsWithin(elsewhere, trigger, popup.Child));
+        Assert.IsFalse(Outside.IsWithin(null, trigger, popup.Child));
+    });
+
     [TestMethod] public void ValueIsNormalisedToHex() => Sta.Run(() =>
     {
         var picker = new ColorPicker { Label = "Accent", Value = "#2F6BFF" };

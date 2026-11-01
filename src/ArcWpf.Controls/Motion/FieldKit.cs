@@ -248,6 +248,18 @@ internal static class Flip
     private static Point Offset(UIElement child) => child.RenderTransform is TranslateTransform move ? new Point(move.X, move.Y) : new Point();
 }
 
+/// <summary>Outside-press detection for window-level handlers. A Popup's content routes its mouse events through its owner window as well,
+/// so a press inside the popup must be told apart from a real outside press by walking up from the event source.</summary>
+internal static class Outside
+{
+    public static bool IsWithin(object? source, params DependencyObject?[] roots)
+    {
+        for (var node = source as DependencyObject; node is not null; node = node is Visual or System.Windows.Media.Media3D.Visual3D ? VisualTreeHelper.GetParent(node) ?? LogicalTreeHelper.GetParent(node) : LogicalTreeHelper.GetParent(node))
+            if (Array.IndexOf(roots, node) >= 0) return true;
+        return false;
+    }
+}
+
 internal static class Announcer
 {
     /// <summary>The registry's polite live region: hands the message to UI Automation clients.</summary>

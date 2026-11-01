@@ -746,7 +746,7 @@ public class MoneyInput : Control
         _window = null;
     }
 
-    private void OutsideDown(object sender, MouseButtonEventArgs e) { if (_currencyButton?.IsMouseOver != true) CloseMenu(false, true); }
+    private void OutsideDown(object sender, MouseButtonEventArgs e) { if (!Outside.IsWithin(e.OriginalSource, _currencyButton, _menu?.Child)) CloseMenu(false, true); }
     private void OutsideDeactivated(object? sender, EventArgs e) => CloseMenu(false, true);
 
     private void Choose(MoneyCurrency next)

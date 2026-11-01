@@ -90,6 +90,9 @@ public class TagInput : Control
         _input = GetTemplateChild("PART_Input") as TextBox;
         _placeholder = GetTemplateChild("PART_Placeholder") as TextBlock;
         _ring = GetTemplateChild("PART_Ring") as Border;
+        // Transforms written in a template are frozen and shared, so the ring gets its own animatable pair.
+        if (_ring is not null) _ring.RenderTransform = new TransformGroup { Children = { new ScaleTransform(1, 1), new TranslateTransform() } };
+        _ringAt = null;
         _messageHost = GetTemplateChild("PART_Message") as Grid;
         if (_input is not null)
         {
@@ -167,24 +170,26 @@ public class TagInput : Control
             _leaving.Children.Add(chip);
             chip.Exit(full, () => _leaving.Children.Remove(chip));
         }
-        _panel.Children.Remove(_input);
-        foreach (var tag in tags)
+        if (!_panel.Children.Contains(_input)) _panel.Children.Add(_input);
+        // Chips sit before the input in list order. The input itself never leaves the panel: removing the focused editor drops keyboard focus.
+        int slot = 0;
+        foreach (var tag in tags.Distinct())
         {
             if (!_chips.TryGetValue(tag, out var chip))
             {
                 chip = new TagChip(this, tag);
                 _chips[tag] = chip;
                 if (animate) chip.Enter(full);
-                _panel.Children.Add(chip);
             }
-            else if (!_panel.Children.Contains(chip)) _panel.Children.Add(chip);
+            int index = _panel.Children.IndexOf(chip);
+            if (index != slot)
+            {
+                if (index >= 0) _panel.Children.RemoveAt(index);
+                _panel.Children.Insert(slot, chip);
+            }
             chip.SetPicked(tag == _picked);
+            slot++;
         }
-        // Keep tag order: re-append in list order, then the input last.
-        var ordered = tags.Select(t => (UIElement)_chips[t]).ToList();
-        _panel.Children.Clear();
-        foreach (var element in ordered) _panel.Children.Add(element);
-        _panel.Children.Add(_input);
         if (full) Flip.Play(_panel, before, Tween.Morph);
         UpdatePlaceholder(animate);
         UpdateRing(animate);

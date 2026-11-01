@@ -536,7 +536,7 @@ public class ColorPicker : Control
         _window = null;
     }
 
-    private void OutsideDown(object sender, MouseButtonEventArgs e) { if (_trigger?.IsMouseOver != true) Hide(false); }
+    private void OutsideDown(object sender, MouseButtonEventArgs e) { if (!Outside.IsWithin(e.OriginalSource, _trigger, _popup?.Child)) Hide(false); }
     private void OutsideDeactivated(object? sender, EventArgs e) => Hide(false);
 
     private void WindowKey(object sender, KeyEventArgs e)

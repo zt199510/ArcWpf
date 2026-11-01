@@ -26,3 +26,29 @@
 ## 已知差异
 
 见各组件规格“与源的差异”：Segoe UI 回退、无字距；弹簧为近似；PhoneInput 旗帜以 ISO 字母徽章代替；ColorPicker 无取色器、TextMorph 以淡入近似；TagInput 输入框固定宽度。
+
+## 人工测试缺陷修复（2026-10-31）
+
+用户人工测试反馈 5 项缺陷。逐项对照冻结源码与模板定位，结论为静态分析推定的根因（Linux 无法复现，证据等级：源码确认 + 代码审阅）。
+
+| 控件 | 现象 | 根因 | 修复 |
+|---|---|---|---|
+| PasswordStrength | 输入框样式异常 | 模板以 `DynamicResource` 引用 PasswordInput 主题文件中的字符串键编辑器样式；主题字典的字符串键运行时不可解析，编辑器回落为 WPF 默认带边框的 PasswordBox/TextBox | 在 PasswordStrengthTheme 内定义 `ArcWpf.PasswordStrength.HiddenEditor/VisibleEditor` 并用 `StaticResource` |
+| MoneyInput | 切换货币无效/不稳定 | 窗口级 `PreviewMouseDown` 外部点击检测未排除 Popup 内容；Popup 内的按下事件也经逻辑树路由到窗口，点选项时菜单先被关闭 | 新增 `Outside.IsWithin`（FieldKit），按事件源向上查找触发器与 Popup 内容；与源 `menuRef.contains(target)` 一致 |
+| PhoneInput | 切换国家无效 | 同上，按下行时列表先收起，MouseUp 不再落在行上 | 同上，对照源 `rootRef.contains(target)` |
+| ColorPicker | 选颜色时面板自动关闭 | 同上，面板内任何按下都被当成外部点击 | 同上，对照源 document `pointerdown` 外部判断 |
+| TagInput | 输入标签卡顿/崩溃 | 光环 `TransformGroup` 写在模板中，模板 Freezable 被冻结，选中标签（如空输入时 Backspace）对其动画抛 `InvalidOperationException`；另外每次变更都把聚焦的输入框移出再加回面板 | 光环变换在 `OnApplyTemplate` 中由代码创建；Sync 只在输入框之前插入/移动标签，输入框不再离开面板，并对重复标签去重 |
+
+### 实际结果
+
+| 项 | 结果 |
+|---|---|
+| `dotnet build src/ArcWpf.Controls` | 通过，0 错误（2 条 Rating/ReorderableList 既有 CS0108 警告） |
+| `dotnet build samples/ArcWpf.Gallery` | 通过，0 错误 |
+| `dotnet build tests/ArcWpf.Tests` | 通过，0 错误 |
+
+新增回归测试（已编译，未运行）：`PasswordStrengthTests.EditorsUseTheBareTemplate`、`TagInputTests.PickingATagMovesAnAnimatableRing`、`TagInputTests.AddingKeepsTheEditorInPlace`、`ColorPickerTests.PressInsidePopupContentIsNotOutside`。
+
+### 未运行/待验证
+
+原因同上：Linux 无 WPF 运行时。5 项均需在 Windows 上人工复测：PasswordStrength 输入框外观（Light/Dark）；MoneyInput 鼠标与键盘切换货币；PhoneInput 鼠标选择国家；ColorPicker 面板内拖动/点选后保持打开、外部点击关闭；TagInput 连续添加标签保持焦点、Backspace 选中与删除。

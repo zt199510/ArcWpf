@@ -28,6 +28,20 @@ namespace ArcWpf.Tests;
         Assert.AreEqual(1, PasswordStrength.CountCharacters("😀"));
     }
 
+    // The editors once pointed at PasswordInput's string-keyed styles through DynamicResource, which a theme dictionary cannot resolve,
+    // so both fell back to WPF's bordered default boxes inside the shell.
+    [TestMethod] public void EditorsUseTheBareTemplate() => Sta.Run(() =>
+    {
+        var field = new PasswordStrength();
+        Assert.IsTrue(field.ApplyTemplate());
+        foreach (var name in new[] { "PART_PasswordBox", "PART_RevealBox" })
+        {
+            var editor = (System.Windows.Controls.Control)field.Template.FindName(name, field)!;
+            Assert.AreEqual(new System.Windows.Thickness(0), editor.BorderThickness, name);
+            Assert.AreEqual(System.Windows.Media.Colors.Transparent, ((System.Windows.Media.SolidColorBrush)editor.Background).Color, name);
+        }
+    });
+
     [TestMethod] public void ControlExposesLevel() => Sta.Run(() =>
     {
         var field = new PasswordStrength { Password = "Copper-Lantern-73" };

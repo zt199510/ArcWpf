@@ -26,9 +26,7 @@
                   <TextBox x:Name="PART_Input" Style="{StaticResource ArcWpf.TagInput.Editor}" MinHeight="28" Width="100" Margin="0,0,6,6" AutomationProperties.Name="{TemplateBinding Label}" AutomationProperties.HelpText="{TemplateBinding Description}"/>
                 </WrapPanel>
                 <Border x:Name="PART_Ring" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1" CornerRadius="14" Opacity="0" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5"
-                        BorderBrush="{DynamicResource ArcWpf.Brush.Accent}" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}">
-                  <Border.RenderTransform><TransformGroup><ScaleTransform/><TranslateTransform/></TransformGroup></Border.RenderTransform>
-                </Border>
+                        BorderBrush="{DynamicResource ArcWpf.Brush.Accent}" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}"/>
               </Grid>
             </Border>
             <Grid x:Name="PART_Message" TextElement.FontSize="12" TextElement.Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>

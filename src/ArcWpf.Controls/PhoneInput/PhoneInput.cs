@@ -736,7 +736,7 @@ public class PhoneInput : Control
         _window = null;
     }
 
-    private void OutsideDown(object sender, MouseButtonEventArgs e) { if (_trigger?.IsMouseOver != true) Close(null, true); }
+    private void OutsideDown(object sender, MouseButtonEventArgs e) { if (!Outside.IsWithin(e.OriginalSource, _trigger, _popup?.Child)) Close(null, true); }
     private void OutsideDeactivated(object? sender, EventArgs e) => Close(null, true);
 
     protected override AutomationPeer OnCreateAutomationPeer() => new FrameworkElementAutomationPeer(this);

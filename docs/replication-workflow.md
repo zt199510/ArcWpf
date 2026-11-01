@@ -45,6 +45,9 @@
 | Web字体与CSS颜色 | 系统回退/色域转换不同 | 保留字体与颜色转换差异，不能声称像素一致 |
 | CSS视觉时长 | 不等于固定补间时长 | 写明WPF近似、速度是否连续、收敛阈值与长帧行为 |
 | 原生编辑/命令 | 为动画改写数据或重建控件 | 保留Text、Width、命令与DataContext绑定，只动画内部部件 |
+| 跨主题文件复用样式 | Generic.xaml中的字符串键资源运行时用DynamicResource查不到，部件回落WPF默认外观（PasswordStrength，2026-10-31） | 样式放在同一主题文件内用StaticResource，或改用ComponentResourceKey |
+| document级外部点击关闭 | Popup内容的鼠标事件也会路由到所在Window，窗口级PreviewMouseDown会把弹层内点击当作外部（MoneyInput/PhoneInput/ColorPicker） | 用`Outside.IsWithin`从事件源向上查找触发器与Popup.Child，不用`IsMouseOver` |
+| 模板内写变换再由代码动画 | 模板中的Freezable被冻结，BeginAnimation抛异常（TagInput光环） | 需代码动画的Transform在OnApplyTemplate中新建并赋值 |
 
 这些是已证实的适配风险，不要求所有控件都使用同一圆角、同一偏移或同一动画。新宿主/新运行时必须重新测量，不能把Input的2 DIP补偿推广给所有文本控件。
 
