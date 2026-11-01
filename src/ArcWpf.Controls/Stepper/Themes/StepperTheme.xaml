@@ -2,29 +2,58 @@
   <Style TargetType="{x:Type local:Stepper}">
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
     <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:Stepper}">
-      <ItemsControl x:Name="PART_Items">
-        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate><DataTemplate>
-          <Button IsEnabled="{Binding IsSelectable}" Margin="0,0,18,0" Padding="0" Background="Transparent" BorderThickness="0">
-            <Button.Template><ControlTemplate TargetType="Button"><Border Background="Transparent" SnapsToDevicePixels="True"><ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template>
-            <StackPanel Orientation="Horizontal">
-              <Border x:Name="MarkSurface" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1">
-                <TextBlock x:Name="MarkText" Text="{Binding Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+      <StackPanel>
+        <ItemsControl x:Name="PART_Items">
+          <ItemsControl.Style><Style TargetType="ItemsControl">
+            <Setter Property="ItemsPanel"><Setter.Value><ItemsPanelTemplate><UniformGrid Rows="1"/></ItemsPanelTemplate></Setter.Value></Setter>
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource TemplatedParent}}" Value="Vertical">
+                <Setter Property="ItemsPanel"><Setter.Value><ItemsPanelTemplate><StackPanel Orientation="Vertical"/></ItemsPanelTemplate></Setter.Value></Setter>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style></ItemsControl.Style>
+          <ItemsControl.ItemTemplate><DataTemplate>
+            <Grid x:Name="ItemRoot" MinHeight="76" Margin="0,0,16,0">
+              <Border x:Name="Connector" Margin="40,17,0,0" Height="2" VerticalAlignment="Top" Background="{DynamicResource ArcWpf.Brush.Border}" CornerRadius="1" IsHitTestVisible="False">
+                <Border x:Name="ConnectorFill" Background="{DynamicResource ArcWpf.Brush.Accent}" CornerRadius="1" Visibility="Collapsed"/>
               </Border>
-              <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{Binding Title}" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
-                <TextBlock x:Name="DescriptionText" Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
-              </StackPanel>
-            </StackPanel>
-          </Button>
-          <DataTemplate.Triggers>
-            <DataTrigger Binding="{Binding IsCurrent}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Background}"/></DataTrigger>
-            <DataTrigger Binding="{Binding IsComplete}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.AccentSubtle}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.AccentStrong}"/></DataTrigger>
-            <DataTrigger Binding="{Binding IsError}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter TargetName="DescriptionText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/></DataTrigger>
-          </DataTemplate.Triggers>
-        </DataTemplate></ItemsControl.ItemTemplate>
-      </ItemsControl>
+              <Button x:Name="StepButton" IsEnabled="{Binding IsSelectable}" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Background="Transparent" BorderThickness="0">
+                <Button.Template><ControlTemplate TargetType="Button"><Border Background="Transparent" SnapsToDevicePixels="True"><ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Top"/></Border></ControlTemplate></Button.Template>
+                <StackPanel x:Name="HeadLayout" Orientation="Vertical">
+                  <Grid Width="36" Height="36" HorizontalAlignment="Left">
+                    <Border x:Name="Ring" Width="36" Height="36" CornerRadius="18" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}" Visibility="Collapsed"/>
+                    <Border x:Name="MarkSurface" Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1">
+                      <TextBlock x:Name="MarkText" Text="{Binding Mark}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                    </Border>
+                  </Grid>
+                  <StackPanel x:Name="Copy" Margin="0,8,0,0">
+                    <TextBlock x:Name="TitleText" Text="{Binding Title}" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="DescriptionText" Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextWrapping="Wrap"/>
+                  </StackPanel>
+                </StackPanel>
+              </Button>
+            </Grid>
+            <DataTemplate.Triggers>
+              <DataTrigger Binding="{Binding HasNext}" Value="False"><Setter TargetName="Connector" Property="Visibility" Value="Collapsed"/></DataTrigger>
+              <DataTrigger Binding="{Binding IsComplete}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.Accent}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Accent}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.AccentForeground}"/><Setter TargetName="TitleText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/><Setter TargetName="ConnectorFill" Property="Visibility" Value="Visible"/></DataTrigger>
+              <DataTrigger Binding="{Binding IsCurrent}" Value="True"><Setter TargetName="Ring" Property="Visibility" Value="Visible"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Accent}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter TargetName="TitleText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/></DataTrigger>
+              <DataTrigger Binding="{Binding IsError}" Value="True"><Setter TargetName="MarkSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter TargetName="MarkSurface" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter TargetName="MarkText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/><Setter TargetName="DescriptionText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/></DataTrigger>
+              <DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType={x:Type local:Stepper}}}" Value="Vertical"><Setter TargetName="ItemRoot" Property="MinHeight" Value="72"/><Setter TargetName="ItemRoot" Property="Margin" Value="0,0,0,8"/><Setter TargetName="HeadLayout" Property="Orientation" Value="Horizontal"/><Setter TargetName="Copy" Property="Margin" Value="12,4,0,0"/><Setter TargetName="Connector" Property="Width" Value="2"/><Setter TargetName="Connector" Property="Height" Value="Auto"/><Setter TargetName="Connector" Property="Margin" Value="17,40,0,0"/><Setter TargetName="Connector" Property="HorizontalAlignment" Value="Left"/><Setter TargetName="Connector" Property="VerticalAlignment" Value="Stretch"/></DataTrigger>
+              <DataTrigger Binding="{Binding IsCompact, RelativeSource={RelativeSource AncestorType={x:Type local:Stepper}}}" Value="True"><Setter TargetName="Copy" Property="Visibility" Value="Collapsed"/><Setter TargetName="ItemRoot" Property="MinHeight" Value="40"/></DataTrigger>
+            </DataTemplate.Triggers>
+          </DataTemplate></ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel x:Name="Caption" Margin="0,12,0,0" Visibility="Collapsed">
+          <TextBlock Text="{Binding CurrentLabel, RelativeSource={RelativeSource TemplatedParent}}" FontSize="14" FontWeight="Medium"/>
+          <TextBlock Text="{Binding CurrentDescription, RelativeSource={RelativeSource TemplatedParent}}" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+        </StackPanel>
+      </StackPanel>
+      <ControlTemplate.Triggers>
+        <Trigger Property="IsCompact" Value="True"><Setter TargetName="Caption" Property="Visibility" Value="Visible"/></Trigger>
+        <MultiTrigger><MultiTrigger.Conditions><Condition Property="Orientation" Value="Vertical"/><Condition Property="Compact" Value="True"/></MultiTrigger.Conditions><Setter TargetName="Caption" Property="Visibility" Value="Collapsed"/></MultiTrigger>
+      </ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>
 </ResourceDictionary>

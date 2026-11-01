@@ -76,6 +76,63 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void WindowLayoutSwitchesBetweenHorizontalVerticalAndCompact() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { Width = 600, CurrentIndex = 1 };
+        stepper.Steps.Add(new StepperStep { Title = "Cart" });
+        stepper.Steps.Add(new StepperStep { Title = "Shipping", Description = "Address and delivery" });
+        stepper.Steps.Add(new StepperStep { Title = "Payment" });
+        var window = new Window { Content = stepper, Width = 700, Height = 300, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.UpdateLayout();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var first = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(0)!;
+            var second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            double firstX = first.TranslatePoint(new Point(), items).X;
+            double secondX = second.TranslatePoint(new Point(), items).X;
+            Assert.IsTrue(secondX > firstX + 100, $"Horizontal cells: first={firstX}, second={secondX}, stepper={stepper.ActualWidth}, items={items.ActualWidth}");
+            var fill = (Border)items.ItemTemplate.FindName("ConnectorFill", first)!;
+            Assert.AreEqual(Visibility.Visible, fill.Visibility);
+
+            stepper.Width = 300; Sta.Pump(); stepper.UpdateLayout();
+            Assert.IsTrue(stepper.IsCompact);
+            Assert.AreEqual(Visibility.Visible, ((StackPanel)stepper.Template.FindName("Caption", stepper)!).Visibility);
+            Assert.AreEqual("Shipping", stepper.CurrentLabel);
+            Assert.AreEqual(Visibility.Collapsed, ((StackPanel)items.ItemTemplate.FindName("Copy", first)!).Visibility);
+
+            stepper.Orientation = StepperOrientation.Vertical; Sta.Pump(); stepper.UpdateLayout();
+            Assert.IsFalse(stepper.IsCompact);
+            first = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(0)!;
+            second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            double firstY = first.TranslatePoint(new Point(), items).Y;
+            double secondY = second.TranslatePoint(new Point(), items).Y;
+            Assert.IsTrue(secondY > firstY + 40, $"Vertical cells: first={firstY}, second={secondY}");
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void KeyboardMovesFocusAcrossCompletedStepsIncludingRtl() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { CurrentIndex = 3 };
+        for (int index = 0; index < 4; index++) stepper.Steps.Add(new StepperStep { Title = $"Step {index + 1}" });
+        var window = new Window { Content = stepper, Width = 620, Height = 170, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.UpdateLayout();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var first = FindButton((ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(0)!)!;
+            var second = FindButton((ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!)!;
+            first.Focus();
+            var right = new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice, System.Windows.PresentationSource.FromVisual(first), 0, System.Windows.Input.Key.Right) { RoutedEvent = System.Windows.Input.Keyboard.PreviewKeyDownEvent };
+            first.RaiseEvent(right);
+            Assert.IsTrue(second.IsKeyboardFocused);
+            stepper.FlowDirection = FlowDirection.RightToLeft;
+            var rtlRight = new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice, System.Windows.PresentationSource.FromVisual(second), 0, System.Windows.Input.Key.Right) { RoutedEvent = System.Windows.Input.Keyboard.PreviewKeyDownEvent };
+            second.RaiseEvent(rtlRight);
+            Assert.IsTrue(first.IsKeyboardFocused);
+        }
+        finally { window.Close(); }
+    });
     private static System.Windows.Controls.Button? FindButton(DependencyObject root)
     {
         if (root is System.Windows.Controls.Button button) return button;
