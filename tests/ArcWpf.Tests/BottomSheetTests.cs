@@ -10,6 +10,26 @@ namespace ArcWpf.Tests;
     [TestMethod] public void BottomSheetDefaultsToBottomSide() => Sta.Run(() => Assert.AreEqual(DrawerSide.Bottom, new BottomSheet().Side));
     [TestMethod] public void SnapHeightIsBindable() => Sta.Run(() => { var sheet = new BottomSheet { SnapHeight = 520 }; Assert.AreEqual(520d, sheet.SnapHeight); });
     [TestMethod] public void CloseOptionsAreInherited() => Sta.Run(() => { var sheet = new BottomSheet { CloseOnEscape = true, CloseOnOverlayClick = true }; Assert.IsTrue(sheet.CloseOnEscape && sheet.CloseOnOverlayClick); });
+    [TestMethod] public void GalleryPageOpensItsSheetInsideTheWindowDrawerHost() => Sta.Run(() =>
+    {
+        var page = new ArcWpf.Gallery.Pages.BottomSheetPage();
+        var sheet = (BottomSheet)page.FindName("TripSheet");
+        var outer = new DrawerHost { Content = page };
+        var window = new Window { Content = outer, Width = 900, Height = 700, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            static IEnumerable<DependencyObject> Walk(DependencyObject node) { yield return node; for (int i = 0; i < VisualTreeHelper.GetChildrenCount(node); i++) foreach (var child in Walk(VisualTreeHelper.GetChild(node, i))) yield return child; }
+            var open = Walk(page).OfType<ArcWpf.Controls.Button>().Single(item => Equals(item.Content, "View trip details"));
+            open.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent)); Sta.Pump();
+            Assert.IsTrue(sheet.IsOpen && sheet.IsPresented);
+            Assert.IsNull(outer.Drawer);
+            ArcMotion.SetLevel(sheet, ArcMotionLevel.Off);
+            sheet.Close();
+            Assert.IsFalse(sheet.IsPresented);
+        }
+        finally { window.Close(); }
+    });
     [TestMethod] public void SnapHeightControlsSurfaceAndClampsToHost() => Sta.Run(() =>
     {
         var sheet = new BottomSheet { Title = "Filters", SnapHeight = 420, Content = new TextBlock { Text = "Categories" } };

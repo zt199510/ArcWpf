@@ -39,7 +39,7 @@
 
 ## 待验证与剩余差异
 
-未运行：真实 Windows 窗口。字体、DPI、动效、弹出层实际位置（含货币菜单修正）、HoverCard 悬停弹出、BottomSheet 打开后的画面都待用户复验。全量测试未运行。
+未运行：真实 Windows 窗口。字体、DPI、动效、弹出层实际位置（含货币菜单修正）、HoverCard 悬停弹出都待用户复验。BottomSheet 打开后的画面已有离屏渲染（见下），真实窗口仍待复验。全量测试未运行。
 
 - 字体：Arc 用 Inter/Geist，WPF 用 Segoe UI；金额的 `-0.03em` 字距未实现。
 - MoneyInput：工具栏窄宽度下不换行（460 宽主示例不受影响）。
@@ -48,3 +48,13 @@
 - HoverCard：胶囊打开态的 8% 前景混合背景未实现，只换了描边。
 
 Gallery 中无来源、属本页取值的内容（已在代码注释说明）：UsageMeter “Add files” 每次 +1.4 GB；ResizablePanels 宽度文字 “N px”；Stepper 非 Workspace 步的面板内容；HoverCard 弹层除姓名外的资料沿用文档 Usage 示例；Card 页 SSR 为懒加载占位，版面未核对，仅核对了模板与 Usage 文案。
+
+## 用户反馈：BottomSheet 打开崩溃
+
+用户在 Windows Gallery 点击打开按钮时抛出 `InvalidOperationException: A Drawer belongs to one DrawerHost at a time.`。
+
+- 根因：页面把 `TripSheet.Show(this)` 的 origin 设为页面本身，`DrawerHost.Find` 只向上查找，命中 MainWindow 的 DrawerHost；而 TripSheet 属于页面内部的 `Host`。这行代码早于本次布局对齐，不是本次引入。
+- 修复：Gallery 改为 `TripSheet.Show(Host)`，控件未改。
+- 回归：新增 `GalleryPageOpensItsSheetInsideTheWindowDrawerHost`，未修复时在点击一行失败，修复后通过；BottomSheet 与 Drawer 测试共 17 项全部通过（Wine）。
+- 离屏渲染（Wine，替代字体）：打开后 `IsPresented=true`，面板 576 x 478.4，停在 peek 位置，背景模糊加遮罩，结构正常。
+- 未运行：真实 Windows 窗口点击复验、拖拽手势。
