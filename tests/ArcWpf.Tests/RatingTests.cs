@@ -2,7 +2,8 @@ using ArcWpf.Controls;
 namespace ArcWpf.Tests;
 [TestClass] public sealed class RatingTests
 {
-    [TestMethod] public void ValueAndMaximumAreBindable() => Sta.Run(() => { var rating = new Rating { Value = 3, Maximum = 5 }; Assert.AreEqual(3d, rating.Value); Assert.AreEqual(5, rating.Maximum); });
-    [TestMethod] public void MaximumIsCoerced() => Sta.Run(() => { var rating = new Rating { Maximum = 0 }; Assert.AreEqual(1, rating.Maximum); });
-    [TestMethod] public void ReadOnlyCanBeEnabled() => Sta.Run(() => { var rating = new Rating { IsReadOnly = true }; Assert.IsTrue(rating.IsReadOnly); });
+    [TestMethod] public void ValueSnapsToWholeStars() => Sta.Run(() => { var rating = new Rating { Maximum = 5, Value = 3.4 }; Assert.AreEqual(3d, rating.Value); });
+    [TestMethod] public void HalfStepsAreKeptWhenAllowed() => Sta.Run(() => { var rating = new Rating { Maximum = 5, AllowHalf = true, Value = 3.4 }; Assert.AreEqual(3.5, rating.Value); });
+    [TestMethod] public void ValueIsClampedToMaximum() => Sta.Run(() => { var rating = new Rating { Maximum = 5, Value = 9 }; Assert.AreEqual(5d, rating.Value); });
+    [TestMethod] public void LoweringMaximumRecoercesValue() => Sta.Run(() => { var rating = new Rating { Maximum = 5, Value = 5 }; rating.Maximum = 3; Assert.AreEqual(3d, rating.Value); });
 }

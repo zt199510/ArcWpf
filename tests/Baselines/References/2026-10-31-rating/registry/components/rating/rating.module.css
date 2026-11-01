@@ -1,0 +1,33 @@
+.field { display: grid; justify-items: start; gap: 6px; min-width: 0; }
+.label { color: var(--foreground); font-size: var(--text-sm); font-weight: 500; line-height: var(--leading-body); letter-spacing: var(--tracking-body); }
+.row { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; row-gap: 2px; max-width: 100%; }
+/* Cells are wider than their stars; the negative inline margin lines the first star up with the label. */
+.stars { --cell: 36px; --glyph: 24px; display: inline-flex; gap: 2px; margin-inline: calc((var(--glyph) - var(--cell)) / 2); touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.sm .stars { --cell: 28px; --glyph: 18px; }
+.lg .stars { --cell: 44px; --glyph: 30px; }
+.cell { position: relative; display: grid; width: var(--cell); height: var(--cell); flex: none; place-items: center; border-radius: calc(var(--radius-control) - 6px); }
+/* The radio covers the cell; with half stars a second radio takes the leading half. */
+.hit { position: absolute; inset: 0; margin: 0; border: 0; border-radius: inherit; padding: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.hit:focus-visible { outline: none; }
+.half { z-index: 1; inset-inline-end: 50%; border-start-end-radius: 0; border-end-end-radius: 0; }
+.hit:disabled { cursor: default; }
+/* The lift answers press and softening; the pop inside carries the commit impulse, so the two transforms never fight. */
+.lift, .pop { display: grid; width: var(--glyph); height: var(--glyph); pointer-events: none; }
+.base, .kept, .fill { display: grid; grid-area: 1 / 1; }
+.base svg, .kept svg, .fill svg { width: var(--glyph); height: var(--glyph); }
+.base svg { fill: transparent; stroke: var(--border-strong); transition: fill var(--duration-standard) var(--ease-standard), stroke var(--duration-standard) var(--ease-standard); }
+/* Once a value shows, empty stars soften from an outline into a quiet solid, so a partly filled star reads as one shape. */
+.stars[data-rated] .base svg { fill: var(--border); stroke: var(--border); }
+.kept { color: color-mix(in oklab, var(--warning) 30%, transparent); }
+.fill { color: var(--warning); }
+.kept svg, .fill svg { fill: currentColor; stroke: currentColor; }
+.value { display: inline-grid; color: var(--text-secondary); font-size: var(--text-sm); line-height: var(--leading-body); letter-spacing: var(--tracking-body); font-variant-numeric: tabular-nums; white-space: nowrap; transition: color var(--duration-fast) var(--ease-standard); }
+.value[data-empty] { color: var(--text-muted); }
+.value > * { grid-area: 1 / 1; }
+.sizer { visibility: hidden; }
+.description { color: var(--text-muted); font-size: var(--text-xs); line-height: var(--leading-body); letter-spacing: var(--tracking-body); font-variant-numeric: tabular-nums; }
+.roll { position: relative; display: block; }
+.word { display: inline-block; white-space: pre; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.field[data-disabled] .stars, .field[data-disabled] .value { opacity: .5; }
+@media (prefers-reduced-motion: reduce) { .base svg, .value { transition: none; } }

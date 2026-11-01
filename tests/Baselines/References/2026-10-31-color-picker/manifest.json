@@ -1,0 +1,19 @@
+{
+  "component": "color-picker",
+  "source": {
+    "registry": "https://uiarc.dev/r/color-picker.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/color-picker/markdown",
+    "page": "https://uiarc.dev/components/color-picker",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation.",
+    "textMorph": "https://uiarc.dev/r/text-morph.json"
+  },
+  "files": {
+    "registry/components/color-picker/color-picker.tsx": "125f022e7abc7abb11739a9df6fcd7fee9f244ff71ea82cbee724578934984e4",
+    "registry/components/color-picker/color-picker.module.css": "c5fd30e3c4c638197fc288b3711f317f8849ba90293dd6a364bc4ee71de55fec",
+    "registry/components/text-morph/text-morph.tsx": "24b6559369ab4e5ca84e4465f3c9e4a973f3c259e90a539f8778c0cc0b9042c2",
+    "registry/components/text-morph/text-morph.module.css": "bd51e5ba739e7b7272ad4b46fb500617aaaefb2ae4303010edaea6057f975989"
+  }
+}

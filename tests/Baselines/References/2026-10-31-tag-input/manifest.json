@@ -1,0 +1,16 @@
+{
+  "component": "tag-input",
+  "source": {
+    "registry": "https://uiarc.dev/r/tag-input.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/tag-input/markdown",
+    "page": "https://uiarc.dev/components/tag-input",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/tag-input/tag-input.tsx": "c17d9903f365a2901676d09692d93a283367825ae0aa53deb00d942e8440472c",
+    "registry/components/tag-input/tag-input.module.css": "d6b84d67e6ff5626c50cff759decba51ce77197b09cd812c759ea47904b6074b"
+  }
+}

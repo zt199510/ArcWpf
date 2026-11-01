@@ -1,5 +1,21 @@
 # PhoneInput 组件规格
 
-状态：WPF fallback 实现，Arc Registry/CSS 当前网络不可访问，未宣称网页完全对齐。
+状态：2026-10-31 按冻结 Arc 源码重建（取代此前网络受限时的 WPF fallback）。参考卡见 [references/components/PhoneInput.md](../references/components/PhoneInput.md)。
 
-支持 `Value`、`CountryCode`、`Label`、`Placeholder`、`ErrorMessage`、`IsValid`；保留原生 TextBox 编辑和数字过滤，10 位号码按 `(555) 123-4567` 显示。
+## 范围矩阵
+
+| 项 | 状态 |
+|---|---|
+| 外形与尺寸（源 CSS） | 已实现 |
+| 内部布局与状态 | 已实现 |
+| 动效（Arc motion tokens，Full/Reduced/Off） | 已实现，弹簧为近似 |
+| Gallery 主示例（源 demo 内容） | 已实现 |
+| 构建（Linux，EnableWindowsTargeting） | 通过 |
+| 单元测试 | 已编写，未运行/待验证（需 Windows） |
+| 真实窗口视觉与交互 | 未运行/待验证（需 Windows） |
+
+## 与源的差异
+
+- WPF 无彩色 emoji，旗帜以 ISO 字母小徽章代替。
+- 变形表面置于 Popup 中（WPF 无溢出层叠），关闭态按钮与打开态表面分离绘制。
+- 圆角插值通过私有 DP 驱动 Border.CornerRadius。

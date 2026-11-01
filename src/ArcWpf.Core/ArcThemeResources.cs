@@ -138,6 +138,33 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("ExpandingSearchHighlight", Ink(.06));
         // date-range-picker trigger hover: color-mix(in oklab, foreground 3%, surface-raised).
         PutBrush("RangeTriggerHover", Oklch(MixL("SurfaceRaised", "Foreground", .03), 0, 0));
+        // 2026-10-31 frozen input batch (rating, chip-group, tag-input, password-strength, shortcut-recorder, money-input,
+        // phone-input, color-picker). color-mix(in oklab) of a chromatic token with a neutral keeps the hue and scales chroma.
+        Color Alpha(Color color, double share) { color.A = (byte)Math.Round(255 * share); return color; }
+        double accentL = dark ? .8 : .33;
+        (double l, double c, double h) warning = (dark ? .83 : .58, dark ? .17 : .18, dark ? 80 : 75), success = (dark ? .78 : .49, dark ? .18 : .19, 150);
+        Color Tint((double l, double c, double h) tone, double share, string neutral) => Oklch(tone.l * share + neutrals[neutral] * (1 - share), tone.c * share, tone.h);
+        PutBrush("RatingKept", Alpha(Oklch(warning.l, warning.c, warning.h), .3));
+        PutBrush("ChipSelectedBorder", Oklch(accentL * .42 + neutrals["Border"] * .58, 0, 0));
+        PutBrush("ChipSelectedSurface", Oklch(accentL * .11 + neutrals["Surface"] * .89, 0, 0));
+        PutBrush("ChipSelectedHoverBorder", Oklch(accentL * .6 + neutrals["Border"] * .4, 0, 0));
+        PutBrush("ChipSelectedHoverSurface", Oklch(accentL * .16 + neutrals["Surface"] * .84, 0, 0));
+        PutBrush("PasswordRuleFill", Alpha(Oklch(success.l, success.c, success.h), .16));
+        PutBrush("KbdPressedBorder", Oklch(accentL * .55 + neutrals["BorderStrong"] * .45, 0, 0));
+        PutBrush("KbdWarningBorder", Tint(warning, .55, "BorderStrong"));
+        PutBrush("KbdWarningSurface", Tint(warning, .12, "SurfaceRaised"));
+        PutBrush("RecorderSurface", Oklch(accentL * .04 + neutrals["Surface"] * .96, 0, 0));
+        PutBrush("ShortcutSheet", Oklch(MixL("Surface", "SurfaceMuted", .45), 0, 0));
+        PutBrush("MoneyGhost", Alpha(Oklch(neutrals["TextMuted"], 0, 0), .55));
+        PutBrush("PhoneGuide", Alpha(Oklch(neutrals["TextMuted"], 0, 0), .72));
+        PutBrush("FieldHighlight", Ink(.065));
+        PutBrush("FieldClear", Ink(.08));
+        PutBrush("FieldSelection", Ink(.16));
+        PutBrush("ColorFormatHover", Ink(.05));
+        PutBrush("ContrastPass", Alpha(Oklch(success.l, success.c, success.h), .14));
+        PutBrush("ContrastLarge", Alpha(Oklch(warning.l, warning.c, warning.h), .16));
+        PutBrush("ContrastFail", Alpha(Oklch(dangerL, dangerC, 25), .12));
+        PutBrush("ChipListSurface", Alpha(Oklch(neutrals["Surface"], 0, 0), .55));
         this["ArcWpf.Button.Padding.Small"] = new Thickness(12, 0, 12, 0);
         this["ArcWpf.Button.Padding.Medium"] = new Thickness(16, 0, 16, 0);
         this["ArcWpf.Button.Padding.Large"] = new Thickness(20, 0, 20, 0);

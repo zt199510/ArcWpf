@@ -1,1 +1,28 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.ShortcutRecorderPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="ShortcutRecorder" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><arc:ShortcutRecorder x:Name="Recorder" Label="Shortcut" ShortcutChanged="Changed"/><TextBlock x:Name="Status" Text="点击按钮并按下组合键" Margin="0,16,0,0"/></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.ShortcutRecorderPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ShortcutRecorder" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="点击录制：按住修饰键时键帽实时点亮，完成后键帽落位并闪亮 700 ms；与已有绑定或系统保留组合冲突时询问 Use anyway。右侧 ShortcutList 支持搜索，按住修饰键会点亮键帽并淡化不相关的行。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例（ShortcutRecorderDemo 72304）：300 | 1fr 面板；左侧 Shortcuts + Key style + 三个可编辑录制器 + 运行提示，右侧速查表。 -->
+    <Border x:Name="Demo" Focusable="True" FocusVisualStyle="{x:Null}" KeyDown="DemoKeyDown" Background="Transparent">
+      <Border BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" CornerRadius="34" ClipToBounds="True">
+        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="300"/><ColumnDefinition MinWidth="0"/></Grid.ColumnDefinitions>
+          <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}" Padding="24">
+            <StackPanel x:Name="Settings">
+              <DockPanel Margin="0,0,0,16" LastChildFill="False">
+                <TextBlock Text="Shortcuts" FontSize="18" FontWeight="Medium" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                <arc:SegmentedControl x:Name="KeyStyle" Label="Key style" SelectedIndex="1" SelectionChanged="KeyStyleChanged" DockPanel.Dock="Right">
+                  <arc:SegmentedItem Content="Mac"/><arc:SegmentedItem Content="Windows"/>
+                </arc:SegmentedControl>
+              </DockPanel>
+              <StackPanel x:Name="Recorders"/>
+              <ContentControl x:Name="Ran" MinHeight="26" Margin="0,8,0,0" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" IsTabStop="False"/>
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="1" MinHeight="420" Padding="24" Background="{DynamicResource ArcWpf.Brush.ShortcutSheet}" CornerRadius="0,34,34,0">
+            <arc:ShortcutList x:Name="Sheet" VerticalAlignment="Top"/>
+          </Border>
+        </Grid>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

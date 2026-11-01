@@ -1,1 +1,10 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.ColorPickerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="ColorPicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><arc:ColorPicker x:Name="Picker" Label="Accent color" ValueChanged="Changed"/><TextBlock x:Name="Status" Text="选择颜色" Margin="0,16,0,0"/></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.ColorPickerPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ColorPicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="色块从左上角长成完整面板（裁剪形变）；面板内拖动饱和度/亮度区域与色相、透明度滑块，输入框可切换 Hex/RGB/HSL/OKLCH；对比度读数与等级随颜色变化；色板可添加、Alt+方向键或拖拽排序、Delete 删除。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例（ColorPickerDemo 63040）：最小高 460，19rem 锚点，Accent #2F6BFF + 五个预设色板。 -->
+    <Grid MinHeight="460" Width="304" HorizontalAlignment="Left">
+      <arc:ColorPicker x:Name="Picker" Label="Accent" Value="#2F6BFF" VerticalAlignment="Top"/>
+    </Grid>
+  </StackPanel>
+</UserControl>

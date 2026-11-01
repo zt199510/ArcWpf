@@ -1,9 +1,33 @@
-using System.Collections.ObjectModel;
 using ArcWpf.Controls;
 namespace ArcWpf.Tests;
 [TestClass] public sealed class ChipGroupTests
 {
-    [TestMethod] public void MultipleItemsCanBeSelected() => Sta.Run(() => { var group = new ChipGroup { ItemsSource = new ObservableCollection<ChipItem>([new ChipItem { Label = "A" }, new ChipItem { Label = "B" }]) }; group.SelectedIndex = 0; Assert.AreEqual(0, group.SelectedIndex); });
-    [TestMethod] public void AllowEmptyIsConfigurable() => Sta.Run(() => { var group = new ChipGroup { AllowEmpty = false }; Assert.IsFalse(group.AllowEmpty); });
-    [TestMethod] public void LabelIsBindable() => Sta.Run(() => Assert.AreEqual("Options", new ChipGroup().Label));
+    private static ChipGroup Topics(bool multiple) => new() { Multiple = multiple, ItemsSource = new[] { "Typography", "Color", "Motion" } };
+
+    [TestMethod] public void MultipleToggleAddsInOptionOrder() => Sta.Run(() =>
+    {
+        var group = Topics(true);
+        group.Toggle("Motion");
+        group.Toggle("Typography");
+        CollectionAssert.AreEqual(new[] { "Typography", "Motion" }, group.SelectedValues!.ToArray());
+    });
+
+    [TestMethod] public void SingleToggleReplacesAndClears() => Sta.Run(() =>
+    {
+        var group = Topics(false);
+        group.Toggle("Color");
+        group.Toggle("Motion");
+        CollectionAssert.AreEqual(new[] { "Motion" }, group.SelectedValues!.ToArray());
+        group.Toggle("Motion");
+        Assert.HasCount(0, group.SelectedValues!);
+    });
+
+    [TestMethod] public void ToggleRaisesSelectedValuesChanged() => Sta.Run(() =>
+    {
+        var group = Topics(true);
+        int raised = 0;
+        group.SelectedValuesChanged += (_, _) => raised++;
+        group.Toggle("Color");
+        Assert.AreEqual(1, raised);
+    });
 }

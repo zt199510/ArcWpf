@@ -1,0 +1,16 @@
+{
+  "component": "rating",
+  "source": {
+    "registry": "https://uiarc.dev/r/rating.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/rating/markdown",
+    "page": "https://uiarc.dev/components/rating",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/rating/rating.tsx": "d55bd061628a4e8089b80da49f65f57da977c69bc4c3a218af67a1a9cef79494",
+    "registry/components/rating/rating.module.css": "f62d971f0e4a5fc93580df566019799d29d2e0771d1653de4f3c1f6ea2f64bf9"
+  }
+}

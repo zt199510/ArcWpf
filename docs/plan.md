@@ -488,3 +488,7 @@ TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/Da
 ## FilterToolbar / ReorderableList 源码复刻（2026-10-31）
 
 拉取 d8bc0f0、7e8103f 后按 Arc 源码重做两控件（API 破坏性调整见规格），构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-31-filter-reorder-rebuild.md)。
+
+## 输入类 8 控件源码复刻（2026-10-31）
+
+用户要求对照 Arc 修复 PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker。已冻结来源并按源码重做（API 破坏性调整见规格），构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-31-input-batch-rebuild.md)。

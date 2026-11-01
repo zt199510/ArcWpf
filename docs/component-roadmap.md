@@ -215,44 +215,10 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 - [x] 按源码重做（含可单独使用的 FilterMenu）、Gallery 主示例与专项测试；构建 0 错误。
 - [ ] 在 Windows 运行 6 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-filter-reorder-rebuild.md)）。
 
-## PasswordStrength 开发（2026-10-31）
+## 输入类 8 控件源码复刻（2026-10-31）
 
-- [x] 建立明确标记的 WPF fallback PasswordStrength，支持长度/大小写/数字/符号评分、StrengthLabel、规则提示和主题。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，PasswordStrength 专项 3/3 通过。
-- [ ] Arc PasswordStrength Registry/CSS 来源恢复后评分规则、分段颜色、动效和真实窗口验收。
+PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker 此前为网络受限时的 WPF fallback。
 
-## MoneyInput 开发（2026-10-31）
-
-- [x] 建立明确标记的 WPF fallback MoneyInput，支持货币符号、DecimalDigits、边界和原生 TextBox 编辑。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，MoneyInput 专项 3/3 通过。
-- [ ] Arc MoneyInput Registry/CSS 来源恢复后文化格式、负数、中间态和真实窗口验收。
-
-## PhoneInput 开发（2026-11-01）
-
-- [x] 建立明确标记的 WPF fallback PhoneInput，支持国家区号、数字过滤、10 位格式化和 IsValid。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，PhoneInput 专项 3/3 通过。
-- [ ] Arc PhoneInput Registry/CSS 来源恢复后国际格式、国家选择、IME 和真实窗口验收。
-
-## TagInput 开发（2026-11-01）
-
-- [x] 建立明确标记的 WPF fallback TagInput，支持标签胶囊、Enter/逗号添加、Backspace、删除和 MaxTags。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，TagInput 专项 3/3 通过。
-- [ ] Arc TagInput Registry/CSS 来源恢复后胶囊尺寸、输入宽度、IME 和真实窗口验收。
-
-## ShortcutRecorder 开发（2026-11-01）
-
-- [x] 建立明确标记的 WPF fallback ShortcutRecorder，支持 Ctrl/Alt/Shift/Win 组合录制、Escape、Backspace 和焦点停止。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ShortcutRecorder 专项 3/3 通过。
-- [ ] Arc ShortcutRecorder Registry/CSS 来源恢复后键帽视觉、组合键过滤和真实窗口验收。
-
-## ChipGroup 开发（2026-11-01）
-
-- [x] 建立明确标记的 WPF fallback ChipGroup，支持多选 Chip、禁用、键盘和 SelectionCommitted。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ChipGroup 专项 3/3 通过。
-- [ ] Arc ChipGroup Registry/CSS 来源恢复后胶囊尺寸、选中动效、响应式布局和真实窗口验收。
-
-## Rating / ColorPicker 开发（2026-11-01）
-
-- [x] 实现 Rating fallback，支持 Value、Maximum、只读、星形选择和 UIA；专项 3/3 通过。
-- [x] 实现 ColorPicker fallback，支持 Value、Hex 输入、预设色板、Popup 和 UIA；专项 3/3 通过。
-- [ ] Arc Rating/ColorPicker Registry/CSS 来源恢复后半星、alpha、取色器、hover 和动效复核。
+- [x] 冻结 8 个 Registry 源码、CSS、页面 demo、动效令牌和许可（含 ColorPicker 依赖的 text-morph）；重写参考卡与规格。
+- [x] 按源码重做控件、Gallery 主示例（源 demo 内容）与专项测试；Controls/Gallery/Tests 构建 0 错误。
+- [ ] 在 Windows 运行专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-input-batch-rebuild.md)）。

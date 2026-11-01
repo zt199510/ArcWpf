@@ -1,0 +1,16 @@
+{
+  "component": "shortcut-recorder",
+  "source": {
+    "registry": "https://uiarc.dev/r/shortcut-recorder.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/shortcut-recorder/markdown",
+    "page": "https://uiarc.dev/components/shortcut-recorder",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/shortcut-recorder/shortcut-recorder.tsx": "e9941d875579297a4f666aa711e703f282d98759635e9da53090338e416b8f37",
+    "registry/components/shortcut-recorder/shortcut-recorder.module.css": "a658a5ccd0d5c3d372d778f73cfffe7f909350a8ee258c92c9a05c8ab31add2e"
+  }
+}

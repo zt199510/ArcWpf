@@ -1,1 +1,10 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.TagInputPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="TagInput" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><arc:TagInput x:Name="Tags" Label="Project tags" Placeholder="Add a tag" TagAdded="TagAdded" TagRemoved="TagRemoved"/><TextBlock x:Name="Status" Text="输入标签并按 Enter" Margin="0,16,0,0"/></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.TagInputPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="TagInput" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="Enter 或逗号添加；重复项会让已有标签脉动。Backspace 先选中最后一个标签（光环滑到它），再按一次删除；←/→ 在标签间移动，Esc 取消选中。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例（previews-actions-inputs tagDemoX）：宽 420、最小高 12rem；Project tags = release, web。 -->
+    <Border Width="420" MinHeight="192" HorizontalAlignment="Left" VerticalAlignment="Top">
+      <arc:TagInput x:Name="Tags" Label="Project tags" Placeholder="Add a tag" Description="Press Enter to add a tag. Press Backspace twice to remove the last one." VerticalAlignment="Top"/>
+    </Border>
+  </StackPanel>
+</UserControl>

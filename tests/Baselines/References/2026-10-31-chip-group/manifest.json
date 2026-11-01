@@ -1,0 +1,16 @@
+{
+  "component": "chip-group",
+  "source": {
+    "registry": "https://uiarc.dev/r/chip-group.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/chip-group/markdown",
+    "page": "https://uiarc.dev/components/chip-group",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/chip-group/chip-group.tsx": "18bd79ee819c6546b6f538bc1df5b2645e07093cb8eeb3637939087cd81b7bfd",
+    "registry/components/chip-group/chip-group.module.css": "cc8c6c63756b0dee42c97c55ede87074996628f237bc31ef32e3d64f8f72b928"
+  }
+}

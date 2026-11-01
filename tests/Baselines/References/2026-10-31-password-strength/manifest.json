@@ -1,0 +1,16 @@
+{
+  "component": "password-strength",
+  "source": {
+    "registry": "https://uiarc.dev/r/password-strength.json",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "markdown": "https://uiarc.dev/components/password-strength/markdown",
+    "page": "https://uiarc.dev/components/password-strength",
+    "license": "https://uiarc.dev/license",
+    "collectedAt": "2026-10-31",
+    "licenseNotice": "Arc UI source retained for analysis; WPF implementation is an independent adaptation."
+  },
+  "files": {
+    "registry/components/password-strength/password-strength.tsx": "8271b05ab8102aaf9cf39b097d97f1112da41dc6f705c22e5842fc96e3cf8996",
+    "registry/components/password-strength/password-strength.module.css": "57080bc46186fa8643600e5ee609e63fc4b6c741ef23cf158f1abccc3747dd68"
+  }
+}

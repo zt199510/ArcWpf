@@ -1,1 +1,21 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.ChipGroupPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="ChipGroup" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><arc:ChipGroup x:Name="Group" Label="Project filters" SelectionCommitted="Changed"><arc:ChipGroup.Items><arc:ChipItem Label="Design"/><arc:ChipItem Label="Engineering"/><arc:ChipItem Label="Marketing"/><arc:ChipItem Label="Disabled" IsEnabled="False"/></arc:ChipGroup.Items></arc:ChipGroup><TextBlock x:Name="Status" Text="选择筛选项" Margin="0,16,0,0"/></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.ChipGroupPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ChipGroup" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/>
+    <TextBlock Text="点选芯片：勾号随标签让位而绘出，可见边缘以弹簧追随新宽度，邻居滑到新位置；超过 6 个折叠到 +N more。方向键在芯片间移动，Space/Enter 切换。" TextWrapping="Wrap" Margin="0,0,0,18"/>
+    <!-- Arc 主示例（chip-group demo）：宽 36rem，Topics 11 项、初始 Motion、maxVisible 6；资源列表前 3 条 + "+N more"；底部 Match 与 Clear filters。 -->
+    <StackPanel Width="576" HorizontalAlignment="Left">
+      <arc:ChipGroup x:Name="Topics" Label="Topics" MaxVisible="6" SelectedValuesChanged="TopicsChanged"/>
+      <Border Margin="0,20,0,0" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}" CornerRadius="18" Background="{DynamicResource ArcWpf.Brush.ChipListSurface}" ClipToBounds="True">
+        <Grid x:Name="ListFrame">
+          <StackPanel x:Name="List" Margin="0,4" TextElement.FontSize="14"/>
+        </Grid>
+      </Border>
+      <DockPanel Margin="0,20,0,0" LastChildFill="False">
+        <arc:SegmentedControl x:Name="Match" Label="Match" SelectedIndex="0" SelectionChanged="MatchChanged" DockPanel.Dock="Left">
+          <arc:SegmentedItem Content="Any topic"/><arc:SegmentedItem Content="One topic"/>
+        </arc:SegmentedControl>
+        <arc:Button x:Name="Clear" Content="Clear filters" Variant="Ghost" Size="Small" DockPanel.Dock="Right" VerticalAlignment="Center" Click="ClearClick"/>
+      </DockPanel>
+    </StackPanel>
+  </StackPanel>
+</UserControl>
