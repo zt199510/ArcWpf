@@ -240,3 +240,9 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 - [x] 建立明确标记的 WPF fallback ResizablePanels，复用 GridSplitter，支持左右内容、比例、最小宽度和键盘/鼠标调整。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，ResizablePanels 专项 3/3 通过。
 - [ ] Arc ResizablePanels Registry/CSS 来源恢复后拖拽把手、边界回弹、比例持久化和真实窗口验收。
+
+## Card / MetricCard 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback Card/MetricCard，支持标题、说明、内容、底部和数值/趋势展示。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，Card 专项筛选通过。
+- [ ] Arc Card/MetricCard Registry/CSS 来源恢复后圆角、阴影、数值排版和真实窗口验收。
