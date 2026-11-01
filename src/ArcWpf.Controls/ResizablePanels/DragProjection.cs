@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace ArcWpf.Controls;
 
-internal sealed class DragProjection
+internal sealed class DragProjection(double recentMilliseconds = 90, double staleMilliseconds = 50, double projectionSeconds = .099)
 {
     private readonly List<(double Time, double Position)> _samples = [];
     private long _started;
@@ -23,7 +23,10 @@ internal sealed class DragProjection
     }
 
     internal double Project()
-        => ProjectAt(Stopwatch.GetElapsedTime(_started).TotalMilliseconds);
+        => Velocity() * projectionSeconds;
+
+    internal double Velocity()
+        => VelocityAt(Stopwatch.GetElapsedTime(_started).TotalMilliseconds);
 
     internal void AddSample(double milliseconds, double position)
     {
@@ -32,12 +35,14 @@ internal sealed class DragProjection
     }
 
     internal double ProjectAt(double milliseconds)
+        => VelocityAt(milliseconds) * projectionSeconds;
+
+    internal double VelocityAt(double milliseconds)
     {
-        var recent = _samples.Where(sample => milliseconds - sample.Time <= 90).ToArray();
-        if (recent.Length < 2 || milliseconds - recent[^1].Time > 50) return 0;
+        var recent = _samples.Where(sample => milliseconds - sample.Time <= recentMilliseconds).ToArray();
+        if (recent.Length < 2 || milliseconds - recent[^1].Time > staleMilliseconds) return 0;
         double elapsed = recent[^1].Time - recent[0].Time;
         if (elapsed <= 0) return 0;
-        double velocity = (recent[^1].Position - recent[0].Position) / (elapsed / 1000);
-        return velocity / 1000 * .99 / (1 - .99);
+        return (recent[^1].Position - recent[0].Position) / (elapsed / 1000);
     }
 }

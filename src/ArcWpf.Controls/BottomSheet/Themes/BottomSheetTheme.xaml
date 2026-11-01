@@ -1,0 +1,70 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="{x:Type arc:BottomSheet}">
+    <Setter Property="Visibility" Value="Collapsed"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceRaised}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:BottomSheet}">
+      <Grid ClipToBounds="True">
+        <Border x:Name="PART_Overlay" Background="{DynamicResource ArcWpf.Brush.DialogOverlay}"/>
+        <Border x:Name="PART_Surface" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" MaxWidth="576" Height="420"
+                CornerRadius="18,18,0,0" BorderThickness="1,1,1,0" BorderBrush="{TemplateBinding BorderBrush}"
+                Background="{TemplateBinding Background}" Effect="{DynamicResource ArcWpf.Shadow.Floating}" Focusable="True">
+          <Grid>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Border x:Name="PART_Header" Grid.Row="0" Padding="20,8,20,16" Background="Transparent">
+              <StackPanel>
+                <Button x:Name="PART_Grabber" Width="56" Height="20" HorizontalAlignment="Center" Margin="0,0,0,4"
+                        Padding="0" BorderThickness="0" Background="Transparent" Cursor="Hand">
+                  <Button.Template><ControlTemplate TargetType="Button"><Grid Background="Transparent">
+                    <Border Width="36" Height="5" CornerRadius="2.5" Background="{DynamicResource ArcWpf.Brush.BorderStrong}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                  </Grid></ControlTemplate></Button.Template>
+                </Button>
+                <Grid>
+                  <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
+                  <StackPanel Grid.Column="0">
+                    <TextBlock Text="{TemplateBinding Title}" FontSize="18" FontWeight="Medium" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="DescriptionText" Text="{TemplateBinding Description}" Margin="0,2,0,0"
+                               FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" TextWrapping="Wrap"/>
+                  </StackPanel>
+                  <Button x:Name="PART_CloseButton" Grid.Column="2" Width="32" Height="32" Margin="0,-2,0,0"
+                          Padding="0" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}"
+                          BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1"
+                          AutomationProperties.Name="Close sheet">
+                    <Button.Template><ControlTemplate TargetType="Button">
+                      <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="16">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      </Border>
+                    </ControlTemplate></Button.Template>
+                    <Path Width="16" Height="16" Data="M 4,4 L 12,12 M 12,4 L 4,12"
+                          Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}" StrokeThickness="1.75"
+                          StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                  </Button>
+                </Grid>
+              </StackPanel>
+            </Border>
+            <ScrollViewer x:Name="PART_Body" Grid.Row="1" VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Disabled" Focusable="False">
+              <Border Padding="20,4,20,24">
+                <ContentPresenter ContentSource="Content" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+              </Border>
+            </ScrollViewer>
+          </Grid>
+        </Border>
+      </Grid>
+      <ControlTemplate.Triggers>
+        <Trigger Property="IsPresented" Value="True"><Setter Property="Visibility" Value="Visible"/></Trigger>
+        <Trigger Property="Description" Value=""><Setter TargetName="DescriptionText" Property="Visibility" Value="Collapsed"/></Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>

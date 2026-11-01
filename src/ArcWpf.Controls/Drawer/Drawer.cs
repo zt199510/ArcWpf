@@ -149,6 +149,7 @@ public class Drawer : ContentControl
         int token = ++_version;
         if (_surface is null) { if (!open) FinishClose(true); return; }
         _surface.IsHitTestVisible = open;
+        if (TryCustomTransition(open, animate, token)) return;
         var level = ArcMotion.GetLevel(this);
         bool motion = animate && level != ArcMotionLevel.Off;
         bool full = level == ArcMotionLevel.Full;
@@ -163,6 +164,12 @@ public class Drawer : ContentControl
         }
         if (_overlay is not null) _motion.Double(_overlay, OpacityProperty, open ? 1 : 0, full && open ? .24 : fade, motion, enter: open);
         _motion.Double(_surface, OpacityProperty, open ? 1 : 0, fade, motion, enter: open, completed: () => { if (!open && token == _version && !IsOpen) FinishClose(true); });
+    }
+
+    protected virtual bool TryCustomTransition(bool open, bool animate, int token) => false;
+    protected void FinishCustomClose(int token)
+    {
+        if (token == _version && !IsOpen) FinishClose(true);
     }
 
     private double StartOffset()
@@ -199,7 +206,7 @@ public class Drawer : ContentControl
         _focus = Dispatcher.BeginInvoke(DispatcherPriority.Input, new Action(() => { _focus = null; if (IsOpen && IsPresented) FocusInitial(); }));
     }
 
-    internal void FocusInitial()
+    internal virtual void FocusInitial()
     {
         if (InitialFocusElement is DependencyObject candidate && DrawerHost.Contains(this, candidate) && InitialFocusElement.Focus()) return;
         if (FocusTargets().FirstOrDefault() is { } first && first.Focus()) return;

@@ -21,6 +21,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Alert/Themes/AlertTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ToastStack/Themes/ToastStackTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Drawer/Themes/DrawerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/BottomSheet/Themes/BottomSheetTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Accordion/Themes/AccordionTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableCard/Themes/ExpandableCardTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Menu/Themes/MenuTheme.xaml" />

@@ -226,8 +226,8 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 ## BottomSheet 开发（2026-11-01）
 
 - [x] 基于 Drawer/DrawerHost 实现 BottomSheet，复用遮罩、Escape、外部点击、焦点归还和 Bottom 动效。
-- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，BottomSheet 专项 3/3 通过。
-- [ ] Arc BottomSheet Registry/CSS 来源恢复后 detent、safe-area、拖拽和真实窗口验收。
+- [x] 按冻结 Registry/CSS 接入默认 45%/92% detent、抓手键盘、拖拽速度投影、橡皮筋、动态遮罩、内容滚动、主题、Gallery 和专项测试；BottomSheet/Drawer 精确专项 16/16 通过。
+- [ ] safe-area、逐帧节奏、真实鼠标/触摸、多 DPI 和 Gallery 实际窗口观察。
 
 ## HoverCard 开发（2026-11-01）
 

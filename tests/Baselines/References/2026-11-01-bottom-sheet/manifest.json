@@ -1,0 +1,21 @@
+{
+  "component": "bottom-sheet",
+  "collectedAt": "2026-11-01",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/bottom-sheet.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/bottom-sheet/markdown",
+    "page.html": "https://uiarc.dev/components/bottom-sheet",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "7e0ea9d7288f26075b33a81ea1c307879d7d1d5e0f59afe597638bc1be7445aa",
+    "license.html": "10ddef90c9f683ce0e8ce4b56cbe25f3a1d05c8f1d737b6ef0b9f8fe693de122",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "558a4f00a03f1b8d22c8d3c276cd9719071252217a4e5eb1079596e5ab135293",
+    "registry.json": "3bec01c6f348635cab9bd33510fb3bb1f6c9d97cce1861c5ebb0a8956746a719",
+    "registry/components/bottom-sheet/bottom-sheet.module.css": "7e7f5d9d09757b8c76afacd694bed8151fe48c9afe9e7a85a157361902275624",
+    "registry/components/bottom-sheet/bottom-sheet.tsx": "c31e59f706c6da72acf78737c842fc58bf1e42d75002b89103914308d689d3f3"
+  },
+  "errors": []
+}
