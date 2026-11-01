@@ -2,10 +2,12 @@
   <Style TargetType="{x:Type local:HoverCard}">
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:HoverCard}">
       <Grid>
-        <ContentPresenter x:Name="PART_Trigger" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Focusable="True" KeyboardNavigation.IsTabStop="True"/>
+        <ContentPresenter x:Name="PART_Trigger" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Focusable="False" KeyboardNavigation.IsTabStop="False"/>
         <Popup x:Name="PART_Popup" PlacementTarget="{Binding ElementName=PART_Trigger}" Placement="Custom" StaysOpen="True" AllowsTransparency="True" PopupAnimation="None">
-          <Border Width="296" Padding="16" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}" Focusable="False">
-            <ContentPresenter Content="{TemplateBinding CardContent}" IsHitTestVisible="False"/>
+          <Border x:Name="PART_Frame" Background="Transparent">
+          <Border x:Name="PART_Card" Width="296" Padding="16" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}" Focusable="False">
+            <ScrollViewer Focusable="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><ContentPresenter Content="{TemplateBinding CardContent}" Focusable="False" IsHitTestVisible="False"/></ScrollViewer>
+          </Border>
           </Border>
         </Popup>
       </Grid>
@@ -16,7 +18,7 @@
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:HoverCardProfile}">
       <StackPanel>
-        <Grid>
+        <Grid x:Name="PART_Head">
           <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="12"/><ColumnDefinition/></Grid.ColumnDefinitions>
           <local:Avatar Grid.Column="0" Width="48" Height="48" Size="Large" DisplayName="{Binding DisplayName, RelativeSource={RelativeSource TemplatedParent}}" Source="{Binding AvatarSource, RelativeSource={RelativeSource TemplatedParent}}"/>
           <StackPanel Grid.Column="2" VerticalAlignment="Center">
