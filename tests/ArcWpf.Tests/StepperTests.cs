@@ -182,6 +182,147 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void CheckAndErrorGlyphsUseSourceGeometryAndClearDrawingClocks() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { CurrentIndex = 1 };
+        stepper.Steps.Add(new StepperStep { Title = "Cart" });
+        stepper.Steps.Add(new StepperStep { Title = "Shipping" });
+        ArcMotion.SetLevel(stepper, ArcMotionLevel.Full);
+        var window = new Window { Content = stepper, Width = 520, Height = 180, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.UpdateLayout();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var first = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(0)!;
+            var second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            var completed = (System.Windows.Shapes.Path)items.ItemTemplate.FindName("CheckPath", first)!;
+            Assert.AreEqual(Visibility.Visible, completed.Visibility);
+            Assert.AreEqual(Visibility.Collapsed, ((TextBlock)items.ItemTemplate.FindName("MarkText", first)!).Visibility);
+            Assert.AreEqual(13d, completed.Data.Bounds.Width, .01);
+            Assert.AreEqual(8.75, completed.Data.Bounds.Height, .01);
+            stepper.Next(); Sta.Pump();
+            var check = (System.Windows.Shapes.Path)items.ItemTemplate.FindName("CheckPath", second)!;
+            Assert.AreEqual(Visibility.Visible, check.Visibility);
+            Assert.IsTrue(check.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(600) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(0d, check.StrokeDashOffset, .01);
+            Assert.IsFalse(check.HasAnimatedProperties);
+            stepper.Steps[1].Error = "Review required"; Sta.Pump();
+            var error = (System.Windows.Shapes.Path)items.ItemTemplate.FindName("ErrorPath", second)!;
+            Assert.AreEqual(Visibility.Visible, error.Visibility);
+            Assert.AreEqual(Visibility.Collapsed, check.Visibility);
+            Assert.IsTrue(error.HasAnimatedProperties);
+            ArcMotion.SetLevel(stepper, ArcMotionLevel.Off);
+            Assert.AreEqual(0d, error.StrokeDashOffset, .001);
+            Assert.IsFalse(error.HasAnimatedProperties);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void ChangingCurrentDescriptionSettlesTextAndBlur() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { CurrentIndex = 1, Details = StepperDetails.Current };
+        stepper.Steps.Add(new StepperStep { Title = "Cart" });
+        stepper.Steps.Add(new StepperStep { Title = "Shipping", Description = "Address and delivery" });
+        stepper.Steps.Add(new StepperStep { Title = "Payment", Description = "Payment details" });
+        ArcMotion.SetLevel(stepper, ArcMotionLevel.Full);
+        var window = new Window { Content = stepper, Width = 600, Height = 190, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.Next(); Sta.Pump();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var third = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(2)!;
+            var description = (TextBlock)items.ItemTemplate.FindName("DescriptionText", third)!;
+            Assert.AreEqual("Payment details", description.Text);
+            Assert.IsTrue(description.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(450) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(1d, description.Opacity, .01);
+            Assert.AreEqual(0d, ((System.Windows.Media.TranslateTransform)description.RenderTransform).Y, .01);
+            Assert.AreEqual(0d, ((System.Windows.Media.Effects.BlurEffect)description.Effect).Radius, .01);
+            Assert.IsFalse(description.HasAnimatedProperties);
+            stepper.Steps[2].Error = "Card declined"; Sta.Pump();
+            Assert.AreEqual("Card declined", description.Text);
+            Assert.IsTrue(description.HasAnimatedProperties);
+            ArcMotion.SetLevel(stepper, ArcMotionLevel.Off);
+            Assert.AreEqual(1d, description.Opacity, .001);
+            Assert.IsFalse(description.HasAnimatedProperties);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void WrappedDescriptionSlotSpringsOpenAndClosed() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { Width = 250, CurrentIndex = 0, Details = StepperDetails.Current, Orientation = StepperOrientation.Vertical };
+        stepper.Steps.Add(new StepperStep { Title = "Account", Description = "Details" });
+        stepper.Steps.Add(new StepperStep { Title = "Shipping", Description = "Address and delivery instructions for the selected order" });
+        ArcMotion.SetLevel(stepper, ArcMotionLevel.Full);
+        var window = new Window { Content = stepper, Width = 340, Height = 320, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.UpdateLayout();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            var slot = (Border)items.ItemTemplate.FindName("DescriptionSlot", second)!;
+            var description = (TextBlock)items.ItemTemplate.FindName("DescriptionText", second)!;
+            Assert.AreEqual(0d, slot.ActualHeight, 1);
+            stepper.Next(); Sta.Pump();
+            Assert.IsTrue(slot.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(slot.HasAnimatedProperties);
+            Assert.IsTrue(double.IsNaN(slot.Height), $"Height={slot.Height}, ActualHeight={slot.ActualHeight}");
+            Assert.IsTrue(slot.ActualHeight > 20, $"slot={slot.ActualWidth}x{slot.ActualHeight}, text={description.DesiredSize.Width}x{description.DesiredSize.Height}, content={description.Text}");
+            var origin = slot.TranslatePoint(new Point(), stepper);
+            Assert.IsTrue(origin.X + slot.ActualWidth <= stepper.ActualWidth + 1, $"Description overflows: right={origin.X + slot.ActualWidth}, stepper={stepper.ActualWidth}");
+            stepper.Previous(); Sta.Pump();
+            Assert.IsTrue(slot.HasAnimatedProperties);
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(slot.HasAnimatedProperties);
+            Assert.AreEqual(0d, slot.ActualHeight, 1);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void DescriptionHeightRetargetsDuringRapidStepChanges() => Sta.Run(() =>
+    {
+        var stepper = new Stepper { Width = 250, Details = StepperDetails.Current, Orientation = StepperOrientation.Vertical };
+        stepper.Steps.Add(new StepperStep { Title = "Account", Description = "Details" });
+        stepper.Steps.Add(new StepperStep { Title = "Shipping", Description = "Address and delivery instructions for the selected order" });
+        ArcMotion.SetLevel(stepper, ArcMotionLevel.Full);
+        var window = new Window { Content = stepper, Width = 340, Height = 320, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            var slot = (Border)items.ItemTemplate.FindName("DescriptionSlot", second)!;
+            stepper.Next(); Sta.Pump();
+            Assert.IsTrue(slot.HasAnimatedProperties);
+            var sample = new System.Windows.Threading.DispatcherFrame();
+            var sampleTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(80) };
+            sampleTimer.Tick += (_, _) => { sampleTimer.Stop(); sample.Continue = false; };
+            sampleTimer.Start(); System.Windows.Threading.Dispatcher.PushFrame(sample);
+            stepper.Previous(); Sta.Pump();
+            Assert.IsTrue(slot.HasAnimatedProperties);
+            stepper.Next(); Sta.Pump();
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(slot.HasAnimatedProperties);
+            Assert.IsTrue(slot.ActualHeight > 20);
+            Assert.IsTrue(double.IsNaN(slot.Height), $"Height={slot.Height}, ActualHeight={slot.ActualHeight}");
+        }
+        finally { window.Close(); }
+    });
     private static System.Windows.Controls.Button? FindButton(DependencyObject root)
     {
         if (root is System.Windows.Controls.Button button) return button;

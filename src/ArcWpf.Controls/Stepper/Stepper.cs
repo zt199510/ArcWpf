@@ -35,7 +35,7 @@ public sealed class StepperStep : INotifyPropertyChanged
     }
 }
 
-public class Stepper : Control
+public partial class Stepper : Control
 {
     public static readonly DependencyProperty CurrentIndexProperty = DependencyProperty.Register(nameof(CurrentIndex), typeof(int), typeof(Stepper), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIndexChanged), value => value is int index && index >= 0);
     public static readonly DependencyProperty AllowStepClickProperty = DependencyProperty.Register(nameof(AllowStepClick), typeof(bool), typeof(Stepper), new PropertyMetadata(true, OnInteractionChanged));
@@ -56,6 +56,11 @@ public class Stepper : Control
     private readonly OwnedMotion _motion = new();
     private int _visualVersion;
     private int _renderedIndex = -1;
+    private string[] _renderedMarks = [];
+    private string[] _renderedTitles = [], _renderedDescriptions = [];
+    private double[] _descriptionHeights = [];
+    private readonly HashSet<Border> _descriptionSlots = [];
+    private readonly Dictionary<Border, System.Windows.Media.Animation.AnimationTimeline> _descriptionTimelines = [];
     public int CurrentIndex { get => (int)GetValue(CurrentIndexProperty); set => SetValue(CurrentIndexProperty, value); }
     public bool AllowStepClick { get => (bool)GetValue(AllowStepClickProperty); set => SetValue(AllowStepClickProperty, value); }
     public StepperOrientation Orientation { get => (StepperOrientation)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
@@ -105,7 +110,7 @@ public class Stepper : Control
     public Stepper()
     {
         Steps.CollectionChanged += StepsChanged;
-        Unloaded += (_, _) => { _motion.Stop(); _renderedIndex = -1; };
+        Unloaded += (_, _) => { _motion.Stop(); StopDescriptionMotions(); _renderedIndex = -1; _renderedMarks = []; _renderedTitles = []; _renderedDescriptions = []; _descriptionHeights = []; };
         AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
     }
     private void StepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -123,7 +128,11 @@ public class Stepper : Control
     public override void OnApplyTemplate()
     {
         _motion.Stop();
+        StopDescriptionMotions();
         _renderedIndex = -1;
+        _renderedMarks = [];
+        _renderedTitles = []; _renderedDescriptions = [];
+        _descriptionHeights = [];
         if (_items is not null)
         {
             _items.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(StepClicked));
@@ -152,7 +161,10 @@ public class Stepper : Control
         if (e.Property == OrientationProperty)
         {
             control._motion.Stop();
+            control.StopDescriptionMotions();
             control._renderedIndex = -1;
+            control._renderedMarks = []; control._renderedTitles = []; control._renderedDescriptions = [];
+            control._descriptionHeights = [];
         }
         control.Refresh();
     }
@@ -177,6 +189,10 @@ public class Stepper : Control
         {
             _motion.Stop();
             _renderedIndex = -1;
+            _renderedMarks = [];
+            _renderedTitles = []; _renderedDescriptions = [];
+            StopDescriptionMotions();
+            _descriptionHeights = [];
             _views.Clear();
             for (int index = 0; index < Steps.Count; index++) _views.Add(new StepView(Steps[index], index));
         }
@@ -219,6 +235,8 @@ public class Stepper : Control
                 _motion.Double(ringScale, ScaleTransform.ScaleXProperty, target > 0 ? 1 : .6, .26, animate, spring: true, delay: delay);
                 _motion.Double(ringScale, ScaleTransform.ScaleYProperty, target > 0 ? 1 : .6, .26, animate, spring: true, delay: delay);
             }
+            UpdateGlyph(container, index, from, animate);
+            UpdateText(container, index);
         }
         if (found) _renderedIndex = CurrentIndex;
     }
