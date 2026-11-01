@@ -133,6 +133,55 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void ConnectorMotionReversesAndClearsClock() => Sta.Run(() =>
+    {
+        var stepper = new Stepper();
+        for (int index = 0; index < 3; index++) stepper.Steps.Add(new StepperStep { Title = $"Step {index + 1}" });
+        ArcMotion.SetLevel(stepper, ArcMotionLevel.Full);
+        var window = new Window { Content = stepper, Width = 620, Height = 180, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); stepper.UpdateLayout();
+            var items = (ItemsControl)stepper.Template.FindName("PART_Items", stepper)!;
+            var first = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(0)!;
+            var second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            var firstFill = (Border)items.ItemTemplate.FindName("ConnectorFill", first)!;
+            var secondFill = (Border)items.ItemTemplate.FindName("ConnectorFill", second)!;
+            var firstScale = (System.Windows.Media.ScaleTransform)firstFill.RenderTransform;
+            var secondScale = (System.Windows.Media.ScaleTransform)secondFill.RenderTransform;
+            Assert.AreEqual(0d, firstScale.ScaleX, .001);
+            stepper.CurrentIndex = 2; Sta.Pump();
+            Assert.IsTrue(firstScale.HasAnimatedProperties);
+            stepper.CurrentIndex = 1; Sta.Pump();
+            Assert.AreSame(firstFill, items.ItemTemplate.FindName("ConnectorFill", (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(0)!)!);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(850) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(1d, firstScale.ScaleX, .01);
+            Assert.AreEqual(0d, secondScale.ScaleX, .01);
+            Assert.IsFalse(firstScale.HasAnimatedProperties);
+            Assert.IsFalse(secondScale.HasAnimatedProperties);
+            ArcMotion.SetLevel(stepper, ArcMotionLevel.Off);
+            stepper.CurrentIndex = 2; Sta.Pump();
+            Assert.AreEqual(1d, secondScale.ScaleX, .001);
+            Assert.IsFalse(secondScale.HasAnimatedProperties);
+            ArcMotion.SetLevel(stepper, ArcMotionLevel.Full);
+            stepper.CurrentIndex = 0; Sta.Pump();
+            Assert.IsTrue(secondScale.HasAnimatedProperties);
+            ArcMotion.SetLevel(stepper, ArcMotionLevel.Off);
+            Assert.AreEqual(0d, secondScale.ScaleX, .001);
+            Assert.IsFalse(secondScale.HasAnimatedProperties);
+            stepper.Orientation = StepperOrientation.Vertical;
+            stepper.CurrentIndex = 2; Sta.Pump(); stepper.UpdateLayout();
+            second = (ContentPresenter)items.ItemContainerGenerator.ContainerFromIndex(1)!;
+            secondFill = (Border)items.ItemTemplate.FindName("ConnectorFill", second)!;
+            secondScale = (System.Windows.Media.ScaleTransform)secondFill.RenderTransform;
+            Assert.AreEqual(1d, secondScale.ScaleX, .001);
+            Assert.AreEqual(1d, secondScale.ScaleY, .001);
+        }
+        finally { window.Close(); }
+    });
     private static System.Windows.Controls.Button? FindButton(DependencyObject root)
     {
         if (root is System.Windows.Controls.Button button) return button;

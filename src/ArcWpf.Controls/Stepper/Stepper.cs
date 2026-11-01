@@ -7,6 +7,9 @@ using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Threading;
+using System.Windows.Automation;
 
 namespace ArcWpf.Controls;
 
@@ -49,6 +52,10 @@ public class Stepper : Control
     public static readonly RoutedEvent CurrentStepChangedEvent = EventManager.RegisterRoutedEvent(nameof(CurrentStepChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Stepper));
     private ItemsControl? _items;
     private readonly HashSet<StepperStep> _observed = [];
+    private readonly ObservableCollection<StepView> _views = [];
+    private readonly OwnedMotion _motion = new();
+    private int _visualVersion;
+    private int _renderedIndex = -1;
     public int CurrentIndex { get => (int)GetValue(CurrentIndexProperty); set => SetValue(CurrentIndexProperty, value); }
     public bool AllowStepClick { get => (bool)GetValue(AllowStepClickProperty); set => SetValue(AllowStepClickProperty, value); }
     public StepperOrientation Orientation { get => (StepperOrientation)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
@@ -60,14 +67,47 @@ public class Stepper : Control
     public string CurrentDescription => (string)GetValue(CurrentDescriptionProperty);
     public ObservableCollection<StepperStep> Steps { get; } = [];
     public event RoutedEventHandler CurrentStepChanged { add => AddHandler(CurrentStepChangedEvent, value); remove => RemoveHandler(CurrentStepChangedEvent, value); }
-    private sealed record StepView(StepperStep Step, int Index, bool IsCurrent, bool IsComplete, bool IsSelectable, bool IsError, bool HasNext, bool ShowDescription)
+    private sealed class StepView(StepperStep step, int index) : INotifyPropertyChanged
     {
+        public StepperStep Step { get; } = step;
+        public int Index { get; } = index;
+        private bool _isCurrent, _isComplete, _isSelectable, _isError, _hasNext, _showDescription;
+        public bool IsCurrent { get => _isCurrent; private set => Set(ref _isCurrent, value); }
+        public bool IsComplete { get => _isComplete; private set => Set(ref _isComplete, value); }
+        public bool IsSelectable { get => _isSelectable; private set => Set(ref _isSelectable, value); }
+        public bool IsError { get => _isError; private set => Set(ref _isError, value); }
+        public bool HasNext { get => _hasNext; private set => Set(ref _hasNext, value); }
+        public bool ShowDescription { get => _showDescription; private set => Set(ref _showDescription, value); }
         public string Title => Step.Title;
         public string Description => IsError ? Step.Error : ShowDescription ? Step.Description : string.Empty;
         public string Mark => IsError ? "!" : IsComplete ? "✓" : (Index + 1).ToString(System.Globalization.CultureInfo.CurrentCulture);
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void Update(Stepper owner)
+        {
+            IsCurrent = Index == owner.CurrentIndex;
+            IsComplete = Index < owner.CurrentIndex;
+            IsSelectable = owner.AllowStepClick && Step.IsEnabled && IsComplete;
+            IsError = !string.IsNullOrEmpty(Step.Error);
+            HasNext = Index < owner.Steps.Count - 1;
+            ShowDescription = owner.Details == StepperDetails.All || IsCurrent;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Description)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Mark)));
+        }
+        private void Set(ref bool field, bool value, [CallerMemberName] string? name = null)
+        {
+            if (field == value) return;
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
     static Stepper() { DefaultStyleKeyProperty.OverrideMetadata(typeof(Stepper), new FrameworkPropertyMetadata(typeof(Stepper))); }
-    public Stepper() { Steps.CollectionChanged += StepsChanged; }
+    public Stepper()
+    {
+        Steps.CollectionChanged += StepsChanged;
+        Unloaded += (_, _) => { _motion.Stop(); _renderedIndex = -1; };
+        AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
+    }
     private void StepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         foreach (var step in _observed.Except(Steps).ToArray())
@@ -82,6 +122,8 @@ public class Stepper : Control
     private void StepChanged(object? sender, PropertyChangedEventArgs e) => Refresh();
     public override void OnApplyTemplate()
     {
+        _motion.Stop();
+        _renderedIndex = -1;
         if (_items is not null)
         {
             _items.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(StepClicked));
@@ -91,13 +133,34 @@ public class Stepper : Control
         _items = GetTemplateChild("PART_Items") as ItemsControl;
         if (_items is not null)
         {
+            _items.ItemsSource = _views;
             _items.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(StepClicked));
             _items.PreviewKeyDown += StepKeyDown;
         }
         Refresh();
     }
-    private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var c = (Stepper)d; c.Refresh(); c.RaiseEvent(new RoutedEventArgs(CurrentStepChangedEvent, c)); }
-    private static void OnInteractionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((Stepper)d).Refresh();
+    private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (Stepper)d;
+        control.Refresh();
+        control.RaiseEvent(new RoutedEventArgs(CurrentStepChangedEvent, control));
+        UIElementAutomationPeer.FromElement(control)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+    }
+    private static void OnInteractionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (Stepper)d;
+        if (e.Property == OrientationProperty)
+        {
+            control._motion.Stop();
+            control._renderedIndex = -1;
+        }
+        control.Refresh();
+    }
+    protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.Property == ArcMotion.LevelProperty && _items is not null) UpdateVisuals();
+    }
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
         base.OnRenderSizeChanged(sizeInfo);
@@ -110,8 +173,54 @@ public class Stepper : Control
         var current = CurrentIndex < Steps.Count ? Steps[CurrentIndex] : null;
         SetValue(CurrentLabelPropertyKey, current?.Title ?? CompleteLabel);
         SetValue(CurrentDescriptionPropertyKey, current is null ? string.Empty : !string.IsNullOrEmpty(current.Error) ? current.Error : current.Description);
-        if (_items is not null)
-            _items.ItemsSource = Steps.Select((step, index) => new StepView(step, index, index == CurrentIndex, index < CurrentIndex, AllowStepClick && step.IsEnabled && index < CurrentIndex, !string.IsNullOrEmpty(step.Error), index < Steps.Count - 1, Details == StepperDetails.All || index == CurrentIndex)).ToArray();
+        if (_views.Count != Steps.Count || _views.Where((view, index) => !ReferenceEquals(view.Step, Steps[index])).Any())
+        {
+            _motion.Stop();
+            _renderedIndex = -1;
+            _views.Clear();
+            for (int index = 0; index < Steps.Count; index++) _views.Add(new StepView(Steps[index], index));
+        }
+        foreach (var view in _views) view.Update(this);
+        int version = ++_visualVersion;
+        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () =>
+        {
+            if (version == _visualVersion) UpdateVisuals();
+        });
+    }
+    private void UpdateVisuals()
+    {
+        if (_items is null || _views.Count == 0) return;
+        bool animate = _renderedIndex >= 0 && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full;
+        int from = _renderedIndex;
+        bool found = false;
+        for (int index = 0; index < _views.Count; index++)
+        {
+            if (_items.ItemContainerGenerator.ContainerFromIndex(index) is not ContentPresenter container) continue;
+            if (_items.ItemTemplate.FindName("ConnectorFill", container) is Border fill)
+            {
+                found = true;
+                if (fill.RenderTransform is not ScaleTransform scale || scale.IsFrozen)
+                    fill.RenderTransform = scale = new ScaleTransform(1, 1);
+                bool vertical = Orientation == StepperOrientation.Vertical;
+                double target = index < CurrentIndex ? 1 : 0;
+                double delay = animate && index >= Math.Min(from, CurrentIndex) && index < Math.Max(from, CurrentIndex)
+                    ? (CurrentIndex > from ? index - from : from - 1 - index) * .08 : 0;
+                _motion.Double(scale, vertical ? ScaleTransform.ScaleYProperty : ScaleTransform.ScaleXProperty, target, .42, animate, spring: true, delay: delay);
+                _motion.Double(scale, vertical ? ScaleTransform.ScaleXProperty : ScaleTransform.ScaleYProperty, 1, 0, false);
+            }
+            if (_items.ItemTemplate.FindName("Ring", container) is Border ring)
+            {
+                found = true;
+                if (ring.RenderTransform is not ScaleTransform ringScale || ringScale.IsFrozen)
+                    ring.RenderTransform = ringScale = new ScaleTransform(.6, .6);
+                double target = index == CurrentIndex ? 1 : 0;
+                double delay = animate && target > 0 ? Math.Max(0, Math.Abs(CurrentIndex - from) - 1) * .08 + .12 : 0;
+                _motion.Double(ring, OpacityProperty, target, .16, animate, delay: delay);
+                _motion.Double(ringScale, ScaleTransform.ScaleXProperty, target > 0 ? 1 : .6, .26, animate, spring: true, delay: delay);
+                _motion.Double(ringScale, ScaleTransform.ScaleYProperty, target > 0 ? 1 : .6, .26, animate, spring: true, delay: delay);
+            }
+        }
+        if (found) _renderedIndex = CurrentIndex;
     }
     private void StepClicked(object sender, RoutedEventArgs e)
     {
