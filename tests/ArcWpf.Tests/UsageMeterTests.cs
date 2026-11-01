@@ -1,4 +1,5 @@
 using ArcWpf.Controls;
+using System.Windows;
 namespace ArcWpf.Tests;
 [TestClass] public sealed class UsageMeterTests
 {
@@ -242,6 +243,69 @@ namespace ArcWpf.Tests;
             Assert.IsTrue(caption.Text.Contains("Long-term media archives", StringComparison.Ordinal));
             Assert.IsTrue(caption.ActualWidth > 0);
             Assert.IsTrue(caption.TranslatePoint(new System.Windows.Point(), meter).X + caption.ActualWidth <= meter.ActualWidth + 1);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void StatusBadgeMorphsWidthAndIconThenStopsInOffMode() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 300, Limit = 100, Used = 50, Decimals = 0 };
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var window = new System.Windows.Window { Content = meter, Width = 390, Height = 250, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); meter.UpdateLayout();
+            var badge = (System.Windows.Controls.Border)meter.Template.FindName("PART_StatusBadge", meter)!;
+            var icon = (System.Windows.Shapes.Path)meter.Template.FindName("PART_StatusIcon", meter)!;
+            double normalWidth = badge.ActualWidth;
+            Assert.AreEqual(Visibility.Collapsed, icon.Visibility);
+            meter.Used = 95; Sta.Pump();
+            Assert.AreEqual(UsageMeterStatus.Near, meter.Status);
+            Assert.AreEqual(Visibility.Visible, icon.Visibility);
+            Assert.AreEqual(meter.TryFindResource("ArcWpf.Brush.Warning"), icon.Stroke);
+            Assert.IsTrue(badge.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(badge.HasAnimatedProperties);
+            Assert.IsTrue(double.IsNaN(badge.Width));
+            Assert.IsTrue(badge.ActualWidth > normalWidth);
+            meter.Used = 110; Sta.Pump();
+            Assert.AreEqual(UsageMeterStatus.Over, meter.Status);
+            Assert.IsTrue(icon.Data.Bounds.Width > 11);
+            Assert.AreEqual(meter.TryFindResource("ArcWpf.Brush.Danger"), icon.Stroke);
+            Assert.IsTrue(badge.HasAnimatedProperties);
+            meter.Used = 80;
+            ArcMotion.SetLevel(meter, ArcMotionLevel.Off);
+            Assert.AreEqual(UsageMeterStatus.Normal, meter.Status);
+            Assert.AreEqual(Visibility.Collapsed, icon.Visibility);
+            Assert.IsFalse(badge.HasAnimatedProperties);
+            Assert.IsTrue(double.IsNaN(badge.Width));
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void RapidBadgeStatusChangesKeepFinalAutoWidth() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 300, Limit = 100, Used = 50, Decimals = 0 };
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var window = new Window { Content = meter, Width = 390, Height = 250, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var badge = (System.Windows.Controls.Border)meter.Template.FindName("PART_StatusBadge", meter)!;
+            var icon = (System.Windows.Shapes.Path)meter.Template.FindName("PART_StatusIcon", meter)!;
+            meter.Used = 95;
+            meter.Used = 110;
+            meter.Used = 80;
+            Assert.AreEqual(UsageMeterStatus.Normal, meter.Status);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(badge.HasAnimatedProperties);
+            Assert.IsTrue(double.IsNaN(badge.Width));
+            Assert.AreEqual(Visibility.Collapsed, icon.Visibility);
+            Assert.AreEqual("20 free", meter.StatusText);
         }
         finally { window.Close(); }
     });

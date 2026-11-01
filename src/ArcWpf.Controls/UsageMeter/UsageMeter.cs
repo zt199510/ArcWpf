@@ -41,7 +41,7 @@ public sealed class UsageMeterSegment : INotifyPropertyChanged
 
 public enum UsageMeterStatus { Normal, Near, Over }
 
-public class UsageMeter : Control
+public partial class UsageMeter : Control
 {
     public static readonly DependencyProperty UsedProperty = DependencyProperty.Register(nameof(Used), typeof(double), typeof(UsageMeter), new FrameworkPropertyMetadata(0d, OnVisualChanged), value => value is double number && double.IsFinite(number) && number >= 0);
     public static readonly DependencyProperty LimitProperty = DependencyProperty.Register(nameof(Limit), typeof(double), typeof(UsageMeter), new FrameworkPropertyMetadata(100d, OnVisualChanged), value => value is double number && double.IsFinite(number) && number >= 0);
@@ -106,7 +106,7 @@ public class UsageMeter : Control
     public UsageMeter()
     {
         Segments.CollectionChanged += SegmentsChanged;
-        Unloaded += (_, _) => { _motion.Stop(); StopNumberMotion(); };
+        Unloaded += (_, _) => { _motion.Stop(); StopNumberMotion(); StopBadgeMotion(); };
         AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
     }
     private void SegmentsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -131,6 +131,8 @@ public class UsageMeter : Control
     {
         _motion.Stop();
         _ticker?.Stop();
+        StopBadgeMotion();
+        _badgeTargetWidth = 0;
         if (_track is not null) _track.SizeChanged -= TrackSizeChanged;
         if (_segmentsCanvas is not null)
         {
@@ -142,6 +144,8 @@ public class UsageMeter : Control
         base.OnApplyTemplate();
         _fill = GetTemplateChild("PART_Fill") as Border;
         _value = GetTemplateChild("PART_Value") as TextBlock;
+        _badge = GetTemplateChild("PART_StatusBadge") as Border;
+        _badgeText = GetTemplateChild("PART_StatusBadgeText") as TextBlock;
         _numberHost = GetTemplateChild("PART_NumberHost") as Grid;
         _ticker = null;
         if (_numberHost is not null)
@@ -189,7 +193,9 @@ public class UsageMeter : Control
         SetValue(StatusPropertyKey, status);
         SetValue(PercentagePropertyKey, percent);
         SetValue(IsWarningPropertyKey, status == UsageMeterStatus.Near);
-        SetValue(StatusTextPropertyKey, status == UsageMeterStatus.Over ? $"{Format(over)} over" : status == UsageMeterStatus.Near ? "Almost full" : $"{Format(free)} free");
+        string statusText = status == UsageMeterStatus.Over ? $"{Format(over)} over" : status == UsageMeterStatus.Near ? "Almost full" : $"{Format(free)} free";
+        SetValue(StatusTextPropertyKey, statusText);
+        UpdateBadge(statusText, animate);
         if (previousStatus != status && IsLoaded)
             UIElementAutomationPeer.FromElement(this)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
         SetValue(CaptionPropertyKey, $"{Unit} of {Format(Limit)} used".Trim());
@@ -437,7 +443,7 @@ public class UsageMeter : Control
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.Property == ArcMotion.LevelProperty && _motion is not null) { _motion.Stop(); StopNumberMotion(); Refresh(false); }
+        if (e.Property == ArcMotion.LevelProperty && _motion is not null) { _motion.Stop(); StopNumberMotion(); StopBadgeMotion(); Refresh(false); }
     }
     protected override AutomationPeer OnCreateAutomationPeer() => new UsageMeterPeer(this);
     private sealed class UsageMeterPeer(UsageMeter owner) : FrameworkElementAutomationPeer(owner)
