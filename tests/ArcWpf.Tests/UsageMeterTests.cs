@@ -22,6 +22,135 @@ namespace ArcWpf.Tests;
         finally { window.Close(); }
     });
     [TestMethod] public void NonFiniteUsageIsRejected() => Sta.Run(() => Assert.Throws<ArgumentException>(() => new UsageMeter { Used = double.NaN }));
+    [TestMethod] public void SegmentsDriveTotalNearAndOverStates() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Used = 99, Limit = 50, Unit = "GB" };
+        var files = new UsageMeterSegment { Id = "files", Label = "Files", Value = 21.4 };
+        var media = new UsageMeterSegment { Id = "media", Label = "Media", Value = 14.2 };
+        var backups = new UsageMeterSegment { Id = "backups", Label = "Backups", Value = 6.8 };
+        meter.Segments.Add(files);
+        meter.Segments.Add(media);
+        meter.Segments.Add(backups);
+        Assert.AreEqual(42.4, meter.Total, .001);
+        Assert.AreEqual(7.6, meter.Free, .001);
+        Assert.AreEqual(UsageMeterStatus.Normal, meter.Status);
+        media.Value = 18.2;
+        Assert.AreEqual(UsageMeterStatus.Near, meter.Status);
+        Assert.IsTrue(meter.IsWarning);
+        meter.Limit = 40;
+        Assert.AreEqual(UsageMeterStatus.Over, meter.Status);
+        Assert.AreEqual(6.4, meter.Over, .001);
+        Assert.IsFalse(meter.IsWarning);
+        Assert.Throws<ArgumentOutOfRangeException>(() => backups.Value = double.NaN);
+        meter.Segments.Clear();
+        Assert.AreEqual(99d, meter.Total);
+    });
+    [TestMethod] public void WindowRendersSegmentsLegendAndOverage() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 350, Limit = 50, Unit = "GB" };
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Off);
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 21.4 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "media", Label = "Media", Value = 14.2 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "backups", Label = "Backups", Value = 6.8 });
+        var window = new System.Windows.Window { Content = meter, Width = 440, Height = 300, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); meter.UpdateLayout();
+            var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
+            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var value = (System.Windows.Controls.TextBlock)meter.Template.FindName("PART_Value", meter)!;
+            Assert.IsGreaterThan(0d, canvas.ActualWidth);
+            Assert.HasCount(4, legend.Children);
+            var first = (System.Windows.Controls.Border)canvas.Children[0];
+            var second = (System.Windows.Controls.Border)canvas.Children[1];
+            Assert.IsGreaterThan(0d, first.Width);
+            Assert.IsTrue(System.Windows.Controls.Canvas.GetLeft(second) >= first.Width + 1.5);
+            Assert.IsTrue(value.Text.StartsWith("42.4", StringComparison.Ordinal));
+            var media = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[1];
+            media.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, media));
+            Assert.IsTrue(value.Text.StartsWith("14.2", StringComparison.Ordinal));
+            Assert.IsTrue(media.IsChecked);
+            meter.Limit = 40; meter.UpdateLayout();
+            Assert.AreEqual(UsageMeterStatus.Over, meter.Status);
+            var hatch = (System.Windows.Shapes.Rectangle)meter.Template.FindName("PART_OverHatch", meter)!;
+            var marker = (System.Windows.Controls.Border)meter.Template.FindName("PART_LimitMarker", meter)!;
+            Assert.IsGreaterThan(0d, hatch.Width);
+            Assert.IsTrue(System.Windows.Controls.Canvas.GetLeft(marker) < canvas.ActualWidth);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void LegendKeyboardMovesFocusAndEscapeClearsPinnedCategory() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 330, Limit = 50, Unit = "GB" };
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 20 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "media", Label = "Media", Value = 10 });
+        var window = new System.Windows.Window { Content = meter, Width = 420, Height = 270, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var legend = (System.Windows.Controls.WrapPanel)meter.Template.FindName("PART_Legend", meter)!;
+            var first = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[0];
+            var second = (System.Windows.Controls.Primitives.ToggleButton)legend.Children[1];
+            first.Focus();
+            var right = new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice, System.Windows.PresentationSource.FromVisual(first), 0, System.Windows.Input.Key.Right) { RoutedEvent = System.Windows.Input.Keyboard.PreviewKeyDownEvent };
+            first.RaiseEvent(right);
+            Assert.IsTrue(second.IsKeyboardFocused);
+            second.RaiseEvent(new System.Windows.RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, second));
+            Assert.IsTrue(second.IsChecked);
+            var escape = new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice, System.Windows.PresentationSource.FromVisual(second), 0, System.Windows.Input.Key.Escape) { RoutedEvent = System.Windows.Input.Keyboard.PreviewKeyDownEvent };
+            second.RaiseEvent(escape);
+            Assert.IsFalse(second.IsChecked);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void SegmentMotionSettlesAndKeepsVisualAfterValueUpdate() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 350, Limit = 50 };
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 20 });
+        meter.Segments.Add(new UsageMeterSegment { Id = "media", Label = "Media", Value = 10 });
+        ArcMotion.SetLevel(meter, ArcMotionLevel.Full);
+        var window = new System.Windows.Window { Content = meter, Width = 440, Height = 270, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
+            var first = (System.Windows.Controls.Border)canvas.Children[0];
+            double before = first.Width;
+            meter.Segments[0].Value = 30;
+            Assert.IsTrue(first.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreSame(first, canvas.Children[0]);
+            Assert.IsGreaterThan(before, first.Width);
+            Assert.IsFalse(first.HasAnimatedProperties);
+            meter.Limit = 45;
+            Assert.IsTrue(first.Width > 0);
+            ArcMotion.SetLevel(meter, ArcMotionLevel.Off);
+            Assert.IsFalse(first.HasAnimatedProperties);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void SegmentBrushTracksThemeChangesInWindow() => Sta.Run(() =>
+    {
+        var meter = new UsageMeter { Width = 320, Limit = 50 };
+        var theme = new ArcWpf.ArcThemeResources();
+        meter.Resources.MergedDictionaries.Add(theme);
+        meter.Segments.Add(new UsageMeterSegment { Id = "files", Label = "Files", Value = 20 });
+        var window = new System.Windows.Window { Content = meter, Width = 400, Height = 270, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var canvas = (System.Windows.Controls.Canvas)meter.Template.FindName("PART_Segments", meter)!;
+            var visual = (System.Windows.Controls.Border)canvas.Children[0];
+            var light = ((System.Windows.Media.SolidColorBrush)visual.Background).Color;
+            theme.Mode = ArcWpf.ArcThemeMode.Dark;
+            Sta.Pump();
+            Assert.AreNotEqual(light, ((System.Windows.Media.SolidColorBrush)visual.Background).Color);
+        }
+        finally { window.Close(); }
+    });
     [TestMethod] public void FillTracksValueAndOffSettlesImmediately() => Sta.Run(() =>
     {
         var meter = new UsageMeter { Width = 300, Used = 25, Limit = 100 };

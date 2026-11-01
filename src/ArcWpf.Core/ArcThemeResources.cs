@@ -164,6 +164,13 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("ContrastPass", Alpha(Oklch(success.l, success.c, success.h), .14));
         PutBrush("ContrastLarge", Alpha(Oklch(warning.l, warning.c, warning.h), .16));
         PutBrush("ContrastFail", Alpha(Oklch(dangerL, dangerC, 25), .12));
+        // usage-meter.module.css: ordered accent/surface blends, a neutral track, and status badges.
+        double[] usageShares = [1, .62, .36, .22];
+        for (int index = 0; index < usageShares.Length; index++)
+            PutBrush($"UsageSegment{index}", Oklch(accentL * usageShares[index] + neutrals["Surface"] * (1 - usageShares[index]), 0, 0));
+        PutBrush("UsageTrack", Oklch(MixL("Surface", "Foreground", .07), 0, 0));
+        PutBrush("UsageNearBadge", Tint(warning, .14, "Surface"));
+        PutBrush("UsageOverBadge", Tint((dangerL, dangerC, 25), .12, "Surface"));
         PutBrush("ChipListSurface", Alpha(Oklch(neutrals["Surface"], 0, 0), .55));
         this["ArcWpf.Button.Padding.Small"] = new Thickness(12, 0, 12, 0);
         this["ArcWpf.Button.Padding.Medium"] = new Thickness(16, 0, 16, 0);
