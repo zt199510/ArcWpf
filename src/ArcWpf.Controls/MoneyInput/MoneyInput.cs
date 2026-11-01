@@ -185,6 +185,8 @@ public class MoneyInput : Control
         {
             _currencyButton.Click += CurrencyClick;
             _currencyButton.PreviewKeyDown += CurrencyKeyDown;
+            // The button's own template is not applied yet; without it the surface has no fill to hit and the code stays blank.
+            _currencyButton.ApplyTemplate();
             if (_currencyButton.Template?.FindName("Surface", _currencyButton) is Border surface) surface.Background = _buttonFill;
             _currencyButton.MouseEnter += (_, _) => PaintButton(true);
             _currencyButton.MouseLeave += (_, _) => PaintButton(true);
