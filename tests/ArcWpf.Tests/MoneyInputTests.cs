@@ -2,6 +2,18 @@ using ArcWpf.Controls;
 namespace ArcWpf.Tests;
 [TestClass] public sealed class MoneyInputTests
 {
+    // The currency button's parts were looked up before its template existed: no hit-testable fill and a blank code, so the menu could not be opened.
+    [TestMethod] public void CurrencyButtonIsReadyAfterTemplate() => Sta.Run(() =>
+    {
+        var field = new MoneyInput { Currency = "EUR" };
+        Assert.IsTrue(field.ApplyTemplate());
+        var button = (System.Windows.Controls.Primitives.ToggleButton)field.Template.FindName("PART_CurrencyButton", field)!;
+        var surface = (System.Windows.Controls.Border)button.Template.FindName("Surface", button)!;
+        var code = (System.Windows.Controls.TextBlock)button.Template.FindName("Code", button)!;
+        Assert.IsNotNull(surface.Background);
+        Assert.AreEqual("EUR", code.Text);
+    });
+
     [TestMethod] public void DraftConvertsToMinorUnits()
     {
         Assert.AreEqual(1250L, MoneyMath.ToMinor("12.5", 2));

@@ -52,3 +52,11 @@
 ### 未运行/待验证
 
 原因同上：Linux 无 WPF 运行时。5 项均需在 Windows 上人工复测：PasswordStrength 输入框外观（Light/Dark）；MoneyInput 鼠标与键盘切换货币；PhoneInput 鼠标选择国家；ColorPicker 面板内拖动/点选后保持打开、外部点击关闭；TagInput 连续添加标签保持焦点、Backspace 选中与删除。
+
+## MoneyInput 第二轮：下拉框打不开（2026-10-31）
+
+用户复测：外部点击修复后仍无法打开货币菜单。第一轮只修了"菜单打开后点选项被提前关闭"，未检查打开路径本身，属误判范围。
+
+根因：`OnApplyTemplate` 在子按钮 `PART_CurrencyButton` 应用自身模板之前调用 `Template.FindName("Surface"/"Code")`，返回 null。Surface 无背景导致按钮只有 chevron 细线可命中，货币代码文字为空。同类控件（ButtonGroup、Search、ExpandingSearch）均先调用 `ApplyTemplate()`。
+
+修复：查找前调用 `_currencyButton.ApplyTemplate()`；模板中 Surface 默认 `Background="Transparent"` 作为兜底。新增 `MoneyInputTests.CurrencyButtonIsReadyAfterTemplate`（已编译，未运行）。三个项目构建 0 错误。Windows 人工复测：待验证。
