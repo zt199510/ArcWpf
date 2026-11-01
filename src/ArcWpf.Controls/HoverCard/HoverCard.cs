@@ -30,7 +30,6 @@ public class HoverCard : ContentControl
     private Window? _owner;
     private bool _repositioning;
     private bool _dismissed;
-    private bool _closing;
     private bool _warm;
     private bool _touchDown;
     private int _transition;
@@ -169,10 +168,11 @@ public class HoverCard : ContentControl
     {
         if (!_touchDown && IsEnabled && !IsOpen) Show();
     }
-    private void TriggerTouchDown(object sender, TouchEventArgs e) => _touchDown = true;
-    private void TriggerTouchUp(object sender, TouchEventArgs e)
+    private void TriggerTouchDown(object? sender, TouchEventArgs e) => _touchDown = true;
+    private void TriggerTouchUp(object? sender, TouchEventArgs e)
     {
-        _touchDown = false;
+        // WPF can promote this touch to a mouse click in the same input cycle.
+        Dispatcher.BeginInvoke(DispatcherPriority.Background, () => _touchDown = false);
         if (!IsEnabled) return;
         if (IsOpen) SetCurrentValue(IsOpenProperty, false);
         else Show();
@@ -239,7 +239,6 @@ public class HoverCard : ContentControl
         }
         ++_transition;
         bool fresh = !_popup.IsOpen;
-        _closing = false;
         _card.IsHitTestVisible = true;
         var level = ArcMotion.GetLevel(this);
         bool full = level == ArcMotionLevel.Full && !_warm;
@@ -263,7 +262,6 @@ public class HoverCard : ContentControl
         if (_popup?.IsOpen != true || _card is null || _scale is null || _move is null) return;
         MarkClosed();
         int version = ++_transition;
-        _closing = true;
         _card.IsHitTestVisible = false;
         var level = ArcMotion.GetLevel(this);
         bool animate = IsLoaded && level != ArcMotionLevel.Off;
@@ -279,7 +277,6 @@ public class HoverCard : ContentControl
     {
         if (version != _transition || IsOpen) return;
         _motion.Stop();
-        _closing = false;
         if (_popup is not null) _popup.IsOpen = false;
     }
     private void MarkClosed()
@@ -298,7 +295,6 @@ public class HoverCard : ContentControl
         MarkClosed();
         ++_transition;
         _motion.Stop();
-        _closing = false;
         if (IsOpen) SetCurrentValue(IsOpenProperty, false);
         _motion.Stop();
         if (_popup is not null) _popup.IsOpen = false;

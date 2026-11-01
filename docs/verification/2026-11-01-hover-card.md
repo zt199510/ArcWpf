@@ -5,3 +5,5 @@
 待运行：Controls/Gallery 构建、HoverCard 专项、悬停延迟、Escape、四向放置、外部点击和主题。
 
 2026-11-01 补充：显示窗口中打开 Popup，模拟触发器离开后进入卡片，关闭计时被取消；切换 Side 后 Popup 与 IsOpen 保持打开。按 Arc 冻结参数补齐 open 500ms、close 140ms、warm intent 80ms、warm window 300ms、296 DIP 卡片宽度、四向碰撞和键盘/触摸路径。HoverCard 专项 7/7 通过。真实鼠标穿越、碰撞坐标和视觉仍待人工验收。
+
+后续审计：WPF 在 TouchUp 后可能合成 MouseUp/Click；触摸切换后的本轮合成点击现被抑制，避免关闭后立即重开。五组件专项合计 33/33 通过；物理触摸路径尚未实际操作，不能据此标为触摸验收通过。
