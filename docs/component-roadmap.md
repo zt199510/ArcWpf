@@ -246,3 +246,9 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 - [x] 建立明确标记的 WPF fallback Card/MetricCard，支持标题、说明、内容、底部和数值/趋势展示。
 - [x] 接入主题、Gallery 和专项测试；Controls 构建通过，Card 专项筛选通过。
 - [ ] Arc Card/MetricCard Registry/CSS 来源恢复后圆角、阴影、数值排版和真实窗口验收。
+
+## Stepper 开发（2026-11-01）
+
+- [x] 建立明确标记的 WPF fallback Stepper，支持步骤列表、CurrentIndex、Next/Previous 和 UIA 状态。
+- [x] 接入主题、Gallery 和专项测试；Controls 构建通过，Stepper 专项筛选通过。
+- [ ] Arc Stepper Registry/CSS 来源恢复后连接线、选中动效、键盘和真实窗口验收。
