@@ -9,7 +9,12 @@ public sealed class ArcThemeResources : ResourceDictionary
 {
     private ArcThemeMode _mode;
 
-    public ArcThemeResources() => Rebuild();
+    public ArcThemeResources()
+    {
+        // ScrollBar's default style key lives in PresentationFramework, so Generic.xaml cannot restyle it; an implicit style here reaches every control.
+        MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/ArcWpf.Core;component/Themes/ScrollBar.xaml", UriKind.Relative)));
+        Rebuild();
+    }
 
     public ArcThemeMode Mode
     {

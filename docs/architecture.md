@@ -43,6 +43,8 @@ Core 可以包含 WPF 相关服务，不将其宣称为跨平台库。需要复�
 
 每个控件独立主题字典，由 Themes/Generic.xaml 汇总。资源键避免普通字符串碰撞；M1 选择并固定 ComponentResourceKey 或统一命名策略。基础控件主题与应用隐式样式的组合方式用消费应用测试。
 
+原生 `ScrollBar` 的默认样式键属于 PresentationFramework，Generic.xaml 改不到它，因此统一样式放在 `ArcThemeResources` 合并的 `ArcWpf.Core/Themes/ScrollBar.xaml`（隐式样式）。控件不要各自定义滚动条；应用可在外层字典用自己的隐式样式覆盖。见[验证记录](verification/2026-11-01-scrollbar-theme.md)。
+
 图标优先矢量，字体嵌入和回退必须验证中文、字重与许可。令牌值从已固定来源提取，不依赖模型凭记忆编造“Arc 标准”。
 
 ## 5. 动效
