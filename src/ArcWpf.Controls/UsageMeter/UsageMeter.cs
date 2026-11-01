@@ -134,7 +134,6 @@ public partial class UsageMeter : Control
         _motion.Stop();
         _ticker?.Stop();
         StopBadgeMotion();
-        _badgeTargetWidth = 0;
         if (_track is not null) _track.SizeChanged -= TrackSizeChanged;
         if (_segmentsCanvas is not null)
         {
@@ -148,6 +147,7 @@ public partial class UsageMeter : Control
         _value = GetTemplateChild("PART_Value") as TextBlock;
         _badge = GetTemplateChild("PART_StatusBadge") as Border;
         _badgeText = GetTemplateChild("PART_StatusBadgeText") as TextBlock;
+        _badgeWidthMotion.Attach(_badge);
         _numberHost = GetTemplateChild("PART_NumberHost") as Grid;
         _ticker = null;
         if (_numberHost is not null)

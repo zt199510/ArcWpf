@@ -20,6 +20,7 @@ public partial class ResizablePanels
         _multiShares = (double[])_multiDragStartShares.Clone();
         _multiOvershoot = 0;
         _multiPointerDelta = 0;
+        _multiDragProjection.Start();
     }
     private void MultiDragDelta(object sender, DragDeltaEventArgs e)
     {
@@ -28,6 +29,7 @@ public partial class ResizablePanels
         double available = _layout.ActualWidth - 6 * (Panels.Count - 1);
         if (available <= 0) return;
         _multiPointerDelta += e.HorizontalChange;
+        _multiDragProjection.Add(e.HorizontalChange);
         double startA = _multiDragStartShares[index] * available;
         double pair = (_multiDragStartShares[index] + _multiDragStartShares[index + 1]) * available;
         var before = _layout.ColumnDefinitions[index * 2];
@@ -61,9 +63,13 @@ public partial class ResizablePanels
             _multiPointerDelta = 0;
             return;
         }
-        if (_multiOvershoot <= -Math.Max(Panels[index].MinSize * .5, 40) && Panels[index].Collapsible)
+        double available = _layout.ActualWidth - 6 * (Panels.Count - 1);
+        double start = _multiDragStartShares is null ? 0 : _multiDragStartShares[index] * available;
+        double pair = _multiDragStartShares is null ? 0 : (_multiDragStartShares[index] + _multiDragStartShares[index + 1]) * available;
+        double raw = start + _multiPointerDelta + _multiDragProjection.Project();
+        if (raw < _layout.ColumnDefinitions[index * 2].MinWidth - Math.Max(Panels[index].MinSize * .5, 40) && Panels[index].Collapsible)
             Panels[index].SetCurrentValue(ResizablePanel.IsCollapsedProperty, true);
-        else if (_multiOvershoot >= Math.Max(Panels[index + 1].MinSize * .5, 40) && Panels[index + 1].Collapsible)
+        else if (pair - raw < _layout.ColumnDefinitions[(index + 1) * 2].MinWidth - Math.Max(Panels[index + 1].MinSize * .5, 40) && Panels[index + 1].Collapsible)
             Panels[index + 1].SetCurrentValue(ResizablePanel.IsCollapsedProperty, true);
         else ApplyMultiLayout();
         RaiseLayoutChanged();

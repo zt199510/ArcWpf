@@ -186,6 +186,168 @@ namespace ArcWpf.Tests;
         }
         finally { window.Close(); }
     });
+    [TestMethod] public void ChangeChipMorphsWidthAndSettlesOnOff() => Sta.Run(() =>
+    {
+        var card = new MetricCard { Width = 420, Label = "Revenue", NumericValue = 24, Change = "+2%" };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var window = new Window { Content = card, Width = 500, Height = 260, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); card.UpdateLayout();
+            var chip = (System.Windows.Controls.Border)card.Template.FindName("ChangeChip", card)!;
+            var text = (System.Windows.Controls.TextBlock)card.Template.FindName("TrendText", card)!;
+            double shortWidth = chip.ActualWidth;
+            card.Change = "+123.45%";
+            Assert.IsTrue(chip.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(chip.HasAnimatedProperties);
+            Assert.IsTrue(double.IsNaN(chip.Width));
+            Assert.IsTrue(chip.ActualWidth > shortWidth);
+            card.Change = "-1%";
+            Assert.IsTrue(chip.HasAnimatedProperties);
+            Assert.IsTrue(text.HasAnimatedProperties);
+            ArcMotion.SetLevel(card, ArcMotionLevel.Off);
+            Assert.IsFalse(chip.HasAnimatedProperties);
+            Assert.IsFalse(text.HasAnimatedProperties);
+            Assert.IsTrue(double.IsNaN(chip.Width));
+            Assert.AreEqual(card.TryFindResource("ArcWpf.Brush.Danger"), text.Foreground);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void ChangeChipExitKeepsCopyUntilFadeAndReentryCancelsExit() => Sta.Run(() =>
+    {
+        var card = new MetricCard { Width = 420, Label = "Revenue", NumericValue = 24, Change = "+8%" };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var window = new Window { Content = card, Width = 500, Height = 250, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var chip = (System.Windows.Controls.Border)card.Template.FindName("ChangeChip", card)!;
+            var text = (System.Windows.Controls.TextBlock)card.Template.FindName("TrendText", card)!;
+            card.Change = string.Empty;
+            Assert.AreEqual(Visibility.Visible, chip.Visibility);
+            Assert.AreEqual("+8%", text.Text);
+            Assert.IsTrue(chip.HasAnimatedProperties);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(550) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(Visibility.Collapsed, chip.Visibility);
+            Assert.IsFalse(chip.HasAnimatedProperties);
+            card.Change = "+4%";
+            card.Change = string.Empty;
+            card.Change = "-2%";
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.AreEqual(Visibility.Visible, chip.Visibility);
+            Assert.AreEqual("-2%", text.Text);
+            Assert.AreEqual(1d, chip.Opacity, .01);
+            Assert.IsFalse(chip.HasAnimatedProperties);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void QuickLookMorphsFromCardAndReturnsBeforeFocusRestore() => Sta.Run(() =>
+    {
+        var card = new Card { Width = 320, Title = "Harbour redesign", Description = "New booking flow", Details = "Scope and milestones" };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var host = new DialogHost { Content = card };
+        var window = new Window { Content = host, Width = 800, Height = 600, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            var title = (System.Windows.Controls.Button)card.Template.FindName("PART_TitleButton", card)!;
+            title.Focus();
+            title.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, title)); Sta.Pump();
+            var dialog = host.Dialog!;
+            var surface = (FrameworkElement)dialog.Template.FindName("PART_Surface", dialog)!;
+            var transform = (System.Windows.Media.TransformGroup)surface.RenderTransform;
+            var scale = (System.Windows.Media.ScaleTransform)transform.Children[0];
+            var move = (System.Windows.Media.TranslateTransform)transform.Children[1];
+            Assert.IsTrue(scale.HasAnimatedProperties);
+            Assert.IsTrue(scale.ScaleX < 1, $"The quick look should start near the card width, scale={scale.ScaleX}");
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsTrue(dialog.IsPresented);
+            Assert.AreEqual(1d, scale.ScaleX, .01);
+            Assert.AreEqual(0d, move.X, .01);
+            Assert.IsFalse(scale.HasAnimatedProperties);
+            dialog.Close();
+            Assert.IsTrue(scale.HasAnimatedProperties);
+            frame = new System.Windows.Threading.DispatcherFrame();
+            timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(550) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsFalse(dialog.IsPresented);
+            Assert.IsFalse(card.IsOpen);
+            Assert.IsTrue(title.IsKeyboardFocused);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void QuickLookReopenDuringExitAndOffSettleWithoutStaleClose() => Sta.Run(() =>
+    {
+        var card = new Card { Width = 320, Title = "Harbour redesign", Details = "Scope and milestones" };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Full);
+        var host = new DialogHost { Content = card };
+        var window = new Window { Content = host, Width = 800, Height = 600, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            card.IsOpen = true; Sta.Pump();
+            var dialog = host.Dialog!;
+            var surface = (FrameworkElement)dialog.Template.FindName("PART_Surface", dialog)!;
+            var scale = (System.Windows.Media.ScaleTransform)((System.Windows.Media.TransformGroup)surface.RenderTransform).Children[0];
+            card.IsOpen = false;
+            Assert.IsTrue(dialog.IsPresented);
+            card.IsOpen = true; Sta.Pump();
+            Assert.IsTrue(dialog.IsOpen);
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
+            timer.Tick += (_, _) => { timer.Stop(); frame.Continue = false; };
+            timer.Start(); System.Windows.Threading.Dispatcher.PushFrame(frame);
+            Assert.IsTrue(dialog.IsPresented);
+            Assert.IsTrue(card.IsOpen);
+            Assert.AreEqual(1d, scale.ScaleX, .01);
+            ArcMotion.SetLevel(card, ArcMotionLevel.Off);
+            dialog.Close(); Sta.Pump();
+            Assert.IsFalse(dialog.IsPresented);
+            Assert.IsFalse(scale.HasAnimatedProperties);
+            Assert.IsFalse(card.IsOpen);
+        }
+        finally { window.Close(); }
+    });
+    [TestMethod] public void QuickLookReducedOpensWithoutSpatialMorph() => Sta.Run(() =>
+    {
+        var card = new Card { Width = 320, Title = "Harbour redesign", Details = "Scope and milestones" };
+        ArcMotion.SetLevel(card, ArcMotionLevel.Reduced);
+        var host = new DialogHost { Content = card };
+        var window = new Window { Content = host, Width = 800, Height = 600, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump();
+            card.IsOpen = true; Sta.Pump();
+            var dialog = host.Dialog!;
+            var surface = (FrameworkElement)dialog.Template.FindName("PART_Surface", dialog)!;
+            var transform = (System.Windows.Media.TransformGroup)surface.RenderTransform;
+            var scale = (System.Windows.Media.ScaleTransform)transform.Children[0];
+            var move = (System.Windows.Media.TranslateTransform)transform.Children[1];
+            Assert.IsTrue(dialog.IsPresented);
+            Assert.IsFalse(scale.HasAnimatedProperties);
+            Assert.IsFalse(move.HasAnimatedProperties);
+            Assert.AreEqual(1d, scale.ScaleX, .01);
+            Assert.AreEqual(0d, move.X, .01);
+            card.IsOpen = false;
+            ArcMotion.SetLevel(card, ArcMotionLevel.Off); Sta.Pump();
+            Assert.IsFalse(dialog.IsPresented);
+        }
+        finally { window.Close(); }
+    });
     [TestMethod] public void CardMediaBylineAndDetailsUseDialogHost() => Sta.Run(() =>
     {
         var card = new Card

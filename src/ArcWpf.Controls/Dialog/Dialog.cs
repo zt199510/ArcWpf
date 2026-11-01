@@ -14,7 +14,7 @@ public sealed class DialogClosingEventArgs(DialogCloseReason reason):CancelEvent
 [TemplatePart(Name="PART_Surface",Type=typeof(FrameworkElement))]
 [TemplatePart(Name="PART_Overlay",Type=typeof(Border))]
 [TemplatePart(Name="PART_CloseButton",Type=typeof(ButtonBase))]
-public class Dialog:ContentControl
+public partial class Dialog:ContentControl
 {
     public static readonly DependencyProperty IsOpenProperty=DependencyProperty.Register(nameof(IsOpen),typeof(bool),typeof(Dialog),new FrameworkPropertyMetadata(false,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,OpenChanged));
     public static readonly DependencyProperty TitleProperty=DependencyProperty.Register(nameof(Title),typeof(string),typeof(Dialog),new FrameworkPropertyMetadata(""));
@@ -97,6 +97,7 @@ public class Dialog:ContentControl
         if(_surface is null){if(!open)FinishClose(true);return;}
         _surface.IsHitTestVisible=open;
         var level=ArcMotion.GetLevel(this);animate&=level!=ArcMotionLevel.Off;
+        if(animate&&level==ArcMotionLevel.Full&&TryMorphTransition(open,token))return;
         bool full=level==ArcMotionLevel.Full;
         double fade=full?(open?.16:.16):.12;
         if(_move is not null)_motion.Double(_move,TranslateTransform.YProperty,full?(open?0:4):0,open?.4:.16,animate&&full,spring:open);
@@ -112,6 +113,7 @@ public class Dialog:ContentControl
     private void FinishClose(bool restore)
     {
         ++_version;_motion.Stop();_focus?.Abort();_focus=null;
+        ClearMorphOrigin();
         bool was=IsPresented;SetValue(IsPresentedPropertyKey,false);_host?.UpdateModal();
         if(_surface is not null){_surface.Opacity=0;_surface.IsHitTestVisible=false;}if(_overlay is not null)_overlay.Opacity=0;
         var target=_restoreFocus;_restoreFocus=null;

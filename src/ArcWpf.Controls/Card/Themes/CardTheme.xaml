@@ -54,7 +54,7 @@
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
             <TextBlock Text="{TemplateBinding DisplayLabel}" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
             <Border x:Name="ChangeChip" Grid.Column="1" Margin="8,0,0,0" Padding="8,3" CornerRadius="12" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1">
-              <TextBlock x:Name="TrendText" Text="{TemplateBinding DisplayChange}" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+              <TextBlock x:Name="TrendText" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
             </Border>
           </Grid>
           <Grid x:Name="PART_NumberHost">
@@ -66,7 +66,6 @@
         </StackPanel>
       </Border>
       <ControlTemplate.Triggers>
-        <MultiTrigger><MultiTrigger.Conditions><Condition Property="Trend" Value=""/><Condition Property="Change" Value=""/></MultiTrigger.Conditions><Setter TargetName="ChangeChip" Property="Visibility" Value="Collapsed"/></MultiTrigger>
         <Trigger Property="IsPositiveChange" Value="True"><Setter TargetName="ChangeChip" Property="Background" Value="{DynamicResource ArcWpf.Brush.BadgeSuccessBackground}"/><Setter TargetName="ChangeChip" Property="BorderBrush" Value="Transparent"/><Setter TargetName="TrendText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Success}"/></Trigger>
         <Trigger Property="IsNegativeChange" Value="True"><Setter TargetName="ChangeChip" Property="Background" Value="{DynamicResource ArcWpf.Brush.BadgeDangerBackground}"/><Setter TargetName="ChangeChip" Property="BorderBrush" Value="Transparent"/><Setter TargetName="TrendText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/></Trigger>
         <Trigger Property="IsCompact" Value="True"><Setter TargetName="PART_Surface" Property="Padding" Value="16"/><Setter TargetName="PART_Top" Property="Margin" Value="0,0,0,24"/><Setter TargetName="ChangeChip" Property="Grid.Row" Value="1"/><Setter TargetName="ChangeChip" Property="Grid.Column" Value="0"/><Setter TargetName="ChangeChip" Property="HorizontalAlignment" Value="Left"/><Setter TargetName="ChangeChip" Property="Margin" Value="0,8,0,0"/></Trigger>

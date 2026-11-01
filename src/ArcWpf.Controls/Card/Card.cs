@@ -5,6 +5,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Automation;
+using System.Windows.Data;
 
 namespace ArcWpf.Controls;
 
@@ -149,10 +150,14 @@ public class Card : ContentControl
         _quickLook ??= CreateQuickLook();
         UpdateQuickLook();
         _quickLook.Show(this);
+        _quickLook.MorphFrom((FrameworkElement?)_surface ?? this);
     }
     private Dialog CreateQuickLook()
     {
         var dialog = new Dialog();
+        BindingOperations.SetBinding(dialog, DataContextProperty, new Binding(nameof(DataContext)) { Source = this });
+        BindingOperations.SetBinding(dialog, FlowDirectionProperty, new Binding(nameof(FlowDirection)) { Source = this });
+        BindingOperations.SetBinding(dialog, ArcMotion.LevelProperty, new Binding { Source = this, Path = new PropertyPath(ArcMotion.LevelProperty) });
         dialog.Closed += (_, _) => { if (IsOpen) SetCurrentValue(IsOpenProperty, false); };
         return dialog;
     }
@@ -209,7 +214,7 @@ public class Card : ContentControl
     private sealed class CardPeer(Card owner) : FrameworkElementAutomationPeer(owner) { protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Group; protected override string GetNameCore() => owner.Title; }
 }
 
-public class MetricCard : Card
+public partial class MetricCard : Card
 {
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(string), typeof(MetricCard), new PropertyMetadata(string.Empty));
     public static readonly DependencyProperty TrendProperty = DependencyProperty.Register(nameof(Trend), typeof(string), typeof(MetricCard), new PropertyMetadata(string.Empty, OnMetricChanged));
@@ -252,12 +257,31 @@ public class MetricCard : Card
     public bool IsPositiveChange => (bool)GetValue(IsPositiveChangeProperty);
     public bool IsCompact => (bool)GetValue(IsCompactProperty);
     static MetricCard() { DefaultStyleKeyProperty.OverrideMetadata(typeof(MetricCard), new FrameworkPropertyMetadata(typeof(MetricCard))); }
-    public MetricCard() { RefreshMetric(); Unloaded += (_, _) => { _valueMotion.Stop(); _ticker?.Stop(); }; }
+    public MetricCard() { RefreshMetric(); Unloaded += (_, _) => { _valueMotion.Stop(); _ticker?.Stop(); StopChangeMotion(); }; }
     public override void OnApplyTemplate()
     {
         _valueMotion.Stop();
         _ticker?.Stop();
+        StopChangeMotion();
         base.OnApplyTemplate();
+        _changeChip = GetTemplateChild("ChangeChip") as Border;
+        _changeText = GetTemplateChild("TrendText") as TextBlock;
+        _changeWidthMotion.Attach(_changeChip);
+        _changeScale = null; _changeMove = null; _changeBlur = null;
+        if (_changeChip is not null)
+        {
+            _changeScale = new ScaleTransform(1, 1);
+            _changeChip.RenderTransformOrigin = new Point(.5, .5);
+            _changeChip.RenderTransform = _changeScale;
+        }
+        if (_changeText is not null)
+        {
+            _changeMove = new TranslateTransform();
+            _changeBlur = new System.Windows.Media.Effects.BlurEffect();
+            _changeText.RenderTransform = _changeMove;
+            _changeText.Effect = _changeBlur;
+        }
+        UpdateChangeMotion(false);
         _valueBlock = GetTemplateChild("PART_Value") as TextBlock;
         _numberHost = GetTemplateChild("PART_NumberHost") as Grid;
         _ticker = null;
@@ -279,6 +303,7 @@ public class MetricCard : Card
         if (e.Property == NumericValueProperty && e.OldValue is double oldValue && double.IsFinite(oldValue))
             card._valueDirection = (double)e.NewValue < oldValue ? -1 : 1;
         card.RefreshMetric();
+        card.UpdateChangeMotion(true);
         bool numeric = double.IsFinite(card.NumericValue);
         if (card._valueBlock is not null) card._valueBlock.Visibility = numeric ? Visibility.Collapsed : Visibility.Visible;
         if (card._ticker is not null) card._ticker.Visibility = numeric ? Visibility.Visible : Visibility.Collapsed;
@@ -311,6 +336,7 @@ public class MetricCard : Card
         {
             _valueMotion.Stop();
             _ticker?.Stop();
+            StopChangeMotion();
             if (_valueBlock is not null) _valueBlock.Opacity = 1;
             if (_valueMove is not null) _valueMove.Y = 0;
         }

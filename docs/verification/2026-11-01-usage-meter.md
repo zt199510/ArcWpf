@@ -19,3 +19,5 @@
 状态徽标回归：Normal→Near 时圆形警示可见、Stroke 为 Warning、宽度时钟启动；完成后 Width 为 Auto 且无时钟。Over 使用三角图形与 Danger，Full 快速往返三种状态后最终文案、图标和宽度正确，切 Off 立即清理。UsageMeter 专项 17/17 通过；首次滚入视野揭示与数字边缘羽化仍未实现。
 
 视口揭示回归：显示窗口的 ScrollViewer 中，仪表在视口外时分段宽度为 0、数字列保持 0 且无时钟；部分进入但不足 40% 时仍不启动。等待期间改变 Files 用量后，滚到超过阈值，分段条与顶部数字按最新值启动；Dispatcher 推进 900ms 后宽度与数字终态正确且时钟清理。滚出再进入不重播。Reduced 下即使离屏，分段与数字也直接显示终态且无揭示时钟。UsageMeter 专项 19/19 通过。物理滚轮/触摸、不同 DPI 与逐帧观感仍待验收。
+
+徽标宽度逻辑改为与 MetricCard 共用 AutoWidthMotion，保持完成后归还 Auto 的契约；Card/Dialog/UsageMeter 相关 70/70 通过。未据此声明来源数字羽化或实际窗口观感已验收。

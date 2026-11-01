@@ -32,6 +32,7 @@ public partial class ResizablePanels : Control
     private GridSplitter? _splitter;
     private TranslateTransform? _edgeOffset;
     private readonly OwnedMotion _edgeMotion = new();
+    private readonly DragProjection _dragProjection = new();
     private bool _updating;
     private bool _updatingCollapse;
     private double _dragStartRatio, _overshoot;
@@ -106,6 +107,7 @@ public partial class ResizablePanels : Control
     private void SplitMoved(object sender, DragDeltaEventArgs e)
     {
         if (_layout is not { ColumnDefinitions.Count: 3 } layout || _edgeOffset is null || IsLeftCollapsed || IsRightCollapsed) return;
+        _dragProjection.Add(e.HorizontalChange);
         bool leftLimit = layout.ColumnDefinitions[0].ActualWidth <= MinLeft + .5 && e.HorizontalChange < 0;
         bool rightLimit = layout.ColumnDefinitions[2].ActualWidth <= MinRight + .5 && e.HorizontalChange > 0;
         _overshoot = leftLimit ? Math.Min(0, _overshoot + e.HorizontalChange) : rightLimit ? Math.Max(0, _overshoot + e.HorizontalChange) : 0;
@@ -120,6 +122,7 @@ public partial class ResizablePanels : Control
         _edgeMotion.Stop();
         if (_edgeOffset is not null) _edgeOffset.X = 0;
         _dragging = true; _dragStartRatio = SplitRatio; _overshoot = 0;
+        _dragProjection.Start();
     }
     private void LayoutSizeChanged(object sender, SizeChangedEventArgs e) => ApplyRatio();
     private void SplitCompleted(object sender, DragCompletedEventArgs e)
@@ -140,8 +143,11 @@ public partial class ResizablePanels : Control
             }
             return;
         }
-        if (_overshoot <= -Math.Max(MinLeft * .5, 40) && CanCollapseLeft) SetCurrentValue(IsLeftCollapsedProperty, true);
-        else if (_overshoot >= Math.Max(MinRight * .5, 40) && CanCollapseRight) SetCurrentValue(IsRightCollapsedProperty, true);
+        if (_layout is not { ColumnDefinitions.Count: 3 } columns) return;
+        double raw = columns.ColumnDefinitions[0].ActualWidth + _overshoot + _dragProjection.Project();
+        double pair = columns.ActualWidth - columns.ColumnDefinitions[1].ActualWidth;
+        if (raw < columns.ColumnDefinitions[0].MinWidth - Math.Max(MinLeft * .5, 40) && CanCollapseLeft) SetCurrentValue(IsLeftCollapsedProperty, true);
+        else if (pair - raw < columns.ColumnDefinitions[2].MinWidth - Math.Max(MinRight * .5, 40) && CanCollapseRight) SetCurrentValue(IsRightCollapsedProperty, true);
         else SyncRatioFromColumns();
         _overshoot = 0;
     }

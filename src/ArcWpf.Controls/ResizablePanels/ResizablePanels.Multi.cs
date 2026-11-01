@@ -61,6 +61,7 @@ public partial class ResizablePanels
     private double[]? _multiDragStartShares;
     private double _multiOvershoot;
     private double _multiPointerDelta;
+    private readonly DragProjection _multiDragProjection = new();
 
     private void PanelsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

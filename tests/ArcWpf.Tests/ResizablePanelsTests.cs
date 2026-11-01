@@ -7,6 +7,17 @@ using System.Windows.Input;
 namespace ArcWpf.Tests;
 [TestClass] public sealed class ResizablePanelsTests
 {
+    [TestMethod] public void DragProjectionUsesRecentMotionAndIgnoresStaleSamples()
+    {
+        var projection = new DragProjection();
+        projection.Start();
+        projection.AddSample(10, 12);
+        projection.AddSample(30, 32);
+        Assert.AreEqual(105.6, projection.ProjectAt(40), 1);
+        Assert.AreEqual(0d, projection.ProjectAt(90));
+        projection.AddSample(100, 45);
+        Assert.AreEqual(0d, projection.ProjectAt(130));
+    }
     [TestMethod] public void SplitRatioAndMinimumsAreBindable() => Sta.Run(() => { var panels = new ResizablePanels { SplitRatio = .4, MinLeft = 120, MinRight = 180 }; Assert.AreEqual(.4, panels.SplitRatio, .001); Assert.AreEqual(120d, panels.MinLeft); });
     [TestMethod] public void ContentPropertiesAreBindable() => Sta.Run(() => { var panels = new ResizablePanels { LeftContent = "Left", RightContent = "Right" }; Assert.AreEqual("Left", panels.LeftContent); Assert.AreEqual("Right", panels.RightContent); });
     [TestMethod] public void DefaultsAreStable() => Sta.Run(() => Assert.AreEqual(.5, new ResizablePanels().SplitRatio, .001));
