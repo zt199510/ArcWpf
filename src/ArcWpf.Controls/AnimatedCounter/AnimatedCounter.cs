@@ -22,10 +22,10 @@ public class AnimatedCounter : Control
     public int Decimals { get => (int)GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public bool AnimateOnView { get => (bool)GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
-    private StackPanel? _digitsPanel; private string _displayText = string.Empty;
+    private StackPanel? _digitsPanel; private string _displayText = string.Empty; private bool _viewAnimated;
     static AnimatedCounter() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnimatedCounter), new FrameworkPropertyMetadata(typeof(AnimatedCounter)));
-    public override void OnApplyTemplate() { base.OnApplyTemplate(); _digitsPanel = GetTemplateChild("PART_Digits") as StackPanel; UpdateText(false); if (AnimateOnView && IsLoaded) AnimateIn(); }
-    protected override void OnInitialized(EventArgs e) { base.OnInitialized(e); Loaded += (_, _) => { if (AnimateOnView) AnimateIn(); }; }
+    public override void OnApplyTemplate() { base.OnApplyTemplate(); _digitsPanel = GetTemplateChild("PART_Digits") as StackPanel; UpdateText(false); if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }
+    protected override void OnInitialized(EventArgs e) { base.OnInitialized(e); IsVisibleChanged += (_, _) => { if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }; }
     private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnimatedCounter)d).UpdateText(true);
     private void UpdateText(bool animate)
     {
