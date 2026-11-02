@@ -46,6 +46,7 @@
 - 同一窗口复验还发现 EmojiPicker 触发按钮在目录排序下显示 `〰️`，当前字体将其绘制成“~~”；已固定默认入口为 `😀`，并增加 `NextArcControlsTests` 回归断言，避免数据目录顺序再次改变入口视觉。
 - 最新 Gallery 窗口复验确认 MentionInput 空状态显示 `Write a comment, @ to mention`，EmojiPicker 触发按钮显示笑脸；两者均保留原生输入/Popup 命中区域。
 - EmojiPicker Popup 复验确认在底部锚点处向上翻转且未越出窗口；表情按钮与肤色按钮统一使用 `Segoe UI Emoji`，不再继承主题前景色强制覆盖字形。
+- 暗色主题复验发现并修复 EmojiPicker 触发按钮的默认白色背景；修复后按钮使用动态 `Surface`、`Foreground` 和 `Border`，与暗色 Gallery 背景一致。
 
 ## AvatarUpload 裁剪输出补强
 
