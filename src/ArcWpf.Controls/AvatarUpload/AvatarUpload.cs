@@ -4,6 +4,7 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using System.Windows.Input;
 using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace ArcWpf.Controls;
 
@@ -19,6 +20,9 @@ public class AvatarUpload : Control
     public static readonly DependencyProperty AcceptProperty = DependencyProperty.Register(nameof(Accept), typeof(string), typeof(AvatarUpload), new PropertyMetadata(".png;.jpg;.jpeg;.webp"));
     public static readonly DependencyProperty MaxSizeProperty = DependencyProperty.Register(nameof(MaxSize), typeof(long), typeof(AvatarUpload), new PropertyMetadata(5 * 1024 * 1024L));
     public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(nameof(Size), typeof(double), typeof(AvatarUpload), new PropertyMetadata(88d));
+    public static readonly DependencyProperty OutputSizeProperty = DependencyProperty.Register(nameof(OutputSize), typeof(int), typeof(AvatarUpload), new FrameworkPropertyMetadata(512, null, CoerceOutputSize));
+    private static readonly DependencyPropertyKey CroppedImagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CroppedImage), typeof(BitmapSource), typeof(AvatarUpload), new PropertyMetadata(null));
+    public static readonly DependencyProperty CroppedImageProperty = CroppedImagePropertyKey.DependencyProperty;
     private static readonly DependencyPropertyKey IsCroppingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCropping), typeof(bool), typeof(AvatarUpload), new PropertyMetadata(false, OnCropChanged));
     public static readonly DependencyProperty IsCroppingProperty = IsCroppingPropertyKey.DependencyProperty;
     public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(nameof(Zoom), typeof(double), typeof(AvatarUpload), new FrameworkPropertyMetadata(1d, OnCropChanged, CoerceZoom));
@@ -34,6 +38,8 @@ public class AvatarUpload : Control
     public string Accept { get => (string)GetValue(AcceptProperty); set => SetValue(AcceptProperty, value); }
     public long MaxSize { get => (long)GetValue(MaxSizeProperty); set => SetValue(MaxSizeProperty, value); }
     public double Size { get => (double)GetValue(SizeProperty); set => SetValue(SizeProperty, Math.Clamp(value, 40, 184)); }
+    public int OutputSize { get => (int)GetValue(OutputSizeProperty); set => SetValue(OutputSizeProperty, value); }
+    public BitmapSource? CroppedImage => (BitmapSource?)GetValue(CroppedImageProperty);
     public bool IsCropping { get => (bool)GetValue(IsCroppingProperty); private set => SetValue(IsCroppingPropertyKey, value); }
     public double Zoom { get => (double)GetValue(ZoomProperty); set => SetValue(ZoomProperty, value); }
     public double CropOffsetX { get => (double)GetValue(CropOffsetXProperty); set => SetValue(CropOffsetXProperty, value); }
@@ -56,6 +62,7 @@ public class AvatarUpload : Control
     }
     private static void OnImageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateFallbackVisual();
     private static void OnProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateProgressRing();
+    private static object CoerceOutputSize(DependencyObject d, object value) => Math.Clamp((int)value, 32, 4096);
     private void UpdateFallbackVisual()
     {
         if (GetTemplateChild("PART_Button") is not DependencyObject root) return;
@@ -91,7 +98,16 @@ public class AvatarUpload : Control
     public void SaveCrop()
     {
         if (!IsCropping || _pendingImage is null || _pendingPath is null) return;
-        ImageSource = _pendingImage; SetValue(IsCroppingPropertyKey, false); var path = _pendingPath; _pendingImage = null; _pendingPath = null; FileSelected?.Invoke(this, path); UpdateCropVisual();
+        try
+        {
+            if (_pendingImage is not BitmapSource pending) throw new InvalidOperationException("The selected image cannot be cropped.");
+            var cropped = CreateCropBitmap(pending);
+            SetValue(CroppedImagePropertyKey, cropped);
+            ImageSource = cropped;
+            var path = EncodeCrop(cropped, _pendingPath);
+            SetValue(IsCroppingPropertyKey, false); _pendingImage = null; _pendingPath = null; FileSelected?.Invoke(this, path); UpdateCropVisual();
+        }
+        catch (Exception error) { Error = error.Message; }
     }
     public void CancelCrop() { _pendingImage = null; _pendingPath = null; SetValue(IsCroppingPropertyKey, false); Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; UpdateCropVisual(); }
     private static void OnCropChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateCropVisual();
@@ -116,4 +132,22 @@ public class AvatarUpload : Control
     private void OnCropMouseDown(object sender, MouseButtonEventArgs e) { if (!IsCropping) return; _dragging = true; _dragStart = e.GetPosition((IInputElement)sender); _dragOriginX = CropOffsetX; _dragOriginY = CropOffsetY; ((UIElement)sender).CaptureMouse(); e.Handled = true; }
     private void OnCropMouseMove(object sender, MouseEventArgs e) { if (!_dragging) return; var point = e.GetPosition((IInputElement)sender); CropOffsetX = _dragOriginX + (point.X - _dragStart.X) / 248; CropOffsetY = _dragOriginY + (point.Y - _dragStart.Y) / 248; }
     private void OnCropMouseUp(object sender, MouseButtonEventArgs e) { _dragging = false; ((UIElement)sender).ReleaseMouseCapture(); }
+    private BitmapSource CreateCropBitmap(BitmapSource source)
+    {
+        var output = Math.Clamp(OutputSize, 32, 4096);
+        var width = source.PixelWidth; var height = source.PixelHeight; var scale = Math.Max(248d / width, 248d / height) * Zoom;
+        var cropWidth = Math.Min(width, 248d / scale); var cropHeight = Math.Min(height, 248d / scale);
+        var centerX = width / 2d - CropOffsetX * 248d / scale; var centerY = height / 2d - CropOffsetY * 248d / scale;
+        var x = Math.Clamp(centerX - cropWidth / 2d, 0, Math.Max(0, width - cropWidth)); var y = Math.Clamp(centerY - cropHeight / 2d, 0, Math.Max(0, height - cropHeight));
+        var rect = new Int32Rect((int)Math.Round(x), (int)Math.Round(y), Math.Max(1, (int)Math.Round(cropWidth)), Math.Max(1, (int)Math.Round(cropHeight)));
+        var cropped = new CroppedBitmap(source, rect); cropped.Freeze();
+        var visual = new DrawingVisual(); using (var context = visual.RenderOpen()) context.DrawImage(cropped, new Rect(0, 0, output, output));
+        var rendered = new RenderTargetBitmap(output, output, 96, 96, PixelFormats.Pbgra32); rendered.Render(visual); rendered.Freeze(); return rendered;
+    }
+    private static string EncodeCrop(BitmapSource bitmap, string originalPath)
+    {
+        var extension = string.Equals(Path.GetExtension(originalPath), ".png", StringComparison.OrdinalIgnoreCase) ? ".png" : ".jpg";
+        var path = Path.Combine(Path.GetTempPath(), $"arc-avatar-{Guid.NewGuid():N}{extension}"); using var stream = File.Create(path);
+        BitmapEncoder encoder = extension == ".png" ? new PngBitmapEncoder() : new JpegBitmapEncoder { QualityLevel = 92 }; encoder.Frames.Add(BitmapFrame.Create(bitmap)); encoder.Save(stream); return path;
+    }
 }

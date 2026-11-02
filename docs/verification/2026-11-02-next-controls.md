@@ -46,3 +46,9 @@
 - 同一窗口复验还发现 EmojiPicker 触发按钮在目录排序下显示 `〰️`，当前字体将其绘制成“~~”；已固定默认入口为 `😀`，并增加 `NextArcControlsTests` 回归断言，避免数据目录顺序再次改变入口视觉。
 - 最新 Gallery 窗口复验确认 MentionInput 空状态显示 `Write a comment, @ to mention`，EmojiPicker 触发按钮显示笑脸；两者均保留原生输入/Popup 命中区域。
 - EmojiPicker Popup 复验确认在底部锚点处向上翻转且未越出窗口；表情按钮与肤色按钮统一使用 `Segoe UI Emoji`，不再继承主题前景色强制覆盖字形。
+
+## AvatarUpload 裁剪输出补强
+
+- `SaveCrop()` 现在按 `OutputSize` 将圆形预览对应的方形区域渲染为 `CroppedImage`，默认 512px，范围限制为 32–4096px。
+- PNG 输入保持 PNG；其他输入写为 92% JPEG 临时文件，并通过现有 `FileSelected` 返回生成文件路径。
+- Controls 构建与 `NextArcControlsTests` 19/19 通过；真实文件选择和上传服务回调仍待窗口级验收。
