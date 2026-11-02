@@ -11,7 +11,7 @@
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="Variant" Value="Compact"><Setter TargetName="Shell" Property="Padding" Value="10,5"/><Setter TargetName="LabelText" Property="Visibility" Value="Collapsed"/><Setter TargetName="LargeUnits" Property="Visibility" Value="Collapsed"/><Setter TargetName="CompactText" Property="Visibility" Value="Visible"/><Setter TargetName="Shell" Property="BorderThickness" Value="1"/></Trigger>
-        <Trigger Property="IsComplete" Value="True"><Setter TargetName="Shell" Property="Background" Value="{DynamicResource ArcWpf.Brush.BadgeSuccessBackground}"/><Setter TargetName="Done" Property="Visibility" Value="Visible"/><Setter TargetName="LargeUnits" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="IsComplete" Value="True"><Setter TargetName="Shell" Property="Background" Value="{DynamicResource ArcWpf.Brush.BadgeSuccessBackground}"/><Setter TargetName="Done" Property="Visibility" Value="Visible"/><Setter TargetName="LabelText" Property="Visibility" Value="Collapsed"/><Setter TargetName="LargeUnits" Property="Visibility" Value="Collapsed"/><Setter TargetName="CompactText" Property="Visibility" Value="Collapsed"/></Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>
