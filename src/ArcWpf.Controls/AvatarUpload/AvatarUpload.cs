@@ -19,6 +19,11 @@ public class AvatarUpload : Control
     public static readonly DependencyProperty AcceptProperty = DependencyProperty.Register(nameof(Accept), typeof(string), typeof(AvatarUpload), new PropertyMetadata(".png;.jpg;.jpeg;.webp"));
     public static readonly DependencyProperty MaxSizeProperty = DependencyProperty.Register(nameof(MaxSize), typeof(long), typeof(AvatarUpload), new PropertyMetadata(5 * 1024 * 1024L));
     public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(nameof(Size), typeof(double), typeof(AvatarUpload), new PropertyMetadata(88d));
+    private static readonly DependencyPropertyKey IsCroppingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCropping), typeof(bool), typeof(AvatarUpload), new PropertyMetadata(false, OnCropChanged));
+    public static readonly DependencyProperty IsCroppingProperty = IsCroppingPropertyKey.DependencyProperty;
+    public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(nameof(Zoom), typeof(double), typeof(AvatarUpload), new FrameworkPropertyMetadata(1d, OnCropChanged, CoerceZoom));
+    public static readonly DependencyProperty CropOffsetXProperty = DependencyProperty.Register(nameof(CropOffsetX), typeof(double), typeof(AvatarUpload), new FrameworkPropertyMetadata(0d, OnCropChanged, CoerceOffset));
+    public static readonly DependencyProperty CropOffsetYProperty = DependencyProperty.Register(nameof(CropOffsetY), typeof(double), typeof(AvatarUpload), new FrameworkPropertyMetadata(0d, OnCropChanged, CoerceOffset));
     public ImageSource? ImageSource { get => (ImageSource?)GetValue(ImageSourceProperty); set => SetValue(ImageSourceProperty, value); }
     public string Initials { get => (string)GetValue(InitialsProperty); set => SetValue(InitialsProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
@@ -29,10 +34,26 @@ public class AvatarUpload : Control
     public string Accept { get => (string)GetValue(AcceptProperty); set => SetValue(AcceptProperty, value); }
     public long MaxSize { get => (long)GetValue(MaxSizeProperty); set => SetValue(MaxSizeProperty, value); }
     public double Size { get => (double)GetValue(SizeProperty); set => SetValue(SizeProperty, Math.Clamp(value, 40, 184)); }
+    public bool IsCropping { get => (bool)GetValue(IsCroppingProperty); private set => SetValue(IsCroppingPropertyKey, value); }
+    public double Zoom { get => (double)GetValue(ZoomProperty); set => SetValue(ZoomProperty, value); }
+    public double CropOffsetX { get => (double)GetValue(CropOffsetXProperty); set => SetValue(CropOffsetXProperty, value); }
+    public double CropOffsetY { get => (double)GetValue(CropOffsetYProperty); set => SetValue(CropOffsetYProperty, value); }
     public event EventHandler<string>? FileSelected;
     static AvatarUpload() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AvatarUpload), new FrameworkPropertyMetadata(typeof(AvatarUpload)));
-    public AvatarUpload() { AllowDrop = true; Focusable = true; Drop += OnDrop; DragOver += OnDragOver; KeyDown += (_, e) => { if (e.Key is Key.Enter or Key.Space) { Browse(); e.Handled = true; } }; }
-    public override void OnApplyTemplate() { base.OnApplyTemplate(); if (GetTemplateChild("PART_Button") is System.Windows.Controls.Button button) button.Click += (_, _) => Browse(); UpdateFallbackVisual(); UpdateProgressRing(); }
+    private ImageSource? _pendingImage; private string? _pendingPath; private bool _dragging; private Point _dragStart; private double _dragOriginX, _dragOriginY;
+    public AvatarUpload() { AllowDrop = true; Focusable = true; Drop += OnDrop; DragOver += OnDragOver; KeyDown += OnKeyDown; }
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
+        if (GetTemplateChild("PART_Button") is System.Windows.Controls.Button button) button.Click += (_, _) => Browse();
+        if (GetTemplateChild("PART_Save") is System.Windows.Controls.Button save) save.Click += (_, _) => SaveCrop();
+        if (GetTemplateChild("PART_Cancel") is System.Windows.Controls.Button cancel) cancel.Click += (_, _) => CancelCrop();
+        if (GetTemplateChild("PART_ZoomOut") is System.Windows.Controls.Button zoomOut) zoomOut.Click += (_, _) => Zoom -= .1;
+        if (GetTemplateChild("PART_ZoomIn") is System.Windows.Controls.Button zoomIn) zoomIn.Click += (_, _) => Zoom += .1;
+        if (GetTemplateChild("PART_Zoom") is Slider slider) slider.ValueChanged += (_, _) => Zoom = slider.Value;
+        if (GetTemplateChild("PART_CropStage") is UIElement stage) { stage.MouseLeftButtonDown += OnCropMouseDown; stage.MouseMove += OnCropMouseMove; stage.MouseLeftButtonUp += OnCropMouseUp; stage.KeyDown += OnKeyDown; }
+        UpdateFallbackVisual(); UpdateProgressRing(); UpdateCropVisual();
+    }
     private static void OnImageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateFallbackVisual();
     private static void OnProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateProgressRing();
     private void UpdateFallbackVisual()
@@ -59,7 +80,7 @@ public class AvatarUpload : Control
         if (!IsImageFile(path)) { Error = "Select an image file"; return; }
         try {
             if (MaxSize > 0 && new FileInfo(path).Length > MaxSize) { Error = $"Image must be smaller than {FileDropzone.FormatFileSize(MaxSize)}"; return; }
-            ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(path)); Error = string.Empty; FileSelected?.Invoke(this, path);
+            var image = new System.Windows.Media.Imaging.BitmapImage(new Uri(path)); image.Freeze(); _pendingImage = image; _pendingPath = path; Error = string.Empty; Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; SetValue(IsCroppingPropertyKey, true); UpdateCropVisual();
         } catch (Exception error) { Error = error.Message; }
     }
 
@@ -67,4 +88,32 @@ public class AvatarUpload : Control
     {
         if (GetTemplateChild("PART_ProgressRing") is System.Windows.Shapes.Ellipse ring) ring.StrokeDashOffset = Math.Clamp(100 - Progress, 0, 100);
     }
+    public void SaveCrop()
+    {
+        if (!IsCropping || _pendingImage is null || _pendingPath is null) return;
+        ImageSource = _pendingImage; SetValue(IsCroppingPropertyKey, false); var path = _pendingPath; _pendingImage = null; _pendingPath = null; FileSelected?.Invoke(this, path); UpdateCropVisual();
+    }
+    public void CancelCrop() { _pendingImage = null; _pendingPath = null; SetValue(IsCroppingPropertyKey, false); Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; UpdateCropVisual(); }
+    private static void OnCropChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateCropVisual();
+    private static object CoerceZoom(DependencyObject d, object value) => Math.Clamp((double)value, 1, 3);
+    private static object CoerceOffset(DependencyObject d, object value) => Math.Clamp((double)value, -.25, .25);
+    private void UpdateCropVisual()
+    {
+        if (GetTemplateChild("PART_CropImage") is System.Windows.Controls.Image image)
+        {
+            image.Source = _pendingImage;
+            image.RenderTransform = new TransformGroup { Children = { new ScaleTransform(Zoom, Zoom), new TranslateTransform(CropOffsetX * 248, CropOffsetY * 248) } };
+        }
+        if (GetTemplateChild("PART_Zoom") is Slider slider && Math.Abs(slider.Value - Zoom) > .001) slider.Value = Zoom;
+    }
+    private void OnKeyDown(object sender, KeyEventArgs e)
+    {
+        if (!IsCropping) { if (e.Key is Key.Enter or Key.Space) { Browse(); e.Handled = true; } return; }
+        var step = (Keyboard.Modifiers & ModifierKeys.Shift) != 0 ? .1 : .02;
+        switch (e.Key) { case Key.Left: CropOffsetX -= step; break; case Key.Right: CropOffsetX += step; break; case Key.Up: CropOffsetY -= step; break; case Key.Down: CropOffsetY += step; break; case Key.Add: case Key.OemPlus: Zoom += .1; break; case Key.Subtract: case Key.OemMinus: Zoom -= .1; break; case Key.D0: Zoom = 1; CropOffsetX = CropOffsetY = 0; break; case Key.Enter: SaveCrop(); break; case Key.Escape: CancelCrop(); break; default: return; }
+        e.Handled = true;
+    }
+    private void OnCropMouseDown(object sender, MouseButtonEventArgs e) { if (!IsCropping) return; _dragging = true; _dragStart = e.GetPosition((IInputElement)sender); _dragOriginX = CropOffsetX; _dragOriginY = CropOffsetY; ((UIElement)sender).CaptureMouse(); e.Handled = true; }
+    private void OnCropMouseMove(object sender, MouseEventArgs e) { if (!_dragging) return; var point = e.GetPosition((IInputElement)sender); CropOffsetX = _dragOriginX + (point.X - _dragStart.X) / 248; CropOffsetY = _dragOriginY + (point.Y - _dragStart.Y) / 248; }
+    private void OnCropMouseUp(object sender, MouseButtonEventArgs e) { _dragging = false; ((UIElement)sender).ReleaseMouseCapture(); }
 }

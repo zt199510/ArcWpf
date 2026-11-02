@@ -23,9 +23,22 @@
         </Button>
         <TextBlock Text="{TemplateBinding Label}" HorizontalAlignment="Center" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,8,0,0"/>
         <TextBlock Text="{TemplateBinding Hint}" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+        <Border x:Name="PART_CropStage" Width="248" Height="248" Margin="0,0,0,10" CornerRadius="124" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.BorderStrong}" BorderThickness="1" ClipToBounds="True" Focusable="True" Visibility="Collapsed">
+          <Grid>
+            <Image x:Name="PART_CropImage" Stretch="UniformToFill" Focusable="False"/>
+            <Ellipse Margin="8" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" StrokeThickness="1" StrokeDashArray="2,2" Fill="Transparent" IsHitTestVisible="False"/>
+          </Grid>
+        </Border>
+        <StackPanel x:Name="PART_CropControls" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+          <Button x:Name="PART_ZoomOut" Content="−" Width="30" Height="30" ToolTip="Zoom out"/>
+          <Slider x:Name="PART_Zoom" Width="112" Minimum="1" Maximum="3" Value="1" VerticalAlignment="Center" AutomationProperties.Name="Zoom"/>
+          <Button x:Name="PART_ZoomIn" Content="＋" Width="30" Height="30" ToolTip="Zoom in"/>
+          <Button x:Name="PART_Save" Content="Save" Margin="8,0,0,0" Padding="12,5"/>
+          <Button x:Name="PART_Cancel" Content="Cancel" Margin="4,0,0,0" Padding="12,5"/>
+        </StackPanel>
         <TextBlock Text="{TemplateBinding Error}" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.Danger}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
       </StackPanel>
-      <ControlTemplate.Triggers><Trigger Property="IsUploading" Value="True"><Setter TargetName="PART_Button" Property="IsEnabled" Value="False"/></Trigger></ControlTemplate.Triggers>
+      <ControlTemplate.Triggers><Trigger Property="IsUploading" Value="True"><Setter TargetName="PART_Button" Property="IsEnabled" Value="False"/></Trigger><Trigger Property="IsCropping" Value="True"><Setter TargetName="PART_Button" Property="Visibility" Value="Collapsed"/><Setter TargetName="PART_CropStage" Property="Visibility" Value="Visible"/><Setter TargetName="PART_CropControls" Property="Visibility" Value="Visible"/></Trigger></ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>
 </ResourceDictionary>
