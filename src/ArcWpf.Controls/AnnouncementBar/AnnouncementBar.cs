@@ -80,6 +80,7 @@ public class AnnouncementBar : Control
             action.Content = CurrentItem?.ActionLabel;
             action.Visibility = string.IsNullOrWhiteSpace(CurrentItem?.ActionLabel) ? Visibility.Collapsed : Visibility.Visible;
         }
+        if (GetTemplateChild("PART_Pause") is System.Windows.Controls.Button pause) { pause.Content = IsPaused ? "▶" : "Ⅱ"; System.Windows.Automation.AutomationProperties.SetName(pause, IsPaused ? "Resume announcements" : "Pause announcements"); }
         UpdateCountdown();
     }
     private void UpdateCountdown()
