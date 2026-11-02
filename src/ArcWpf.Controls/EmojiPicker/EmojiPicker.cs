@@ -126,7 +126,7 @@ public class EmojiPicker : Control
     private void Build()
     {
         if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); var allCategories = string.Equals(SelectedCategory, "All", StringComparison.OrdinalIgnoreCase); IEnumerable<string> source = allCategories ? Emojis : Emojis.Where(value => CategoryValues.TryGetValue(SelectedCategory, out var values) && values.Contains(RemoveSkinTone(value))); IEnumerable<string> items = string.IsNullOrEmpty(query) ? (allCategories ? (RecentEmojis ?? new ObservableCollection<string>()).Concat(DefaultRecent ?? new ObservableCollection<string>()) : Enumerable.Empty<string>()).Concat(source).Distinct(StringComparer.Ordinal) : source.Where(value => MatchesSearch(value, query));
-        foreach (var emoji in items) { var displayed = ApplySkinTone(emoji); var name = EmojiNames.TryGetValue(RemoveSkinTone(emoji), out var knownName) ? knownName : displayed; var button = new System.Windows.Controls.Button { Content = displayed, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = name }; button.SetResourceReference(Control.ForegroundProperty, "ArcWpf.Brush.Foreground"); button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
+        foreach (var emoji in items) { var displayed = ApplySkinTone(emoji); var name = EmojiNames.TryGetValue(RemoveSkinTone(emoji), out var knownName) ? knownName : displayed; var button = new System.Windows.Controls.Button { Content = displayed, FontFamily = new FontFamily("Segoe UI Emoji"), FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = name }; button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
         if (_grid.Children.Count == 0) _grid.Children.Add(new TextBlock { Text = "No emoji found", Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(8), HorizontalAlignment = HorizontalAlignment.Center });
     }
     private void UpdateGridColumns() { if (_grid is not null) _grid.Columns = Math.Clamp(Columns, 6, 12); }
@@ -142,7 +142,7 @@ public class EmojiPicker : Control
         for (var index = 0; index < SkinToneValues.Length; index++)
         {
             var tone = index == 0 ? "👍" : "👍" + SkinToneValues[index];
-            var button = new System.Windows.Controls.Button { Content = tone, Tag = index, Padding = new Thickness(5, 2, 5, 2), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 17, ToolTip = index == 0 ? "Default skin tone" : $"Skin tone {index}" };
+            var button = new System.Windows.Controls.Button { Content = tone, Tag = index, Padding = new Thickness(5, 2, 5, 2), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontFamily = new FontFamily("Segoe UI Emoji"), FontSize = 17, ToolTip = index == 0 ? "Default skin tone" : $"Skin tone {index}" };
             button.SetResourceReference(Control.ForegroundProperty, "ArcWpf.Brush.Foreground"); var selected = index; button.Click += (_, _) => SkinTone = selected; _tones.Children.Add(button);
         }
         UpdateToneVisuals();
