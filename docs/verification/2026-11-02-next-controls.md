@@ -54,3 +54,4 @@
 - PNG 输入保持 PNG；其他输入写为 92% JPEG 临时文件，并通过现有 `FileSelected` 返回生成文件路径。
 - Controls 构建与 `NextArcControlsTests` 19/19 通过；真实文件选择和上传服务回调仍待窗口级验收。
 - AvatarUpload 裁剪开始后通过 Dispatcher 将焦点移到裁剪区，保存和取消后归还上传按钮焦点，符合 Arc 的键盘焦点路径；本次 Controls 构建与专项测试继续通过。
+- FileDropzone 增加 Ctrl+V 粘贴路径：剪贴板文件列表直接加入，剪贴板图片编码为临时 PNG 后复用同一 `AddFiles` 校验和上传流程；Controls 构建与 `NextArcControlsTests` 19/19 通过。

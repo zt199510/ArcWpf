@@ -6,4 +6,4 @@
 
 已实现的 WPF 扩展契约：`Note`、`DropLabel`、`MaxSize`、`ListPlacement`（`below`/`inside`）、`CompactAt`，以及 `FileDropzoneItem.Preview`、`FilePath`、`Retryable`、`FormattedSize`。超过 `MaxSize` 的文件会进入失败状态且不会启动上传。
 
-与 Arc Web 的有意适配差异：WPF 使用 `FilePath` 承载本地文件路径，不直接暴露浏览器 `File`；模板使用 WPF `Rectangle` 虚线边缘和原生 `ProgressBar`，拖拽光晕为静态资源层叠加，连续指针跟随和逐帧弹簧仍待后续动效迭代。剪贴板粘贴、自动对象 URL 生命周期和容器查询响应式断点尚未实现。
+与 Arc Web 的有意适配差异：WPF 使用 `FilePath` 承载本地文件路径，不直接暴露浏览器 `File`；模板使用 WPF `Rectangle` 虚线边缘和原生 `ProgressBar`，拖拽光晕为静态资源层叠加，连续指针跟随和逐帧弹簧仍待后续动效迭代。Ctrl+V 现在支持剪贴板文件列表和图片（图片会写入临时 PNG）；自动对象 URL 生命周期和容器查询响应式断点仍待后续扩展。

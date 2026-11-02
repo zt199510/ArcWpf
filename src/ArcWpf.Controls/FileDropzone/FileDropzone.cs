@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -67,7 +68,7 @@ public class FileDropzone : Control
     public FileDropzoneUpload? Upload { get => (FileDropzoneUpload?)GetValue(UploadProperty); set => SetValue(UploadProperty, value); }
     public event EventHandler<IReadOnlyList<string>>? FilesSelected;
     static FileDropzone() => DefaultStyleKeyProperty.OverrideMetadata(typeof(FileDropzone), new FrameworkPropertyMetadata(typeof(FileDropzone)));
-    public FileDropzone() { Items = new ObservableCollection<FileDropzoneItem>(); AllowDrop = true; Focusable = true; Drop += OnDrop; DragEnter += (_, e) => IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); DragLeave += (_, _) => IsDragging = false; DragOver += (_, e) => { IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); e.Effects = DragDropEffects.Copy; }; KeyDown += (_, e) => { if (e.Key is System.Windows.Input.Key.Enter or System.Windows.Input.Key.Space) { Browse(); e.Handled = true; } }; AddHandler(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, new RoutedEventHandler(OnItemButtonClick)); UpdateLayoutFlags(); }
+    public FileDropzone() { Items = new ObservableCollection<FileDropzoneItem>(); AllowDrop = true; Focusable = true; Drop += OnDrop; DragEnter += (_, e) => IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); DragLeave += (_, _) => IsDragging = false; DragOver += (_, e) => { IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); e.Effects = DragDropEffects.Copy; }; KeyDown += (_, e) => { if (e.Key is System.Windows.Input.Key.Enter or System.Windows.Input.Key.Space) { Browse(); e.Handled = true; } else if (e.Key == System.Windows.Input.Key.V && (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) != 0) { PasteClipboard(); e.Handled = true; } }; AddHandler(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, new RoutedEventHandler(OnItemButtonClick)); UpdateLayoutFlags(); }
     private static void OnLayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((FileDropzone)d).UpdateLayoutFlags();
     private static void OnItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -95,6 +96,17 @@ public class FileDropzone : Control
     {
         var dialog = new OpenFileDialog { Multiselect = Multiple, Filter = string.IsNullOrWhiteSpace(Accept) || Accept == "*.*" ? "All files|*.*" : $"Files|{Accept}" };
         if (dialog.ShowDialog() == true) AddFiles(dialog.FileNames);
+    }
+    private void PasteClipboard()
+    {
+        try
+        {
+            if (Clipboard.ContainsFileDropList()) { AddFiles(Clipboard.GetFileDropList().Cast<string>()); return; }
+            if (!Clipboard.ContainsImage()) return;
+            var path = Path.Combine(Path.GetTempPath(), $"arc-drop-{Guid.NewGuid():N}.png");
+            using var stream = File.Create(path); var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(Clipboard.GetImage())); encoder.Save(stream); AddFiles([path]);
+        }
+        catch { /* 剪贴板可能在其他进程锁定，保持输入不被打断。 */ }
     }
     private void AddFiles(IEnumerable<string> paths)
     {
