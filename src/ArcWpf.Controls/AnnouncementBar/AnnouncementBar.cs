@@ -38,13 +38,13 @@ public class AnnouncementBar : Control
     public ObservableCollection<AnnouncementItem> Announcements { get => (ObservableCollection<AnnouncementItem>)GetValue(AnnouncementsProperty); set => SetValue(AnnouncementsProperty, value); }
     public bool Controls { get => (bool)GetValue(ControlsProperty); set => SetValue(ControlsProperty, value); }
     public bool IsPaused { get => (bool)GetValue(IsPausedProperty); set => SetValue(IsPausedProperty, value); }
-    private TextBlock? _message; private TextBlock? _countdown; private Border? _root; private readonly DispatcherTimer _timer = new(); private readonly DispatcherTimer _countdownTimer = new() { Interval = TimeSpan.FromSeconds(1) }; private INotifyCollectionChanged? _source; private int _messageTransition;
+    private TextBlock? _message; private TextBlock? _countdown; private Border? _root; private System.Windows.Controls.ProgressBar? _timerProgress; private readonly DispatcherTimer _timer = new(); private readonly DispatcherTimer _countdownTimer = new() { Interval = TimeSpan.FromSeconds(1) }; private INotifyCollectionChanged? _source; private int _messageTransition;
     static AnnouncementBar() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnnouncementBar), new FrameworkPropertyMetadata(typeof(AnnouncementBar)));
     public event EventHandler<AnnouncementItem>? ActionInvoked;
-    public AnnouncementBar() { Messages = new ObservableCollection<string>(); Announcements = new ObservableCollection<AnnouncementItem>(); _timer.Tick += (_, _) => Next(); _countdownTimer.Tick += (_, _) => UpdateCountdown(); Loaded += (_, _) => { Start(); _countdownTimer.Start(); }; Unloaded += (_, _) => { _timer.Stop(); _countdownTimer.Stop(); }; MouseEnter += (_, _) => _timer.Stop(); MouseLeave += (_, _) => Start(); GotKeyboardFocus += (_, _) => _timer.Stop(); LostKeyboardFocus += (_, _) => Start(); }
+    public AnnouncementBar() { Messages = new ObservableCollection<string>(); Announcements = new ObservableCollection<AnnouncementItem>(); _timer.Tick += (_, _) => Next(); _countdownTimer.Tick += (_, _) => UpdateCountdown(); Loaded += (_, _) => { Start(); _countdownTimer.Start(); }; Unloaded += (_, _) => { _timer.Stop(); _countdownTimer.Stop(); SnapshotTimerProgress(); }; MouseEnter += (_, _) => { _timer.Stop(); SnapshotTimerProgress(); }; MouseLeave += (_, _) => Start(); GotKeyboardFocus += (_, _) => { _timer.Stop(); SnapshotTimerProgress(); }; LostKeyboardFocus += (_, _) => Start(); }
     public override void OnApplyTemplate()
     {
-        base.OnApplyTemplate(); _message = GetTemplateChild("PART_Message") as TextBlock; if (_message is not null) { _message.RenderTransform = new TranslateTransform(); _message.RenderTransformOrigin = new Point(.5, .5); } _countdown = GetTemplateChild("PART_Countdown") as TextBlock; _root = GetTemplateChild("Root") as Border;
+        base.OnApplyTemplate(); _message = GetTemplateChild("PART_Message") as TextBlock; if (_message is not null) { _message.RenderTransform = new TranslateTransform(); _message.RenderTransformOrigin = new Point(.5, .5); } _countdown = GetTemplateChild("PART_Countdown") as TextBlock; _root = GetTemplateChild("Root") as Border; _timerProgress = GetTemplateChild("PART_TimerProgress") as System.Windows.Controls.ProgressBar;
         if (GetTemplateChild("PART_Previous") is System.Windows.Controls.Button previous) previous.Click += (_, _) => Previous();
         if (GetTemplateChild("PART_Next") is System.Windows.Controls.Button next) next.Click += (_, _) => Next();
         if (GetTemplateChild("PART_Pause") is System.Windows.Controls.Button pause) pause.Click += (_, _) => IsPaused = !IsPaused;
@@ -70,7 +70,7 @@ public class AnnouncementBar : Control
     private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnnouncementBar)d).TransitionMessage((int)e.OldValue, (int)e.NewValue);
     private static void OnAutoPlayChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnnouncementBar)d).Start();
     private static void OnOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var bar = (AnnouncementBar)d; bar.UpdateOpen(true); if (bar.IsOpen) bar.Start(); else bar._timer.Stop(); }
-    private static void OnPausedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var bar = (AnnouncementBar)d; if (bar.IsPaused) bar._timer.Stop(); else bar.Start(); }
+    private static void OnPausedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var bar = (AnnouncementBar)d; if (bar.IsPaused) { bar._timer.Stop(); bar.SnapshotTimerProgress(); } else bar.Start(); }
     private AnnouncementItem? CurrentItem => Announcements is { Count: > 0 } ? Announcements[Math.Clamp(Index, 0, Announcements.Count - 1)] : null;
     private int Count => Announcements is { Count: > 0 } ? Announcements.Count : Messages.Count;
     private void Update()
@@ -119,7 +119,24 @@ public class AnnouncementBar : Control
         _countdown.Text = remaining.TotalDays >= 1 ? $"{remaining.Days}d {remaining.Hours:00}h" : $"{remaining.Hours:00}:{remaining.Minutes:00}:{remaining.Seconds:00}";
         _countdown.Visibility = Visibility.Visible;
     }
-    private void Start() { _timer.Stop(); if (IsLoaded && AutoPlay && !IsPaused && IsOpen && Count > 1) { _timer.Interval = Interval <= TimeSpan.Zero ? TimeSpan.FromSeconds(6) : Interval; _timer.Start(); } }
+    private void Start()
+    {
+        _timer.Stop(); _timerProgress?.BeginAnimation(System.Windows.Controls.Primitives.RangeBase.ValueProperty, null);
+        if (IsLoaded && AutoPlay && !IsPaused && IsOpen && Count > 1)
+        {
+            _timer.Interval = Interval <= TimeSpan.Zero ? TimeSpan.FromSeconds(6) : Interval;
+            _timerProgress?.BeginAnimation(System.Windows.Controls.Primitives.RangeBase.ValueProperty, new DoubleAnimation(0, 100, _timer.Interval) { FillBehavior = FillBehavior.HoldEnd });
+            _timer.Start();
+        }
+        else if (_timerProgress is not null) _timerProgress.Value = 0;
+    }
+    private void SnapshotTimerProgress()
+    {
+        if (_timerProgress is null) return;
+        var value = _timerProgress.Value;
+        _timerProgress.BeginAnimation(System.Windows.Controls.Primitives.RangeBase.ValueProperty, null);
+        _timerProgress.Value = value;
+    }
     private void Next() { if (Count > 0) Index = (Index + 1) % Count; }
     public void Previous() { if (Count > 0) Index = (Index - 1 + Count) % Count; }
     public void Close() { IsOpen = false; _timer.Stop(); }
