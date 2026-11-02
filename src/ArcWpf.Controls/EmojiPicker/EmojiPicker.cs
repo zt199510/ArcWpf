@@ -60,7 +60,7 @@ public class EmojiPicker : Control
     }
     public override void OnApplyTemplate()
     {
-        base.OnApplyTemplate(); if (GetTemplateChild("PART_Toggle") is Button toggle) toggle.Click += (_, _) => IsOpen = !IsOpen;
+        base.OnApplyTemplate(); if (GetTemplateChild("PART_Toggle") is System.Windows.Controls.Button toggle) toggle.Click += (_, _) => IsOpen = !IsOpen;
         _popup = GetTemplateChild("PART_Popup") as Popup; _grid = GetTemplateChild("PART_Grid") as UniformGrid; _categories = GetTemplateChild("PART_Categories") as UniformGrid; _tones = GetTemplateChild("PART_Tones") as UniformGrid; _search = GetTemplateChild("PART_Search") as TextBox;
         if (_popup is not null) { _popup.DataContext = this; _popup.CustomPopupPlacementCallback = PlacePopup; }
         if (_search is not null) _search.TextChanged += (_, _) => { SearchText = _search.Text; Build(); };
@@ -85,7 +85,7 @@ public class EmojiPicker : Control
             IsOpen = false; e.Handled = true; return;
         }
         if (e.Key is not (Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)) return;
-        var buttons = _grid?.Children.OfType<Button>().ToArray();
+        var buttons = _grid?.Children.OfType<System.Windows.Controls.Button>().ToArray();
         if (buttons is null || buttons.Length == 0) return;
         var current = Array.IndexOf(buttons, Keyboard.FocusedElement as Button);
         var columns = Math.Max(1, _grid?.Columns ?? 6);
@@ -115,13 +115,13 @@ public class EmojiPicker : Control
     private void Build()
     {
         if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); var allCategories = string.Equals(SelectedCategory, "All", StringComparison.OrdinalIgnoreCase); IEnumerable<string> source = allCategories ? Emojis : Emojis.Where(value => CategoryValues.TryGetValue(SelectedCategory, out var values) && values.Contains(RemoveSkinTone(value))); IEnumerable<string> items = string.IsNullOrEmpty(query) ? (allCategories ? (RecentEmojis ?? new ObservableCollection<string>()) : Enumerable.Empty<string>()).Concat(source).Distinct(StringComparer.Ordinal) : source.Where(value => MatchesSearch(value, query));
-        foreach (var emoji in items) { var displayed = ApplySkinTone(emoji); var name = EmojiNames.TryGetValue(RemoveSkinTone(emoji), out var knownName) ? knownName : displayed; var button = new Button { Content = displayed, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = name }; button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
+        foreach (var emoji in items) { var displayed = ApplySkinTone(emoji); var name = EmojiNames.TryGetValue(RemoveSkinTone(emoji), out var knownName) ? knownName : displayed; var button = new System.Windows.Controls.Button { Content = displayed, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = name }; button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
         if (_grid.Children.Count == 0) _grid.Children.Add(new TextBlock { Text = "No emoji found", Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(8), HorizontalAlignment = HorizontalAlignment.Center });
     }
     private void BuildCategories()
     {
         if (_categories is null) return; _categories.Children.Clear(); var names = new[] { "All" }.Concat(CategoryValues.Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase)).ToArray(); _categories.Columns = names.Length;
-        foreach (var name in names) { var button = new Button { Content = name, Tag = name, Padding = new Thickness(6, 3, 6, 3), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 11 }; button.Click += (_, _) => SelectedCategory = name; _categories.Children.Add(button); }
+        foreach (var name in names) { var button = new System.Windows.Controls.Button { Content = name, Tag = name, Padding = new Thickness(6, 3, 6, 3), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 11 }; button.Click += (_, _) => SelectedCategory = name; _categories.Children.Add(button); }
     }
     private void BuildTones()
     {
@@ -129,7 +129,7 @@ public class EmojiPicker : Control
         for (var index = 0; index < SkinToneValues.Length; index++)
         {
             var tone = index == 0 ? "👍" : "👍" + SkinToneValues[index];
-            var button = new Button { Content = tone, Tag = index, Padding = new Thickness(5, 2, 5, 2), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 17, ToolTip = index == 0 ? "Default skin tone" : $"Skin tone {index}" };
+            var button = new System.Windows.Controls.Button { Content = tone, Tag = index, Padding = new Thickness(5, 2, 5, 2), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 17, ToolTip = index == 0 ? "Default skin tone" : $"Skin tone {index}" };
             var selected = index; button.Click += (_, _) => SkinTone = selected; _tones.Children.Add(button);
         }
     }
