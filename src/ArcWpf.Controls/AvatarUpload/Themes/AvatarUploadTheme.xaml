@@ -2,10 +2,28 @@
   <Style TargetType="{x:Type local:AvatarUpload}">
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:AvatarUpload}">
       <StackPanel HorizontalAlignment="Center">
-        <Button x:Name="PART_Button" Width="96" Height="96" BorderThickness="0" Background="Transparent">
-          <Button.Template><ControlTemplate TargetType="Button"><Border CornerRadius="48" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" ClipToBounds="True"><Grid><Image Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Stretch="UniformToFill"/><TextBlock x:Name="InitialsText" Text="{Binding Initials, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/><TextBlock Text="＋" FontSize="22" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,8,5" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/><Border x:Name="PART_Uploading" Background="#99000000" Visibility="Collapsed"><StackPanel VerticalAlignment="Center"><TextBlock Text="Uploading…" Foreground="White" HorizontalAlignment="Center" FontSize="12"/><ProgressBar Value="{Binding Progress, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Width="54" Height="3" Margin="0,4,0,0"/></StackPanel></Border></Grid></Border><ControlTemplate.Triggers><DataTrigger Binding="{Binding IsUploading, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Value="True"><Setter TargetName="PART_Uploading" Property="Visibility" Value="Visible"/></DataTrigger></ControlTemplate.Triggers></ControlTemplate></Button.Template>
+        <Button x:Name="PART_Button" Width="{TemplateBinding Size}" Height="{TemplateBinding Size}" BorderThickness="0" Background="Transparent" AutomationProperties.Name="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}">
+          <Button.Template><ControlTemplate TargetType="Button">
+            <Border CornerRadius="100" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" ClipToBounds="True">
+              <Grid>
+                <Image Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Stretch="UniformToFill"/>
+                <TextBlock x:Name="InitialsText" Text="{Binding Initials, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+                <Border x:Name="PART_Hover" Background="#66000000" Opacity="0"><TextBlock Text="＋" FontSize="26" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/></Border>
+                <Ellipse x:Name="PART_ProgressRing" Margin="-2" Fill="Transparent" Stroke="{DynamicResource ArcWpf.Brush.Accent}" StrokeThickness="3" StrokeDashArray="100,100" StrokeDashOffset="100" IsHitTestVisible="False"/>
+                <Border x:Name="PART_Uploading" Background="#99000000" Visibility="Collapsed"><StackPanel VerticalAlignment="Center"><TextBlock Text="Uploading…" Foreground="White" HorizontalAlignment="Center" FontSize="12"/><TextBlock Text="{Binding Progress, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}, StringFormat={}{0:0}%}" Foreground="White" HorizontalAlignment="Center" FontSize="11" Margin="0,2,0,0"/></StackPanel></Border>
+              </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="PART_Hover" Property="Opacity" Value="1"/></Trigger>
+              <DataTrigger Binding="{Binding IsUploading, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Value="True"><Setter TargetName="PART_Uploading" Property="Visibility" Value="Visible"/><Setter TargetName="PART_ProgressRing" Property="Visibility" Value="Visible"/></DataTrigger>
+              <DataTrigger Binding="{Binding Error, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Value=""><Setter TargetName="PART_ProgressRing" Property="Visibility" Value="Collapsed"/></DataTrigger>
+              <DataTrigger Binding="{Binding Error, RelativeSource={RelativeSource AncestorType={x:Type local:AvatarUpload}}}" Value="{x:Null}"><Setter TargetName="PART_ProgressRing" Property="Visibility" Value="Collapsed"/></DataTrigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate></Button.Template>
         </Button>
-        <TextBlock Text="{TemplateBinding Label}" HorizontalAlignment="Center" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,8,0,0"/><TextBlock Text="{TemplateBinding Error}" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.Danger}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+        <TextBlock Text="{TemplateBinding Label}" HorizontalAlignment="Center" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,8,0,0"/>
+        <TextBlock Text="{TemplateBinding Hint}" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+        <TextBlock Text="{TemplateBinding Error}" HorizontalAlignment="Center" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.Danger}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
       </StackPanel>
       <ControlTemplate.Triggers><Trigger Property="IsUploading" Value="True"><Setter TargetName="PART_Button" Property="IsEnabled" Value="False"/></Trigger></ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
