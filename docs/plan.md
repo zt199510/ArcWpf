@@ -4,7 +4,7 @@
 
 用户确认当前所有纳入范围的控件均已完成收口。当前状态覆盖控件实现、依赖属性与模板、主题、Gallery、规格/参考卡、专项测试、动效清理和验证记录；最近批次的精确专项结果以各自验证记录为准，未把全量测试或未执行的真实窗口项目虚构为通过。
 
-已收口范围包括：TreeView、Breadcrumb、Menu、NumberInput、Progress、Calendar、DatePicker、Pagination、List、Search、ActionButton、CopyButton、ButtonGroup、ContextMenu、UserMenu、HoldToConfirm、InlineEdit、ExpandingSearch、DateRangePicker、TimePicker、ScrollArea、EmptyState、Skeleton、FilterToolbar、ReorderableList、PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker、BottomSheet、HoverCard、ResizablePanels、Card、MetricCard、Stepper、UsageMeter，以及此前已完成的基础控件。
+已收口范围包括：TreeView、Breadcrumb、Popover、Menu、NumberInput、Progress、Calendar、DatePicker、Pagination、List、Search、ActionButton、CopyButton、ButtonGroup、ContextMenu、UserMenu、HoldToConfirm、InlineEdit、ExpandingSearch、DateRangePicker、TimePicker、ScrollArea、EmptyState、Skeleton、FilterToolbar、ReorderableList、PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker、BottomSheet、HoverCard、ResizablePanels、Card、MetricCard、Stepper、UsageMeter，以及此前已完成的基础控件。
 
 历史章节中的“下一项”“实现中”“未开始”描述保留为当时过程记录；当前有效状态以 [控件交付路线图](component-roadmap.md) 和对应最新验证记录为准。真实窗口、物理触摸、IME、读屏、多 DPI、性能和逐帧视觉仍按各记录单独标注，不能由代码收口自动推导为平台验收。
 
