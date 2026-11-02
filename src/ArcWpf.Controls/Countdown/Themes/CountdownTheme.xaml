@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ArcWpf.Controls">
   <Style TargetType="{x:Type local:Countdown}">
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:Countdown}">
-      <Border x:Name="Shell" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="0" CornerRadius="16" Padding="10,6">
+      <Border x:Name="Shell" VerticalAlignment="Center" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="0" CornerRadius="16" Padding="10,6">
         <StackPanel HorizontalAlignment="Center">
           <TextBlock x:Name="LabelText" Text="{TemplateBinding Label}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FontSize="12" HorizontalAlignment="Center"/>
           <TextBlock x:Name="CompactText" Visibility="Collapsed" Foreground="{DynamicResource ArcWpf.Brush.Text}" FontSize="14" HorizontalAlignment="Center" MinWidth="120"/>

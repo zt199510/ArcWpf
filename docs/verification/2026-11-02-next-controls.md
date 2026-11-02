@@ -35,3 +35,10 @@
 
 - Countdown 增加 `CountdownUnit` 与 `Units` 集合，按 Arc 的最大单位吸收剩余时间规则动态生成大号分栏，紧凑模式复用相同拆分结果。
 - 自定义单位集合、完成态和 Gallery 页面已通过构建、8 项专项测试及实际启动检查；数字列仍为 WPF 文本槽近似，未宣称完整循环轮。
+
+## 真实窗口布局复验
+
+- 环境：Windows Gallery，96 DPI，浅色主题，`Arc Next Batch` 页面。
+- 修复前：Compact Countdown 在三列 Grid 中被垂直拉伸，倒计时贴在列顶部，剩余区域形成明显空白。
+- 修复：Countdown 模板根 `Shell` 增加 `VerticalAlignment="Center"`，只让内部内容参与自身高度测量并在列内垂直居中。
+- 修复后：倒计时胶囊位于 AvatarUpload 与 AnimatedCounter 同一视觉中心线，空白区域消失；截图来自当前构建的 Gallery 实例。
