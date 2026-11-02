@@ -15,6 +15,7 @@ public sealed class NextArcControlsTests
     [TestMethod] public void FileDropzoneHonorsLimits() => Sta.Run(() => { var d = new FileDropzone { MaxFiles = 2, Multiple = true }; Assert.AreEqual(2, d.MaxFiles); Assert.IsTrue(d.AllowDrop); });
     [TestMethod] public void FileDropzoneItemPublishesStatusChanges() => Sta.Run(() => { var item = new FileDropzoneItem(); var changed = false; item.PropertyChanged += (_, e) => changed |= e.PropertyName == nameof(FileDropzoneItem.Status); item.Status = "failed"; Assert.IsTrue(changed); });
     [TestMethod] public void AvatarUploadHasFallbackInitials() => Sta.Run(() => { var a = new AvatarUpload { Initials = "AW" }; Assert.AreEqual("AW", a.Initials); });
+    [TestMethod] public void AvatarUploadClampsProgress() => Sta.Run(() => { var a = new AvatarUpload { Progress = 140 }; Assert.AreEqual(100d, a.Progress); a.Progress = -2; Assert.AreEqual(0d, a.Progress); Assert.IsTrue(a.AllowDrop); });
     [TestMethod] public void MentionInputRetainsNativeTextEditing() => Sta.Run(() => { var input = new MentionInput { Text = "@Ada" }; Assert.AreEqual("@Ada", input.Text); Assert.IsTrue(input.AcceptsReturn); });
     [TestMethod] public void EmojiPickerHasDefaultPalette() => Sta.Run(() => { var picker = new EmojiPicker(); Assert.IsGreaterThan(10, picker.Emojis.Count); });
 }

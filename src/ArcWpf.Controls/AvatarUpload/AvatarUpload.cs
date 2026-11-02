@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Win32;
+using System.Windows.Input;
+using System.IO;
 
 namespace ArcWpf.Controls;
 
@@ -11,12 +13,17 @@ public class AvatarUpload : Control
     public static readonly DependencyProperty InitialsProperty = DependencyProperty.Register(nameof(Initials), typeof(string), typeof(AvatarUpload), new PropertyMetadata("A"));
     public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(AvatarUpload), new PropertyMetadata("Upload avatar"));
     public static readonly DependencyProperty IsUploadingProperty = DependencyProperty.Register(nameof(IsUploading), typeof(bool), typeof(AvatarUpload), new PropertyMetadata(false));
+    public static readonly DependencyProperty ProgressProperty = DependencyProperty.Register(nameof(Progress), typeof(double), typeof(AvatarUpload), new PropertyMetadata(0d));
+    public static readonly DependencyProperty ErrorProperty = DependencyProperty.Register(nameof(Error), typeof(string), typeof(AvatarUpload), new PropertyMetadata(string.Empty));
     public ImageSource? ImageSource { get => (ImageSource?)GetValue(ImageSourceProperty); set => SetValue(ImageSourceProperty, value); }
     public string Initials { get => (string)GetValue(InitialsProperty); set => SetValue(InitialsProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public bool IsUploading { get => (bool)GetValue(IsUploadingProperty); set => SetValue(IsUploadingProperty, value); }
+    public double Progress { get => (double)GetValue(ProgressProperty); set => SetValue(ProgressProperty, Math.Clamp(value, 0, 100)); }
+    public string Error { get => (string)GetValue(ErrorProperty); set => SetValue(ErrorProperty, value); }
     public event EventHandler<string>? FileSelected;
     static AvatarUpload() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AvatarUpload), new FrameworkPropertyMetadata(typeof(AvatarUpload)));
+    public AvatarUpload() { AllowDrop = true; Focusable = true; Drop += OnDrop; DragOver += OnDragOver; KeyDown += (_, e) => { if (e.Key is Key.Enter or Key.Space) { Browse(); e.Handled = true; } }; }
     public override void OnApplyTemplate() { base.OnApplyTemplate(); if (GetTemplateChild("PART_Button") is Button button) button.Click += (_, _) => Browse(); UpdateFallbackVisual(); }
     private static void OnImageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateFallbackVisual();
     private void UpdateFallbackVisual()
@@ -33,6 +40,14 @@ public class AvatarUpload : Control
     {
         var dialog = new OpenFileDialog { Filter = "Images|*.png;*.jpg;*.jpeg;*.webp;*.gif" };
         if (dialog.ShowDialog() != true) return;
-        try { ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(dialog.FileName)); FileSelected?.Invoke(this, dialog.FileName); } catch { }
+        TrySelect(dialog.FileName);
+    }
+    private void OnDragOver(object sender, DragEventArgs e) { e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None; e.Handled = true; }
+    private void OnDrop(object sender, DragEventArgs e) { if (e.Data.GetData(DataFormats.FileDrop) is string[] files) { var path = files.FirstOrDefault(IsImageFile); if (path is not null) TrySelect(path); } e.Handled = true; }
+    private static bool IsImageFile(string path) => new[] { ".png", ".jpg", ".jpeg", ".webp", ".gif" }.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
+    private void TrySelect(string path)
+    {
+        if (!IsImageFile(path)) { Error = "Select an image file"; return; }
+        try { ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(path)); Error = string.Empty; FileSelected?.Invoke(this, path); } catch (Exception error) { Error = error.Message; }
     }
 }
