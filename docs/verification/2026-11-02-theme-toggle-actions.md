@@ -19,3 +19,5 @@
 - `dotnet test tests/ArcWpf.Tests/ArcWpf.Tests.csproj --no-build --filter "FullyQualifiedName~ThemeSwitchTests|FullyQualifiedName~ToggleGroupTests|FullyQualifiedName~ActionSwapTests|FullyQualifiedName~UndoToastTests|FullyQualifiedName~ExpandableTextTests"`：10/10 通过。
 
 待验收：Windows 实际窗口中的主题切换观感、真实鼠标/键盘焦点、明暗主题、多 DPI、Reduced/Off 动效、ExpandableText 的真实行高测量，以及 UndoToast 的完整行布局/服务端失败回滚。程序化测试和构建结果不替代这些窗口证据。
+
+后续：同日对照线上页面重做，结果见 [像素对照记录](2026-11-02-theme-toggle-actions-pixel.md)；上面的范围和 10 项专项数字仅指首版。

@@ -74,6 +74,7 @@ public sealed class ArcThemeResources : ResourceDictionary
         // OTP input: frozen 2026-10-27 foundation accent and srgb danger/surface mix.
         var otpAccent = Oklch(dark ? .8 : .33, 0, 0); PutBrush("Accent", otpAccent);
         otpAccent.A = (byte)Math.Round(255 * (dark ? .13 : .1)); PutBrush("AccentSubtle", otpAccent);
+        otpAccent.A = (byte)Math.Round(255 * .11); PutBrush("UndoFlash", otpAccent);
         var otpDanger = Oklch(dangerL, dangerC, 25); var otpSurface = Oklch(neutrals["Surface"], 0, 0);
         PutBrush("OTPErrorSurface", Color.FromRgb((byte)Math.Round(otpDanger.R*.07+otpSurface.R*.93), (byte)Math.Round(otpDanger.G*.07+otpSurface.G*.93), (byte)Math.Round(otpDanger.B*.07+otpSurface.B*.93)));
         // dropdown-menu.module.css .highlight[data-tone="danger"]: danger 8% over surface (sRGB approximation of the oklab mix).
@@ -211,6 +212,17 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("StatusSuccessInk", dark ? Oklch(.8002, .1316, 162) : Oklch(.444, .1008, 162));
         PutBrush("StatusWarningFill", dark ? Oklch(.2888, .0144, 78) : Oklch(.955, .012, 68));
         PutBrush("StatusWarningInk", dark ? Oklch(.8378, .1128, 78) : Oklch(.454, .0912, 68));
+        // toggle-group.module.css and action-swap.module.css, color-mix(in oklab) over the 2026-11-02 foundation roles.
+        PutBrush("ToggleFill", Oklch(neutrals["ControlOn"] * (dark ? .14 : .11) + neutrals["Surface"] * (dark ? .86 : .89), 0, 0));
+        (double l, double c, double h) dataDanger = dark ? (.71, .155, 8) : (.53, .18, 10);
+        foreach (var (name, tone, fill, border, hover) in new[] { ("Success", dataSuccess, .1, .25, .42), ("Warning", dataWarning, .12, .3, .48), ("Danger", dataDanger, .1, .25, .42) })
+        {
+            PutBrush($"Swap{name}", Oklch(tone.l, tone.c, tone.h));
+            PutBrush($"Swap{name}Fill", Tint(tone, fill, "Surface"));
+            PutBrush($"Swap{name}Border", Tint(tone, border, "Border"));
+            PutBrush($"Swap{name}HoverBorder", Tint(tone, hover, "Border"));
+        }
+        PutBrush("UndoRowActionHover", Alpha(Oklch(neutrals["Foreground"], 0, 0), .07));
         this["ArcWpf.Button.Padding.Small"] = new Thickness(12, 0, 12, 0);
         this["ArcWpf.Button.Padding.Medium"] = new Thickness(16, 0, 16, 0);
         this["ArcWpf.Button.Padding.Large"] = new Thickness(20, 0, 20, 0);

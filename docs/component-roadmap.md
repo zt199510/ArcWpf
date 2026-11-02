@@ -70,7 +70,7 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 ## 2026-11-02 新增控件批次
 
-ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来源冻结、WPF 实现、主题、Gallery 和专项测试代码；精确验证见 [验证记录](verification/2026-11-02-theme-toggle-actions.md)。UndoToast 是 Arc Pro，Registry 不可得，当前为公开文档驱动的独立 WPF 实现。真实窗口、DPI、读屏和逐帧动效仍待验收。
+ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来源冻结、WPF 实现、主题、Gallery 和专项测试代码；精确验证见 [验证记录](verification/2026-11-02-theme-toggle-actions.md)。已对照线上页面做像素复刻，见 [像素记录](verification/2026-11-02-theme-toggle-actions-pixel.md)。UndoToast 是 Arc Pro，Registry 不可得，依据公开文档和页面显示独立实现。真实窗口、DPI、读屏和逐帧动效仍待验收。
 
 
 ## Arc 后续补齐建议（2026-10-28）

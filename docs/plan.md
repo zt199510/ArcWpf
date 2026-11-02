@@ -6,7 +6,7 @@
 
 2026-11-02 数据展示批次：CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成来源冻结、规格、WPF 实现、主题、Gallery 和专项测试；四控件精确专项 15/15 通过，解决方案构建 0 错误。见 [数据展示控件复刻验证](verification/2026-11-02-data-controls.md)；随后按 Arc 线上页面重做外观，见 [像素对照记录](verification/2026-11-02-data-controls-pixel.md)。
 
-2026-11-02 新增交互批次：ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来源冻结、规格、WPF 实现、主题、Gallery 和专项测试；专项 10/10 通过，Controls/Gallery 构建 0 错误。UndoToast 为 Arc Pro，按公开文档独立实现；真实窗口、DPI、读屏和逐帧动效仍按验证记录保留待验收。见 [验证记录](verification/2026-11-02-theme-toggle-actions.md)。
+2026-11-02 新增交互批次：ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来源冻结、规格、WPF 实现、主题、Gallery 和专项测试；之后对照线上页面重做，专项 40/40 通过，解决方案构建 0 错误，全量测试未运行（[像素记录](verification/2026-11-02-theme-toggle-actions-pixel.md)）。UndoToast 为 Arc Pro，按公开文档和页面显示独立实现；真实窗口、DPI、读屏和逐帧动效仍按验证记录保留待验收。见 [验证记录](verification/2026-11-02-theme-toggle-actions.md)。
 
 已收口范围包括：TreeView、Breadcrumb、Popover、CheckBox、Menu、NumberInput、Progress、Calendar、DatePicker、Pagination、List、Search、ActionButton、CopyButton、ButtonGroup、ContextMenu、UserMenu、HoldToConfirm、InlineEdit、ExpandingSearch、DateRangePicker、TimePicker、ScrollArea、EmptyState、Skeleton、FilterToolbar、ReorderableList、PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker、BottomSheet、HoverCard、ResizablePanels、Card、MetricCard、Stepper、UsageMeter，以及此前已完成的基础控件。
 

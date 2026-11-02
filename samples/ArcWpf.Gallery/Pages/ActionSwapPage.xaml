@@ -1,1 +1,52 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.ActionSwapPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="ActionSwap" FontSize="19" FontWeight="Medium" Margin="0,0,0,14"/><Border Style="{DynamicResource Gallery.PreviewCanvas}"><arc:ActionSwap x:Name="Swap" HorizontalAlignment="Center"/></Border></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.ActionSwapPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <Style x:Key="Row" TargetType="Border">
+      <Setter Property="Height" Value="68"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    </Style>
+    <Style x:Key="Secondary" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+      <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="ActionSwap" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="宽度、内边距、色调、图标和字母在同一根弹簧上一起变化。打开开关可模拟连接失败。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <StackPanel Width="440" VerticalAlignment="Center" TextElement.FontSize="14">
+        <Border Style="{StaticResource Row}">
+          <DockPanel>
+            <arc:ActionSwap x:Name="Follow" Size="Small" DockPanel.Dock="Right"/>
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Emma Collins" FontWeight="Medium"/>
+              <TextBlock Text="Design lead at Arc" Style="{StaticResource Secondary}"/>
+            </StackPanel>
+          </DockPanel>
+        </Border>
+        <Border Style="{StaticResource Row}">
+          <DockPanel>
+            <arc:ActionSwap x:Name="Library" Size="Small" DockPanel.Dock="Right"/>
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Designing calm interfaces" FontWeight="Medium"/>
+              <TextBlock Text="Article · 8 min read" Style="{StaticResource Secondary}"/>
+            </StackPanel>
+          </DockPanel>
+        </Border>
+        <Border Style="{StaticResource Row}">
+          <DockPanel>
+            <arc:ActionSwap x:Name="Invite" Size="Small" DockPanel.Dock="Right"/>
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Ava Mitchell" FontWeight="Medium"/>
+              <TextBlock Text="ava@example.com" Style="{StaticResource Secondary}"/>
+            </StackPanel>
+          </DockPanel>
+        </Border>
+        <arc:Switch x:Name="LostConnection" Content="Simulate a lost connection" Margin="0,20,0,0" HorizontalAlignment="Left"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

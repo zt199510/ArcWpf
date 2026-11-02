@@ -23,6 +23,21 @@ internal static class Lucide
     public const string Plus = "M5,12 H19 M12,5 V19";
     public const string Sparkles = "M9.94,15.5 A2,2 0 0 0 8.5,14.06 L2.37,12.48 A0.5,0.5 0 0 1 2.37,11.52 L8.5,9.94 A2,2 0 0 0 9.94,8.5 L11.52,2.37 A0.5,0.5 0 0 1 12.48,2.37 L14.06,8.5 A2,2 0 0 0 15.5,9.94 L21.63,11.52 A0.5,0.5 0 0 1 21.63,12.48 L15.5,14.06 A2,2 0 0 0 14.06,15.5 L12.48,21.63 A0.5,0.5 0 0 1 11.52,21.63 Z M20,3 V7 M22,5 H18 M4,17 V19 M5,18 H3";
     public const string Star = "M11.525,2.295 A0.53,0.53 0 0 1 12.475,2.295 L14.785,6.974 A2.123,2.123 0 0 0 16.38,8.134 L21.546,8.89 A0.53,0.53 0 0 1 21.84,9.794 L18.104,13.432 A2.123,2.123 0 0 0 17.493,15.31 L18.375,20.45 A0.53,0.53 0 0 1 17.604,21.01 L12.986,18.582 A2.122,2.122 0 0 0 11.013,18.582 L6.396,21.01 A0.53,0.53 0 0 1 5.626,20.45 L6.507,15.311 A2.122,2.122 0 0 0 5.896,13.432 L2.16,9.795 A0.53,0.53 0 0 1 2.454,8.889 L7.619,8.134 A2.122,2.122 0 0 0 9.216,6.974 Z";
+    // 2026-11-02 theme and action controls.
+    public const string Sun = "M12,8 A4,4,0,1,1,12,16 A4,4,0,1,1,12,8 Z M12,2 v2 M12,20 v2 M4.93,4.93 l1.41,1.41 M17.66,17.66 l1.41,1.41 M2,12 h2 M20,12 h2 M6.34,17.66 l-1.41,1.41 M19.07,4.93 l-1.41,1.41";
+    public const string Moon = "M20.985,12.486 a9,9,0,1,1,-9.473,-9.472 c.405,-.022,.617,.46,.402,.803 a6,6,0,0,0,8.268,8.268 c.344,-.215,.825,-.004,.803,.401";
+    public const string Bold = "M6,12 h9 a4,4,0,0,1,0,8 H7 a1,1,0,0,1,-1,-1 V5 a1,1,0,0,1,1,-1 h7 a4,4,0,0,1,0,8";
+    public const string Italic = "M19,4 H10 M14,20 H5 M15,4 L9,20";
+    public const string Underline = "M6,4 v6 a6,6,0,0,0,12,0 V4 M4,20 H20";
+    public const string AlignStart = "M21,5 H3 M15,12 H3 M17,19 H3";
+    public const string AlignCenter = "M21,5 H3 M17,12 H7 M19,19 H5";
+    public const string AlignEnd = "M21,5 H3 M21,12 H9 M21,19 H7";
+    public const string AlignJustify = "M3,5 h18 M3,12 h18 M3,19 h18";
+    public const string UserPlus = "M16,21 v-2 a4,4,0,0,0,-4,-4 H6 a4,4,0,0,0,-4,4 v2 M9,3 A4,4,0,1,1,9,11 A4,4,0,1,1,9,3 Z M19,8 V14 M22,11 H16";
+    public const string Send = "M14.536,21.686 a.5,.5,0,0,0,.937,-.024 l6.5,-19 a.496,.496,0,0,0,-.635,-.635 l-19,6.5 a.5,.5,0,0,0,-.024,.937 l7.93,3.18 a2,2,0,0,1,1.112,1.11 z M21.854,2.147 l-10.94,10.939";
+    public const string CircleAlert = "M12,2 A10,10,0,1,1,12,22 A10,10,0,1,1,12,2 Z M12,8 V12 M12,16 H12.01";
+    public const string Archive = "M3,3 h18 a1,1,0,0,1,1,1 v3 a1,1,0,0,1,-1,1 H3 a1,1,0,0,1,-1,-1 V4 a1,1,0,0,1,1,-1 z M4,8 v11 a2,2,0,0,0,2,2 h12 a2,2,0,0,0,2,-2 V8 M10,12 h4";
+    public const string Trash = "M10,11 v6 M14,11 v6 M19,6 v14 a2,2,0,0,1,-2,2 H7 a2,2,0,0,1,-2,-2 V6 M3,6 h18 M8,6 V4 a2,2,0,0,1,2,-2 h4 a2,2,0,0,1,2,2 v2";
 
     /// <summary>A stroked glyph whose color follows the inherited TextElement.Foreground of its container.</summary>
     public static Viewbox Glyph(string data, double size, double stroke = 1.75)
