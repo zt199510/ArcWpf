@@ -5,7 +5,9 @@
     <Border Margin="0,4,0,0" Padding="9,8" CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
       <Grid MinHeight="42">
         <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-        <Border Width="40" Height="40" CornerRadius="9" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1"><TextBlock Text="▱" FontSize="23" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Border>
+        <Border Width="40" Height="40" CornerRadius="9" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" ClipToBounds="True">
+          <Grid><Image x:Name="PreviewImage" Source="{Binding Preview}" Stretch="UniformToFill"/><TextBlock x:Name="TypeGlyph" Text="▱" FontSize="23" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Grid>
+        </Border>
         <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center" MinWidth="0">
           <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
           <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><TextBlock Text="{Binding FormattedSize}" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><TextBlock Text="  ·  " FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><TextBlock Text="{Binding Status}" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel>
@@ -19,6 +21,10 @@
         </StackPanel>
       </Grid>
     </Border>
+    <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding Preview}" Value=""><Setter TargetName="PreviewImage" Property="Visibility" Value="Collapsed"/></DataTrigger>
+      <DataTrigger Binding="{Binding Preview}" Value="{x:Null}"><Setter TargetName="PreviewImage" Property="Visibility" Value="Collapsed"/></DataTrigger>
+    </DataTemplate.Triggers>
   </DataTemplate>
   <Style TargetType="{x:Type local:FileDropzone}">
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
