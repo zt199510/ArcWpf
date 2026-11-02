@@ -8,10 +8,12 @@ namespace ArcWpf.Tests;
 public sealed class NextArcControlsTests
 {
     [TestMethod] public void CountdownExposesRemainingAndCompletion() => Sta.Run(() => { var c = new Countdown { Target = DateTime.UtcNow.AddSeconds(3) }; Assert.IsFalse(c.IsComplete); c.Target = DateTime.UtcNow.AddSeconds(-1); Assert.IsTrue(c.IsComplete); Assert.AreEqual(TimeSpan.Zero, c.Remaining); });
+    [TestMethod] public void CountdownSupportsArcUnitSelection() => Sta.Run(() => { var c = new Countdown { Target = DateTime.UtcNow.AddHours(27), Units = new ObservableCollection<CountdownUnit> { CountdownUnit.Hours, CountdownUnit.Minutes } }; Assert.HasCount(2, c.Units); Assert.Contains(CountdownUnit.Hours, c.Units); });
     [TestMethod] public void AnimatedCounterKeepsFormattingContract() => Sta.Run(() => { var c = new AnimatedCounter { Value = 1234.5, Decimals = 1, Prefix = "$", Suffix = " USD" }; Assert.AreEqual("$", c.Prefix); Assert.AreEqual(1, c.Decimals); });
     [TestMethod] public void AnnouncementBarCyclesAndCloses() => Sta.Run(() => { var b = new AnnouncementBar { Messages = new ObservableCollection<string> { "a", "b" }, AutoPlay = false }; b.Index = 1; Assert.AreEqual(1, b.Index); b.Close(); Assert.IsFalse(b.IsOpen); });
     [TestMethod] public void TimelineStoresEvents() => Sta.Run(() => { var t = new Timeline(); t.Events.Add(new TimelineEvent { Title = "Build" }); Assert.HasCount(1, t.Events); });
     [TestMethod] public void FileDropzoneHonorsLimits() => Sta.Run(() => { var d = new FileDropzone { MaxFiles = 2, Multiple = true }; Assert.AreEqual(2, d.MaxFiles); Assert.IsTrue(d.AllowDrop); });
+    [TestMethod] public void FileDropzoneItemPublishesStatusChanges() => Sta.Run(() => { var item = new FileDropzoneItem(); var changed = false; item.PropertyChanged += (_, e) => changed |= e.PropertyName == nameof(FileDropzoneItem.Status); item.Status = "failed"; Assert.IsTrue(changed); });
     [TestMethod] public void AvatarUploadHasFallbackInitials() => Sta.Run(() => { var a = new AvatarUpload { Initials = "AW" }; Assert.AreEqual("AW", a.Initials); });
     [TestMethod] public void MentionInputRetainsNativeTextEditing() => Sta.Run(() => { var input = new MentionInput { Text = "@Ada" }; Assert.AreEqual("@Ada", input.Text); Assert.IsTrue(input.AcceptsReturn); });
     [TestMethod] public void EmojiPickerHasDefaultPalette() => Sta.Run(() => { var picker = new EmojiPicker(); Assert.IsGreaterThan(10, picker.Emojis.Count); });
