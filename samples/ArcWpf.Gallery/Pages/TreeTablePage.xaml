@@ -1,0 +1,3 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TreeTablePage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel><TextBlock Text="TreeTable" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/><TextBlock Text="层级行、同级排序、选择和有限高度滚动。" Margin="0,0,0,16"/><arc:TreeTable x:Name="Table" MaxHeight="360" Selectable="True"/></StackPanel>
+</UserControl>

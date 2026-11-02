@@ -1,0 +1,21 @@
+{
+  "component": "json-viewer",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/json-viewer.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/json-viewer/markdown",
+    "page.html": "https://uiarc.dev/components/json-viewer",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "32c691e779a9345b25594f44b4a6c976182d3ef7a675091b22078d04fb183ea9",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "4d3fc584e7e61a8171dbbb003dc0803fd0b47def5c304a748cf866f744639ebb",
+    "registry.json": "7924f72d9197c308c4771e72086da32fa5e57406bfa82c407c04d2fea3b7ea40",
+    "registry/components/json-viewer/json-viewer.module.css": "c6ffedc6fb954166ddb5ba15eb911609f101031b26b3af6ef0b719db2a44ff95",
+    "registry/components/json-viewer/json-viewer.tsx": "6ca4f99eb84de1087b505a8f107d431d0af956a316cbe06c587873aa3836a472"
+  },
+  "errors": []
+}

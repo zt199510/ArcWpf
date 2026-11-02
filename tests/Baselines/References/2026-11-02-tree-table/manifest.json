@@ -1,0 +1,21 @@
+{
+  "component": "tree-table",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/tree-table.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/tree-table/markdown",
+    "page.html": "https://uiarc.dev/components/tree-table",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "e5423a4837848cde91bfd56d0ea107a0c1e58fc68d49e006cb5252a4b20ccfb5",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "7a4e9cf41ca6202fc1ed1b7d2da75a917696eb9616fab04be2207694d69bb3bd",
+    "registry.json": "63bf60322b89525fbaa43241c65ffc292f45a8f948455989385ba31fa8d67f5a",
+    "registry/components/tree-table/tree-table.module.css": "168edc4471cf33389b7a85aea9d324423a7f8d78731fdeb9699ace25073cf68e",
+    "registry/components/tree-table/tree-table.tsx": "5f549e8f104b2c0bd5e7f71425ea57ebad7bfeb6a5f3d56e95c04136984c222e"
+  },
+  "errors": []
+}

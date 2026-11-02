@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <Style TargetType="{x:Type arc:JSONViewer}">
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:JSONViewer}">
+      <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10" Padding="12">
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <Grid Margin="0,0,0,8">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <TextBox x:Name="PART_Search" Visibility="Visible" MinHeight="32" Padding="10,4" ToolTip="Search JSON"/>
+            <TextBlock x:Name="PART_ResultCount" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          </Grid>
+          <arc:TreeView x:Name="PART_Tree" Grid.Row="1" Label="{TemplateBinding Label}" MaxHeight="{TemplateBinding MaxHeight}"/>
+          <Grid Grid.Row="2" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <TextBlock x:Name="PART_Path" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" TextTrimming="CharacterEllipsis"/>
+            <Button x:Name="PART_CopyValue" Grid.Column="1" Content="Copy value" Margin="8,0,0,0" Padding="10,4" Visibility="Collapsed"/>
+            <Button x:Name="PART_CopyPath" Grid.Column="2" Content="Copy path" Margin="8,0,0,0" Padding="10,4" Visibility="Collapsed"/>
+          </Grid>
+        </Grid>
+      </Border>
+      <ControlTemplate.Triggers>
+        <Trigger Property="Searchable" Value="False"><Setter TargetName="PART_Search" Property="Visibility" Value="Collapsed"/></Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>

@@ -5,6 +5,9 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ActionButton/Themes/ActionButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CopyButton/Themes/CopyButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CodeBlock/Themes/CodeBlockTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/JSONViewer/Themes/JSONViewerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/SortableDataTable/Themes/SortableDataTableTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TreeTable/Themes/TreeTableTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/SplitButton/Themes/SplitButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ButtonGroup/Themes/ButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Switch/Themes/SwitchTheme.xaml" />

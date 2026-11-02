@@ -1,0 +1,10 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.JSONViewerPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="JSONViewer" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="搜索、展开和复制 JSON 路径；树区域保持有限高度并独立滚动。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <arc:JSONViewer x:Name="Viewer" MaxHeight="360"/>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,21 @@
+{
+  "component": "sortable-data-table",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/sortable-data-table.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/sortable-data-table/markdown",
+    "page.html": "https://uiarc.dev/components/sortable-data-table",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "3b079a815dab52d68b0da4749e4d5508f687a1ea0723b0a8a419e61453d09688",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "7b0e4fe5d220175c0cf50ae3214ab173361b3bbb9d3f8395b02f2418152c5e9e",
+    "registry.json": "720e8f3168c9bd2f79826b898da21353f753285907c0f2af9c724b3b3cda2b62",
+    "registry/components/sortable-data-table/sortable-data-table.module.css": "d6b89098f7ce0d36123923857cd4fd7e30faf7676bfdb938b061670205c9525a",
+    "registry/components/sortable-data-table/sortable-data-table.tsx": "90350cd5d18abdd5fced97289482604fb48f2dfcf61ce82168697d7cef51e085"
+  },
+  "errors": []
+}

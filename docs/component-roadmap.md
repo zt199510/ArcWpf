@@ -66,7 +66,7 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 ## 下一阶段
 
-现有控件没有待实现的下一项。后续如新增 Arc 控件，另立来源分析和交付批次；不覆盖本路线图已收口结论。
+数据展示控件批次已开始：CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成实现、Gallery 和精确专项验证。后续如新增 Arc 控件，另立来源分析和交付批次；不覆盖本路线图已收口结论。
 
 
 ## Arc 后续补齐建议（2026-10-28）
@@ -93,7 +93,7 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 ### 第四批：数据展示（M4-D）
 
-`SortableDataTable`、`ReorderableList`、`FilterToolbar`、`TreeTable`、`CodeBlock`、`JSONViewer`。建议先做 `FilterToolbar` 和 `ReorderableList`，再决定是否为 DataGrid/TreeTable 引入独立虚拟化和列模型；不要把 WPF 原生 DataGrid 的复杂契约偷偷扩展进基础控件。
+`SortableDataTable`、`ReorderableList`、`FilterToolbar`、`TreeTable`、`CodeBlock`、`JSONViewer`。CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成本批次实现；后续若扩展虚拟化、异步懒加载或 DataGrid 编辑语义，应另立范围，不把复杂契约偷偷扩展进基础控件。
 
 ### 暂缓
 
