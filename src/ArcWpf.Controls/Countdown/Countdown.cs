@@ -27,7 +27,7 @@ public class Countdown : Control
     public static readonly DependencyProperty RemainingProperty = RemainingPropertyKey.DependencyProperty;
     public static readonly RoutedEvent CompletedEvent = EventManager.RegisterRoutedEvent(nameof(Completed), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Countdown));
     private readonly DispatcherTimer _timer = new(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(250) };
-    private TextBlock? _days, _hours, _minutes, _seconds, _compact; private StackPanel? _largeUnits;
+    private TextBlock? _days, _hours, _minutes, _seconds, _compact; private StackPanel? _largeUnits; private readonly Dictionary<CountdownUnit, long> _lastUnitValues = new();
     private readonly Dictionary<TextBlock, string> _lastDigits = new();
     public DateTime Target { get => (DateTime)GetValue(TargetProperty); set => SetValue(TargetProperty, value); }
     public string TargetText { get => (string)GetValue(TargetTextProperty); set => SetValue(TargetTextProperty, value); }
@@ -82,6 +82,13 @@ public class Countdown : Control
         {
             if (i > 0) _largeUnits.Children.Add(new TextBlock { Text = ":", FontSize = 28, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(6, 0, 6, 0) });
             var stack = new StackPanel(); var value = new TextBlock { Text = parts[i].Value.ToString("00"), FontSize = 32, FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Center }; var label = new TextBlock { Text = UnitLabels[parts[i].Unit], FontSize = 11, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center }; stack.Children.Add(value); stack.Children.Add(label); _largeUnits.Children.Add(stack);
+            if (_lastUnitValues.TryGetValue(parts[i].Unit, out var previous) && previous != parts[i].Value && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full)
+            {
+                var move = new TranslateTransform { Y = parts[i].Value > previous ? -7 : 7 }; stack.RenderTransform = move; stack.Opacity = .45;
+                move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.2)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+                stack.BeginAnimation(OpacityProperty, new DoubleAnimation(.45, 1, TimeSpan.FromSeconds(.2)));
+            }
+            _lastUnitValues[parts[i].Unit] = parts[i].Value;
         }
     }
     private void SetDigits(TextBlock? block, string value)
