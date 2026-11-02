@@ -1,0 +1,21 @@
+{
+  "component": "code-block",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/code-block.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/code-block/markdown",
+    "page.html": "https://uiarc.dev/components/code-block",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "76f5088a2de9b5df777597c305d3b63ae50564a0ce946f079de8402fd28cdda0",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "5ed195e570c2d27cae495b85ff5269e35d7cdc8b0c37f4d580cdb1e10282b7a4",
+    "registry.json": "de7389b3c637abf96c76e1fd6b1c3a4f177b4bea1e672e329f8cbb8d63cbeab9",
+    "registry/components/code-block/code-block.module.css": "a76414fc4141b0b76836cdddc8b59d15a7ab94c52e9222a26a8bdf98c96b1a1d",
+    "registry/components/code-block/code-block.tsx": "af1c47e8f90e1287c4f26c30354250746809ddb97a3a4a30f8d83f0260c59379"
+  },
+  "errors": []
+}

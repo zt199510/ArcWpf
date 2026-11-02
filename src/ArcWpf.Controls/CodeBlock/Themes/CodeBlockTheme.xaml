@@ -1,0 +1,50 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="clr-namespace:ArcWpf.Controls">
+  <SolidColorBrush x:Key="ArcWpf.Code.String" Color="#18794E"/>
+  <SolidColorBrush x:Key="ArcWpf.Code.Number" Color="#9A5B13"/>
+  <SolidColorBrush x:Key="ArcWpf.Code.Keyword" Color="#6841C6"/>
+  <SolidColorBrush x:Key="ArcWpf.Code.Type" Color="#176B87"/>
+  <SolidColorBrush x:Key="ArcWpf.Code.Function" Color="#A23E16"/>
+  <SolidColorBrush x:Key="ArcWpf.Code.Property" Color="#7A5A00"/>
+  <Style TargetType="{x:Type arc:CodeBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:CodeBlock}">
+      <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10" ClipToBounds="True">
+        <StackPanel>
+          <Border Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}"
+                  BorderThickness="0,0,0,1" Padding="16,8">
+            <Grid MinHeight="34">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="&lt;/&gt;" FontFamily="{DynamicResource ArcWpf.Font.Body}" FontSize="13" FontWeight="SemiBold"
+                           Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="PART_FileName" Margin="8,0,0,0" FontSize="13" FontWeight="Medium"
+                           Foreground="{TemplateBinding Foreground}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="·" Margin="8,0" Foreground="{DynamicResource ArcWpf.Brush.BorderStrong}"/>
+                <TextBlock x:Name="PART_Language" FontFamily="{DynamicResource ArcWpf.Font.Body}" FontSize="11"
+                           Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+              </StackPanel>
+              <arc:CopyButton x:Name="PART_CopyButton" Grid.Column="1" Value="{TemplateBinding Code}" Label="Copy code" CopiedLabel="Copied"
+                              Variant="Secondary" MinHeight="32" Padding="12,0"/>
+            </Grid>
+          </Border>
+          <RichTextBox x:Name="PART_CodeEditor" BorderThickness="0" Padding="0" IsReadOnly="True" Focusable="True"
+                       Background="Transparent" Foreground="{TemplateBinding Foreground}" FontFamily="Cascadia Mono"
+                       FontSize="13" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                       SpellCheck.IsEnabled="False" IsUndoEnabled="False" />
+          <Button x:Name="PART_ExpandButton" Visibility="Collapsed" MinHeight="44" BorderThickness="0,1,0,0"
+                  BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}"
+                  Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" FontSize="13" HorizontalContentAlignment="Center"/>
+        </StackPanel>
+      </Border>
+      <ControlTemplate.Triggers>
+        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".65"/></Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
+</ResourceDictionary>
