@@ -2,7 +2,10 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace ArcWpf.Controls;
 
@@ -37,12 +40,16 @@ public class MentionInput : TextBox
     private readonly ListBox _list = new() { BorderThickness = new Thickness(0), Padding = new Thickness(4), MinWidth = 240 };
     private readonly Border _popupSurface = new() { Padding = new Thickness(4), CornerRadius = new CornerRadius(14), BorderThickness = new Thickness(1) };
     private string _trigger = string.Empty; private char _symbol = '@'; private string _lastText = string.Empty; private int _lastCaret; private bool _changingMentions;
+    private MentionTokenAdorner? _tokenAdorner;
     static MentionInput() => DefaultStyleKeyProperty.OverrideMetadata(typeof(MentionInput), new FrameworkPropertyMetadata(typeof(MentionInput)));
-    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
+    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; Loaded += OnLoaded; Unloaded += OnUnloaded; SizeChanged += (_, _) => _tokenAdorner?.InvalidateVisual(); LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
+    private void OnLoaded(object sender, RoutedEventArgs e) { if (_tokenAdorner is not null) return; var layer = AdornerLayer.GetAdornerLayer(this); if (layer is null) return; _tokenAdorner = new MentionTokenAdorner(this); layer.Add(_tokenAdorner); }
+    private void OnUnloaded(object sender, RoutedEventArgs e) { if (_tokenAdorner is null) return; AdornerLayer.GetAdornerLayer(this)?.Remove(_tokenAdorner); _tokenAdorner = null; }
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         if (!_changingMentions) ReconcileMentions(_lastText, Text, _lastCaret);
         _lastText = Text; _lastCaret = CaretIndex; RefreshSuggestions();
+        _tokenAdorner?.InvalidateVisual();
     }
     private void ReconcileMentions(string oldText, string newText, int hint)
     {
@@ -119,5 +126,35 @@ public class MentionInput : TextBox
         var tokenText = (kind == MentionKind.Person ? "@" : "#") + name; var token = new MentionToken { Kind = kind, Id = id, Label = name, Start = start, End = start + tokenText.Length };
         _changingMentions = true; try { Text = Text.Remove(start, _trigger.Length + 1).Insert(start, tokenText + " "); Mentions.Add(token); } finally { _changingMentions = false; }
         CaretIndex = token.End + 1; _lastText = Text; _lastCaret = CaretIndex; _popup.IsOpen = false; Focus(); MentionAdded?.Invoke(this, token);
+    }
+
+    private sealed class MentionTokenAdorner : Adorner
+    {
+        private readonly MentionInput _owner;
+        public MentionTokenAdorner(MentionInput owner) : base(owner) { _owner = owner; IsHitTestVisible = false; SnapsToDevicePixels = true; }
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            base.OnRender(drawingContext);
+            if (_owner.Mentions.Count == 0 || string.IsNullOrEmpty(_owner.Text)) return;
+            var accent = (_owner.TryFindResource("ArcWpf.Brush.AccentSubtle") as Brush) ?? new SolidColorBrush(Color.FromArgb(36, 96, 120, 255));
+            var channel = (_owner.TryFindResource("ArcWpf.Brush.SurfaceMuted") as Brush) ?? new SolidColorBrush(Color.FromArgb(32, 128, 128, 128));
+            foreach (var token in _owner.Mentions.ToArray())
+            {
+                var start = Math.Clamp(token.Start, 0, _owner.Text.Length); var end = Math.Clamp(token.End, start, _owner.Text.Length);
+                Rect? line = null;
+                for (var index = start; index < end; index++)
+                {
+                    var rect = _owner.GetRectFromCharacterIndex(index, true);
+                    if (rect.IsEmpty || double.IsNaN(rect.X)) continue;
+                    if (line is null || Math.Abs(line.Value.Top - rect.Top) > 0.5) { if (line is not null) Draw(line.Value, token.Kind == MentionKind.Channel ? channel : accent, drawingContext); line = rect; }
+                    else line = new Rect(Math.Min(line.Value.Left, rect.Left), line.Value.Top, Math.Max(line.Value.Right, rect.Right) - Math.Min(line.Value.Left, rect.Left), Math.Max(line.Value.Height, rect.Height));
+                }
+                if (line is not null) Draw(line.Value, token.Kind == MentionKind.Channel ? channel : accent, drawingContext);
+            }
+        }
+        private static void Draw(Rect rect, Brush brush, DrawingContext context)
+        {
+            rect.Inflate(2.5, 1); context.DrawRoundedRectangle(brush, null, rect, 5, 5);
+        }
     }
 }
