@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System.Windows.Input;
 using System.IO;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace ArcWpf.Controls;
 
@@ -87,7 +88,7 @@ public class AvatarUpload : Control
         if (!IsImageFile(path)) { Error = "Select an image file"; return; }
         try {
             if (MaxSize > 0 && new FileInfo(path).Length > MaxSize) { Error = $"Image must be smaller than {FileDropzone.FormatFileSize(MaxSize)}"; return; }
-            var image = new System.Windows.Media.Imaging.BitmapImage(new Uri(path)); image.Freeze(); _pendingImage = image; _pendingPath = path; Error = string.Empty; Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; SetValue(IsCroppingPropertyKey, true); UpdateCropVisual();
+            var image = new System.Windows.Media.Imaging.BitmapImage(new Uri(path)); image.Freeze(); _pendingImage = image; _pendingPath = path; Error = string.Empty; Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; SetValue(IsCroppingPropertyKey, true); UpdateCropVisual(); Dispatcher.BeginInvoke(DispatcherPriority.Input, new Action(() => (GetTemplateChild("PART_CropStage") as UIElement)?.Focus()));
         } catch (Exception error) { Error = error.Message; }
     }
 
@@ -105,11 +106,11 @@ public class AvatarUpload : Control
             SetValue(CroppedImagePropertyKey, cropped);
             ImageSource = cropped;
             var path = EncodeCrop(cropped, _pendingPath);
-            SetValue(IsCroppingPropertyKey, false); _pendingImage = null; _pendingPath = null; FileSelected?.Invoke(this, path); UpdateCropVisual();
+            SetValue(IsCroppingPropertyKey, false); _pendingImage = null; _pendingPath = null; FileSelected?.Invoke(this, path); UpdateCropVisual(); (GetTemplateChild("PART_Button") as UIElement)?.Focus();
         }
         catch (Exception error) { Error = error.Message; }
     }
-    public void CancelCrop() { _pendingImage = null; _pendingPath = null; SetValue(IsCroppingPropertyKey, false); Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; UpdateCropVisual(); }
+    public void CancelCrop() { _pendingImage = null; _pendingPath = null; SetValue(IsCroppingPropertyKey, false); Zoom = 1; CropOffsetX = 0; CropOffsetY = 0; UpdateCropVisual(); (GetTemplateChild("PART_Button") as UIElement)?.Focus(); }
     private static void OnCropChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AvatarUpload)d).UpdateCropVisual();
     private static object CoerceZoom(DependencyObject d, object value) => Math.Clamp((double)value, 1, 3);
     private static object CoerceOffset(DependencyObject d, object value) => Math.Clamp((double)value, -.25, .25);
