@@ -5,21 +5,13 @@
         <StackPanel HorizontalAlignment="Center">
           <TextBlock x:Name="LabelText" Text="{TemplateBinding Label}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FontSize="12" HorizontalAlignment="Center"/>
           <TextBlock x:Name="CompactText" Visibility="Collapsed" FontSize="14" HorizontalAlignment="Center"/>
-          <StackPanel x:Name="LargeUnits" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,3,0,0">
-            <StackPanel><TextBlock x:Name="Days" Text="00" FontSize="32" FontWeight="SemiBold" HorizontalAlignment="Center"/><TextBlock Text="Days" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Center"/></StackPanel>
-            <TextBlock Text=":" FontSize="28" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="6,0"/>
-            <StackPanel><TextBlock x:Name="Hours" Text="00" FontSize="32" FontWeight="SemiBold" HorizontalAlignment="Center"/><TextBlock Text="Hours" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Center"/></StackPanel>
-            <TextBlock Text=":" FontSize="28" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="6,0"/>
-            <StackPanel><TextBlock x:Name="Minutes" Text="00" FontSize="32" FontWeight="SemiBold" HorizontalAlignment="Center"/><TextBlock Text="Minutes" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Center"/></StackPanel>
-            <TextBlock Text=":" FontSize="28" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" Margin="6,0"/>
-            <StackPanel><TextBlock x:Name="Seconds" Text="00" FontSize="32" FontWeight="SemiBold" HorizontalAlignment="Center"/><TextBlock Text="Seconds" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Center"/></StackPanel>
-          </StackPanel>
+          <StackPanel x:Name="LargeUnits" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,3,0,0"/>
           <TextBlock x:Name="Done" Text="{TemplateBinding CompleteLabel}" Visibility="Collapsed" Foreground="{DynamicResource ArcWpf.Brush.Success}" FontSize="18" HorizontalAlignment="Center"/>
         </StackPanel>
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="Variant" Value="Compact"><Setter TargetName="Shell" Property="Padding" Value="10,5"/><Setter TargetName="LabelText" Property="Visibility" Value="Collapsed"/><Setter TargetName="LargeUnits" Property="Visibility" Value="Collapsed"/><Setter TargetName="CompactText" Property="Visibility" Value="Visible"/><Setter TargetName="Shell" Property="BorderThickness" Value="1"/></Trigger>
-        <Trigger Property="IsComplete" Value="True"><Setter TargetName="Shell" Property="Background" Value="{DynamicResource ArcWpf.Brush.BadgeSuccessBackground}"/><Setter TargetName="Done" Property="Visibility" Value="Visible"/><Setter TargetName="Days" Property="Visibility" Value="Collapsed"/><Setter TargetName="Hours" Property="Visibility" Value="Collapsed"/><Setter TargetName="Minutes" Property="Visibility" Value="Collapsed"/><Setter TargetName="Seconds" Property="Visibility" Value="Collapsed"/></Trigger>
+        <Trigger Property="IsComplete" Value="True"><Setter TargetName="Shell" Property="Background" Value="{DynamicResource ArcWpf.Brush.BadgeSuccessBackground}"/><Setter TargetName="Done" Property="Visibility" Value="Visible"/><Setter TargetName="LargeUnits" Property="Visibility" Value="Collapsed"/></Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>
