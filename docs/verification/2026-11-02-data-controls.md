@@ -1,5 +1,7 @@
 # 数据展示控件复刻验证记录（2026-11-02）
 
+> 外观与部分 API 已被后续重做取代，以 [像素对照记录](2026-11-02-data-controls-pixel.md) 为准。
+
 来源冻结批次：
 
 - `tests/Baselines/References/2026-11-02-code-block/manifest.json`

@@ -21,16 +21,66 @@ public sealed class CodeBlockTests
     });
 
     [TestMethod]
+    public void HeaderAndSourceFollowArcGeometry() => Sta.Run(() =>
+    {
+        var block = new CodeBlock { Width = 521.6, VerticalAlignment = VerticalAlignment.Top, Filename = "button.tsx", Language = "tsx", Code = "<Button variant=\"secondary\">Review changes</Button>" };
+        var window = new Window { Content = block, Width = 620, Height = 260, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); block.UpdateLayout();
+            var editor = (RichTextBox)block.Template.FindName("PART_CodeEditor", block)!;
+            Assert.AreEqual(64, editor.ActualHeight, .01);
+            Assert.AreEqual(119, block.ActualHeight, .51);
+            var copy = (CopyButton)block.Template.FindName("PART_CopyButton", block)!;
+            Assert.AreEqual(36, copy.ActualHeight, .01);
+            Assert.AreEqual("<Button variant=\"secondary\">Review changes</Button>", new TextRange(editor.Document.ContentStart, editor.Document.ContentEnd).Text.TrimEnd('\r', '\n'));
+        }
+        finally { window.Close(); }
+    });
+
+    [TestMethod]
+    public void TokensUseTheArcKinds() => Sta.Run(() =>
+    {
+        var block = new CodeBlock { Width = 521.6, Language = "tsx", Code = "<Button variant=\"secondary\">" };
+        var window = new Window { Content = block, Width = 620, Height = 260, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); block.UpdateLayout();
+            var editor = (RichTextBox)block.Template.FindName("PART_CodeEditor", block)!;
+            var runs = ((Paragraph)editor.Document.Blocks.First()).Inlines.OfType<Run>().ToDictionary(run => run.Text, run => ((SolidColorBrush)run.Foreground).Color);
+            Assert.AreEqual(((SolidColorBrush)block.FindResource("ArcWpf.Brush.CodeType")).Color, runs["Button"]);
+            Assert.AreEqual(((SolidColorBrush)block.FindResource("ArcWpf.Brush.CodeProperty")).Color, runs["variant"]);
+            Assert.AreEqual(((SolidColorBrush)block.FindResource("ArcWpf.Brush.CodeString")).Color, runs["\"secondary\""]);
+        }
+        finally { window.Close(); }
+    });
+
+    [TestMethod]
+    public void LongLinesScrollInsteadOfWrapping() => Sta.Run(() =>
+    {
+        var block = new CodeBlock { Width = 320, VerticalAlignment = VerticalAlignment.Top, Code = new string('x', 200) };
+        var window = new Window { Content = block, Width = 620, Height = 260, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); block.UpdateLayout(); Sta.Pump();
+            var editor = (RichTextBox)block.Template.FindName("PART_CodeEditor", block)!;
+            Assert.IsGreaterThan(editor.ViewportWidth, editor.ExtentWidth);
+            Assert.AreEqual(64, editor.ActualHeight, .01);
+        }
+        finally { window.Close(); }
+    });
+
+    [TestMethod]
     public void WindowBuildsLineNumbersAndTokenRuns() => Sta.Run(() =>
     {
-        var block = new CodeBlock { Width = 520, Code = "const answer = 42;\nreturn \"ok\";", Language = "ts" };
+        var block = new CodeBlock { Width = 520, ShowLineNumbers = true, Code = "const answer = 42;\nreturn \"ok\";", Language = "ts" };
         var window = new Window { Content = block, Width = 620, Height = 260, ShowInTaskbar = false };
         try
         {
             window.Show(); Sta.Pump(); block.UpdateLayout();
             var editor = (RichTextBox)block.Template.FindName("PART_CodeEditor", block)!;
             Assert.HasCount(2, editor.Document.Blocks);
-            Assert.AreEqual("  1  const answer = 42;", new TextRange(editor.Document.Blocks.First().ContentStart, editor.Document.Blocks.First().ContentEnd).Text.TrimEnd('\r', '\n'));
+            Assert.AreEqual("1  const answer = 42;", new TextRange(editor.Document.Blocks.First().ContentStart, editor.Document.Blocks.First().ContentEnd).Text.TrimEnd('\r', '\n'));
             Assert.IsNotNull(block.Template.FindName("PART_CopyButton", block));
             Assert.IsNotNull(block.Template.FindName("PART_FileName", block));
         }

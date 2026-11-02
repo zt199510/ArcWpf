@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:core="clr-namespace:ArcWpf;assembly=ArcWpf.Core">
   <ResourceDictionary.MergedDictionaries>
 
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Motion/Themes/OverlayScrollViewerTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Button/Themes/ButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ActionButton/Themes/ActionButtonTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CopyButton/Themes/CopyButtonTheme.xaml" />

@@ -5,6 +5,8 @@
   <StackPanel>
     <TextBlock Text="JSONViewer" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
     <TextBlock Text="搜索、展开和复制 JSON 路径；树区域保持有限高度并独立滚动。" TextWrapping="Wrap" Margin="0,0,0,16"/>
-    <arc:JSONViewer x:Name="Viewer" MaxHeight="360"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:JSONViewer x:Name="Viewer" Width="521.6" RootName="order" MaxHeight="380" Label="Order payload"/>
+    </Border>
   </StackPanel>
 </UserControl>

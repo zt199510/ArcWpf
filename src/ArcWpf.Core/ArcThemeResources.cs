@@ -177,6 +177,40 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("UsageNearBadge", Tint(warning, .14, "Surface"));
         PutBrush("UsageOverBadge", Tint((dangerL, dangerC, 25), .12, "Surface"));
         PutBrush("ChipListSurface", Alpha(Oklch(neutrals["Surface"], 0, 0), .55));
+        // code-block.module.css token roles; Windows browsers resolve its mono stack to Consolas.
+        this["ArcWpf.Font.Mono"] = new FontFamily("Consolas, Courier New, Microsoft YaHei UI");
+        PutBrush("CodeString", dark ? Oklch(.77, .15, 150) : Oklch(.46, .13, 150));
+        PutBrush("CodeNumber", dark ? Oklch(.8, .14, 75) : Oklch(.5, .14, 55));
+        PutBrush("CodeKeyword", dark ? Oklch(.78, .16, 285) : Oklch(.48, .15, 285));
+        PutBrush("CodeType", dark ? Oklch(.79, .13, 230) : Oklch(.46, .13, 230));
+        PutBrush("CodeFunction", dark ? Oklch(.8, .13, 25) : Oklch(.43, .12, 25));
+        PutBrush("CodeProperty", dark ? Oklch(.79, .12, 85) : Oklch(.44, .12, 85));
+        // json-viewer.module.css uses the 2026-11-02 foundation roles, which moved on from the older Success/Warning above.
+        (double l, double c, double h) dataSuccess = dark ? (.79, .14, 162) : (.5, .12, 162), dataWarning = dark ? (.83, .12, 78) : (.55, .12, 68);
+        PutBrush("JsonString", Oklch(dataSuccess.l, dataSuccess.c, dataSuccess.h));
+        PutBrush("JsonBoolean", Oklch(dataWarning.l, dataWarning.c, dataWarning.h));
+        PutBrush("JsonMark", Alpha(Oklch(dataWarning.l, dataWarning.c, dataWarning.h), .22));
+        PutBrush("JsonMarkCurrent", Alpha(Oklch(dataWarning.l, dataWarning.c, dataWarning.h), .48));
+        PutBrush("JsonRowHover", Oklch(MixL("Surface", "Foreground", .035), 0, 0));
+        // sortable-data-table.module.css: every fill is a mix over the cell base, which is surface or the sorted column tint.
+        PutBrush("TableHover", Oklch(MixL("Surface", "Foreground", .03), 0, 0));
+        PutBrush("TableHoverSorted", Oklch(MixL("SurfaceMuted", "Foreground", .03), 0, 0));
+        PutBrush("TableSelected", Oklch(accentL * .08 + neutrals["Surface"] * .92, 0, 0));
+        PutBrush("TableSelectedSorted", Oklch(accentL * .08 + neutrals["SurfaceMuted"] * .92, 0, 0));
+        PutBrush("TableSelectedHover", Oklch(accentL * .11 + neutrals["Surface"] * .89, 0, 0));
+        PutBrush("TableSelectedHoverSorted", Oklch(accentL * .11 + neutrals["SurfaceMuted"] * .89, 0, 0));
+        // tree-table.module.css: accent-subtle with foreground 4%, and the chevron hover over surface-muted.
+        PutBrush("TreeSelectedHover", Alpha(Oklch(accentL * .96 + neutrals["Foreground"] * .04, 0, 0), (dark ? .13 : .1) * .96 + .04));
+        PutBrush("TreeChevronHover", Oklch(MixL("SurfaceMuted", "Foreground", .06), 0, 0));
+        // The small status badge the 2026-11-02 data demos show: 20 high, radius 5, computed from uiarc.dev in both themes.
+        PutBrush("StatusNeutralFill", Oklch(dark ? .2816 : .946, 0, 0));
+        PutBrush("StatusNeutralInk", Oklch(dark ? .7814 : .4104, 0, 0));
+        PutBrush("StatusInfoFill", dark ? Oklch(.284, .0114, 236) : Oklch(.951, .011, 240));
+        PutBrush("StatusInfoInk", dark ? Oklch(.8002, .0893, 236) : Oklch(.4524, .0924, 240));
+        PutBrush("StatusSuccessFill", dark ? Oklch(.284, .0168, 162) : Oklch(.95, .012, 162));
+        PutBrush("StatusSuccessInk", dark ? Oklch(.8002, .1316, 162) : Oklch(.444, .1008, 162));
+        PutBrush("StatusWarningFill", dark ? Oklch(.2888, .0144, 78) : Oklch(.955, .012, 68));
+        PutBrush("StatusWarningInk", dark ? Oklch(.8378, .1128, 78) : Oklch(.454, .0912, 68));
         this["ArcWpf.Button.Padding.Small"] = new Thickness(12, 0, 12, 0);
         this["ArcWpf.Button.Padding.Medium"] = new Thickness(16, 0, 16, 0);
         this["ArcWpf.Button.Padding.Large"] = new Thickness(20, 0, 20, 0);

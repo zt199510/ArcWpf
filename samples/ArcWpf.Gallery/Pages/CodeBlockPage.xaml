@@ -4,8 +4,13 @@
              xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
     <TextBlock Text="CodeBlock" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
-    <TextBlock Text="轻量高亮、复制、行号和长代码折叠；源码区域独立横向滚动。" TextWrapping="Wrap" Margin="0,0,0,16"/>
-    <arc:CodeBlock Filename="hello.ts" Language="ts" MaxLines="8" Code="export function hello(name: string) {
+    <TextBlock Text="轻量高亮、复制和长代码折叠；源码区域独立横向滚动。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:CodeBlock Width="521.6" Filename="button.tsx" Language="tsx" Code="&lt;Button variant=&quot;secondary&quot;&gt;Review changes&lt;/Button&gt;"/>
+    </Border>
+    <TextBlock Text="maxLines 折叠" FontWeight="Medium" Margin="0,24,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:CodeBlock Width="521.6" Filename="hello.ts" Language="ts" MaxLines="4" Code="export function hello(name: string) {
   const greeting = `Hello, ${name}`;
   // Keep the example short in the gallery.
   return greeting;
@@ -13,5 +18,13 @@
 
 export const answer = 42;
 console.log(answer);"/>
+    </Border>
+    <TextBlock Text="ShowLineNumbers（WPF 扩展，Arc 原版没有行号）" FontWeight="Medium" Margin="0,24,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:CodeBlock Width="521.6" Filename="answer.json" Language="json" ShowLineNumbers="True" Code="{}{
+  &quot;answer&quot;: 42,
+  &quot;final&quot;: true
+}"/>
+    </Border>
   </StackPanel>
 </UserControl>

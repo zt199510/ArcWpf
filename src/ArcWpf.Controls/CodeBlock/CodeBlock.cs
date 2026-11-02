@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
@@ -18,6 +19,7 @@ public class CodeBlock : Control
     public static readonly DependencyProperty CodeProperty = DependencyProperty.Register(nameof(Code), typeof(string), typeof(CodeBlock), new FrameworkPropertyMetadata(string.Empty, Changed));
     public static readonly DependencyProperty FilenameProperty = DependencyProperty.Register(nameof(Filename), typeof(string), typeof(CodeBlock), new FrameworkPropertyMetadata("Source code", Changed));
     public static new readonly DependencyProperty LanguageProperty = DependencyProperty.Register(nameof(Language), typeof(string), typeof(CodeBlock), new FrameworkPropertyMetadata("tsx", Changed));
+    public static readonly DependencyProperty ShowLineNumbersProperty = DependencyProperty.Register(nameof(ShowLineNumbers), typeof(bool), typeof(CodeBlock), new FrameworkPropertyMetadata(false, Changed));
     public static readonly DependencyProperty MaxLinesProperty = DependencyProperty.Register(nameof(MaxLines), typeof(int), typeof(CodeBlock), new FrameworkPropertyMetadata(0, Changed), value => value is int lines && lines >= 0);
     private static readonly DependencyPropertyKey IsExpandedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsExpanded), typeof(bool), typeof(CodeBlock), new FrameworkPropertyMetadata(false));
     public static readonly DependencyProperty IsExpandedProperty = IsExpandedPropertyKey.DependencyProperty;
@@ -29,9 +31,12 @@ public class CodeBlock : Control
     };
     private static readonly HashSet<string> Types = new(StringComparer.Ordinal)
     {
-        "Array", "Boolean", "Date", "Error", "Map", "Number", "Promise", "Record", "Set", "String", "ReactNode", "HTMLElement", "Event", "unknown", "never", "void", "any", "boolean", "number", "string", "object"
+        "Array", "Boolean", "Date", "Error", "Map", "Number", "Promise", "Record", "Set", "String", "ReactNode", "HTMLElement", "HTMLButtonElement", "Event", "unknown", "never", "void", "any", "boolean", "number", "string", "object"
     };
     private static readonly HashSet<char> Punctuation = new("{}[]();,.<>:=+*/!?|&-".ToCharArray());
+    private static readonly Regex TokenPattern = new(@"/\*[\s\S]*?\*/|//[^\n]*|<!--[\s\S]*?-->|`(?:\\.|[^`\\])*`|""(?:\\.|[^""\\])*""|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][\w$-]*\b|[{}[\]();,.<>:=+*/!?|&-]", RegexOptions.CultureInvariant);
+    // code-block.module.css .pre: 14px at line-height 1.7 with padding 20.
+    private const double FontSizeOfSource = 14, LineHeight = 23.8, SourcePadding = 20, BaselineLift = 2;
 
     private TextBlock? _filename;
     private TextBlock? _language;
@@ -41,11 +46,14 @@ public class CodeBlock : Control
     private bool _expanded;
     private double _fullHeight;
     private double _collapsedHeight;
+    private readonly OwnedMotion _motion = new();
 
     public string Code { get => (string)GetValue(CodeProperty); set => SetValue(CodeProperty, value); }
     public string Filename { get => (string)GetValue(FilenameProperty); set => SetValue(FilenameProperty, value); }
     public new string Language { get => (string)GetValue(LanguageProperty); set => SetValue(LanguageProperty, value); }
     public int MaxLines { get => (int)GetValue(MaxLinesProperty); set => SetValue(MaxLinesProperty, value); }
+    /// <summary>Extension beyond Arc, whose source has no line numbers; off by default so the block matches it.</summary>
+    public bool ShowLineNumbers { get => (bool)GetValue(ShowLineNumbersProperty); set => SetValue(ShowLineNumbersProperty, value); }
     public bool IsExpanded => (bool)GetValue(IsExpandedProperty);
 
     static CodeBlock()
@@ -88,6 +96,7 @@ public class CodeBlock : Control
         _expand = GetTemplateChild("PART_ExpandButton") as System.Windows.Controls.Button;
         _editor = GetTemplateChild("PART_CodeEditor") as RichTextBox;
         if (_expand is not null) _expand.Click += ExpandClicked;
+        if (_editor is not null) _editor.PreviewMouseWheel += SourceWheel;
         Rebuild();
     }
 
@@ -95,7 +104,14 @@ public class CodeBlock : Control
     {
         StopEditorAnimations();
         if (_expand is not null) _expand.Click -= ExpandClicked;
+        if (_editor is not null) _editor.PreviewMouseWheel -= SourceWheel;
         _filename = null; _language = null; _copy = null; _expand = null; _editor = null;
+    }
+    // The source never scrolls vertically; hand the wheel to whatever scrolls around the block.
+    private void SourceWheel(object sender, MouseWheelEventArgs e)
+    {
+        e.Handled = true;
+        RaiseEvent(new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) { RoutedEvent = MouseWheelEvent, Source = this });
     }
     private void ExpandClicked(object sender, RoutedEventArgs e) { ToggleExpanded(); e.Handled = true; }
 
@@ -113,93 +129,111 @@ public class CodeBlock : Control
     {
         if (_editor is null) return;
         StopEditorAnimations();
-        var document = new FlowDocument { FontFamily = new FontFamily("Cascadia Mono"), FontSize = 13, LineHeight = 22, PagePadding = new Thickness(16, 14, 16, 14) };
-        string[] lines = (Code ?? string.Empty).Replace("\r\n", "\n").Split('\n');
-        int width = Math.Max(2, lines.Length.ToString(CultureInfo.InvariantCulture).Length);
+        string code = (Code ?? string.Empty).Replace("\r\n", "\n");
+        string[] lines = code.Split('\n');
+        var document = new FlowDocument { FontSize = FontSizeOfSource, LineHeight = LineHeight, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, TextAlignment = TextAlignment.Left };
+        int width = lines.Length.ToString(CultureInfo.InvariantCulture).Length;
+        var paragraphs = new Paragraph[lines.Length];
         for (int index = 0; index < lines.Length; index++)
         {
-            var paragraph = new Paragraph { Margin = new Thickness(0), KeepTogether = true };
-            paragraph.Inlines.Add(new Run((index + 1).ToString(CultureInfo.InvariantCulture).PadLeft(width + 1)) { Foreground = FindBrush("ArcWpf.Brush.TextMuted") });
-            paragraph.Inlines.Add(new Run("  ") { Foreground = FindBrush("ArcWpf.Brush.BorderStrong") });
-            AddHighlightedRuns(paragraph, lines[index], NormalizeLanguage(Language));
+            var paragraph = paragraphs[index] = new Paragraph { Margin = new Thickness(0), KeepTogether = true };
+            if (ShowLineNumbers) paragraph.Inlines.Add(Token($"{(index + 1).ToString(CultureInfo.InvariantCulture).PadLeft(width)}  ", "ArcWpf.Brush.TextMuted"));
             document.Blocks.Add(paragraph);
         }
+        AddHighlightedRuns(paragraphs, code, NormalizeLanguage(Language));
         _editor.Document = document;
-        _editor.IsReadOnly = true;
-        _editor.IsUndoEnabled = false;
-        _editor.Background = Brushes.Transparent;
-        _editor.Foreground = FindBrush("ArcWpf.Brush.Foreground");
-        _editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-        _editor.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-        _fullHeight = Math.Max(30, lines.Length * 22 + 28);
-        _collapsedHeight = Math.Max(30, Math.Min(_fullHeight, Math.Max(1, MaxLines) * 22 + 28));
+        // RichTextBox replaces the page padding when a document attaches, so the source's padding goes on afterwards. It scrolls with the text, like CSS padding.
+        // A block line height sets the baseline about 2 DIP lower than CSS half-leading, whatever the mono font; the padding gives it back.
+        document.PagePadding = new Thickness(SourcePadding, SourcePadding - BaselineLift, SourcePadding, SourcePadding + BaselineLift);
+        // A pre keeps its natural width. RichTextBox only honors PageWidth when the column is that wide as well.
+        document.PageWidth = document.ColumnWidth = MeasureSourceWidth(lines, width) + SourcePadding * 2;
+        document.ColumnGap = 0;
+        _fullHeight = Math.Round(lines.Length * LineHeight + SourcePadding * 2);
+        _collapsedHeight = MaxLines > 0 ? Math.Min(_fullHeight, Math.Round(MaxLines * LineHeight + SourcePadding * 2)) : _fullHeight;
         _editor.Height = _expanded || !CanCollapse ? _fullHeight : _collapsedHeight;
     }
 
-    private void AddHighlightedRuns(Paragraph paragraph, string line, string language)
+    // The document is a pre: it keeps its natural width, so a long line scrolls inside the block instead of wrapping.
+    private double MeasureSourceWidth(string[] lines, int numberWidth)
     {
-        int index = 0;
-        while (index < line.Length)
+        var typeface = new Typeface(_editor!.FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+        double dip = VisualTreeHelper.GetDpi(this).PixelsPerDip, widest = 0;
+        foreach (string line in lines)
         {
-            int start = index;
-            string kind;
-            if (line[index] == '/' && index + 1 < line.Length && line[index + 1] == '/') { paragraph.Inlines.Add(new Run(line[index..]) { Foreground = FindBrush("ArcWpf.Brush.TextMuted") }); break; }
-            if (line[index] == '"' || line[index] == '\'' || line[index] == '`')
-            {
-                char quote = line[index++];
-                while (index < line.Length && line[index] != quote) { if (line[index] == '\\') index++; index++; }
-                if (index < line.Length) index++;
-                kind = "String";
-            }
-            else if (char.IsDigit(line[index]))
-            {
-                index++; while (index < line.Length && (char.IsDigit(line[index]) || line[index] == '.')) index++;
-                kind = "Number";
-            }
-            else if (char.IsLetter(line[index]) || line[index] is '_' or '$')
-            {
-                index++; while (index < line.Length && (char.IsLetterOrDigit(line[index]) || line[index] is '_' or '$' or '-')) index++;
-                string word = line[start..index];
-                kind = Keywords.Contains(word) ? "Keyword" : Types.Contains(word) ? "Type" : line[index..].TrimStart().StartsWith('(') && language != "json" ? "Function" : null!;
-            }
-            else
-            {
-                index++;
-                kind = Punctuation.Contains(line[start]) ? "Punctuation" : null!;
-            }
-            paragraph.Inlines.Add(new Run(line[start..index]) { Foreground = TokenBrush(kind) });
+            string text = ShowLineNumbers ? new string('0', numberWidth + 2) + line : line;
+            widest = Math.Max(widest, new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, FontSizeOfSource, Brushes.Black, dip).WidthIncludingTrailingWhitespace);
         }
+        return Math.Ceiling(widest) + 2;
+    }
+
+    // code-block.tsx highlight(): one pass over the whole source, so block comments and template strings can span lines.
+    private void AddHighlightedRuns(Paragraph[] paragraphs, string code, string language)
+    {
+        int cursor = 0, line = 0;
+        void Emit(string text, string? key)
+        {
+            string[] parts = text.Split('\n');
+            for (int index = 0; index < parts.Length; index++)
+            {
+                if (index > 0) line++;
+                if (parts[index].Length > 0)
+                {
+                    var run = key is null ? new Run(parts[index]) : Token(parts[index], key);
+                    if (key == "ArcWpf.Brush.TextMuted") run.FontStyle = FontStyles.Italic;
+                    paragraphs[line].Inlines.Add(run);
+                }
+            }
+        }
+        foreach (Match match in TokenPattern.Matches(code))
+        {
+            if (cursor < match.Index) Emit(code[cursor..match.Index], null);
+            Emit(match.Value, TokenKey(match.Value, code, match.Index, language));
+            cursor = match.Index + match.Length;
+        }
+        if (cursor < code.Length) Emit(code[cursor..], null);
+    }
+
+    private static string? TokenKey(string value, string source, int index, string language)
+    {
+        if (value.StartsWith("//", StringComparison.Ordinal) || value.StartsWith("/*", StringComparison.Ordinal) || value.StartsWith("<!--", StringComparison.Ordinal)) return "ArcWpf.Brush.TextMuted";
+        string after = source[(index + value.Length)..];
+        if (value[0] is '"' or '\'' or '`') return language == "json" && after.TrimStart().StartsWith(':') ? "ArcWpf.Brush.CodeProperty" : "ArcWpf.Brush.CodeString";
+        if (char.IsAsciiDigit(value[0])) return "ArcWpf.Brush.CodeNumber";
+        if (Keywords.Contains(value)) return "ArcWpf.Brush.CodeKeyword";
+        if (Types.Contains(value)) return "ArcWpf.Brush.CodeType";
+        if (value.Length == 1 && Punctuation.Contains(value[0])) return "ArcWpf.Brush.TextSecondary";
+        string before = source[..index];
+        if (language is "tsx" or "jsx" or "html" or "vue" && (before.EndsWith('<') || before.EndsWith("</", StringComparison.Ordinal))) return "ArcWpf.Brush.CodeType";
+        if (after.TrimStart().StartsWith('(') && language != "json") return "ArcWpf.Brush.CodeFunction";
+        if (language is "css" or "tsx" or "jsx" && after.TrimStart() is [':' or '=', ..]) return "ArcWpf.Brush.CodeProperty";
+        return null;
+    }
+
+    private static Run Token(string text, string key)
+    {
+        var run = new Run(text);
+        run.SetResourceReference(TextElement.ForegroundProperty, key);
+        return run;
     }
 
     private static string NormalizeLanguage(string? language) => (language ?? "tsx").Trim().TrimStart('.').ToLowerInvariant();
-    private Brush TokenBrush(string? kind) => FindBrush(kind switch
-    {
-        "String" => "ArcWpf.Code.String", "Number" => "ArcWpf.Code.Number", "Keyword" => "ArcWpf.Code.Keyword", "Type" => "ArcWpf.Code.Type", "Function" => "ArcWpf.Code.Function", "Punctuation" => "ArcWpf.Brush.TextSecondary", _ => "ArcWpf.Brush.Foreground"
-    });
-    private Brush FindBrush(string key) => TryFindResource(key) as Brush ?? Brushes.Gray;
 
     private void UpdateExpandVisual(bool animate)
     {
         if (_expand is null || !CanCollapse) { if (_expand is not null) _expand.Visibility = Visibility.Collapsed; return; }
         _expand.Visibility = Visibility.Visible;
-        _expand.Content = _expanded ? "Show fewer lines" : $"Show all {LineCount} lines";
+        string showAll = $"Show all {LineCount} lines";
+        _expand.Content = _expanded ? "Show fewer lines" : showAll;
+        _expand.Tag = showAll;
         AutomationProperties.SetName(_expand, (string)_expand.Content);
         if (_editor is null) return;
-        double target = _expanded ? _fullHeight : _collapsedHeight;
-        _editor.BeginAnimation(HeightProperty, null);
         bool motion = animate && ArcMotion.GetLevel(this) == ArcMotionLevel.Full && IsLoaded;
-        if (motion)
-        {
-            double from = _editor.ActualHeight > 0 ? _editor.ActualHeight : _editor.Height;
-            var animation = new System.Windows.Media.Animation.DoubleAnimation(from, target, TimeSpan.FromSeconds(.42))
-            {
-                FillBehavior = System.Windows.Media.Animation.FillBehavior.HoldEnd,
-                EasingFunction = new System.Windows.Media.Animation.CubicEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
-            };
-            animation.Completed += (_, _) => { _editor.BeginAnimation(HeightProperty, null); _editor.Height = target; };
-            _editor.BeginAnimation(HeightProperty, animation);
-        }
-        else _editor.Height = target;
+        double from = _editor.ActualHeight > 0 ? _editor.ActualHeight : _editor.Height;
+        _editor.Height = from;
+        _motion.Double(_editor, HeightProperty, _expanded ? _fullHeight : _collapsedHeight, Tween.Smooth, motion, spring: true);
+        _expand.ApplyTemplate();
+        if (_expand.Template.FindName("Spin", _expand) is RotateTransform spin) _motion.Double(spin, RotateTransform.AngleProperty, _expanded ? 180 : 0, Tween.Snappy, motion, spring: true);
     }
-    private void StopEditorAnimations() => _editor?.BeginAnimation(HeightProperty, null);
+
+    private void StopEditorAnimations() => _motion.Stop();
 }

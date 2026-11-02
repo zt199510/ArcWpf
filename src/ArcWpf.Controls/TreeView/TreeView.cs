@@ -22,6 +22,10 @@ public sealed class TreeNode : INotifyPropertyChanged
     public ObservableCollection<TreeNode> Children { get; } = new();
     public object? Icon { get => _icon; set { if (Equals(_icon, value)) return; _icon = value; OnPropertyChanged(nameof(Icon)); } }
     public bool IsEnabled { get => _isEnabled; set { if (_isEnabled == value) return; _isEnabled = value; OnPropertyChanged(nameof(IsEnabled)); } }
+    /// <summary>Whatever a custom row template needs to draw this node.</summary>
+    public object? Data { get; set; }
+    /// <summary>A branch that loads its children on demand, so an empty Children still shows as openable.</summary>
+    internal bool ForceBranch { get; init; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -34,7 +38,10 @@ internal sealed class TreeRow
     public string? ParentId { get; init; }
     public required int Position { get; init; }
     public required int SetSize { get; init; }
-    public bool HasChildren => Node.Children.Count > 0;
+    public bool HasChildren => Node.ForceBranch || Node.Children.Count > 0;
+    public bool IsLast { get; set; }
+    /// <summary>Scroll padding carried by the rows, because a virtualizing panel can't scroll its host's padding.</summary>
+    public Thickness ScrollInset => new(6, Depth == 1 ? 6 : 0, 6, IsLast ? 6 : 0);
     public bool IsExpanded { get; set; }
     public bool IsSelected { get; set; }
     public bool IsFocusable { get; set; }
@@ -59,6 +66,10 @@ public class TreeView : Control
     private readonly ObservableCollection<TreeRow> _rows = new();
     private readonly HashSet<string> _internalExpanded = new(StringComparer.Ordinal);
     private string? _focusedId;
+    private bool _deferRows;
+    /// <summary>Raised when keyboard or pointer moves the current row, before focus lands on it.</summary>
+    internal event Action<string>? CurrentRowMoved;
+    internal ScrollViewer? RowsScroll => _rowsHost is null ? null : FindVisual(_rowsHost, item => item is ScrollViewer) as ScrollViewer;
 
     public ObservableCollection<TreeNode> Nodes { get => (ObservableCollection<TreeNode>?)GetValue(NodesProperty) ?? throw new InvalidOperationException("Tree nodes are not initialized."); set => SetValue(NodesProperty, value); }
     public ObservableCollection<string> DefaultExpandedIds { get => (ObservableCollection<string>?)GetValue(DefaultExpandedIdsProperty) ?? throw new InvalidOperationException("Default expanded ids are not initialized."); set => SetValue(DefaultExpandedIdsProperty, value); }
@@ -106,6 +117,39 @@ public class TreeView : Control
         if (e.Property == LabelProperty) AutomationProperties.SetName(this, Label);
     }
 
+    /// <summary>Replaces the rows, open branches and current row in one pass, for a host that owns all three.</summary>
+    internal void Load(ObservableCollection<TreeNode> nodes, IEnumerable<string> expanded, string? selectedId)
+    {
+        _deferRows = true;
+        var ids = new ObservableCollection<string>(expanded);
+        DefaultExpandedIds = ids;
+        ExpandedIds = new ObservableCollection<string>(ids);
+        Nodes = nodes;
+        SelectedNode = selectedId is null ? null : FindNode(nodes, selectedId);
+        if (selectedId is not null) _focusedId = selectedId;
+        _deferRows = false;
+        RebuildRows();
+    }
+
+    internal void Select(string id)
+    {
+        SelectedNode = FindNode(Nodes, id);
+        _focusedId = id;
+        RebuildRows();
+    }
+
+    internal void FocusNode(string id) => FocusRow(id);
+
+    private static TreeNode? FindNode(IEnumerable<TreeNode> nodes, string id)
+    {
+        foreach (var node in nodes)
+        {
+            if (node.Id == id) return node;
+            if (FindNode(node.Children, id) is { } child) return child;
+        }
+        return null;
+    }
+
     private static void OnExpandedIdsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((TreeView)d).RebuildRows();
     private void NodesChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildRows();
 
@@ -119,12 +163,13 @@ public class TreeView : Control
 
     private void RebuildRows()
     {
-        if (_rowsHost is null) return;
+        if (_rowsHost is null || _deferRows) return;
         var expanded = ExpandedSet;
         _rows.Clear();
         Flatten(Nodes, expanded, 1, null, _rows);
         var visibleFocused = _rows.Any(row => row.Node.Id == _focusedId);
         if (!visibleFocused) _focusedId = _rows.FirstOrDefault()?.Node.Id;
+        if (_rows.Count > 0) _rows[^1].IsLast = true;
         foreach (var row in _rows) { row.IsSelected = SelectedNode?.Id == row.Node.Id; row.IsFocusable = row.Node.Id == _focusedId; row.IsExpanded = row.HasChildren && expanded.Contains(row.Node.Id); }
         _rowsHost.ItemsSource = null;
         _rowsHost.ItemsSource = _rows;
@@ -136,13 +181,14 @@ public class TreeView : Control
         for (var index = 0; index < list.Count; index++)
         {
             var node = list[index];
-            target.Add(new TreeRow { Node = node, Depth = depth, ParentId = parentId, Position = index + 1, SetSize = list.Count, IsExpanded = node.Children.Count > 0 && expanded.Contains(node.Id) });
+            target.Add(new TreeRow { Node = node, Depth = depth, ParentId = parentId, Position = index + 1, SetSize = list.Count, IsExpanded = (node.ForceBranch || node.Children.Count > 0) && expanded.Contains(node.Id) });
             if (node.Children.Count > 0 && expanded.Contains(node.Id)) Flatten(node.Children, expanded, depth + 1, node.Id, target);
         }
     }
 
     private void RowClick(object sender, RoutedEventArgs e)
     {
+        if (IsNestedAction(e.OriginalSource as DependencyObject)) return;
         if (FindRow(e.OriginalSource as DependencyObject) is not { } row || !row.Node.IsEnabled) return;
         FocusRow(row.Node.Id); SelectRow(row); if (row.HasChildren) ToggleRow(row);
         e.Handled = true;
@@ -150,6 +196,7 @@ public class TreeView : Control
 
     private void RowMouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (IsNestedAction(e.OriginalSource as DependencyObject)) return;
         if (FindRow(e.OriginalSource as DependencyObject) is not { } row || !row.Node.IsEnabled) return;
         FocusRow(row.Node.Id);
         SelectRow(row);
@@ -180,7 +227,8 @@ public class TreeView : Control
 
     private void RowFocus(object sender, KeyboardFocusChangedEventArgs e)
     {
-        if (FindRow(e.NewFocus as DependencyObject) is { } row) { _focusedId = row.Node.Id; RebuildRows(); }
+        // Rebuilding here would destroy the row that just took focus, so only a real move rebuilds.
+        if (FindRow(e.NewFocus as DependencyObject) is { } row && row.Node.Id != _focusedId) { _focusedId = row.Node.Id; RebuildRows(); }
     }
 
     private void MoveFocus(int index)
@@ -192,6 +240,7 @@ public class TreeView : Control
     private void FocusRow(string id)
     {
         _focusedId = id; RebuildRows();
+        CurrentRowMoved?.Invoke(id);
         Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Input, new Action(() => FindButton(id)?.Focus()));
     }
 
@@ -209,6 +258,17 @@ public class TreeView : Control
         if (ExpandedIds is { } controlled) { controlled.Clear(); foreach (var id in next) controlled.Add(id); }
         else { _internalExpanded.Clear(); foreach (var id in next) _internalExpanded.Add(id); }
         RebuildRows(); RaiseEvent(new TreeExpandedChangedEventArgs(ExpandedChangedEvent, this, next));
+    }
+
+    // A button inside a row template (a copy action, say) keeps its own click instead of acting as the row.
+    private static bool IsNestedAction(DependencyObject? source)
+    {
+        while (source is not null)
+        {
+            if (source is ButtonBase button) return button.Tag is not TreeRow;
+            source = source is Visual ? VisualTreeHelper.GetParent(source) : LogicalTreeHelper.GetParent(source);
+        }
+        return false;
     }
 
     private TreeRow? FindRow(DependencyObject? source)
