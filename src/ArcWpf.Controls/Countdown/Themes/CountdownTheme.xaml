@@ -4,7 +4,7 @@
       <Border x:Name="Shell" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="0" CornerRadius="16" Padding="10,6">
         <StackPanel HorizontalAlignment="Center">
           <TextBlock x:Name="LabelText" Text="{TemplateBinding Label}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FontSize="12" HorizontalAlignment="Center"/>
-          <TextBlock x:Name="CompactText" Visibility="Collapsed" FontSize="14" HorizontalAlignment="Center"/>
+          <TextBlock x:Name="CompactText" Visibility="Collapsed" Foreground="{DynamicResource ArcWpf.Brush.Text}" FontSize="14" HorizontalAlignment="Center" MinWidth="120"/>
           <StackPanel x:Name="LargeUnits" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,3,0,0"/>
           <TextBlock x:Name="Done" Text="{TemplateBinding CompleteLabel}" Visibility="Collapsed" Foreground="{DynamicResource ArcWpf.Brush.Success}" FontSize="18" HorizontalAlignment="Center"/>
         </StackPanel>
