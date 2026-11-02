@@ -48,8 +48,8 @@ public class EmojiPicker : Control
         var selected = ApplySkinTone(emoji); SelectedEmoji = selected; RecordRecent(selected); EmojiSelected?.Invoke(this, selected); IsOpen = false;
     }
     private static void OnEmojisChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((EmojiPicker)d).AttachEmojiSource(e.NewValue as ObservableCollection<string>);
-    private static void OnCategoryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((EmojiPicker)d).Build();
-    private static void OnSkinToneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var picker = (EmojiPicker)d; picker.Build(); picker.BuildTones(); picker.SkinToneChanged?.Invoke(picker, (int)e.NewValue); }
+    private static void OnCategoryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var picker = (EmojiPicker)d; picker.Build(); picker.UpdateCategoryVisuals(); }
+    private static void OnSkinToneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var picker = (EmojiPicker)d; picker.Build(); picker.BuildTones(); picker.UpdateToneVisuals(); picker.SkinToneChanged?.Invoke(picker, (int)e.NewValue); }
     private static object CoerceSkinTone(DependencyObject d, object value) => Math.Clamp((int)value, 0, SkinToneValues.Length - 1);
     private Popup? _popup; private UniformGrid? _grid; private UniformGrid? _categories; private UniformGrid? _tones; private TextBox? _search; private INotifyCollectionChanged? _emojiSource;
     static EmojiPicker() => DefaultStyleKeyProperty.OverrideMetadata(typeof(EmojiPicker), new FrameworkPropertyMetadata(typeof(EmojiPicker)));
@@ -66,7 +66,7 @@ public class EmojiPicker : Control
         if (_search is not null) _search.TextChanged += (_, _) => { SearchText = _search.Text; Build(); };
         PreviewKeyDown += OnPreviewKeyDown;
         AttachEmojiSource(Emojis);
-        BuildCategories(); BuildTones(); Build();
+        BuildCategories(); BuildTones(); Build(); UpdateCategoryVisuals(); UpdateToneVisuals();
         if (AutoFocus && IsOpen) Dispatcher.BeginInvoke(() => _search?.Focus());
     }
     private void AttachEmojiSource(ObservableCollection<string>? source)
@@ -122,6 +122,7 @@ public class EmojiPicker : Control
     {
         if (_categories is null) return; _categories.Children.Clear(); var names = new[] { "All" }.Concat(CategoryValues.Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase)).ToArray(); _categories.Columns = names.Length;
         foreach (var name in names) { var button = new System.Windows.Controls.Button { Content = name, Tag = name, Padding = new Thickness(6, 3, 6, 3), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 11 }; button.Click += (_, _) => SelectedCategory = name; _categories.Children.Add(button); }
+        UpdateCategoryVisuals();
     }
     private void BuildTones()
     {
@@ -131,6 +132,25 @@ public class EmojiPicker : Control
             var tone = index == 0 ? "👍" : "👍" + SkinToneValues[index];
             var button = new System.Windows.Controls.Button { Content = tone, Tag = index, Padding = new Thickness(5, 2, 5, 2), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 17, ToolTip = index == 0 ? "Default skin tone" : $"Skin tone {index}" };
             var selected = index; button.Click += (_, _) => SkinTone = selected; _tones.Children.Add(button);
+        }
+        UpdateToneVisuals();
+    }
+    private void UpdateCategoryVisuals()
+    {
+        if (_categories is null) return;
+        foreach (var button in _categories.Children.OfType<System.Windows.Controls.Button>())
+        {
+            if (string.Equals(button.Tag as string, SelectedCategory, StringComparison.OrdinalIgnoreCase)) button.SetResourceReference(System.Windows.Controls.Control.BackgroundProperty, "ArcWpf.Brush.AccentSubtle");
+            else button.Background = Brushes.Transparent;
+        }
+    }
+    private void UpdateToneVisuals()
+    {
+        if (_tones is null) return;
+        foreach (var button in _tones.Children.OfType<System.Windows.Controls.Button>())
+        {
+            if (button.Tag is int tone && tone == SkinTone) button.SetResourceReference(System.Windows.Controls.Control.BackgroundProperty, "ArcWpf.Brush.AccentSubtle");
+            else button.Background = Brushes.Transparent;
         }
     }
     private static string RemoveSkinTone(string emoji)
