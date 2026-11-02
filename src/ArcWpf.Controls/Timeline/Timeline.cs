@@ -40,13 +40,15 @@ public class Timeline : Control
     public static readonly DependencyProperty TimeZoneIdProperty = DependencyProperty.Register(nameof(TimeZoneId), typeof(string), typeof(Timeline), new PropertyMetadata("UTC", OnTimeChanged));
     public static readonly DependencyProperty LocaleProperty = DependencyProperty.Register(nameof(Locale), typeof(string), typeof(Timeline), new PropertyMetadata("en-US", OnTimeChanged));
     public static readonly DependencyProperty DefaultExpandedProperty = DependencyProperty.Register(nameof(DefaultExpanded), typeof(ObservableCollection<string>), typeof(Timeline), new PropertyMetadata(null, OnDefaultExpandedChanged));
+    public static readonly DependencyProperty ScrollToNewProperty = DependencyProperty.Register(nameof(ScrollToNew), typeof(bool), typeof(Timeline), new PropertyMetadata(true));
     public ObservableCollection<TimelineEvent> Events { get => (ObservableCollection<TimelineEvent>)GetValue(EventsProperty); set => SetValue(EventsProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public DateTime Now { get => (DateTime)GetValue(NowProperty); set => SetValue(NowProperty, value); }
     public string TimeZoneId { get => (string)GetValue(TimeZoneIdProperty); set => SetValue(TimeZoneIdProperty, value); }
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public ObservableCollection<string> DefaultExpanded { get => (ObservableCollection<string>)GetValue(DefaultExpandedProperty); set => SetValue(DefaultExpandedProperty, value); }
-    private bool _hasRendered;
+    public bool ScrollToNew { get => (bool)GetValue(ScrollToNewProperty); set => SetValue(ScrollToNewProperty, value); }
+    private bool _hasRendered; private ScrollViewer? _scrollViewer;
     static Timeline() => DefaultStyleKeyProperty.OverrideMetadata(typeof(Timeline), new FrameworkPropertyMetadata(typeof(Timeline)));
     public Timeline() { Events = new ObservableCollection<TimelineEvent>(); Events.CollectionChanged += OnEventsChanged; DefaultExpanded = new ObservableCollection<string>(); Focusable = true; PreviewKeyDown += OnPreviewKeyDown; }
     private void OnEventsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -60,6 +62,7 @@ public class Timeline : Control
             reset.Tick += (_, _) => { reset.Stop(); item.IsNew = false; };
             reset.Start();
         }
+        if (_hasRendered && ScrollToNew && e.NewItems.Count > 0) Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => _scrollViewer?.ScrollToTop()));
     }
     private static void OnDefaultExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((Timeline)d).ApplyDefaultExpanded();
     private void ApplyDefaultExpanded()
@@ -70,7 +73,7 @@ public class Timeline : Control
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        _hasRendered = true;
+        _scrollViewer = GetTemplateChild("PART_ScrollViewer") as ScrollViewer; _hasRendered = true;
         ApplyDefaultExpanded(); UpdateTimeLabels();
         if (GetTemplateChild("PART_Events") is ItemsControl items)
         {
