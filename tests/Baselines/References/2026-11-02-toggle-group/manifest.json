@@ -1,0 +1,21 @@
+{
+  "component": "toggle-group",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/toggle-group.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "license.html": "https://uiarc.dev/license",
+    "component.md": "https://uiarc.dev/components/toggle-group/markdown",
+    "page.html": "https://uiarc.dev/components/toggle-group"
+  },
+  "files": {
+    "component.md": "0cb3f4337322d048785db82e65aa6551bae7c5969c65576a913667f5565d388c",
+    "page.html": "bd5228090df6291685f7b6a251efa470149582e7b7123216cb4358e20c387f9f",
+    "registry/registry/components/toggle-group/toggle-group.module.css": "2d8c1a59930eeb9e37d5ef9c325c9cbea646b9d3413bd1ecad0ed049260f1898",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "registry.json": "9eb1f976313144be96811ca6739cf8adfe002c94eddcec90e811d2e2cec4122f",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "registry/registry/components/toggle-group/toggle-group.tsx": "81505030e027276c5ac3910d5223262dde118e9a1684c876878376adb4244679"
+  },
+  "errors": []
+}

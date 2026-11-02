@@ -68,6 +68,10 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 数据展示控件批次已开始：CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成实现、Gallery 和精确专项验证。后续如新增 Arc 控件，另立来源分析和交付批次；不覆盖本路线图已收口结论。
 
+## 2026-11-02 新增控件批次
+
+ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来源冻结、WPF 实现、主题、Gallery 和专项测试代码；精确验证见 [验证记录](verification/2026-11-02-theme-toggle-actions.md)。UndoToast 是 Arc Pro，Registry 不可得，当前为公开文档驱动的独立 WPF 实现。真实窗口、DPI、读屏和逐帧动效仍待验收。
+
 
 ## Arc 后续补齐建议（2026-10-28）
 

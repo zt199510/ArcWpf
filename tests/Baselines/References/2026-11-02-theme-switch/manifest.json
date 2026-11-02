@@ -1,0 +1,21 @@
+{
+  "component": "theme-switch",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/theme-switch.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "license.html": "https://uiarc.dev/license",
+    "component.md": "https://uiarc.dev/components/theme-switch/markdown",
+    "page.html": "https://uiarc.dev/components/theme-switch"
+  },
+  "files": {
+    "component.md": "6e7980f3a56ae8b0aeeb7c79421e570712fcda24ce5768d87e5ded8f8d7f191f",
+    "registry/registry/components/theme-switch/theme-switch.tsx": "ab77cf084065de4d4ad6a25d972c5242e39a704142b285f1ce56b7d82c22dafd",
+    "page.html": "f6fd88aab074934792c827f86ed1ea1dac28d62865d9d13ac3495c799e937d4d",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "registry.json": "3e9e818e5751753a65589641690d5402b43b8eaf515efdb8a44a64c02a986aa8",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "registry/registry/components/theme-switch/theme-switch.module.css": "271d73fdd37bbcece5b4a1db2e94a97c3376f914e73ccf2e6a25dd2b14e26e7a"
+  },
+  "errors": []
+}

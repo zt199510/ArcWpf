@@ -1,0 +1,21 @@
+{
+  "component": "action-swap",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/action-swap.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "license.html": "https://uiarc.dev/license",
+    "component.md": "https://uiarc.dev/components/action-swap/markdown",
+    "page.html": "https://uiarc.dev/components/action-swap"
+  },
+  "files": {
+    "component.md": "eff199bfdc88f849a3099e0955bfbb44ba04e8edd3e959efd1721a421a7f7c8e",
+    "registry/registry/components/action-swap/action-swap.tsx": "b152c93287b16ebc6cbbfd655308f6ce58ea361ad0aa926db61d4a5bafdc0258",
+    "page.html": "261528b72630c07e86a261c4ccb1583e16665419952a608fab5da634aded303b",
+    "registry/registry/components/action-swap/action-swap.module.css": "8467c23b63fa4738679842f7fbd1c9ce53f53d95272db04334f205c04cff284a",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "registry.json": "0426f383f5c6fd5ad9193d457b919a6939eda558723aa718272a62e7e56119c3",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62"
+  },
+  "errors": []
+}

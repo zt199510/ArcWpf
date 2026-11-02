@@ -73,6 +73,11 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Card/Themes/CardTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Stepper/Themes/StepperTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/UsageMeter/Themes/UsageMeterTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ThemeSwitch/Themes/ThemeSwitchTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ToggleGroup/Themes/ToggleGroupTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ActionSwap/Themes/ActionSwapTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/UndoToast/Themes/UndoToastTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableText/Themes/ExpandableTextTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

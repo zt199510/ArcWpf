@@ -1,0 +1,21 @@
+{
+  "component": "expandable-text",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/expandable-text.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "license.html": "https://uiarc.dev/license",
+    "component.md": "https://uiarc.dev/components/expandable-text/markdown",
+    "page.html": "https://uiarc.dev/components/expandable-text"
+  },
+  "files": {
+    "registry/registry/components/expandable-text/expandable-text.tsx": "946d4eb56a6eab849adf31d1c6493ee5ccfa4f74c717009cb3a799447717b504",
+    "component.md": "e09e656f2c6ed2999f06ca84d2e207a2fe94a26a779ea133cf641765b037a803",
+    "page.html": "6b072930e1142a66c73579b8df76cbb466d8f04ca984e6c44a37df4f7a492206",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "registry.json": "867011c88872c7f0f043f017a501c733d81b796f9ad19aa1a72a74a4fd51c5ce",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "registry/registry/components/expandable-text/expandable-text.module.css": "3921d0b286516e8c2f88f2016cb16e73e11641f1d611d9d60dcbd765be4e8c58"
+  },
+  "errors": []
+}

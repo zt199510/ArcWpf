@@ -1,0 +1,20 @@
+{
+  "component": "undo-toast",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/undo-toast.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "license.html": "https://uiarc.dev/license",
+    "component.md": "https://uiarc.dev/components/undo-toast/markdown",
+    "page.html": "https://uiarc.dev/components/undo-toast"
+  },
+  "files": {
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "license.html": "fa6569b72df1c24d3a0988ed52c0083d4a4c434d44340b23570199153d998d62",
+    "component.md": "099b1e5a149851bba4517515408fecc69f1ea0edad2679aef8a9f5deca8691fa",
+    "page.html": "73cafb8d2492d1b4c268048cdf2f6b61a2d24c727df981b46846413a9d05d5a8"
+  },
+  "errors": [
+    "registry.json: Response status code does not indicate success: 404 (Not Found)."
+  ]
+}
