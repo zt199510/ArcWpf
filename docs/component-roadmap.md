@@ -26,7 +26,7 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 |优先级|控件|当前缺口|完成条件|
 |---|---|---|---|
-|P0|TreeView / Breadcrumb / Popover|已收口|代码、规格、Gallery、专项测试和验证记录已同步|
+|P0|TreeView / Breadcrumb / Popover / CheckBox|已收口|代码、规格、Gallery、专项测试和验证记录已同步|
 |P1|Menu / NumberInput / Progress / Calendar / DatePicker / Pagination|已收口|代码、主题、键盘、绑定、专项测试和验证记录已同步|
 |P2|List / Search|已收口|代码、Gallery、规格和专项测试已同步|
 |M4 批次|ActionButton、CopyButton、ButtonGroup、ContextMenu、UserMenu、HoldToConfirm、InlineEdit、ExpandingSearch|已收口|按来源规格完成组件、Gallery、专项测试和文档记录|
