@@ -6,13 +6,15 @@
     "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
     "component.md": "https://uiarc.dev/components/emoji-picker/markdown",
     "page.html": "https://uiarc.dev/components/emoji-picker",
-    "license.html": "https://uiarc.dev/license"
+    "license.html": "https://uiarc.dev/license",
+    "emoji-test-15.0.txt": "https://unicode.org/Public/emoji/15.0/emoji-test.txt"
   },
   "files": {
     "component.md": "fc4d68e30ef6baf279ca1b231bb3ff470569b1cf149af61ad29b89033f3e96fc",
     "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
     "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
-    "page.html": "87a6399be6d6693538a494d05b75d1c48d0df1b6b135d654302a7a81529e1d43"
+    "page.html": "87a6399be6d6693538a494d05b75d1c48d0df1b6b135d654302a7a81529e1d43",
+    "emoji-test-15.0.txt": "8445f23ac8388e096be19d0262e14fceff856ff52093f2356dc89485f1a853db"
   },
   "errors": [
     "registry.json: Response status code does not indicate success: 404 (Not Found)."

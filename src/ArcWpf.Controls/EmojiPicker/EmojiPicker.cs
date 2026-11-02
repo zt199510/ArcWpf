@@ -11,18 +11,14 @@ namespace ArcWpf.Controls;
 public class EmojiPicker : Control
 {
     private static readonly string[] SkinToneValues = ["", "🏻", "🏼", "🏽", "🏾", "🏿"];
-    private static readonly HashSet<string> ToneCapable = ["👍", "👏", "🙏"];
+    private static readonly HashSet<string> ToneCapable = ["👋", "🤚", "🖐️", "✋", "🖖", "👌", "🤏", "✌️", "🤞", "🤟", "🤘", "🤙", "👈", "👉", "👆", "👇", "☝️", "✍️", "👏", "🙏", "👍", "👎", "👊", "✊", "🤝", "💪", "👐", "🙌", "💅", "🫶"];
     private static readonly IReadOnlyDictionary<string, string[]> Aliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
     {
         ["smile"] = ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🙂", "🙃", "😉", "😊"],
         ["love"] = ["😍", "❤️"], ["heart"] = ["❤️"], ["fire"] = ["🔥"], ["party"] = ["🎉"], ["rocket"] = ["🚀"], ["idea"] = ["💡"], ["thumb"] = ["👍"], ["clap"] = ["👏"], ["pray"] = ["🙏"]
     };
-    private static readonly IReadOnlyDictionary<string, string[]> CategoryValues = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
-    {
-        ["Smileys"] = ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🙂", "🙃", "😉", "😊", "😍", "🤔", "😎"],
-        ["Objects"] = ["🎉", "🔥", "🚀", "💡", "⭐"],
-        ["Symbols"] = ["❤️", "👍", "👏", "🙏", "✅"]
-    };
+    private static readonly IReadOnlyDictionary<string, string> EmojiNames = EmojiCatalog.Items.ToDictionary(item => item.Emoji, item => item.Name, StringComparer.Ordinal);
+    private static readonly IReadOnlyDictionary<string, HashSet<string>> CategoryValues = EmojiCatalog.Items.GroupBy(item => item.Group, StringComparer.OrdinalIgnoreCase).ToDictionary(group => group.Key, group => group.Select(item => item.Emoji).ToHashSet(StringComparer.Ordinal), StringComparer.OrdinalIgnoreCase);
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(EmojiPicker), new PropertyMetadata(false));
     public static readonly DependencyProperty SelectedEmojiProperty = DependencyProperty.Register(nameof(SelectedEmoji), typeof(string), typeof(EmojiPicker), new PropertyMetadata(string.Empty));
     public static readonly DependencyProperty EmojisProperty = DependencyProperty.Register(nameof(Emojis), typeof(ObservableCollection<string>), typeof(EmojiPicker), new PropertyMetadata(null, OnEmojisChanged));
@@ -59,7 +55,7 @@ public class EmojiPicker : Control
     static EmojiPicker() => DefaultStyleKeyProperty.OverrideMetadata(typeof(EmojiPicker), new FrameworkPropertyMetadata(typeof(EmojiPicker)));
     public EmojiPicker()
     {
-        Emojis = new ObservableCollection<string>(new[] { "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🙂", "🙃", "😉", "😊", "😍", "🤔", "😎", "🎉", "🔥", "❤️", "👍", "👏", "🙏", "✅", "⭐", "🚀", "💡" });
+        Emojis = new ObservableCollection<string>(EmojiCatalog.Items.Select(item => item.Emoji));
         SelectedEmoji = Emojis[0]; RecentEmojis = new ObservableCollection<string>();
     }
     public override void OnApplyTemplate()
@@ -118,13 +114,13 @@ public class EmojiPicker : Control
     }
     private void Build()
     {
-        if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); var allCategories = string.Equals(SelectedCategory, "All", StringComparison.OrdinalIgnoreCase); IEnumerable<string> source = allCategories ? Emojis : Emojis.Where(value => CategoryValues.TryGetValue(SelectedCategory, out var values) && values.Contains(RemoveSkinTone(value), StringComparer.Ordinal)); IEnumerable<string> items = string.IsNullOrEmpty(query) ? (allCategories ? (RecentEmojis ?? new ObservableCollection<string>()) : Enumerable.Empty<string>()).Concat(source).Distinct(StringComparer.Ordinal) : source.Where(value => value.Contains(query, StringComparison.OrdinalIgnoreCase) || Aliases.Any(alias => alias.Key.Contains(query, StringComparison.OrdinalIgnoreCase) && alias.Value.Contains(RemoveSkinTone(value), StringComparer.Ordinal)));
-        foreach (var emoji in items) { var displayed = ApplySkinTone(emoji); var button = new Button { Content = displayed, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = displayed }; button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
+        if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); var allCategories = string.Equals(SelectedCategory, "All", StringComparison.OrdinalIgnoreCase); IEnumerable<string> source = allCategories ? Emojis : Emojis.Where(value => CategoryValues.TryGetValue(SelectedCategory, out var values) && values.Contains(RemoveSkinTone(value))); IEnumerable<string> items = string.IsNullOrEmpty(query) ? (allCategories ? (RecentEmojis ?? new ObservableCollection<string>()) : Enumerable.Empty<string>()).Concat(source).Distinct(StringComparer.Ordinal) : source.Where(value => MatchesSearch(value, query));
+        foreach (var emoji in items) { var displayed = ApplySkinTone(emoji); var name = EmojiNames.TryGetValue(RemoveSkinTone(emoji), out var knownName) ? knownName : displayed; var button = new Button { Content = displayed, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = name }; button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
         if (_grid.Children.Count == 0) _grid.Children.Add(new TextBlock { Text = "No emoji found", Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(8), HorizontalAlignment = HorizontalAlignment.Center });
     }
     private void BuildCategories()
     {
-        if (_categories is null) return; _categories.Children.Clear(); var names = new[] { "All", "Smileys", "Objects", "Symbols" }; _categories.Columns = names.Length;
+        if (_categories is null) return; _categories.Children.Clear(); var names = new[] { "All" }.Concat(CategoryValues.Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase)).ToArray(); _categories.Columns = names.Length;
         foreach (var name in names) { var button = new Button { Content = name, Tag = name, Padding = new Thickness(6, 3, 6, 3), BorderThickness = new Thickness(0), Background = Brushes.Transparent, FontSize = 11 }; button.Click += (_, _) => SelectedCategory = name; _categories.Children.Add(button); }
     }
     private void BuildTones()
@@ -141,6 +137,13 @@ public class EmojiPicker : Control
     {
         foreach (var tone in SkinToneValues.Skip(1)) emoji = emoji.Replace(tone, string.Empty, StringComparison.Ordinal);
         return emoji;
+    }
+    private static bool MatchesSearch(string emoji, string query)
+    {
+        var normalized = RemoveSkinTone(emoji);
+        return normalized.Contains(query, StringComparison.OrdinalIgnoreCase)
+            || (EmojiNames.TryGetValue(normalized, out var name) && name.Contains(query, StringComparison.OrdinalIgnoreCase))
+            || Aliases.Any(alias => alias.Key.Contains(query, StringComparison.OrdinalIgnoreCase) && alias.Value.Contains(normalized, StringComparer.Ordinal));
     }
     private string ApplySkinTone(string emoji)
     {
