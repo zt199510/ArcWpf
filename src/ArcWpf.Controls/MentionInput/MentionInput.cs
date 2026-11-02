@@ -8,6 +8,16 @@ namespace ArcWpf.Controls;
 
 public sealed class MentionPerson { public string Id { get; set; } = string.Empty; public string Name { get; set; } = string.Empty; public string Role { get; set; } = string.Empty; }
 public sealed class MentionChannel { public string Id { get; set; } = string.Empty; public string Name { get; set; } = string.Empty; public string Description { get; set; } = string.Empty; }
+public enum MentionKind { Person, Channel }
+public sealed class MentionToken
+{
+    public MentionKind Kind { get; init; }
+    public string Id { get; init; } = string.Empty;
+    public string Label { get; init; } = string.Empty;
+    public int Start { get; internal set; }
+    public int End { get; internal set; }
+    public string Text => (Kind == MentionKind.Person ? "@" : "#") + Label;
+}
 
 public class MentionInput : TextBox
 {
@@ -15,17 +25,40 @@ public class MentionInput : TextBox
     public static readonly DependencyProperty SubmitOnEnterProperty = DependencyProperty.Register(nameof(SubmitOnEnter), typeof(bool), typeof(MentionInput), new PropertyMetadata(false));
     public static readonly DependencyProperty MaxSuggestionsProperty = DependencyProperty.Register(nameof(MaxSuggestions), typeof(int), typeof(MentionInput), new PropertyMetadata(6));
     public static readonly DependencyProperty ChannelsProperty = DependencyProperty.Register(nameof(Channels), typeof(ObservableCollection<MentionChannel>), typeof(MentionInput), new PropertyMetadata(null));
+    public static readonly DependencyProperty MentionsProperty = DependencyProperty.Register(nameof(Mentions), typeof(ObservableCollection<MentionToken>), typeof(MentionInput), new PropertyMetadata(null));
     public ObservableCollection<MentionPerson> People { get => (ObservableCollection<MentionPerson>)GetValue(PeopleProperty); set => SetValue(PeopleProperty, value); }
     public bool SubmitOnEnter { get => (bool)GetValue(SubmitOnEnterProperty); set => SetValue(SubmitOnEnterProperty, value); }
     public int MaxSuggestions { get => (int)GetValue(MaxSuggestionsProperty); set => SetValue(MaxSuggestionsProperty, value); }
     public ObservableCollection<MentionChannel> Channels { get => (ObservableCollection<MentionChannel>)GetValue(ChannelsProperty); set => SetValue(ChannelsProperty, value); }
+    public ObservableCollection<MentionToken> Mentions { get => (ObservableCollection<MentionToken>)GetValue(MentionsProperty); set => SetValue(MentionsProperty, value); }
     public event EventHandler<string>? Submitted;
+    public event EventHandler<MentionToken>? MentionAdded;
     private readonly Popup _popup = new() { StaysOpen = false, Placement = PlacementMode.Bottom, AllowsTransparency = true };
     private readonly ListBox _list = new() { BorderThickness = new Thickness(0), Padding = new Thickness(4), MinWidth = 240 };
     private readonly Border _popupSurface = new() { Padding = new Thickness(4), CornerRadius = new CornerRadius(14), BorderThickness = new Thickness(1) };
-    private string _trigger = string.Empty; private char _symbol = '@';
+    private string _trigger = string.Empty; private char _symbol = '@'; private string _lastText = string.Empty; private int _lastCaret; private bool _changingMentions;
     static MentionInput() => DefaultStyleKeyProperty.OverrideMetadata(typeof(MentionInput), new FrameworkPropertyMetadata(typeof(MentionInput)));
-    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += (_, _) => RefreshSuggestions(); KeyDown += OnKeyDown; LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p.Name); else if (_list.SelectedItem is MentionChannel c) Choose(c.Name); }; _popup.Child = _popupSurface; }
+    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
+    private void OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (!_changingMentions) ReconcileMentions(_lastText, Text, _lastCaret);
+        _lastText = Text; _lastCaret = CaretIndex; RefreshSuggestions();
+    }
+    private void ReconcileMentions(string oldText, string newText, int hint)
+    {
+        if (Mentions.Count == 0) return;
+        var prefix = 0; var maxPrefix = Math.Min(Math.Min(oldText.Length, newText.Length), Math.Max(0, hint));
+        while (prefix < maxPrefix && oldText[prefix] == newText[prefix]) prefix++;
+        var suffix = 0; while (suffix < oldText.Length - prefix && suffix < newText.Length - prefix && oldText[^ (suffix + 1)] == newText[^ (suffix + 1)]) suffix++;
+        var oldEnd = oldText.Length - suffix; var delta = newText.Length - oldText.Length;
+        foreach (var mention in Mentions.ToArray())
+        {
+            if (mention.End <= prefix) continue;
+            if (mention.Start >= oldEnd) { mention.Start += delta; mention.End += delta; continue; }
+            Mentions.Remove(mention);
+        }
+        foreach (var mention in Mentions.ToArray()) if (mention.Start < 0 || mention.End > newText.Length || newText[mention.Start..mention.End] != mention.Text) Mentions.Remove(mention);
+    }
     private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
         try
@@ -55,17 +88,33 @@ public class MentionInput : TextBox
     {
         if (!_popup.IsOpen)
         {
+            if (SelectionLength == 0 && e.Key == Key.Back) { var mention = Mentions.FirstOrDefault(item => item.End == CaretIndex); if (mention is not null) { RemoveMention(mention); e.Handled = true; return; } }
+            if (SelectionLength == 0 && e.Key == Key.Delete) { var mention = Mentions.FirstOrDefault(item => item.Start == CaretIndex); if (mention is not null) { RemoveMention(mention); e.Handled = true; return; } }
+            if (SelectionLength == 0 && e.Key == Key.Left) { var mention = Mentions.FirstOrDefault(item => item.End == CaretIndex); if (mention is not null) { CaretIndex = mention.Start; e.Handled = true; return; } }
+            if (SelectionLength == 0 && e.Key == Key.Right) { var mention = Mentions.FirstOrDefault(item => item.Start == CaretIndex); if (mention is not null) { CaretIndex = mention.End; e.Handled = true; return; } }
             if (e.Key == Key.Enter && SubmitOnEnter) { Submitted?.Invoke(this, Text); e.Handled = true; }
             return;
         }
         if (e.Key == Key.Down) { _list.SelectedIndex = Math.Min(_list.SelectedIndex + 1, _list.Items.Count - 1); e.Handled = true; }
         else if (e.Key == Key.Up) { _list.SelectedIndex = Math.Max(_list.SelectedIndex - 1, 0); e.Handled = true; }
-        else if (e.Key is Key.Enter or Key.Tab && _list.SelectedItem is object selected) { if (selected is MentionPerson person) Choose(person.Name); else if (selected is MentionChannel channel) Choose(channel.Name); e.Handled = true; }
+        else if (e.Key is Key.Enter or Key.Tab && _list.SelectedItem is object selected) { if (selected is MentionPerson person) Choose(person); else if (selected is MentionChannel channel) Choose(channel); e.Handled = true; }
         else if (e.Key == Key.Escape) { _popup.IsOpen = false; e.Handled = true; }
+        else if (e.Key == Key.Back && SelectionLength == 0) { var mention = Mentions.FirstOrDefault(item => item.End == CaretIndex); if (mention is not null) { RemoveMention(mention); e.Handled = true; } }
+        else if (e.Key == Key.Delete && SelectionLength == 0) { var mention = Mentions.FirstOrDefault(item => item.Start == CaretIndex); if (mention is not null) { RemoveMention(mention); e.Handled = true; } }
+        else if (e.Key == Key.Left && SelectionLength == 0) { var mention = Mentions.FirstOrDefault(item => item.End == CaretIndex); if (mention is not null) { CaretIndex = mention.Start; e.Handled = true; } }
+        else if (e.Key == Key.Right && SelectionLength == 0) { var mention = Mentions.FirstOrDefault(item => item.Start == CaretIndex); if (mention is not null) { CaretIndex = mention.End; e.Handled = true; } }
     }
-    private void Choose(string name)
+    private void RemoveMention(MentionToken mention)
+    {
+        var caret = mention.Start; _changingMentions = true; try { Text = Text.Remove(mention.Start, mention.End - mention.Start); Mentions.Remove(mention); } finally { _changingMentions = false; } CaretIndex = caret; _lastText = Text; _lastCaret = caret;
+    }
+    private void Choose(MentionPerson person) => Choose(MentionKind.Person, person.Id, person.Name);
+    private void Choose(MentionChannel channel) => Choose(MentionKind.Channel, channel.Id, channel.Name);
+    private void Choose(MentionKind kind, string id, string name)
     {
         var start = CaretIndex - _trigger.Length - 1; if (start < 0) return;
-        Text = Text.Remove(start, _trigger.Length + 1).Insert(start, _symbol + name + " "); CaretIndex = start + name.Length + 2; _popup.IsOpen = false; Focus();
+        var tokenText = (kind == MentionKind.Person ? "@" : "#") + name; var token = new MentionToken { Kind = kind, Id = id, Label = name, Start = start, End = start + tokenText.Length };
+        _changingMentions = true; try { Text = Text.Remove(start, _trigger.Length + 1).Insert(start, tokenText + " "); Mentions.Add(token); } finally { _changingMentions = false; }
+        CaretIndex = token.End + 1; _lastText = Text; _lastCaret = CaretIndex; _popup.IsOpen = false; Focus(); MentionAdded?.Invoke(this, token);
     }
 }
