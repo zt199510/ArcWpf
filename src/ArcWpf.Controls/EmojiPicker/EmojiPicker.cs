@@ -10,6 +10,11 @@ namespace ArcWpf.Controls;
 
 public class EmojiPicker : Control
 {
+    private static readonly IReadOnlyDictionary<string, string[]> Aliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["smile"] = ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🙂", "🙃", "😉", "😊"],
+        ["love"] = ["😍", "❤️"], ["heart"] = ["❤️"], ["fire"] = ["🔥"], ["party"] = ["🎉"], ["rocket"] = ["🚀"], ["idea"] = ["💡"], ["thumb"] = ["👍"], ["clap"] = ["👏"], ["pray"] = ["🙏"]
+    };
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(EmojiPicker), new PropertyMetadata(false));
     public static readonly DependencyProperty SelectedEmojiProperty = DependencyProperty.Register(nameof(SelectedEmoji), typeof(string), typeof(EmojiPicker), new PropertyMetadata(string.Empty));
     public static readonly DependencyProperty EmojisProperty = DependencyProperty.Register(nameof(Emojis), typeof(ObservableCollection<string>), typeof(EmojiPicker), new PropertyMetadata(null, OnEmojisChanged));
@@ -87,7 +92,7 @@ public class EmojiPicker : Control
     }
     private void Build()
     {
-        if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); IEnumerable<string> items = string.IsNullOrEmpty(query) ? Emojis : Emojis.Where(value => value.Contains(query, StringComparison.OrdinalIgnoreCase));
+        if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); IEnumerable<string> items = string.IsNullOrEmpty(query) ? Emojis : Emojis.Where(value => value.Contains(query, StringComparison.OrdinalIgnoreCase) || Aliases.Any(alias => alias.Key.Contains(query, StringComparison.OrdinalIgnoreCase) && alias.Value.Contains(value, StringComparer.Ordinal)));
         foreach (var emoji in items) { var button = new Button { Content = emoji, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = emoji }; button.Click += (_, _) => { SelectedEmoji = emoji; EmojiSelected?.Invoke(this, emoji); IsOpen = false; }; _grid.Children.Add(button); }
         if (_grid.Children.Count == 0) _grid.Children.Add(new TextBlock { Text = "No emoji found", Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(8), HorizontalAlignment = HorizontalAlignment.Center });
     }
