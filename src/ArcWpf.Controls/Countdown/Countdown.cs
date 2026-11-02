@@ -86,7 +86,12 @@ public class Countdown : Control
             _largeUnits.Children.Clear(); _unitViews.Clear();
             for (var i = 0; i < parts.Count; i++)
             {
-                if (i > 0) _largeUnits.Children.Add(new TextBlock { Text = ":", FontSize = 28, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(6, 0, 6, 0), VerticalAlignment = VerticalAlignment.Top });
+                if (i > 0)
+                {
+                    var separator = new TextBlock { Text = ":", FontSize = 28, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(6, 0, 6, 0), VerticalAlignment = VerticalAlignment.Top };
+                    separator.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted");
+                    _largeUnits.Children.Add(separator);
+                }
                 var visual = new UnitVisual(UnitLabels[parts[i].Unit], (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray);
                 _unitViews[parts[i].Unit] = visual; _largeUnits.Children.Add(visual);
             }
@@ -119,7 +124,9 @@ public class Countdown : Control
         public UnitVisual(string label, Brush muted)
         {
             _label = label; _muted = muted; HorizontalAlignment = HorizontalAlignment.Center; _digits.Children.Clear(); Children.Add(_digits);
-            Children.Add(new TextBlock { Text = label, FontSize = 11, Foreground = muted, HorizontalAlignment = HorizontalAlignment.Center });
+            var labelText = new TextBlock { Text = label, FontSize = 11, Foreground = muted, HorizontalAlignment = HorizontalAlignment.Center };
+            labelText.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted");
+            Children.Add(labelText);
         }
         public void SetValue(long value, bool animate, bool descending, ArcMotionLevel level)
         {
@@ -141,6 +148,7 @@ public class Countdown : Control
         {
             if (_current?.Text == digit.ToString()) return;
             var next = new TextBlock { Text = digit.ToString(), FontSize = 32, FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            next.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.Foreground");
             var old = _current; _current = next; var token = ++_version;
             if (old is null || !animate || level != ArcMotionLevel.Full)
             {

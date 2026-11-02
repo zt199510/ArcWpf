@@ -34,7 +34,9 @@ public class AnimatedCounter : Control
         var next = Prefix + text + Suffix; var previous = _displayText; _displayText = next; if (_accessibleText is not null) _accessibleText.Text = next; System.Windows.Automation.AutomationProperties.SetName(this, next); _digitsPanel.Children.Clear();
         for (var index = 0; index < next.Length; index++)
         {
-            var glyph = new TextBlock { Text = next[index].ToString(), Foreground = (TryFindResource("ArcWpf.Brush.Foreground") as Brush) ?? Foreground ?? Brushes.Black, FontSize = 32, FontWeight = FontWeights.Medium, FontFamily = (TryFindResource("ArcWpf.Font.Mono") as FontFamily) ?? new FontFamily("Consolas") };
+            var glyph = new TextBlock { Text = next[index].ToString(), Foreground = Foreground ?? Brushes.Black, FontSize = 32, FontWeight = FontWeights.Medium, FontFamily = (TryFindResource("ArcWpf.Font.Mono") as FontFamily) ?? new FontFamily("Consolas") };
+            glyph.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.Foreground");
+            glyph.SetResourceReference(TextBlock.FontFamilyProperty, "ArcWpf.Font.Mono");
             if (char.IsDigit(next[index])) glyph.MinWidth = 18;
             _digitsPanel.Children.Add(glyph);
             if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full && index < previous.Length && previous[index] != next[index])
