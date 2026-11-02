@@ -4,7 +4,7 @@
       <Border x:Name="Root" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="14" Padding="12,8">
         <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
           <TextBlock x:Name="PART_Indicator" Text="●" Foreground="{DynamicResource ArcWpf.Brush.Accent}" FontSize="12" Margin="0,0,10,0" VerticalAlignment="Center"/>
-          <TextBlock x:Name="PART_Message" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+          <TextBlock x:Name="PART_Message" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" RenderTransformOrigin="0.5,0.5"/>
           <TextBlock x:Name="PART_Countdown" Grid.Column="2" Visibility="Collapsed" FontFamily="{DynamicResource ArcWpf.Font.Mono}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
           <Button x:Name="PART_Action" Grid.Column="3" Visibility="Collapsed" Padding="8,3" Margin="10,0,0,0"/>
           <StackPanel x:Name="PART_Controls" Grid.Column="4" Orientation="Horizontal" Margin="12,0,0,0"><Button x:Name="PART_Previous" Content="‹" AutomationProperties.Name="Previous announcement" Padding="6,0"/><Button x:Name="PART_Pause" Content="Ⅱ" AutomationProperties.Name="Pause announcements" Padding="6,0"/><Button x:Name="PART_Next" Content="›" AutomationProperties.Name="Next announcement" Padding="6,0"/></StackPanel>

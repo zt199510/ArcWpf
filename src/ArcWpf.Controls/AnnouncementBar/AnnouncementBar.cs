@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Media.Animation;
+using System.Windows.Media;
 using System.Collections.Specialized;
 
 namespace ArcWpf.Controls;
@@ -37,13 +38,13 @@ public class AnnouncementBar : Control
     public ObservableCollection<AnnouncementItem> Announcements { get => (ObservableCollection<AnnouncementItem>)GetValue(AnnouncementsProperty); set => SetValue(AnnouncementsProperty, value); }
     public bool Controls { get => (bool)GetValue(ControlsProperty); set => SetValue(ControlsProperty, value); }
     public bool IsPaused { get => (bool)GetValue(IsPausedProperty); set => SetValue(IsPausedProperty, value); }
-    private TextBlock? _message; private TextBlock? _countdown; private Border? _root; private readonly DispatcherTimer _timer = new(); private readonly DispatcherTimer _countdownTimer = new() { Interval = TimeSpan.FromSeconds(1) }; private INotifyCollectionChanged? _source;
+    private TextBlock? _message; private TextBlock? _countdown; private Border? _root; private readonly DispatcherTimer _timer = new(); private readonly DispatcherTimer _countdownTimer = new() { Interval = TimeSpan.FromSeconds(1) }; private INotifyCollectionChanged? _source; private int _messageTransition;
     static AnnouncementBar() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnnouncementBar), new FrameworkPropertyMetadata(typeof(AnnouncementBar)));
     public event EventHandler<AnnouncementItem>? ActionInvoked;
     public AnnouncementBar() { Messages = new ObservableCollection<string>(); Announcements = new ObservableCollection<AnnouncementItem>(); _timer.Tick += (_, _) => Next(); _countdownTimer.Tick += (_, _) => UpdateCountdown(); Loaded += (_, _) => { Start(); _countdownTimer.Start(); }; Unloaded += (_, _) => { _timer.Stop(); _countdownTimer.Stop(); }; MouseEnter += (_, _) => _timer.Stop(); MouseLeave += (_, _) => Start(); GotKeyboardFocus += (_, _) => _timer.Stop(); LostKeyboardFocus += (_, _) => Start(); }
     public override void OnApplyTemplate()
     {
-        base.OnApplyTemplate(); _message = GetTemplateChild("PART_Message") as TextBlock; _countdown = GetTemplateChild("PART_Countdown") as TextBlock; _root = GetTemplateChild("Root") as Border;
+        base.OnApplyTemplate(); _message = GetTemplateChild("PART_Message") as TextBlock; if (_message is not null) { _message.RenderTransform = new TranslateTransform(); _message.RenderTransformOrigin = new Point(.5, .5); } _countdown = GetTemplateChild("PART_Countdown") as TextBlock; _root = GetTemplateChild("Root") as Border;
         if (GetTemplateChild("PART_Previous") is System.Windows.Controls.Button previous) previous.Click += (_, _) => Previous();
         if (GetTemplateChild("PART_Next") is System.Windows.Controls.Button next) next.Click += (_, _) => Next();
         if (GetTemplateChild("PART_Pause") is System.Windows.Controls.Button pause) pause.Click += (_, _) => IsPaused = !IsPaused;
@@ -66,7 +67,7 @@ public class AnnouncementBar : Control
         else if (bar.Messages is { } messages) bar.AttachSource(messages);
         bar.Update();
     }
-    private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnnouncementBar)d).Update();
+    private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnnouncementBar)d).TransitionMessage((int)e.OldValue, (int)e.NewValue);
     private static void OnAutoPlayChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnnouncementBar)d).Start();
     private static void OnOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var bar = (AnnouncementBar)d; bar.UpdateOpen(true); if (bar.IsOpen) bar.Start(); else bar._timer.Stop(); }
     private static void OnPausedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var bar = (AnnouncementBar)d; if (bar.IsPaused) bar._timer.Stop(); else bar.Start(); }
@@ -82,6 +83,32 @@ public class AnnouncementBar : Control
         }
         if (GetTemplateChild("PART_Pause") is System.Windows.Controls.Button pause) { pause.Content = IsPaused ? "▶" : "Ⅱ"; System.Windows.Automation.AutomationProperties.SetName(pause, IsPaused ? "Resume announcements" : "Pause announcements"); }
         UpdateCountdown();
+    }
+    private void TransitionMessage(int oldIndex, int newIndex)
+    {
+        if (_message is null || oldIndex == newIndex || !IsLoaded || ArcMotion.GetLevel(this) != ArcMotionLevel.Full)
+        {
+            Update();
+            return;
+        }
+        var direction = newIndex >= oldIndex ? 1 : -1;
+        var token = ++_messageTransition;
+        var transform = _message.RenderTransform as TranslateTransform ?? new TranslateTransform();
+        _message.RenderTransform = transform;
+        transform.BeginAnimation(TranslateTransform.YProperty, null);
+        _message.BeginAnimation(UIElement.OpacityProperty, null);
+        var exit = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(.12)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn } };
+        exit.Completed += (_, _) =>
+        {
+            if (token != _messageTransition) return;
+            Update();
+            transform.Y = direction * 14;
+            var enter = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(.2)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } };
+            transform.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(direction * 14, 0, TimeSpan.FromSeconds(.24)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            _message.BeginAnimation(UIElement.OpacityProperty, enter);
+        };
+        transform.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(0, -direction * 14, TimeSpan.FromSeconds(.16)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn } });
+        _message.BeginAnimation(UIElement.OpacityProperty, exit);
     }
     private void UpdateCountdown()
     {
