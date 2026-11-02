@@ -19,12 +19,23 @@ public class MentionInput : TextBox
     public bool SubmitOnEnter { get => (bool)GetValue(SubmitOnEnterProperty); set => SetValue(SubmitOnEnterProperty, value); }
     public int MaxSuggestions { get => (int)GetValue(MaxSuggestionsProperty); set => SetValue(MaxSuggestionsProperty, value); }
     public ObservableCollection<MentionChannel> Channels { get => (ObservableCollection<MentionChannel>)GetValue(ChannelsProperty); set => SetValue(ChannelsProperty, value); }
+    public event EventHandler<string>? Submitted;
     private readonly Popup _popup = new() { StaysOpen = false, Placement = PlacementMode.Bottom, AllowsTransparency = true };
     private readonly ListBox _list = new() { BorderThickness = new Thickness(0), Padding = new Thickness(4), MinWidth = 240 };
     private readonly Border _popupSurface = new() { Padding = new Thickness(4), CornerRadius = new CornerRadius(14), BorderThickness = new Thickness(1) };
     private string _trigger = string.Empty; private char _symbol = '@';
     static MentionInput() => DefaultStyleKeyProperty.OverrideMetadata(typeof(MentionInput), new FrameworkPropertyMetadata(typeof(MentionInput)));
-    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); AcceptsReturn = true; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += (_, _) => RefreshSuggestions(); KeyDown += OnKeyDown; LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p.Name); else if (_list.SelectedItem is MentionChannel c) Choose(c.Name); }; _popup.Child = _popupSurface; }
+    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += (_, _) => RefreshSuggestions(); KeyDown += OnKeyDown; LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p.Name); else if (_list.SelectedItem is MentionChannel c) Choose(c.Name); }; _popup.Child = _popupSurface; }
+    private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
+    {
+        try
+        {
+            var screen = PointToScreen(new Point(0, ActualHeight));
+            var below = screen.Y + popupSize.Height + 6 <= SystemParameters.WorkArea.Bottom;
+            return [new CustomPopupPlacement(new Point(0, below ? targetSize.Height + 6 : -popupSize.Height - 6), PopupPrimaryAxis.Vertical)];
+        }
+        catch { return [new CustomPopupPlacement(new Point(0, targetSize.Height + 6), PopupPrimaryAxis.Vertical)]; }
+    }
     private void RefreshSuggestions()
     {
         var caret = CaretIndex; var before = Text[..Math.Clamp(caret, 0, Text.Length)]; var at = before.LastIndexOf('@'); var hash = before.LastIndexOf('#'); var start = Math.Max(at, hash);
@@ -37,18 +48,16 @@ public class MentionInput : TextBox
         if (_list.Items.Count > 0)
         {
             _popup.HorizontalOffset = 0;
-            try
-            {
-                var screen = PointToScreen(new Point(0, ActualHeight));
-                _popup.Placement = screen.Y + 300 > SystemParameters.WorkArea.Bottom ? PlacementMode.Top : PlacementMode.Bottom;
-            }
-            catch { _popup.Placement = PlacementMode.Bottom; }
         }
         _popup.IsOpen = _list.Items.Count > 0;
     }
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
-        if (!_popup.IsOpen) return;
+        if (!_popup.IsOpen)
+        {
+            if (e.Key == Key.Enter && SubmitOnEnter) { Submitted?.Invoke(this, Text); e.Handled = true; }
+            return;
+        }
         if (e.Key == Key.Down) { _list.SelectedIndex = Math.Min(_list.SelectedIndex + 1, _list.Items.Count - 1); e.Handled = true; }
         else if (e.Key == Key.Up) { _list.SelectedIndex = Math.Max(_list.SelectedIndex - 1, 0); e.Handled = true; }
         else if (e.Key is Key.Enter or Key.Tab && _list.SelectedItem is object selected) { if (selected is MentionPerson person) Choose(person.Name); else if (selected is MentionChannel channel) Choose(channel.Name); e.Handled = true; }

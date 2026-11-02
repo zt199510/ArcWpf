@@ -3,20 +3,24 @@ using System.Windows;
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Runtime.CompilerServices;
 
 namespace ArcWpf.Controls;
 
-public sealed class TimelineEvent
+public sealed class TimelineEvent : INotifyPropertyChanged
 {
+    private DateTime _at = DateTime.Now; private string _title = string.Empty, _actor = string.Empty, _meta = string.Empty, _detail = string.Empty, _tone = "neutral"; private bool _isExpanded;
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
-    public DateTime At { get; set; } = DateTime.Now;
-    public string Title { get; set; } = string.Empty;
-    public string Actor { get; set; } = string.Empty;
-    public string Meta { get; set; } = string.Empty;
-    public string Detail { get; set; } = string.Empty;
-    public string Tone { get; set; } = "neutral";
-    public bool IsExpanded { get; set; }
+    public DateTime At { get => _at; set => Set(ref _at, value); }
+    public string Title { get => _title; set => Set(ref _title, value); }
+    public string Actor { get => _actor; set => Set(ref _actor, value); }
+    public string Meta { get => _meta; set => Set(ref _meta, value); }
+    public string Detail { get => _detail; set => Set(ref _detail, value); }
+    public string Tone { get => _tone; set => Set(ref _tone, value); }
+    public bool IsExpanded { get => _isExpanded; set => Set(ref _isExpanded, value); }
     public DateTime DayKey => At.ToLocalTime().Date;
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private void Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return; field = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); if (name == nameof(At)) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DayKey))); }
 }
 
 public class Timeline : Control
