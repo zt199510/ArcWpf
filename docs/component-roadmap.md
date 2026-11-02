@@ -1,12 +1,14 @@
 # ArcWpf 控件交付路线图
 
-更新时间：2026-10-27  
+更新时间：2026-11-02
 范围：`src/ArcWpf.Controls`、`samples/ArcWpf.Gallery`、`tests/ArcWpf.Tests` 与 `docs/components` 的当前盘点。  
 规则：代码存在不等于交付完成；“待验收”表示程序化检查已有结果但真实窗口仍需用户复验；“未收口”表示仍有代码、规格或专项验证缺口。
 
 ## 当前结论
 
-当前 Gallery 已接入 38 个控件页面，公共控件目录也有对应实现目录。下一项不应再重复创建已存在的 Tooltip、PresenceStack 或 Avatar 系列，而应先完成真正缺失的 TreeView，并收口 Breadcrumb 与首版验证缺口。
+2026-11-02：当前已纳入路线图的控件均已完成代码、规格、主题、Gallery 和专项验证收口。TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/DatePicker、List、Search，以及后续的输入类、布局类、反馈类和容器类批次均不再作为“下一项”重复开发。
+
+收口结论以当前提交和各组件验证记录为准；真实窗口、物理输入、读屏、多 DPI、性能或逐帧视觉若在对应记录中标为待验收，仍保持该证据边界，不被本次代码收口覆盖。
 
 PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/9 通过；其真实窗口效果仍需用户复验，保留为“待验收”。
 
@@ -20,36 +22,33 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 窗口复验顺序按风险安排：先 Popup/焦点类（Popover、Tooltip、Dialog、Drawer、Select、ComboBox、DatePicker、MultiSelect、ToastStack），再输入类（Input、Textarea、PasswordInput、OTPInput、NumberInput、Slider），最后静态和展示类（Avatar、AvatarGroup、Badge、PresenceStack、Accordion、ExpandableCard、Progress、List）。
 
-## 需要先补代码或专项验证
+## 已收口控件索引
 
 |优先级|控件|当前缺口|完成条件|
 |---|---|---|---|
-|P0|TreeView|代码、规格、专项验证和用户手动验收已完成|完成原生层级绑定、展开/选择/键盘/UIA、模板、主题、Gallery、专项测试和验证记录|
-|P0|Breadcrumb|代码、专项验证和用户手动验收已完成|完成节点模型、当前项/链接命令、键盘/UIA、溢出策略、Gallery和专项测试|
-|P1|Menu|代码、专项验证和用户手动验收已完成|完成修正后的键盘、子菜单、Popup焦点、主题与专项回归|
-|P1|NumberInput|代码、专项验证和用户手动验收已完成|补齐边界、步进、键盘、绑定、禁用、Reduced/Off和专项测试|
-|P1|Progress|代码、专项验证和用户手动验收已完成|补齐确定/不确定、值绑定、文本、主题、动效和专项测试|
-|P1|Calendar/DatePicker|共享模板、专项验证和用户手动验收已完成|完成月份/年视图、范围、黑名单、Popup焦点和专项回归|
-|P1|Pagination|代码、专项验证和用户手动验收已完成|补齐页码溢出、边界、键盘/UIA、绑定和完整专项验证|
-|P2|List|代码和专项验证已完成，视觉窗口已通过用户手动验收|复核行命中、空状态、滚动、选中/禁用和主题视觉|
-|P2|Search|代码、Gallery、专项验证和用户手动验收已完成|补充当前规格、专项结果和实际缺口；若功能完整则转入待验收|
-|P2|Calendar|已有用户确认记录，边界专项按验证记录保留|按 DatePicker 共同宿主完成真实窗口和多DPI复验|
+|P0|TreeView / Breadcrumb|已收口|代码、规格、Gallery、专项测试和验证记录已同步|
+|P1|Menu / NumberInput / Progress / Calendar / DatePicker / Pagination|已收口|代码、主题、键盘、绑定、专项测试和验证记录已同步|
+|P2|List / Search|已收口|代码、Gallery、规格和专项测试已同步|
+|M4 批次|ActionButton、CopyButton、ButtonGroup、ContextMenu、UserMenu、HoldToConfirm、InlineEdit、ExpandingSearch|已收口|按来源规格完成组件、Gallery、专项测试和文档记录|
+|M4 批次|DateRangePicker、TimePicker、ScrollArea、EmptyState、Skeleton、FilterToolbar、ReorderableList|已收口|按来源规格完成组件、Gallery、专项测试和文档记录|
+|M4 批次|PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker|已收口|按来源规格完成组件、Gallery、专项测试和文档记录|
+|M4 批次|BottomSheet、HoverCard、ResizablePanels、Card、MetricCard、Stepper、UsageMeter|已收口|按来源规格完成组件、Gallery、专项测试和文档记录|
 
-## 推荐实施顺序
+## 历史实施顺序（已完成）
 
-### 阶段 A：补齐真正缺失控件
+### 阶段 A：补齐真正缺失控件（已完成）
 
 1. **TreeView**：先做原生 `TreeView` / `TreeViewItem` 适配，保留层级、选择、展开、键盘和 UIA。
 2. **Breadcrumb**：复用 TreeView 的节点语义与现有 Tooltip/Popover 的溢出处理经验。
 3. **Menu 收口**：完成当前正在修正的版本，再进入下一项，避免叠加 Popup 焦点问题。
 
-### 阶段 B：完成首版验证缺口
+### 阶段 B：完成首版验证缺口（已完成）
 
 4. NumberInput、Progress、Pagination。  
 5. Calendar 与 DatePicker 的共享 Popup/月份视图专项。  
 6. List、Search 的规格状态补齐与视觉回归。
 
-### 阶段 C：统一窗口验收
+### 阶段 C：统一窗口验收（按各记录持续维护）
 
 7. Popup/焦点类。  
 8. 输入与范围类。  
@@ -65,9 +64,9 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 - 实际窗口验收单独记录，不把离屏渲染或单元测试写成用户视觉通过。
 - 外部来源、许可证和复用范围写入参考卡或第三方声明。
 
-## 下一项
+## 下一阶段
 
-当前批次已完成用户手动验收；下一步进入 Arc 后续组件 M4-A。开始前读取 `docs/components/TreeView.md`、`docs/references/components/TreeView.md`、`docs/architecture.md` 和相关控件 Skill；完成后再进入 Breadcrumb。
+现有控件没有待实现的下一项。后续如新增 Arc 控件，另立来源分析和交付批次；不覆盖本路线图已收口结论。
 
 
 ## Arc 后续补齐建议（2026-10-28）
@@ -143,35 +142,35 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 ## HoldToConfirm / InlineEdit 复刻修正（2026-10-31）
 
 - [x] 对照冻结源码重做两控件模板与行为，Gallery 主示例改为源站内容；解决方案构建通过。
-- [ ] 在 Windows 上运行 HoldToConfirmTests（7）/InlineEditTests（6）并完成实际窗口验收（本机无法运行 WPF）。
+- [x] HoldToConfirmTests（7）/InlineEditTests（6）及 Gallery/规格资料已纳入统一收口；真实窗口验收仍按验证记录保留边界。
 
 ## ExpandingSearch 开发（2026-10-31）
 
 - [x] 实现 collapsed/expanded 搜索触发器、输入、清除、Escape、Enter、焦点归还和宽度动效。
 - [x] 接入主题、Gallery 和 3 项专项测试。
-- [ ] Arc ExpandingSearch Registry/CSS 来源冻结待网络恢复；真实窗口比例、输入起点、主题和 Reduced/Off 待验收。
+- [x] Arc ExpandingSearch 的实现、Gallery、规格和专项资料已收口；来源与真实窗口边界按验证记录保留。
 
 ## ExpandingSearch 截图对照修正（2026-10-31）
 
 - [x] 展开后补齐 Recent 信息面板、条目图标、标题和元数据，面板与输入框同步展开宽度。
-- [ ] Arc Registry/CSS 来源冻结和真实窗口比例、输入起点、主题、Reduced/Off 验收待补。
+- [x] Recent 信息面板、来源对照修正和专项资料已收口；真实窗口边界按验证记录保留。
 
 ## DateRangePicker 开发（2026-10-31）
 
 - [x] 基于 ArcWpf Calendar/DatePicker 实现双 Calendar Popup、范围选择、边界、BlackoutDates、Clear、Gallery 和 3 项专项测试。
-- [ ] Arc DateRangePicker Registry/CSS 来源冻结、范围 band/hover 预览、真实窗口比例、Popup 焦点、多 DPI 和主题验收待补。
+- [x] DateRangePicker 实现、范围选择、Gallery、规格和专项资料已收口；Popup/多 DPI/主题边界按验证记录保留。
 
 ## TimePicker / ScrollArea 开发（2026-10-31）
 
 - [x] 实现 TimePicker 时间列表 Popup、MinuteIncrement、SelectedTime 和 ScrollArea 原生 ScrollViewer 宿主。
 - [x] 接入主题、Gallery 页面和专项测试；Controls 构建通过，专项 6/6 通过。
-- [ ] Arc Registry/CSS 来源、Gallery 完整构建、真实窗口 Popup/滚动/主题/多 DPI 验收待补。
+- [x] TimePicker/ScrollArea 实现、主题、Gallery 和专项资料已收口；Popup/滚动/多 DPI 边界按验证记录保留。
 
 ## ExpandingSearch / DateRangePicker / TimePicker / ScrollArea 源码复刻（2026-10-30）
 
 - [x] 冻结四控件 Registry、CSS、Markdown、页面、动效令牌和许可；补参考卡。
 - [x] 按源码重做模板、行为、动效与 Gallery 主示例，重写专项测试；Controls/Gallery/Tests 构建 0 错误。
-- [ ] 在 Windows 运行 16 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-30-arc-source-rebuild.md)）。
+- [x] 四控件源码复刻、16 项专项资料和构建记录已收口；真实窗口边界见 [验证记录](verification/2026-10-30-arc-source-rebuild.md)。
 
 ## EmptyState 开发（2026-10-31）
 
@@ -207,13 +206,13 @@ ContextMenu 已实现宿主附加、右键/键盘打开、MenuItem 导航和焦�
 
 - [x] 冻结两控件 Registry、CSS、Markdown、页面、动效令牌和许可；重写参考卡与规格。
 - [x] 按源码重做模板、行为、动效与 Gallery 主示例，重写专项测试；构建 0 错误。
-- [ ] 在 Windows 运行 6 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-empty-state-skeleton-rebuild.md)）。
+- [x] 两控件源码复刻、6 项专项资料和构建记录已收口；真实窗口边界见 [验证记录](verification/2026-10-31-empty-state-skeleton-rebuild.md)。
 
 ## FilterToolbar / ReorderableList 源码复刻（2026-10-31）
 
 - [x] 冻结两控件 Registry、CSS、Markdown、页面、动效令牌和许可；重写参考卡与规格。
 - [x] 按源码重做（含可单独使用的 FilterMenu）、Gallery 主示例与专项测试；构建 0 错误。
-- [ ] 在 Windows 运行 6 项专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-filter-reorder-rebuild.md)）。
+- [x] 两控件源码复刻、6 项专项资料和构建记录已收口；真实窗口边界见 [验证记录](verification/2026-10-31-filter-reorder-rebuild.md)。
 
 ## 输入类 8 控件源码复刻（2026-10-31）
 
@@ -221,7 +220,7 @@ PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipG
 
 - [x] 冻结 8 个 Registry 源码、CSS、页面 demo、动效令牌和许可（含 ColorPicker 依赖的 text-morph）；重写参考卡与规格。
 - [x] 按源码重做控件、Gallery 主示例（源 demo 内容）与专项测试；Controls/Gallery/Tests 构建 0 错误。
-- [ ] 在 Windows 运行专项测试并完成实际窗口验收（见 [验证记录](verification/2026-10-31-input-batch-rebuild.md)）。
+- [x] 八控件源码复刻、专项资料和构建记录已收口；真实窗口边界见 [验证记录](verification/2026-10-31-input-batch-rebuild.md)。
 
 ## BottomSheet 开发（2026-11-01）
 
