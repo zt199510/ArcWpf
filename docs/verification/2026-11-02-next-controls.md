@@ -42,3 +42,5 @@
 - 修复前：Compact Countdown 在三列 Grid 中被垂直拉伸，倒计时贴在列顶部，剩余区域形成明显空白。
 - 修复：Countdown 模板根 `Shell` 增加 `VerticalAlignment="Center"`，只让内部内容参与自身高度测量并在列内垂直居中。
 - 修复后：倒计时胶囊位于 AvatarUpload 与 AnimatedCounter 同一视觉中心线，空白区域消失；截图来自当前构建的 Gallery 实例。
+
+- 同一窗口复验还发现 EmojiPicker 触发按钮在目录排序下显示 `〰️`，当前字体将其绘制成“~~”；已固定默认入口为 `😀`，并增加 `NextArcControlsTests` 回归断言，避免数据目录顺序再次改变入口视觉。

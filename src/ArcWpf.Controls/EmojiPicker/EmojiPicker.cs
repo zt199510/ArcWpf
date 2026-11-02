@@ -65,7 +65,8 @@ public class EmojiPicker : Control
     public EmojiPicker()
     {
         Emojis = new ObservableCollection<string>(EmojiCatalog.Items.Select(item => item.Emoji));
-        SelectedEmoji = Emojis[0]; RecentEmojis = new ObservableCollection<string>();
+        // Arc 的触发按钮使用一个稳定、可识别的默认表情，而不是依赖 Unicode 目录排序。
+        SelectedEmoji = Emojis.Contains("😀") ? "😀" : Emojis[0]; RecentEmojis = new ObservableCollection<string>();
         DefaultRecent = new ObservableCollection<string>(["😀", "😂", "😍", "🥳", "👍", "👎", "👏", "🙏", "🔥", "🎉", "🚀", "💡", "❤️", "😎", "🤔", "✅", "❌", "✨"]);
     }
     public override void OnApplyTemplate()
