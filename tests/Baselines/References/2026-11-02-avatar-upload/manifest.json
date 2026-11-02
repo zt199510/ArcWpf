@@ -1,0 +1,20 @@
+{
+  "component": "avatar-upload",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/avatar-upload.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/avatar-upload/markdown",
+    "page.html": "https://uiarc.dev/components/avatar-upload",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "a73ed81e6db577473e3ebe34fa0df3c623ec9308671a60d84d0d5ae9028ea832",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "83f7fb8126de7adf4c2e6e6f5ebd4eb2110b944e72651c39802113ebf70f2c07"
+  },
+  "errors": [
+    "registry.json: Response status code does not indicate success: 404 (Not Found)."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "component": "announcement-bar",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/announcement-bar.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/announcement-bar/markdown",
+    "page.html": "https://uiarc.dev/components/announcement-bar",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "37fbd924ce16708ef43e4d67305a8f21b6d329d47ae23804e850e8be215293ba",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "c9c1e67b82e4a24f95d94e75d7501134c647e7f5276d8762875f74917c16658e",
+    "registry.json": "49bbb978ec4ec6e062323d2bc0ec9a70a457c37e4b5f3f751371595e9c009444",
+    "registry/registry/components/announcement-bar/announcement-bar.module.css": "d181f87bcab4aefb55f14cca268fba1c237b07bf81fb969b43f4019b7902b50c",
+    "registry/registry/components/announcement-bar/announcement-bar.tsx": "2c17869b4bf7065e5c4ec05a9a7ca473d28cdd1035e6ebc26fd710aeb44dd8dd"
+  },
+  "errors": []
+}

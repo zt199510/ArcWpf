@@ -1,0 +1,21 @@
+{
+  "component": "countdown",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/countdown.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/countdown/markdown",
+    "page.html": "https://uiarc.dev/components/countdown",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "82c944a5630f19568b59e14d77c652325c575b9ffe7a84255b0b8973734d59b4",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "81c80197ba45aad8343b6f07f27889b27cef827b2c966e005050b7f55a142ee2",
+    "registry.json": "50010a052d2c94240c11097d10b385dd88c6738823dcd4741ffc9d5ceb9cc95b",
+    "registry/registry/components/countdown/countdown.module.css": "97b99d7435bd26f25a154e3cef9eb0f74edae3c50cac8c98cc6391602f00c59e",
+    "registry/registry/components/countdown/countdown.tsx": "41717eb6d74e220d6f7cb9bfd8c418c83666bac44e049a3c19eeb2562ff83d5b"
+  },
+  "errors": []
+}

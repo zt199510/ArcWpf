@@ -1,0 +1,21 @@
+{
+  "component": "timeline",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/timeline.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/timeline/markdown",
+    "page.html": "https://uiarc.dev/components/timeline",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "58eee3cef09811d5a302c9c4e9bd5490081d602d86328c7a8665eeae2daac737",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "3797b07c6acf5b753e9088f6c109b18676bcb5f32c92cb2fa963c9d8f44b2651",
+    "registry.json": "4f64ebb8bfd686c953bad14217d50fedfd605ea8bb5dfdecc33b6b94de86824a",
+    "registry/registry/components/timeline/timeline.module.css": "34712f6b90d29cbc326f1115ee2588d330d729f63d661d7c2c80432b3585115c",
+    "registry/registry/components/timeline/timeline.tsx": "ea458dc8893e9f70957e027859501f29af48e85e06915ead7443eb8e31635490"
+  },
+  "errors": []
+}

@@ -1,0 +1,21 @@
+{
+  "component": "mention-input",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/mention-input.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/mention-input/markdown",
+    "page.html": "https://uiarc.dev/components/mention-input",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "3c1b70b5fe066785faa7ff71b26a0958c72b96db54c0397445d0125273e4cc6a",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "45cbc99e75906d05ace0aed7093ff8759212bc0d0373941d54d97d957952d521",
+    "registry.json": "c21ce343119e9c6a57de88ffd96ddfdeaf695e9a8c3d1a9740d7da88512dfbb6",
+    "registry/registry/components/mention-input/mention-input.module.css": "ff715146d8d89a0bacf9dfb80747e53f243816a610dd9921637a1d594b718e72",
+    "registry/registry/components/mention-input/mention-input.tsx": "aef3f5eb1bcf6f83cc5ef8a8f6dd4d064ce5dc57373ca2cf47e1d4079a489b91"
+  },
+  "errors": []
+}

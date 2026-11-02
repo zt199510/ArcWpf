@@ -1,0 +1,21 @@
+{
+  "component": "animated-counter",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/animated-counter.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/animated-counter/markdown",
+    "page.html": "https://uiarc.dev/components/animated-counter",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "ca77c7a30a109cd4787e29d6a365eee101c2de0839865ac4b0dbb129d615b532",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "4eac31fe650e7f23879e1c50a14ed88400ba2e3c6534ab144ecff684d1e8267c",
+    "registry.json": "01046ee4db66aa33671f460ee76bbae54db7b0059a9ccde4b77da4548ac5453a",
+    "registry/registry/components/animated-counter/animated-counter.module.css": "33b7d7f0081f4fd3907a4fafcff64444581845a58cb7b0b7844c394a2e254adf",
+    "registry/registry/components/animated-counter/animated-counter.tsx": "2542f8bcd8a413c7a846d440d917a3c11a77f4e016014dfdd242c4549df01750"
+  },
+  "errors": []
+}

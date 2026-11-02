@@ -1,0 +1,21 @@
+{
+  "component": "file-dropzone",
+  "collectedAt": "2026-11-02",
+  "sourceUrls": {
+    "registry.json": "https://uiarc.dev/r/file-dropzone.json",
+    "motion.json": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "component.md": "https://uiarc.dev/components/file-dropzone/markdown",
+    "page.html": "https://uiarc.dev/components/file-dropzone",
+    "license.html": "https://uiarc.dev/license"
+  },
+  "files": {
+    "component.md": "c5b505bad479627962a3278e90fba50742c3e11a9e583b543c7180f68831c5b0",
+    "license.html": "5634f0095971b97a0d41be7ef22b9ca00cd15df9817420bf680baa4d57d3d8a2",
+    "motion.json": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+    "page.html": "d81585a76a79e632c331586a56d954211a2035c591073584241b778a664588b6",
+    "registry.json": "0b0fad78d270197ae9e6d77fd4b77404d724fdcc8071020b788c4b6d9cbaa736",
+    "registry/registry/components/file-dropzone/file-dropzone.module.css": "0d1cc9a41e724b04727f3392e29ef588c0211db4745bc87b784da999b03a2ef4",
+    "registry/registry/components/file-dropzone/file-dropzone.tsx": "1702b59c1f5e236733a9761636d25213485cbbd12b7887cc078467638d9dc283"
+  },
+  "errors": []
+}
