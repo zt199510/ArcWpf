@@ -20,4 +20,5 @@ public sealed class NextArcControlsTests
     [TestMethod] public void MentionInputRetainsNativeTextEditing() => Sta.Run(() => { var input = new MentionInput { Text = "@Ada" }; Assert.AreEqual("@Ada", input.Text); Assert.IsTrue(input.AcceptsReturn); });
     [TestMethod] public void EmojiPickerHasDefaultPalette() => Sta.Run(() => { var picker = new EmojiPicker(); Assert.IsGreaterThan(10, picker.Emojis.Count); });
     [TestMethod] public void EmojiPickerTracksRecentLimit() => Sta.Run(() => { var picker = new EmojiPicker { MaxRecent = 1 }; picker.SelectEmoji("😀"); picker.SelectEmoji("🎉"); Assert.HasCount(1, picker.RecentEmojis); Assert.AreEqual("🎉", picker.RecentEmojis[0]); });
+    [TestMethod] public void EmojiPickerExposesCategorySelection() => Sta.Run(() => { var picker = new EmojiPicker { SelectedCategory = "Symbols" }; Assert.AreEqual("Symbols", picker.SelectedCategory); });
 }
