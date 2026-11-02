@@ -1,5 +1,9 @@
 # ArcWpf 实施计划
 
+## 2026-11-02 Arc 后续展示与输入批次
+
+AnnouncementBar、AnimatedCounter、Countdown、Timeline、AvatarUpload、FileDropzone、MentionInput、EmojiPicker 已完成来源冻结、WPF 首版实现、Arc 主题模板、Gallery 示例和基础专项测试。Controls 与 Gallery 构建通过，8 项专项测试通过；实际窗口视觉、Popup 碰撞、中文 IME、DPI、拖放和逐帧动效仍按验证记录待验收。AvatarUpload、EmojiPicker 属于 Pro 页面公开资料独立实现，未使用 Pro Registry 源码。
+
 ## 2026-11-02 控件批次统一收口
 
 用户确认当前所有纳入范围的控件均已完成收口。当前状态覆盖控件实现、依赖属性与模板、主题、Gallery、规格/参考卡、专项测试、动效清理和验证记录；最近批次的精确专项结果以各自验证记录为准，未把全量测试或未执行的真实窗口项目虚构为通过。

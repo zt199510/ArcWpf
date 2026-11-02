@@ -78,6 +78,14 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ActionSwap/Themes/ActionSwapTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/UndoToast/Themes/UndoToastTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandableText/Themes/ExpandableTextTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Countdown/Themes/CountdownTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/AnimatedCounter/Themes/AnimatedCounterTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/AnnouncementBar/Themes/AnnouncementBarTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Timeline/Themes/TimelineTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/FileDropzone/Themes/FileDropzoneTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/AvatarUpload/Themes/AvatarUploadTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/MentionInput/Themes/MentionInputTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/EmojiPicker/Themes/EmojiPickerTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

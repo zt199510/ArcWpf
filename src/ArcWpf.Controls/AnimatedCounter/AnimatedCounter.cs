@@ -1,0 +1,49 @@
+using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
+using System.Windows.Media;
+
+namespace ArcWpf.Controls;
+
+public class AnimatedCounter : Control
+{
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(AnimatedCounter), new FrameworkPropertyMetadata(0d, OnValueChanged));
+    public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty PrefixProperty = DependencyProperty.Register(nameof(Prefix), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty SuffixProperty = DependencyProperty.Register(nameof(Suffix), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty DecimalsProperty = DependencyProperty.Register(nameof(Decimals), typeof(int), typeof(AnimatedCounter), new PropertyMetadata(0, OnValueChanged));
+    public static readonly DependencyProperty LocaleProperty = DependencyProperty.Register(nameof(Locale), typeof(string), typeof(AnimatedCounter), new PropertyMetadata("en-US", OnValueChanged));
+    public static readonly DependencyProperty AnimateOnViewProperty = DependencyProperty.Register(nameof(AnimateOnView), typeof(bool), typeof(AnimatedCounter), new PropertyMetadata(false));
+    public double Value { get => (double)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
+    public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+    public string Prefix { get => (string)GetValue(PrefixProperty); set => SetValue(PrefixProperty, value); }
+    public string Suffix { get => (string)GetValue(SuffixProperty); set => SetValue(SuffixProperty, value); }
+    public int Decimals { get => (int)GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
+    public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
+    public bool AnimateOnView { get => (bool)GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
+    private TextBlock? _valueText;
+    static AnimatedCounter() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnimatedCounter), new FrameworkPropertyMetadata(typeof(AnimatedCounter)));
+    public override void OnApplyTemplate() { base.OnApplyTemplate(); _valueText = GetTemplateChild("PART_Value") as TextBlock; UpdateText(false); if (AnimateOnView && IsLoaded) AnimateIn(); }
+    protected override void OnInitialized(EventArgs e) { base.OnInitialized(e); Loaded += (_, _) => { if (AnimateOnView) AnimateIn(); }; }
+    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnimatedCounter)d).UpdateText(true);
+    private void UpdateText(bool animate)
+    {
+        if (_valueText is null) return;
+        string text; try { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.GetCultureInfo(Locale)); } catch { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.InvariantCulture); }
+        var previous = _valueText.Text; _valueText.Text = Prefix + text + Suffix;
+        if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full)
+        {
+            var move = _valueText.RenderTransform as TranslateTransform ?? new TranslateTransform(); _valueText.RenderTransform = move;
+            move.Y = string.CompareOrdinal(previous, _valueText.Text) > 0 ? 6 : -6; _valueText.Opacity = .35;
+            move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            _valueText.BeginAnimation(OpacityProperty, new DoubleAnimation(0.35, 1, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+        }
+    }
+    private void AnimateIn()
+    {
+        if (_valueText is null) return;
+        _valueText.Opacity = ArcMotion.GetLevel(this) == ArcMotionLevel.Off ? 1 : 0;
+        if (ArcMotion.GetLevel(this) != ArcMotionLevel.Off) _valueText.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromSeconds(.3)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+    }
+}

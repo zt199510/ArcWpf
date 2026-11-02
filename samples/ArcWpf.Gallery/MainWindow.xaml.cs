@@ -25,6 +25,7 @@ public partial class MainWindow : Window
     {
         var groups = new[]
         {
+            Group("arc-next", "Arc next", ("arc-next-batch", "Arc Next Batch", new ArcNextBatchPage())),
             Group("data", "数据", ("code-block", "CodeBlock", new CodeBlockPage()), ("json-viewer", "JSONViewer", new JSONViewerPage()), ("sortable-data-table", "SortableDataTable", new SortableDataTablePage()), ("tree-table", "TreeTable", new TreeTablePage())),
             Group("new-interactions", "新交互", ("theme-switch", "ThemeSwitch", new ThemeSwitchPage()), ("toggle-group", "ToggleGroup", new ToggleGroupPage()), ("action-swap", "ActionSwap", new ActionSwapPage()), ("undo-toast", "UndoToast", new UndoToastPage()), ("expandable-text", "ExpandableText", new ExpandableTextPage())),
             Group("basic", "基础", ("button", "Button", new ButtonPage()), ("action-button", "ActionButton", new ActionButtonPage()), ("copy-button", "CopyButton", new CopyButtonPage()), ("split-button", "SplitButton", new SplitButtonPage()), ("button-group", "ButtonGroup", new ButtonGroupPage()), ("switch", "Switch", new SwitchPage()), ("input", "Input", new InputPage()), ("password-input", "PasswordInput", new PasswordInputPage()), ("otp-input", "OTPInput", new OTPInputPage()), ("segmented-control", "SegmentedControl", new SegmentedControlPage()), ("textarea", "Textarea", new TextareaPage()), ("search", "Search", new SearchPage()), ("calendar", "Calendar", new CalendarPage()), ("date-picker", "DatePicker", new DatePickerPage())),

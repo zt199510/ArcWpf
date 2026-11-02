@@ -6,6 +6,8 @@
 
 ## 当前结论
 
+2026-11-02：AnnouncementBar、AnimatedCounter、Countdown、Timeline、AvatarUpload、FileDropzone、MentionInput、EmojiPicker 已建立 WPF 控件、Arc 主题模板、Gallery 合并示例与基础专项测试。Controls/Gallery 构建通过，专项测试 8/8 通过；真实窗口视觉、Popup、IME、拖放、DPI 与逐帧动效仍待验收。AvatarUpload 和 EmojiPicker 为 Arc Pro 公开资料独立实现，未复用 Pro 源码。
+
 2026-11-02：当前已纳入路线图的控件均已完成代码、规格、主题、Gallery 和专项验证收口。TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/DatePicker、List、Search，以及后续的输入类、布局类、反馈类和容器类批次均不再作为“下一项”重复开发。
 
 收口结论以当前提交和各组件验证记录为准；真实窗口、物理输入、读屏、多 DPI、性能或逐帧视觉若在对应记录中标为待验收，仍保持该证据边界，不被本次代码收口覆盖。

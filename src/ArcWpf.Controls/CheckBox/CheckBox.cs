@@ -137,7 +137,7 @@ public class CheckBox : System.Windows.Controls.CheckBox
         void Begin(AnimationTimeline? value) { if(target is UIElement ui) ui.BeginAnimation(property,value); else ((Animatable)target).BeginAnimation(property,value); }
         Track(() => Begin(null), animation); Begin(animation);
     }
-    private void Track(Action stop, Timeline animation)
+    private void Track(Action stop, System.Windows.Media.Animation.Timeline animation)
     {
         int generation = _generation; _stops.Add(stop);
         animation.Completed += (_, _) => { if(generation != _generation) return; stop(); _stops.Remove(stop); };
