@@ -63,9 +63,16 @@ public class MentionInput : TextBox
     {
         try
         {
-            var screen = PointToScreen(new Point(0, ActualHeight));
-            var below = screen.Y + popupSize.Height + 6 <= SystemParameters.WorkArea.Bottom;
-            return [new CustomPopupPlacement(new Point(0, below ? targetSize.Height + 6 : -popupSize.Height - 6), PopupPrimaryAxis.Vertical)];
+            var caret = GetRectFromCharacterIndex(Math.Clamp(CaretIndex, 0, Text.Length), true);
+            if (caret.IsEmpty || double.IsNaN(caret.X)) caret = new Rect(0, 0, 0, ActualHeight);
+            var screenCaret = PointToScreen(new Point(caret.X, caret.Bottom));
+            var workArea = SystemParameters.WorkArea;
+            var roomBelow = screenCaret.Y + popupSize.Height + 6 <= workArea.Bottom;
+            var roomAbove = screenCaret.Y - caret.Height - popupSize.Height - 6 >= workArea.Top;
+            var below = roomBelow || !roomAbove;
+            var x = Math.Clamp(caret.X, 0, Math.Max(0, ActualWidth - popupSize.Width));
+            var y = below ? caret.Bottom + 6 : caret.Top - popupSize.Height - 6;
+            return [new CustomPopupPlacement(new Point(x, y), PopupPrimaryAxis.Vertical)];
         }
         catch { return [new CustomPopupPlacement(new Point(0, targetSize.Height + 6), PopupPrimaryAxis.Vertical)]; }
     }
@@ -78,10 +85,6 @@ public class MentionInput : TextBox
         _list.ItemsSource = (_symbol == '@' ? People.Where(p => p.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)).Cast<object>() : Channels.Where(c => c.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)).Cast<object>()).Take(Math.Max(1, MaxSuggestions)).ToList();
         _list.SelectedIndex = _list.Items.Count > 0 ? 0 : -1;
         _popup.PlacementTarget = this;
-        if (_list.Items.Count > 0)
-        {
-            _popup.HorizontalOffset = 0;
-        }
         _popup.IsOpen = _list.Items.Count > 0;
     }
     private void OnKeyDown(object sender, KeyEventArgs e)
