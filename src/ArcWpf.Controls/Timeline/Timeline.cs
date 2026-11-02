@@ -7,12 +7,14 @@ using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
+using System.Collections.Specialized;
 
 namespace ArcWpf.Controls;
 
 public sealed class TimelineEvent : INotifyPropertyChanged
 {
-    private DateTime _at = DateTime.Now; private string _title = string.Empty, _actor = string.Empty, _meta = string.Empty, _detail = string.Empty, _tone = "neutral"; private bool _isExpanded;
+    private DateTime _at = DateTime.Now; private string _title = string.Empty, _actor = string.Empty, _meta = string.Empty, _detail = string.Empty, _tone = "neutral"; private bool _isExpanded, _isNew;
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public DateTime At { get => _at; set => Set(ref _at, value); }
     public string Title { get => _title; set => Set(ref _title, value); }
@@ -21,6 +23,7 @@ public sealed class TimelineEvent : INotifyPropertyChanged
     public string Detail { get => _detail; set => Set(ref _detail, value); }
     public string Tone { get => _tone; set => Set(ref _tone, value); }
     public bool IsExpanded { get => _isExpanded; set => Set(ref _isExpanded, value); }
+    public bool IsNew { get => _isNew; internal set => Set(ref _isNew, value); }
     public DateTime DayKey => At.ToLocalTime().Date;
     public string DisplayTime { get; private set; } = string.Empty;
     public string FullTime { get; private set; } = string.Empty;
@@ -43,8 +46,21 @@ public class Timeline : Control
     public string TimeZoneId { get => (string)GetValue(TimeZoneIdProperty); set => SetValue(TimeZoneIdProperty, value); }
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public ObservableCollection<string> DefaultExpanded { get => (ObservableCollection<string>)GetValue(DefaultExpandedProperty); set => SetValue(DefaultExpandedProperty, value); }
+    private bool _hasRendered;
     static Timeline() => DefaultStyleKeyProperty.OverrideMetadata(typeof(Timeline), new FrameworkPropertyMetadata(typeof(Timeline)));
-    public Timeline() { Events = new ObservableCollection<TimelineEvent>(); DefaultExpanded = new ObservableCollection<string>(); Focusable = true; PreviewKeyDown += OnPreviewKeyDown; }
+    public Timeline() { Events = new ObservableCollection<TimelineEvent>(); Events.CollectionChanged += OnEventsChanged; DefaultExpanded = new ObservableCollection<string>(); Focusable = true; PreviewKeyDown += OnPreviewKeyDown; }
+    private void OnEventsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is null) return;
+        foreach (TimelineEvent item in e.NewItems)
+        {
+            item.IsNew = _hasRendered;
+            if (!item.IsNew) continue;
+            var reset = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(520) };
+            reset.Tick += (_, _) => { reset.Stop(); item.IsNew = false; };
+            reset.Start();
+        }
+    }
     private static void OnDefaultExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((Timeline)d).ApplyDefaultExpanded();
     private void ApplyDefaultExpanded()
     {
@@ -54,6 +70,7 @@ public class Timeline : Control
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
+        _hasRendered = true;
         ApplyDefaultExpanded(); UpdateTimeLabels();
         if (GetTemplateChild("PART_Events") is ItemsControl items)
         {
