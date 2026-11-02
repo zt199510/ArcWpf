@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Data;
 
 namespace ArcWpf.Controls;
 
@@ -42,7 +43,23 @@ public class MentionInput : TextBox
     private string _trigger = string.Empty; private char _symbol = '@'; private string _lastText = string.Empty; private int _lastCaret; private bool _changingMentions;
     private MentionTokenAdorner? _tokenAdorner;
     static MentionInput() => DefaultStyleKeyProperty.OverrideMetadata(typeof(MentionInput), new FrameworkPropertyMetadata(typeof(MentionInput)));
-    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; Loaded += OnLoaded; Unloaded += OnUnloaded; SizeChanged += (_, _) => _tokenAdorner?.InvalidateVisual(); LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
+    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _list.MinWidth = 272; _list.MaxHeight = 320; _list.SelectionMode = SelectionMode.Single; _list.ItemTemplateSelector = new SuggestionTemplateSelector(BuildSuggestionTemplate("@", false), BuildSuggestionTemplate("#", true)); _list.ItemContainerStyle = BuildSuggestionContainerStyle(); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; Loaded += OnLoaded; Unloaded += OnUnloaded; SizeChanged += (_, _) => _tokenAdorner?.InvalidateVisual(); LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
+    private static DataTemplate BuildSuggestionTemplate(string glyph, bool channel)
+    {
+        var root = new FrameworkElementFactory(typeof(StackPanel)); root.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal); root.SetValue(FrameworkElement.MarginProperty, new Thickness(2));
+        var icon = new FrameworkElementFactory(typeof(Border)); icon.SetValue(Border.WidthProperty, 28d); icon.SetValue(Border.HeightProperty, 28d); icon.SetValue(Border.CornerRadiusProperty, new CornerRadius(14)); icon.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceMuted");
+        var iconText = new FrameworkElementFactory(typeof(TextBlock)); iconText.SetValue(TextBlock.TextProperty, glyph); iconText.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center); iconText.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center); iconText.SetValue(TextBlock.FontSizeProperty, 12d); icon.AppendChild(iconText); root.AppendChild(icon);
+        var copy = new FrameworkElementFactory(typeof(StackPanel)); copy.SetValue(FrameworkElement.MarginProperty, new Thickness(10, 0, 0, 0));
+        var name = new FrameworkElementFactory(typeof(TextBlock)); name.SetBinding(TextBlock.TextProperty, new Binding("Name")); name.SetValue(TextBlock.FontSizeProperty, 13d); name.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium); name.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis); copy.AppendChild(name);
+        var meta = new FrameworkElementFactory(typeof(TextBlock)); meta.SetBinding(TextBlock.TextProperty, new Binding(channel ? "Description" : "Role")); meta.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted"); meta.SetValue(TextBlock.FontSizeProperty, 11d); meta.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis); copy.AppendChild(meta); root.AppendChild(copy);
+        return new DataTemplate { VisualTree = root };
+    }
+    private static Style BuildSuggestionContainerStyle()
+    {
+        var style = new Style(typeof(ListBoxItem)); style.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(8, 7, 8, 7))); style.Setters.Add(new Setter(Control.MarginProperty, new Thickness(2))); style.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch)); style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(0))); style.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+        var selected = new Trigger { Property = ListBoxItem.IsSelectedProperty, Value = true }; selected.Setters.Add(new Setter(Control.BackgroundProperty, new DynamicResourceExtension("ArcWpf.Brush.AccentSubtle"))); style.Triggers.Add(selected);
+        var hover = new Trigger { Property = ListBoxItem.IsMouseOverProperty, Value = true }; hover.Setters.Add(new Setter(Control.BackgroundProperty, new DynamicResourceExtension("ArcWpf.Brush.SurfaceMuted"))); style.Triggers.Add(hover); return style;
+    }
     private void OnLoaded(object sender, RoutedEventArgs e) { if (_tokenAdorner is not null) return; var layer = AdornerLayer.GetAdornerLayer(this); if (layer is null) return; _tokenAdorner = new MentionTokenAdorner(this); layer.Add(_tokenAdorner); }
     private void OnUnloaded(object sender, RoutedEventArgs e) { if (_tokenAdorner is null) return; AdornerLayer.GetAdornerLayer(this)?.Remove(_tokenAdorner); _tokenAdorner = null; }
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
@@ -126,6 +143,14 @@ public class MentionInput : TextBox
         var tokenText = (kind == MentionKind.Person ? "@" : "#") + name; var token = new MentionToken { Kind = kind, Id = id, Label = name, Start = start, End = start + tokenText.Length };
         _changingMentions = true; try { Text = Text.Remove(start, _trigger.Length + 1).Insert(start, tokenText + " "); Mentions.Add(token); } finally { _changingMentions = false; }
         CaretIndex = token.End + 1; _lastText = Text; _lastCaret = CaretIndex; _popup.IsOpen = false; Focus(); MentionAdded?.Invoke(this, token);
+    }
+
+    private sealed class SuggestionTemplateSelector : DataTemplateSelector
+    {
+        private readonly DataTemplate _person;
+        private readonly DataTemplate _channel;
+        public SuggestionTemplateSelector(DataTemplate person, DataTemplate channel) { _person = person; _channel = channel; }
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) => item is MentionChannel ? _channel : _person;
     }
 
     private sealed class MentionTokenAdorner : Adorner
