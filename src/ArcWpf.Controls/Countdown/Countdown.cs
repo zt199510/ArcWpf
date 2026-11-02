@@ -4,6 +4,7 @@ using System.Windows.Threading;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace ArcWpf.Controls;
 
@@ -27,7 +28,7 @@ public class Countdown : Control
     public static readonly DependencyProperty RemainingProperty = RemainingPropertyKey.DependencyProperty;
     public static readonly RoutedEvent CompletedEvent = EventManager.RegisterRoutedEvent(nameof(Completed), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Countdown));
     private readonly DispatcherTimer _timer = new(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(250) };
-    private TextBlock? _days, _hours, _minutes, _seconds, _compact; private StackPanel? _largeUnits; private readonly Dictionary<CountdownUnit, long> _lastUnitValues = new();
+    private TextBlock? _days, _hours, _minutes, _seconds, _compact; private StackPanel? _largeUnits; private readonly Dictionary<CountdownUnit, long> _lastUnitValues = new(); private readonly Dictionary<CountdownUnit, UnitVisual> _unitViews = new(); private CountdownUnit[] _renderedUnits = [];
     private readonly Dictionary<TextBlock, string> _lastDigits = new();
     public DateTime Target { get => (DateTime)GetValue(TargetProperty); set => SetValue(TargetProperty, value); }
     public string TargetText { get => (string)GetValue(TargetTextProperty); set => SetValue(TargetTextProperty, value); }
@@ -45,7 +46,8 @@ public class Countdown : Control
     {
         base.OnApplyTemplate();
         _days = GetTemplateChild("Days") as TextBlock; _hours = GetTemplateChild("Hours") as TextBlock;
-        _minutes = GetTemplateChild("Minutes") as TextBlock; _seconds = GetTemplateChild("Seconds") as TextBlock; _compact = GetTemplateChild("CompactText") as TextBlock; _largeUnits = GetTemplateChild("LargeUnits") as StackPanel; Update();
+        _minutes = GetTemplateChild("Minutes") as TextBlock; _seconds = GetTemplateChild("Seconds") as TextBlock; _compact = GetTemplateChild("CompactText") as TextBlock; _largeUnits = GetTemplateChild("LargeUnits") as StackPanel;
+        _renderedUnits = []; _unitViews.Clear(); _lastUnitValues.Clear(); Update();
     }
     private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((Countdown)d).Update();
     private static void OnUnitsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((Countdown)d).Update();
@@ -77,18 +79,24 @@ public class Countdown : Control
     private static string ShortLabel(CountdownUnit unit) => unit switch { CountdownUnit.Days => "d", CountdownUnit.Hours => "h", CountdownUnit.Minutes => "m", _ => "s" };
     private void BuildLargeUnits(IReadOnlyList<(CountdownUnit Unit, long Value)> parts)
     {
-        if (_largeUnits is null) return; _largeUnits.Children.Clear();
-        for (var i = 0; i < parts.Count; i++)
+        if (_largeUnits is null) return;
+        var units = parts.Select(part => part.Unit).ToArray();
+        if (!_renderedUnits.SequenceEqual(units))
         {
-            if (i > 0) _largeUnits.Children.Add(new TextBlock { Text = ":", FontSize = 28, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(6, 0, 6, 0) });
-            var stack = new StackPanel(); var value = new TextBlock { Text = parts[i].Value.ToString("00"), FontSize = 32, FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Center }; var label = new TextBlock { Text = UnitLabels[parts[i].Unit], FontSize = 11, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center }; stack.Children.Add(value); stack.Children.Add(label); _largeUnits.Children.Add(stack);
-            if (_lastUnitValues.TryGetValue(parts[i].Unit, out var previous) && previous != parts[i].Value && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full)
+            _largeUnits.Children.Clear(); _unitViews.Clear();
+            for (var i = 0; i < parts.Count; i++)
             {
-                var move = new TranslateTransform { Y = parts[i].Value > previous ? -7 : 7 }; stack.RenderTransform = move; stack.Opacity = .45;
-                move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.2)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
-                stack.BeginAnimation(OpacityProperty, new DoubleAnimation(.45, 1, TimeSpan.FromSeconds(.2)));
+                if (i > 0) _largeUnits.Children.Add(new TextBlock { Text = ":", FontSize = 28, Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(6, 0, 6, 0), VerticalAlignment = VerticalAlignment.Top });
+                var visual = new UnitVisual(UnitLabels[parts[i].Unit], (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray);
+                _unitViews[parts[i].Unit] = visual; _largeUnits.Children.Add(visual);
             }
-            _lastUnitValues[parts[i].Unit] = parts[i].Value;
+            _renderedUnits = units;
+        }
+        foreach (var part in parts)
+        {
+            var previous = _lastUnitValues.TryGetValue(part.Unit, out var old) ? old : part.Value;
+            _unitViews[part.Unit].SetValue(part.Value, previous != part.Value && IsLoaded, part.Value < previous, ArcMotion.GetLevel(this));
+            _lastUnitValues[part.Unit] = part.Value;
         }
     }
     private void SetDigits(TextBlock? block, string value)
@@ -101,6 +109,54 @@ public class Countdown : Control
         block.RenderTransform = move; move.Y = old.CompareTo(value) > 0 ? 7 : -7; block.Opacity = .45;
         move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.2)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
         block.BeginAnimation(OpacityProperty, new DoubleAnimation(.45, 1, TimeSpan.FromSeconds(.2)));
+    }
+    private sealed class UnitVisual : StackPanel
+    {
+        private readonly StackPanel _digits = new() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+        private readonly string _label;
+        private readonly Brush _muted;
+        private readonly List<DigitWheel> _wheels = [];
+        public UnitVisual(string label, Brush muted)
+        {
+            _label = label; _muted = muted; HorizontalAlignment = HorizontalAlignment.Center; _digits.Children.Clear(); Children.Add(_digits);
+            Children.Add(new TextBlock { Text = label, FontSize = 11, Foreground = muted, HorizontalAlignment = HorizontalAlignment.Center });
+        }
+        public void SetValue(long value, bool animate, bool descending, ArcMotionLevel level)
+        {
+            var text = value >= 100 ? value.ToString(CultureInfo.InvariantCulture) : value.ToString("00", CultureInfo.InvariantCulture);
+            if (_wheels.Count != text.Length)
+            {
+                _digits.Children.Clear(); _wheels.Clear();
+                for (var index = 0; index < text.Length; index++) { var wheel = new DigitWheel(); _wheels.Add(wheel); _digits.Children.Add(wheel); }
+            }
+            for (var index = 0; index < text.Length; index++) _wheels[index].SetDigit(text[index], animate, descending, level);
+        }
+    }
+    private sealed class DigitWheel : Grid
+    {
+        private TextBlock? _current;
+        private int _version;
+        public DigitWheel() { Width = 24; Height = 40; ClipToBounds = true; HorizontalAlignment = HorizontalAlignment.Center; }
+        public void SetDigit(char digit, bool animate, bool descending, ArcMotionLevel level)
+        {
+            if (_current?.Text == digit.ToString()) return;
+            var next = new TextBlock { Text = digit.ToString(), FontSize = 32, FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            var old = _current; _current = next; var token = ++_version;
+            if (old is null || !animate || level != ArcMotionLevel.Full)
+            {
+                Children.Clear(); Children.Add(next); next.RenderTransform = new TranslateTransform(); next.Opacity = 1; return;
+            }
+            var direction = descending ? -1 : 1;
+            var oldTransform = new TranslateTransform(); var nextTransform = new TranslateTransform { Y = -direction * Height };
+            old.RenderTransform = oldTransform; next.RenderTransform = nextTransform; next.Opacity = .35; Children.Add(next);
+            var duration = TimeSpan.FromSeconds(.24);
+            oldTransform.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(0, direction * Height, duration) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn } });
+            nextTransform.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(-direction * Height, 0, duration) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            next.BeginAnimation(OpacityProperty, new DoubleAnimation(.35, 1, duration));
+            var cleanup = new DispatcherTimer { Interval = duration };
+            cleanup.Tick += (_, _) => { cleanup.Stop(); if (token != _version) return; Children.Clear(); Children.Add(next); next.RenderTransform = new TranslateTransform(); next.Opacity = 1; };
+            cleanup.Start();
+        }
     }
     private DateTimeOffset ResolveTarget()
     {
