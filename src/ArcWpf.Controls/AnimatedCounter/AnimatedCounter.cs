@@ -22,28 +22,33 @@ public class AnimatedCounter : Control
     public int Decimals { get => (int)GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public bool AnimateOnView { get => (bool)GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
-    private TextBlock? _valueText;
+    private StackPanel? _digitsPanel; private string _displayText = string.Empty;
     static AnimatedCounter() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnimatedCounter), new FrameworkPropertyMetadata(typeof(AnimatedCounter)));
-    public override void OnApplyTemplate() { base.OnApplyTemplate(); _valueText = GetTemplateChild("PART_Value") as TextBlock; UpdateText(false); if (AnimateOnView && IsLoaded) AnimateIn(); }
+    public override void OnApplyTemplate() { base.OnApplyTemplate(); _digitsPanel = GetTemplateChild("PART_Digits") as StackPanel; UpdateText(false); if (AnimateOnView && IsLoaded) AnimateIn(); }
     protected override void OnInitialized(EventArgs e) { base.OnInitialized(e); Loaded += (_, _) => { if (AnimateOnView) AnimateIn(); }; }
     private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnimatedCounter)d).UpdateText(true);
     private void UpdateText(bool animate)
     {
-        if (_valueText is null) return;
+        if (_digitsPanel is null) return;
         string text; try { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.GetCultureInfo(Locale)); } catch { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.InvariantCulture); }
-        var previous = _valueText.Text; _valueText.Text = Prefix + text + Suffix;
-        if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full)
+        var next = Prefix + text + Suffix; var previous = _displayText; _displayText = next; _digitsPanel.Children.Clear();
+        for (var index = 0; index < next.Length; index++)
         {
-            var move = _valueText.RenderTransform as TranslateTransform ?? new TranslateTransform(); _valueText.RenderTransform = move;
-            move.Y = string.CompareOrdinal(previous, _valueText.Text) > 0 ? 6 : -6; _valueText.Opacity = .35;
-            move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
-            _valueText.BeginAnimation(OpacityProperty, new DoubleAnimation(0.35, 1, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            var glyph = new TextBlock { Text = next[index].ToString(), Foreground = (Brush)FindResource("ArcWpf.Brush.Foreground"), FontSize = 32, FontWeight = FontWeights.Medium, FontFamily = (FontFamily)FindResource("ArcWpf.Font.Mono") };
+            if (char.IsDigit(next[index])) glyph.MinWidth = 18;
+            _digitsPanel.Children.Add(glyph);
+            if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full && index < previous.Length && previous[index] != next[index])
+            {
+                var move = new TranslateTransform { Y = string.CompareOrdinal(previous, next) > 0 ? 6 : -6 }; glyph.RenderTransform = move; glyph.Opacity = .35;
+                move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+                glyph.BeginAnimation(OpacityProperty, new DoubleAnimation(.35, 1, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            }
         }
     }
     private void AnimateIn()
     {
-        if (_valueText is null) return;
-        _valueText.Opacity = ArcMotion.GetLevel(this) == ArcMotionLevel.Off ? 1 : 0;
-        if (ArcMotion.GetLevel(this) != ArcMotionLevel.Off) _valueText.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromSeconds(.3)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+        if (_digitsPanel is null) return;
+        _digitsPanel.Opacity = ArcMotion.GetLevel(this) == ArcMotionLevel.Off ? 1 : 0;
+        if (ArcMotion.GetLevel(this) != ArcMotionLevel.Off) _digitsPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromSeconds(.3)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
     }
 }

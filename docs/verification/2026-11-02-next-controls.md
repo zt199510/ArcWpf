@@ -25,3 +25,8 @@
 - FileDropzone 的条目实现属性变更通知，增加上传取消、失败重试和移除入口；上传使用每项独立 `CancellationTokenSource`，取消和失败状态会回写到条目。
 - 补强后的 Controls 构建、Gallery 构建和 `NextArcControlsTests` 8/8 通过；Gallery `--page=arc-next-batch` 实际启动保持运行 4 秒后正常退出。
 - 上述结果仍属于程序与启动验证；Arc Web 与 WPF 的真实尺寸、鼠标高亮、主题切换、DPI 和逐帧动效仍需窗口级对照。
+
+## 数字控件补强
+
+- AnimatedCounter 从整段 TextBlock 动画改为按格式化字符串拆分字符槽，数字、分组分隔符、前后缀分别呈现，变化字符独立上下位移和淡入。
+- 该实现仍是 WPF 字符槽近似，Countdown 的完整多单位自定义集合和真正循环轮仍待继续对齐。
