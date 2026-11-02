@@ -30,11 +30,13 @@ public class MentionInput : TextBox
     public static readonly DependencyProperty MaxSuggestionsProperty = DependencyProperty.Register(nameof(MaxSuggestions), typeof(int), typeof(MentionInput), new PropertyMetadata(6));
     public static readonly DependencyProperty ChannelsProperty = DependencyProperty.Register(nameof(Channels), typeof(ObservableCollection<MentionChannel>), typeof(MentionInput), new PropertyMetadata(null));
     public static readonly DependencyProperty MentionsProperty = DependencyProperty.Register(nameof(Mentions), typeof(ObservableCollection<MentionToken>), typeof(MentionInput), new PropertyMetadata(null));
+    public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(nameof(Placeholder), typeof(string), typeof(MentionInput), new PropertyMetadata("Write a comment, @ to mention", OnPlaceholderChanged));
     public ObservableCollection<MentionPerson> People { get => (ObservableCollection<MentionPerson>)GetValue(PeopleProperty); set => SetValue(PeopleProperty, value); }
     public bool SubmitOnEnter { get => (bool)GetValue(SubmitOnEnterProperty); set => SetValue(SubmitOnEnterProperty, value); }
     public int MaxSuggestions { get => (int)GetValue(MaxSuggestionsProperty); set => SetValue(MaxSuggestionsProperty, value); }
     public ObservableCollection<MentionChannel> Channels { get => (ObservableCollection<MentionChannel>)GetValue(ChannelsProperty); set => SetValue(ChannelsProperty, value); }
     public ObservableCollection<MentionToken> Mentions { get => (ObservableCollection<MentionToken>)GetValue(MentionsProperty); set => SetValue(MentionsProperty, value); }
+    public string Placeholder { get => (string)GetValue(PlaceholderProperty); set => SetValue(PlaceholderProperty, value); }
     public event EventHandler<string>? Submitted;
     public event EventHandler<MentionToken>? MentionAdded;
     private readonly Popup _popup = new() { StaysOpen = false, Placement = PlacementMode.Bottom, AllowsTransparency = true };
@@ -43,6 +45,7 @@ public class MentionInput : TextBox
     private string _trigger = string.Empty; private char _symbol = '@'; private string _lastText = string.Empty; private int _lastCaret; private bool _changingMentions;
     private MentionTokenAdorner? _tokenAdorner;
     static MentionInput() => DefaultStyleKeyProperty.OverrideMetadata(typeof(MentionInput), new FrameworkPropertyMetadata(typeof(MentionInput)));
+    private static void OnPlaceholderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((MentionInput)d)._tokenAdorner?.InvalidateVisual();
     public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _list.MinWidth = 272; _list.MaxHeight = 320; _list.SelectionMode = SelectionMode.Single; _list.ItemTemplateSelector = new SuggestionTemplateSelector(BuildSuggestionTemplate("@", false), BuildSuggestionTemplate("#", true)); _list.ItemContainerStyle = BuildSuggestionContainerStyle(); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; Loaded += OnLoaded; Unloaded += OnUnloaded; SizeChanged += (_, _) => _tokenAdorner?.InvalidateVisual(); LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
     private static DataTemplate BuildSuggestionTemplate(string glyph, bool channel)
     {
@@ -160,7 +163,19 @@ public class MentionInput : TextBox
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            if (_owner.Mentions.Count == 0 || string.IsNullOrEmpty(_owner.Text)) return;
+            if (string.IsNullOrEmpty(_owner.Text))
+            {
+                if (!string.IsNullOrEmpty(_owner.Placeholder))
+                {
+                    var brush = (_owner.TryFindResource("ArcWpf.Brush.TextMuted") as Brush) ?? Brushes.Gray;
+                    var typeface = new Typeface(_owner.FontFamily, _owner.FontStyle, _owner.FontWeight, _owner.FontStretch);
+                    var dpi = VisualTreeHelper.GetDpi(_owner).PixelsPerDip;
+                    var text = new FormattedText(_owner.Placeholder, System.Globalization.CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, _owner.FontSize, brush, dpi);
+                    drawingContext.DrawText(text, new Point(_owner.Padding.Left, _owner.Padding.Top));
+                }
+                return;
+            }
+            if (_owner.Mentions.Count == 0) return;
             var accent = (_owner.TryFindResource("ArcWpf.Brush.AccentSubtle") as Brush) ?? new SolidColorBrush(Color.FromArgb(36, 96, 120, 255));
             var channel = (_owner.TryFindResource("ArcWpf.Brush.SurfaceMuted") as Brush) ?? new SolidColorBrush(Color.FromArgb(32, 128, 128, 128));
             foreach (var token in _owner.Mentions.ToArray())

@@ -44,3 +44,4 @@
 - 修复后：倒计时胶囊位于 AvatarUpload 与 AnimatedCounter 同一视觉中心线，空白区域消失；截图来自当前构建的 Gallery 实例。
 
 - 同一窗口复验还发现 EmojiPicker 触发按钮在目录排序下显示 `〰️`，当前字体将其绘制成“~~”；已固定默认入口为 `😀`，并增加 `NextArcControlsTests` 回归断言，避免数据目录顺序再次改变入口视觉。
+- 最新 Gallery 窗口复验确认 MentionInput 空状态显示 `Write a comment, @ to mention`，EmojiPicker 触发按钮显示笑脸；两者均保留原生输入/Popup 命中区域。
