@@ -3,17 +3,22 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace ArcWpf.Controls;
 
-public sealed class FileDropzoneItem
+public sealed class FileDropzoneItem : INotifyPropertyChanged
 {
+    private string _name = string.Empty, _status = string.Empty, _error = string.Empty; private long _size; private double _progress;
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
-    public string Name { get; set; } = string.Empty;
-    public long Size { get; set; }
-    public string Status { get; set; } = string.Empty;
-    public double Progress { get; set; }
-    public string Error { get; set; } = string.Empty;
+    public string Name { get => _name; set => Set(ref _name, value); }
+    public long Size { get => _size; set => Set(ref _size, value); }
+    public string Status { get => _status; set => Set(ref _status, value); }
+    public double Progress { get => _progress; set => Set(ref _progress, value); }
+    public string Error { get => _error; set => Set(ref _error, value); }
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private void Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return; field = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
 }
 public delegate Task FileDropzoneUpload(FileDropzoneItem item, Action<double> onProgress, CancellationToken cancellationToken);
 
@@ -38,7 +43,13 @@ public class FileDropzone : Control
     public FileDropzoneUpload? Upload { get => (FileDropzoneUpload?)GetValue(UploadProperty); set => SetValue(UploadProperty, value); }
     public event EventHandler<IReadOnlyList<string>>? FilesSelected;
     static FileDropzone() => DefaultStyleKeyProperty.OverrideMetadata(typeof(FileDropzone), new FrameworkPropertyMetadata(typeof(FileDropzone)));
-    public FileDropzone() { Items = new ObservableCollection<FileDropzoneItem>(); AllowDrop = true; Focusable = true; Drop += OnDrop; DragEnter += (_, e) => IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); DragLeave += (_, _) => IsDragging = false; DragOver += (_, e) => { IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); e.Effects = DragDropEffects.Copy; }; KeyDown += (_, e) => { if (e.Key is System.Windows.Input.Key.Enter or System.Windows.Input.Key.Space) { Browse(); e.Handled = true; } }; }
+    public FileDropzone() { Items = new ObservableCollection<FileDropzoneItem>(); AllowDrop = true; Focusable = true; Drop += OnDrop; DragEnter += (_, e) => IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); DragLeave += (_, _) => IsDragging = false; DragOver += (_, e) => { IsDragging = e.Data.GetDataPresent(DataFormats.FileDrop); e.Effects = DragDropEffects.Copy; }; KeyDown += (_, e) => { if (e.Key is System.Windows.Input.Key.Enter or System.Windows.Input.Key.Space) { Browse(); e.Handled = true; } }; AddHandler(Button.ClickEvent, new RoutedEventHandler(OnItemButtonClick)); }
+    private void OnItemButtonClick(object sender, RoutedEventArgs e)
+    {
+        if (e.OriginalSource is not Button button || button.Tag is not FileDropzoneItem item) return;
+        if (button.Name == "PART_Retry") RetryItem(item); else if (button.Name == "PART_Cancel") CancelUpload(item); else if (button.Name == "PART_Remove") RemoveItem(item);
+        e.Handled = true;
+    }
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -61,11 +72,18 @@ public class FileDropzone : Control
         }
         if (selected.Length > 0) FilesSelected?.Invoke(this, selected);
     }
+    private readonly Dictionary<string, CancellationTokenSource> _uploads = new();
+    public void RemoveItem(FileDropzoneItem item) { CancelUpload(item); Items.Remove(item); }
+    public void RetryItem(FileDropzoneItem item) { if (Items.Contains(item) && Upload is not null) { CancelUpload(item); _ = UploadItemAsync(item); } }
+    public void CancelUpload(FileDropzoneItem item) { if (_uploads.Remove(item.Id, out var cts)) cts.Cancel(); }
     private async Task UploadItemAsync(FileDropzoneItem item)
     {
         if (Upload is null) return;
+        CancelUpload(item); using var cts = new CancellationTokenSource(); _uploads[item.Id] = cts;
         item.Status = "uploading"; item.Progress = 0;
-        try { await Upload(item, percent => { item.Progress = Math.Clamp(percent, 0, 100); }, CancellationToken.None); item.Progress = 100; item.Status = "uploaded"; }
+        try { await Upload(item, percent => { item.Progress = Math.Clamp(percent, 0, 100); }, cts.Token); item.Progress = 100; item.Status = "uploaded"; item.Error = string.Empty; }
+        catch (OperationCanceledException) { item.Status = "cancelled"; }
         catch (Exception error) { item.Status = "failed"; item.Error = error.Message; }
+        finally { _uploads.Remove(item.Id); }
     }
 }

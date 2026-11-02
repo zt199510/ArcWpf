@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Input;
+using System.Collections.Specialized;
 
 namespace ArcWpf.Controls;
 
@@ -10,7 +12,7 @@ public class EmojiPicker : Control
 {
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(EmojiPicker), new PropertyMetadata(false));
     public static readonly DependencyProperty SelectedEmojiProperty = DependencyProperty.Register(nameof(SelectedEmoji), typeof(string), typeof(EmojiPicker), new PropertyMetadata(string.Empty));
-    public static readonly DependencyProperty EmojisProperty = DependencyProperty.Register(nameof(Emojis), typeof(ObservableCollection<string>), typeof(EmojiPicker), new PropertyMetadata(null));
+    public static readonly DependencyProperty EmojisProperty = DependencyProperty.Register(nameof(Emojis), typeof(ObservableCollection<string>), typeof(EmojiPicker), new PropertyMetadata(null, OnEmojisChanged));
     public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register(nameof(SearchText), typeof(string), typeof(EmojiPicker), new PropertyMetadata(string.Empty));
     public static readonly DependencyProperty SearchPlaceholderProperty = DependencyProperty.Register(nameof(SearchPlaceholder), typeof(string), typeof(EmojiPicker), new PropertyMetadata("Search emoji"));
     public static readonly DependencyProperty AutoFocusProperty = DependencyProperty.Register(nameof(AutoFocus), typeof(bool), typeof(EmojiPicker), new PropertyMetadata(false));
@@ -21,7 +23,8 @@ public class EmojiPicker : Control
     public string SearchPlaceholder { get => (string)GetValue(SearchPlaceholderProperty); set => SetValue(SearchPlaceholderProperty, value); }
     public bool AutoFocus { get => (bool)GetValue(AutoFocusProperty); set => SetValue(AutoFocusProperty, value); }
     public event EventHandler<string>? EmojiSelected;
-    private Popup? _popup; private UniformGrid? _grid; private TextBox? _search;
+    private static void OnEmojisChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((EmojiPicker)d).AttachEmojiSource(e.NewValue as ObservableCollection<string>);
+    private Popup? _popup; private UniformGrid? _grid; private TextBox? _search; private INotifyCollectionChanged? _emojiSource;
     static EmojiPicker() => DefaultStyleKeyProperty.OverrideMetadata(typeof(EmojiPicker), new FrameworkPropertyMetadata(typeof(EmojiPicker)));
     public EmojiPicker()
     {
@@ -34,8 +37,43 @@ public class EmojiPicker : Control
         _popup = GetTemplateChild("PART_Popup") as Popup; _grid = GetTemplateChild("PART_Grid") as UniformGrid; _search = GetTemplateChild("PART_Search") as TextBox;
         if (_popup is not null) { _popup.DataContext = this; _popup.CustomPopupPlacementCallback = PlacePopup; }
         if (_search is not null) _search.TextChanged += (_, _) => { SearchText = _search.Text; Build(); };
+        PreviewKeyDown += OnPreviewKeyDown;
+        AttachEmojiSource(Emojis);
         Build();
         if (AutoFocus && IsOpen) Dispatcher.BeginInvoke(() => _search?.Focus());
+    }
+    private void AttachEmojiSource(ObservableCollection<string>? source)
+    {
+        if (_emojiSource is not null) _emojiSource.CollectionChanged -= OnEmojiCollectionChanged;
+        _emojiSource = source;
+        if (_emojiSource is not null) _emojiSource.CollectionChanged += OnEmojiCollectionChanged;
+    }
+    private void OnEmojiCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => Build();
+    private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (!IsOpen) return;
+        if (e.Key == Key.Escape)
+        {
+            if (!string.IsNullOrEmpty(SearchText)) { SearchText = string.Empty; if (_search is not null) _search.Clear(); Build(); e.Handled = true; return; }
+            IsOpen = false; e.Handled = true; return;
+        }
+        if (e.Key is not (Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)) return;
+        var buttons = _grid?.Children.OfType<Button>().ToArray();
+        if (buttons is null || buttons.Length == 0) return;
+        var current = Array.IndexOf(buttons, Keyboard.FocusedElement as Button);
+        var columns = Math.Max(1, _grid?.Columns ?? 6);
+        var next = current < 0 ? 0 : current;
+        next = e.Key switch
+        {
+            Key.Left => Math.Max(0, next - 1),
+            Key.Right => Math.Min(buttons.Length - 1, next + 1),
+            Key.Up => Math.Max(0, next - columns),
+            Key.Down => Math.Min(buttons.Length - 1, next + columns),
+            Key.Home or Key.PageUp => 0,
+            Key.End or Key.PageDown => buttons.Length - 1,
+            _ => next
+        };
+        buttons[next].Focus(); e.Handled = true;
     }
     private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
@@ -51,5 +89,6 @@ public class EmojiPicker : Control
     {
         if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); IEnumerable<string> items = string.IsNullOrEmpty(query) ? Emojis : Emojis.Where(value => value.Contains(query, StringComparison.OrdinalIgnoreCase));
         foreach (var emoji in items) { var button = new Button { Content = emoji, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = emoji }; button.Click += (_, _) => { SelectedEmoji = emoji; EmojiSelected?.Invoke(this, emoji); IsOpen = false; }; _grid.Children.Add(button); }
+        if (_grid.Children.Count == 0) _grid.Children.Add(new TextBlock { Text = "No emoji found", Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(8), HorizontalAlignment = HorizontalAlignment.Center });
     }
 }

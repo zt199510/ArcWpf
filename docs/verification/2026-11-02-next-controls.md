@@ -18,3 +18,10 @@
 ## 待执行
 
 真实窗口中的 Arc 页面比例、主题切换、鼠标悬停、Popup 碰撞/翻转、键盘焦点、中文 IME、拖放、DPI 和动效中间帧尚未逐项验收。AvatarUpload 与 EmojiPicker 没有 Registry 源码，独立实现差异按各自规格记录。
+
+## 2026-11-02 交互补强
+
+- EmojiPicker 增加空搜索结果、Escape 先清空搜索再关闭、方向键/Home/End/PageUp/PageDown 网格导航，并监听 `Emojis` 集合变化。
+- FileDropzone 的条目实现属性变更通知，增加上传取消、失败重试和移除入口；上传使用每项独立 `CancellationTokenSource`，取消和失败状态会回写到条目。
+- 补强后的 Controls 构建、Gallery 构建和 `NextArcControlsTests` 8/8 通过；Gallery `--page=arc-next-batch` 实际启动保持运行 4 秒后正常退出。
+- 上述结果仍属于程序与启动验证；Arc Web 与 WPF 的真实尺寸、鼠标高亮、主题切换、DPI 和逐帧动效仍需窗口级对照。
