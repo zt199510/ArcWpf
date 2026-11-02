@@ -4,6 +4,7 @@
       <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
         <TextBlock Text="{TemplateBinding Label}" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FontSize="12" VerticalAlignment="Center" Margin="0,0,0,8"/>
         <StackPanel x:Name="PART_Digits" Orientation="Horizontal" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="PART_Accessible" Opacity="0" IsHitTestVisible="False" Height="0" TextWrapping="NoWrap"/>
       </StackPanel>
     </ControlTemplate></Setter.Value></Setter>
   </Style>

@@ -22,19 +22,19 @@ public class AnimatedCounter : Control
     public int Decimals { get => (int)GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public bool AnimateOnView { get => (bool)GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
-    private StackPanel? _digitsPanel; private string _displayText = string.Empty; private bool _viewAnimated;
+    private StackPanel? _digitsPanel; private TextBlock? _accessibleText; private string _displayText = string.Empty; private bool _viewAnimated;
     static AnimatedCounter() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnimatedCounter), new FrameworkPropertyMetadata(typeof(AnimatedCounter)));
-    public override void OnApplyTemplate() { base.OnApplyTemplate(); _digitsPanel = GetTemplateChild("PART_Digits") as StackPanel; UpdateText(false); if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }
+    public override void OnApplyTemplate() { base.OnApplyTemplate(); _digitsPanel = GetTemplateChild("PART_Digits") as StackPanel; _accessibleText = GetTemplateChild("PART_Accessible") as TextBlock; UpdateText(false); if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }
     protected override void OnInitialized(EventArgs e) { base.OnInitialized(e); IsVisibleChanged += (_, _) => { if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }; }
     private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnimatedCounter)d).UpdateText(true);
     private void UpdateText(bool animate)
     {
         if (_digitsPanel is null) return;
         string text; try { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.GetCultureInfo(Locale)); } catch { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.InvariantCulture); }
-        var next = Prefix + text + Suffix; var previous = _displayText; _displayText = next; _digitsPanel.Children.Clear();
+        var next = Prefix + text + Suffix; var previous = _displayText; _displayText = next; if (_accessibleText is not null) _accessibleText.Text = next; System.Windows.Automation.AutomationProperties.SetName(this, next); _digitsPanel.Children.Clear();
         for (var index = 0; index < next.Length; index++)
         {
-            var glyph = new TextBlock { Text = next[index].ToString(), Foreground = (Brush)FindResource("ArcWpf.Brush.Foreground"), FontSize = 32, FontWeight = FontWeights.Medium, FontFamily = (FontFamily)FindResource("ArcWpf.Font.Mono") };
+            var glyph = new TextBlock { Text = next[index].ToString(), Foreground = (TryFindResource("ArcWpf.Brush.Foreground") as Brush) ?? Foreground ?? Brushes.Black, FontSize = 32, FontWeight = FontWeights.Medium, FontFamily = (TryFindResource("ArcWpf.Font.Mono") as FontFamily) ?? new FontFamily("Consolas") };
             if (char.IsDigit(next[index])) glyph.MinWidth = 18;
             _digitsPanel.Children.Add(glyph);
             if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full && index < previous.Length && previous[index] != next[index])
