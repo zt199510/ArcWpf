@@ -21,4 +21,5 @@ public sealed class NextArcControlsTests
     [TestMethod] public void EmojiPickerHasDefaultPalette() => Sta.Run(() => { var picker = new EmojiPicker(); Assert.IsGreaterThan(10, picker.Emojis.Count); });
     [TestMethod] public void EmojiPickerTracksRecentLimit() => Sta.Run(() => { var picker = new EmojiPicker { MaxRecent = 1 }; picker.SelectEmoji("😀"); picker.SelectEmoji("🎉"); Assert.HasCount(1, picker.RecentEmojis); Assert.AreEqual("🎉", picker.RecentEmojis[0]); });
     [TestMethod] public void EmojiPickerExposesCategorySelection() => Sta.Run(() => { var picker = new EmojiPicker { SelectedCategory = "Symbols" }; Assert.AreEqual("Symbols", picker.SelectedCategory); });
+    [TestMethod] public void EmojiPickerClampsSkinToneAndAppliesIt() => Sta.Run(() => { var picker = new EmojiPicker { SkinTone = 9 }; Assert.AreEqual(5, picker.SkinTone); picker.SelectEmoji("👍"); Assert.AreEqual("👍🏿", picker.SelectedEmoji); picker.SkinTone = -1; Assert.AreEqual(0, picker.SkinTone); });
 }
