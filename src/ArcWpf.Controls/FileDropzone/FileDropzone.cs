@@ -20,7 +20,8 @@ public sealed class FileDropzoneItem : INotifyPropertyChanged
     /// <summary>WPF 文件选择器返回的本地路径。上传回调可据此读取文件。</summary>
     public string FilePath { get => _filePath; set => Set(ref _filePath, value); }
     public bool Retryable { get => _retryable; set => Set(ref _retryable, value); }
-    public string Status { get => _status; set => Set(ref _status, value); }
+    public string Status { get => _status; set { if (Set(ref _status, value)) OnPropertyChanged(nameof(DisplayStatus)); } }
+    public string DisplayStatus => _status switch { "uploading" => "Uploading", "uploaded" => "Uploaded", "failed" => "Failed", "cancelled" => "Cancelled", "selected" => "Selected", _ => string.Empty };
     public double Progress { get => _progress; set => Set(ref _progress, value); }
     public string Error { get => _error; set => Set(ref _error, value); }
     public event PropertyChangedEventHandler? PropertyChanged;
