@@ -21,20 +21,29 @@ public class EmojiPicker : Control
     public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register(nameof(SearchText), typeof(string), typeof(EmojiPicker), new PropertyMetadata(string.Empty));
     public static readonly DependencyProperty SearchPlaceholderProperty = DependencyProperty.Register(nameof(SearchPlaceholder), typeof(string), typeof(EmojiPicker), new PropertyMetadata("Search emoji"));
     public static readonly DependencyProperty AutoFocusProperty = DependencyProperty.Register(nameof(AutoFocus), typeof(bool), typeof(EmojiPicker), new PropertyMetadata(false));
+    public static readonly DependencyProperty RecentEmojisProperty = DependencyProperty.Register(nameof(RecentEmojis), typeof(ObservableCollection<string>), typeof(EmojiPicker), new PropertyMetadata(null));
+    public static readonly DependencyProperty MaxRecentProperty = DependencyProperty.Register(nameof(MaxRecent), typeof(int), typeof(EmojiPicker), new PropertyMetadata(8));
     public bool IsOpen { get => (bool)GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
     public string SelectedEmoji { get => (string)GetValue(SelectedEmojiProperty); set => SetValue(SelectedEmojiProperty, value); }
     public ObservableCollection<string> Emojis { get => (ObservableCollection<string>)GetValue(EmojisProperty); set => SetValue(EmojisProperty, value); }
     public string SearchText { get => (string)GetValue(SearchTextProperty); set => SetValue(SearchTextProperty, value); }
     public string SearchPlaceholder { get => (string)GetValue(SearchPlaceholderProperty); set => SetValue(SearchPlaceholderProperty, value); }
     public bool AutoFocus { get => (bool)GetValue(AutoFocusProperty); set => SetValue(AutoFocusProperty, value); }
+    public ObservableCollection<string> RecentEmojis { get => (ObservableCollection<string>)GetValue(RecentEmojisProperty); set => SetValue(RecentEmojisProperty, value); }
+    public int MaxRecent { get => (int)GetValue(MaxRecentProperty); set => SetValue(MaxRecentProperty, value); }
     public event EventHandler<string>? EmojiSelected;
+    public void SelectEmoji(string emoji)
+    {
+        if (string.IsNullOrWhiteSpace(emoji)) return;
+        SelectedEmoji = emoji; RecordRecent(emoji); EmojiSelected?.Invoke(this, emoji); IsOpen = false;
+    }
     private static void OnEmojisChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((EmojiPicker)d).AttachEmojiSource(e.NewValue as ObservableCollection<string>);
     private Popup? _popup; private UniformGrid? _grid; private TextBox? _search; private INotifyCollectionChanged? _emojiSource;
     static EmojiPicker() => DefaultStyleKeyProperty.OverrideMetadata(typeof(EmojiPicker), new FrameworkPropertyMetadata(typeof(EmojiPicker)));
     public EmojiPicker()
     {
         Emojis = new ObservableCollection<string>(new[] { "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🙂", "🙃", "😉", "😊", "😍", "🤔", "😎", "🎉", "🔥", "❤️", "👍", "👏", "🙏", "✅", "⭐", "🚀", "💡" });
-        SelectedEmoji = Emojis[0];
+        SelectedEmoji = Emojis[0]; RecentEmojis = new ObservableCollection<string>();
     }
     public override void OnApplyTemplate()
     {
@@ -92,8 +101,14 @@ public class EmojiPicker : Control
     }
     private void Build()
     {
-        if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); IEnumerable<string> items = string.IsNullOrEmpty(query) ? Emojis : Emojis.Where(value => value.Contains(query, StringComparison.OrdinalIgnoreCase) || Aliases.Any(alias => alias.Key.Contains(query, StringComparison.OrdinalIgnoreCase) && alias.Value.Contains(value, StringComparer.Ordinal)));
-        foreach (var emoji in items) { var button = new Button { Content = emoji, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = emoji }; button.Click += (_, _) => { SelectedEmoji = emoji; EmojiSelected?.Invoke(this, emoji); IsOpen = false; }; _grid.Children.Add(button); }
+        if (_grid is null) return; _grid.Children.Clear(); var query = SearchText.Trim(); IEnumerable<string> items = string.IsNullOrEmpty(query) ? (RecentEmojis ?? new ObservableCollection<string>()).Concat(Emojis).Distinct(StringComparer.Ordinal) : Emojis.Where(value => value.Contains(query, StringComparison.OrdinalIgnoreCase) || Aliases.Any(alias => alias.Key.Contains(query, StringComparison.OrdinalIgnoreCase) && alias.Value.Contains(value, StringComparer.Ordinal)));
+        foreach (var emoji in items) { var button = new Button { Content = emoji, FontSize = 22, Padding = new Thickness(6), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Tag = emoji, Focusable = true, ToolTip = emoji }; button.Click += (_, _) => SelectEmoji(emoji); _grid.Children.Add(button); }
         if (_grid.Children.Count == 0) _grid.Children.Add(new TextBlock { Text = "No emoji found", Foreground = (Brush?)TryFindResource("ArcWpf.Brush.TextMuted") ?? Brushes.Gray, Margin = new Thickness(8), HorizontalAlignment = HorizontalAlignment.Center });
+    }
+    private void RecordRecent(string emoji)
+    {
+        if (RecentEmojis is null) return;
+        RecentEmojis.Remove(emoji); RecentEmojis.Insert(0, emoji);
+        while (RecentEmojis.Count > Math.Max(0, MaxRecent)) RecentEmojis.RemoveAt(RecentEmojis.Count - 1);
     }
 }
