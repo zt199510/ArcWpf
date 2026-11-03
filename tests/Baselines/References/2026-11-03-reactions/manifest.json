@@ -1,0 +1,56 @@
+{
+  "component": "Reactions",
+  "capturedAt": "2026-11-03T04:25:06.8819461Z",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/reactions/markdown",
+    "registry": "https://uiarc.dev/r/reactions.json",
+    "page": "https://uiarc.dev/components/reactions",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/reactions/markdown",
+      "sha256": "554d0c992693914786b3fc6dc2c641371228bc19449491a80fce32d8796af2c8",
+      "bytes": 6162
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/reactions.json",
+      "sha256": "52bced2ce2017ac0543b7029f89061dc693d3fa4901a768add1b4fd6373cc70a",
+      "bytes": 26048
+    },
+    {
+      "name": "registry/reactions.tsx",
+      "url": "https://uiarc.dev/r/reactions.json#registry/components/reactions/reactions.tsx",
+      "sha256": "70eafd27d801e1f00839a16a881425ef009f8a0946f300ad52dc4537581484a6",
+      "bytes": 18712
+    },
+    {
+      "name": "registry/reactions.module.css",
+      "url": "https://uiarc.dev/r/reactions.json#registry/components/reactions/reactions.module.css",
+      "sha256": "2cbff83746d0c63c98815e664423028ca5d1fb7913b34204c292bf6d479bb297",
+      "bytes": 5906
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/reactions",
+      "sha256": "a2aaf12105a737fb6841345b9b750a59b9b88fc8e6ddd0cf6742e9770fca8463",
+      "bytes": 184599
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ],
+  "license": "See license.txt"
+}

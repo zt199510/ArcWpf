@@ -1,0 +1,10 @@
+using System.Collections.ObjectModel;
+using ArcWpf.Controls;
+namespace ArcWpf.Tests;
+[TestClass] public sealed class RadioCardsTests
+{
+    [TestMethod] public void SelectsEnabledOptionAndIgnoresDisabled() => Sta.Run(() => { var c = new RadioCards { Options = new ObservableCollection<RadioCardOption> { new() { Value="a" }, new() { Value="b", Disabled=true } } }; c.SelectedValue = "a"; c.SelectOption(c.Options[1]); Assert.AreEqual("a", c.SelectedValue); c.SelectOption(c.Options[0]); Assert.AreEqual("a", c.SelectedValue); });
+    [TestMethod] public void TabStopUsesSelectedOrFirstUsableOption() => Sta.Run(() => { var c = new RadioCards { Options = new ObservableCollection<RadioCardOption> { new() { Value="disabled", Disabled=true }, new() { Value="first" }, new() { Value="second" } } }; Assert.IsTrue(c.IsOptionTabStop(c.Options[1])); Assert.IsFalse(c.IsOptionTabStop(c.Options[2])); c.SelectedValue = "second"; Assert.IsTrue(c.IsOptionTabStop(c.Options[2])); Assert.IsFalse(c.IsOptionTabStop(c.Options[1])); c.SelectedValue = "disabled"; Assert.IsTrue(c.IsOptionTabStop(c.Options[1])); });
+    [TestMethod] public void WindowRendersRadioCardsTemplate() => Sta.Run(() => { var c = new RadioCards { Width=420, Options = new ObservableCollection<RadioCardOption> { new() { Value="a", Label="A", Description="First" }, new() { Value="b", Label="B", Meta="$12" } }, SelectedValue="a" }; var w = new System.Windows.Window { Content=c, Width=520, Height=220, ShowInTaskbar=false }; try { w.Show(); Sta.Pump(); c.UpdateLayout(); Assert.IsNotNull(c.Template.FindName("PART_Items", c)); } finally { w.Close(); } });
+    [TestMethod] public void GroupDisabledRefreshesSelectionAndTabSemantics() => Sta.Run(() => { var c = new RadioCards { Options = new ObservableCollection<RadioCardOption> { new() { Value="a" }, new() { Value="b" } } }; Assert.IsTrue(c.IsOptionTabStop(c.Options[0])); c.IsGroupDisabled = true; Assert.IsFalse(c.IsOptionTabStop(c.Options[0])); c.SelectOption(c.Options[1]); Assert.IsNull(c.SelectedValue); });
+}

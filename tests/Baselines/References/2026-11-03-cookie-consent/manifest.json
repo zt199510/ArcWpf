@@ -1,0 +1,56 @@
+{
+  "component": "CookieConsent",
+  "capturedAt": "2026-11-03T04:17:50.5211844Z",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/cookie-consent/markdown",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "page": "https://uiarc.dev/components/cookie-consent",
+    "registry": "https://uiarc.dev/r/cookie-consent.json",
+    "license": "https://uiarc.dev/license"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/cookie-consent/markdown",
+      "sha256": "b69eefbe9f53ac222ba30f922fb8fc6e881de4b608be28519ff65416e5d9fd5c",
+      "bytes": 9190
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/cookie-consent",
+      "sha256": "fd063acce5f9f2ec9001df9c353da6c7bd03ab0bb4a009796fe23920efd09798",
+      "bytes": 191581
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/cookie-consent.json",
+      "sha256": "f51505079e5e05d65d3526747261470ec2355ec5e679b4f27914b53ee537cc8e",
+      "bytes": 27596
+    },
+    {
+      "name": "registry/cookie-consent.tsx",
+      "url": "https://uiarc.dev/r/cookie-consent.json#registry/components/cookie-consent/cookie-consent.tsx",
+      "sha256": "a197fe4a9fc015b99ddcdd1ae478d874049b1cc747994bcee3aadabbe2d6acef",
+      "bytes": 20613
+    },
+    {
+      "name": "registry/cookie-consent.module.css",
+      "url": "https://uiarc.dev/r/cookie-consent.json#registry/components/cookie-consent/cookie-consent.module.css",
+      "sha256": "869f8afe5f49740c99c2edb954c387a9ad6d56c54078f504c74cb1eb63978ae8",
+      "bytes": 5213
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    }
+  ],
+  "license": "See license.txt"
+}

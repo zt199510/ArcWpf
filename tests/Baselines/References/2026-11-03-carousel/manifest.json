@@ -1,0 +1,56 @@
+{
+  "component": "Carousel",
+  "capturedAt": "2026-11-03T03:45:20.9236734Z",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/carousel/markdown",
+    "page": "https://uiarc.dev/components/carousel",
+    "registry": "https://uiarc.dev/r/carousel.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/carousel/markdown",
+      "sha256": "4f7ac6bdda05559215c7cac8df14bbb194c14f76db66a4c80b19506204cac069",
+      "bytes": 5572
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/carousel",
+      "sha256": "90954e22ebb1b1280afc84c544af720a4dbe1926d94d7f2e2c1d5e6010837725",
+      "bytes": 198322
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/carousel.json",
+      "sha256": "d6f3b4622141500fc25eb159ae67b57eb1af0784bfeed7530d7dbe18f999c3dd",
+      "bytes": 27285
+    },
+    {
+      "name": "registry/carousel.tsx",
+      "url": "https://uiarc.dev/r/carousel.json#registry/components/carousel/carousel.tsx",
+      "sha256": "d6a10bf50641fec5b83197b917e272e5c0f74989cf7cf82001b622a84a5a693f",
+      "bytes": 21619
+    },
+    {
+      "name": "registry/carousel.module.css",
+      "url": "https://uiarc.dev/r/carousel.json#registry/components/carousel/carousel.module.css",
+      "sha256": "0ea3d62c03daf3a07bf7c591cc4402cbb518ae9e144b307cce8ae76ccacee035",
+      "bytes": 4223
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ],
+  "license": "See license.txt"
+}

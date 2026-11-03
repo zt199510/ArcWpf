@@ -86,6 +86,11 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/AvatarUpload/Themes/AvatarUploadTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/MentionInput/Themes/MentionInputTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/EmojiPicker/Themes/EmojiPickerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Carousel/Themes/CarouselTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/RadioCards/Themes/RadioCardsTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/CookieConsent/Themes/CookieConsentTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Reactions/Themes/ReactionsTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/SwipeActions/Themes/SwipeActionsTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

@@ -70,6 +70,62 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 
 数据展示控件批次已开始：CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成实现、Gallery 和精确专项验证。后续如新增 Arc 控件，另立来源分析和交付批次；不覆盖本路线图已收口结论。
 
+### 2026-11-03 Carousel 开发
+
+- [x] 冻结 Arc Carousel Registry、CSS、Markdown、页面、动效令牌和许可快照；见 `tests/Baselines/References/2026-11-03-carousel`。
+- [x] 完成 WPF Carousel、Arc 主题模板、Gallery 主示例和 4 项专项测试。
+- [x] 增加连续拖拽时相邻卡片的缩放/变暗反馈与横向鼠标滚轮导航。
+- [x] 增加触摸捕获、连续位移反馈和触摸释放回位。
+- [x] 增加最近指针速度采样和 flick 阈值翻页。
+- [x] 使用 Owned/Tween spring 处理可打断的回位，并将释放速度投影到翻页判定。
+- [x] 指示器改为 Arc 风格的活动 pill，支持索引更新和点击选择。
+- [ ] 真实窗口的触摸、甩动惯性、明暗主题、多 DPI 和逐帧动效验收。
+
+本批次后续顺序为 RadioCards → CookieConsent → Reactions → SwipeActions；当前四项均已完成实现入口。
+
+### 2026-11-03 RadioCards 开发
+
+- [x] 冻结 Arc RadioCards Registry、CSS、Markdown、页面、动效令牌和许可快照；见 `tests/Baselines/References/2026-11-03-radio-cards`。
+- [x] 建立 WPF RadioCards、主题模板、Gallery 页面和 4 项专项测试。
+- [x] 最小列宽真正传递到卡片容器，禁用项同步到 WPF `IsEnabled`。
+- [x] 增加独立 overlay 选中环，按卡片布局位置移动并适配 Full/Reduced/Off。
+- [x] 禁用卡片优先显示 `disabledReason`，与 Arc 状态语义一致。
+- [x] 对齐 Arc 单一 Tab stop、Home/End 首尾可用项和网格/列表 Meta 布局。
+- [ ] 真实窗口环边界、网格响应式、键盘和主题验收。
+
+### 2026-11-03 CookieConsent 开发
+
+- [x] 冻结 Arc CookieConsent Registry、CSS、Markdown、页面、动效令牌和许可快照；见 `tests/Baselines/References/2026-11-03-cookie-consent`。
+- [x] 完成同意栏、偏好面板、重新打开按钮、类别开关、版本化本地存储、Gallery 和 4 项专项测试。
+- [x] 补齐打开、关闭和提交后的明确按钮焦点归还路径。
+- [x] `Position` 与 `ShowReopenButton` 变更在模板已加载后即时刷新位置和重新打开按钮可见性。
+- [x] Position 对齐 Arc face 语义：bar/panel 按位置对齐，居中和左侧的 reopen chip 靠左，右侧位置靠右。
+- [ ] 真实窗口的焦点归还、明暗主题、逐帧形变动效和多 DPI 验收。
+
+### 2026-11-03 Reactions 来源冻结
+
+- [x] 冻结 Arc Reactions Registry、CSS、Markdown、页面、动效令牌和许可快照；见 `tests/Baselines/References/2026-11-03-reactions`。
+- [x] 实现 reaction pills、计数、picker、键盘语义、Popover 碰撞、Gallery 和专项测试。
+
+### 2026-11-03 Reactions 开发
+
+- [x] 完成 WPF Reactions、reaction pills、计数切换、Popup picker、主题、Gallery 和 4 项专项测试。
+- [x] 补齐 reaction icon/label 渲染、Popup 上下碰撞定位和关闭焦点归还。
+- [x] 补齐 picker 选中态、悬停态和按下反馈，并保留键盘可操作路径。
+- [x] Reaction 数据改为可观察对象，计数变更保留原位并加入方向性滚动/回弹反馈。
+- [x] picker 使用共享高亮层跟随鼠标悬停和键盘焦点，并按 Arc spring 参数移动。
+- [ ] Arc 计数滚动、图标 kick、共享高亮弹簧、完整 Popover 动效和真实窗口验收。
+
+### 2026-11-03 SwipeActions 开发
+
+- [x] 冻结 Arc SwipeActions Registry、CSS、Markdown、页面、动效令牌和许可快照；见 `tests/Baselines/References/2026-11-03-swipe-actions`。
+- [x] 完成 WPF SwipeActions/SwipeActionsRow、鼠标和触摸拖拽、full swipe、More 操作、主题、Gallery 和 2 项专项测试。
+- [x] 补齐鼠标/触摸捕获、边界橡皮筋、释放速度采样和 Full/Reduced/Off 回弹过渡。
+- [x] More 按钮改为包含 leading/trailing 全部动作的原生 ContextMenu。
+- [x] 动作层改为真实 WPF 按钮，补齐 tone、图标/文案、点击命中、Escape 和外部点击关闭。
+- [x] 动作层随揭示距离连续伸展，外侧动作在长拖拽时承担覆盖区域。
+- [ ] 菜单视觉主题、真实触摸、多 DPI 和窗口验收。
+
 ## 2026-11-02 新增控件批次
 
 ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来源冻结、WPF 实现、主题、Gallery 和专项测试代码；精确验证见 [验证记录](verification/2026-11-02-theme-toggle-actions.md)。已对照线上页面做像素复刻，见 [像素记录](verification/2026-11-02-theme-toggle-actions-pixel.md)。UndoToast 是 Arc Pro，Registry 不可得，依据公开文档和页面显示独立实现。真实窗口、DPI、读屏和逐帧动效仍待验收。

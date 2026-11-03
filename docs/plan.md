@@ -4,6 +4,20 @@
 
 AnnouncementBar、AnimatedCounter、Countdown、Timeline、AvatarUpload、FileDropzone、MentionInput、EmojiPicker 已完成来源冻结、WPF 首版实现、Arc 主题模板、Gallery 示例和基础专项测试。Controls 与 Gallery 构建通过，8 项专项测试通过；实际窗口视觉、Popup 碰撞、中文 IME、DPI、拖放和逐帧动效仍按验证记录待验收。AvatarUpload、EmojiPicker 属于 Pro 页面公开资料独立实现，未使用 Pro Registry 源码。 2026-11-02 已对照线上页面重做并拆成独立 Gallery 页面，见 [像素记录](verification/2026-11-02-next-controls-pixel.md)；真实窗口未验证。
 
+## 2026-11-03 Carousel 开发
+
+Carousel 已完成 Arc 来源冻结、WPF 实现、主题模板、Gallery 示例和 4 项专项测试；现已加入可打断 spring、释放速度投影和活动 pill 指示器。Controls/Gallery 构建通过。真实窗口拖拽、触摸、甩动惯性、多 DPI、明暗主题和逐帧动效仍待验收。
+
+## 2026-11-03 RadioCards / CookieConsent 开发
+
+RadioCards 已完成来源冻结、WPF 实现、主题、Gallery 和 4 项专项测试；CookieConsent 已完成来源冻结、WPF 实现、主题、Gallery 和 4 项专项测试。两项 Controls/Gallery 构建通过；选中环弹簧、CookieConsent 形变动效、真实窗口焦点、主题和多 DPI 仍按对应规格保留待验收。
+
+Reactions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 4 项专项测试；现已加入可观察计数、方向性计数滚动、选中回弹、picker 选中/悬停反馈和 Add/Close 图标切换。Controls/Gallery 构建通过。完整 Popover 动效和真实窗口键盘/主题验收仍待补齐。
+
+SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 项专项测试；现已补齐真实动作按钮、tone、点击命中、Escape/外部关闭和动作层连续伸展。Controls/Gallery 构建通过。真实触摸、多 DPI、菜单主题和窗口验收仍待补齐。本轮五项控件均已建立实现和验证入口。
+
+2026-11-03 五控件批次收口复核：Carousel、RadioCards、CookieConsent、Reactions、SwipeActions 专项测试 18/18 通过，Gallery 构建 0 警告/0 错误，`git diff --check` 通过。验证记录见 [五控件批次验证](verification/2026-11-03-interaction-batch.md)；真实窗口、触摸、DPI、读屏和逐帧动效仍保持待验收边界。
+
 ## 2026-11-02 控件批次统一收口
 
 用户确认当前所有纳入范围的控件均已完成收口。当前状态覆盖控件实现、依赖属性与模板、主题、Gallery、规格/参考卡、专项测试、动效清理和验证记录；最近批次的精确专项结果以各自验证记录为准，未把全量测试或未执行的真实窗口项目虚构为通过。

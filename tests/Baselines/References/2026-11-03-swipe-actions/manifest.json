@@ -1,0 +1,56 @@
+{
+  "component": "SwipeActions",
+  "capturedAt": "2026-11-03T04:32:51.6475555Z",
+  "urls": {
+    "registry": "https://uiarc.dev/r/swipe-actions.json",
+    "page": "https://uiarc.dev/components/swipe-actions",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json",
+    "license": "https://uiarc.dev/license",
+    "markdown": "https://uiarc.dev/components/swipe-actions/markdown"
+  },
+  "files": [
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/swipe-actions.json",
+      "sha256": "f801f15dcc5bb87fa16e515ff4c9b4eb618e006f50dc6489313645a2f9493fed",
+      "bytes": 27959
+    },
+    {
+      "name": "registry/swipe-actions.tsx",
+      "url": "https://uiarc.dev/r/swipe-actions.json#registry/components/swipe-actions/swipe-actions.tsx",
+      "sha256": "44636a22e832e09a3ac30f42dbcfb2674a930127e4b288bfc5078b094a1888c0",
+      "bytes": 20183
+    },
+    {
+      "name": "registry/swipe-actions.module.css",
+      "url": "https://uiarc.dev/r/swipe-actions.json#registry/components/swipe-actions/swipe-actions.module.css",
+      "sha256": "2acdbeda8ff1c228fcece9b19d90b740a69af9e99892217c10146348220002b7",
+      "bytes": 6193
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/swipe-actions",
+      "sha256": "85e4660ad915168d367833594729ada89475e629713a5e45cf9ce0b3791187c2",
+      "bytes": 201880
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/swipe-actions/markdown",
+      "sha256": "c28ed113b7fe4eed9fcbaf3505fcde67726ba5980e546da0d86af0e825d2fd99",
+      "bytes": 7401
+    }
+  ],
+  "license": "See license.txt"
+}
