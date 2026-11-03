@@ -90,6 +90,7 @@ public class PasswordStrength : Control
     private Grid? _errorHost, _meter, _word;
     private StackPanel? _rules;
     private FieldMessage? _error;
+    private TextBlock? _currentWord;
     private readonly List<(Border Fill, TranslateTransform Move)> _segments = [];
     private readonly List<RuleRow> _rows = [];
     private readonly SolidColorBrush _tone = new(Colors.Gray), _shellInk = new(Colors.Gray);
@@ -124,6 +125,7 @@ public class PasswordStrength : Control
         _errorHost = GetTemplateChild("PART_Error") as Grid;
         _meter = GetTemplateChild("PART_Meter") as Grid;
         _word = GetTemplateChild("PART_Word") as Grid;
+        _currentWord = null;
         _rules = GetTemplateChild("PART_Rules") as StackPanel;
         if (_shell is not null) { _shell.BorderBrush = _shellInk; _shell.RenderTransform = _shake; }
         if (_hidden is not null) { _hidden.Password = Password; _hidden.PasswordChanged += HiddenChanged; }
@@ -305,11 +307,11 @@ public class PasswordStrength : Control
     private void SetWord(string text, bool full, bool animate)
     {
         if (_word is null) return;
-        var current = _word.Children.OfType<TextBlock>().LastOrDefault(t => t.IsHitTestVisible);
+        var current = _currentWord;
         if ((current?.Text ?? "") == text) return;
+        _currentWord = null;
         if (current is not null)
         {
-            current.IsHitTestVisible = false;
             if (full) Tween.Present(current, false, -.3 * 14 * _direction, 2, Tween.Fast, ArcEasing.Standard, done: () => _word.Children.Remove(current));
             else if (animate) Tween.To(current, OpacityProperty, 0, Tween.Instant, null, done: () => _word.Children.Remove(current));
             else _word.Children.Remove(current);
@@ -317,6 +319,7 @@ public class PasswordStrength : Control
         if (text.Length == 0) return;
         var line = new TextBlock { Text = text, FontWeight = FontWeights.Medium, HorizontalAlignment = HorizontalAlignment.Right, RenderTransform = new TranslateTransform() };
         _word.Children.Add(line);
+        _currentWord = line;
         if (full) Tween.Present(line, true, .3 * 14 * _direction, 4, Tween.Standard, ArcEasing.Enter);
         else if (animate) Tween.Present(line, true, 0, 0, Tween.Fast, ArcEasing.Standard);
     }

@@ -13,6 +13,7 @@
 | 构建（Linux，EnableWindowsTargeting） | 通过 |
 | 单元测试 | 已编写，未运行/待验证（需 Windows） |
 | 真实窗口视觉与交互 | 未运行/待验证（需 Windows） |
+| 强度词槽与叠放修复 | 已修改，程序化检查通过，实际效果待复验，见 [验证记录](../verification/2026-11-03-password-strength-word.md) |
 
 ## 与源的差异
 
