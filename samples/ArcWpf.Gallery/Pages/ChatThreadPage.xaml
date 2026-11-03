@@ -1,0 +1,24 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ChatThreadPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+<UserControl.Resources><ControlTemplate x:Key="OutlinePill" TargetType="Button"><Border x:Name="Frame" CornerRadius="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" BorderThickness="1" Padding="{TemplateBinding Padding}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}"><ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Frame" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="ChatThread" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="聊天线程：分组气泡、回应、已读头像滑动、输入指示和可附件的输入框。头像用姓名缩写，图片为原创渐变。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <Border x:Name="Stage" Width="521.625" Height="436" CornerRadius="34" BorderThickness="1" Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}">
+        <DockPanel x:Name="CardBody">
+          <Border DockPanel.Dock="Top" Height="57.2" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}" Padding="18,0,14,0">
+            <DockPanel>
+              <Button x:Name="Offline" DockPanel.Dock="Right" Template="{StaticResource OutlinePill}" Tag="16" Height="32" Padding="12,0,12,0" Click="OnOffline" VerticalAlignment="Center" AutomationProperties.Name="Go offline"><StackPanel Orientation="Horizontal"><arc:ArcDataGridIcon Icon="wifi-off" Size="15" StrokeThickness="1.75" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,6,0"/><TextBlock x:Name="OfflineText" Text="Go offline" FontSize="12" FontWeight="Medium" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></StackPanel></Button>
+              <StackPanel x:Name="Faces" DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0"/>
+              <StackPanel VerticalAlignment="Center"><TextBlock Text="CSV export limit" FontSize="14" LineHeight="15.4" LineStackingStrategy="BlockLineHeight" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/><TextBlock Text="Chloe Nguyen, Daniel Kim" FontSize="12" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel>
+            </DockPanel>
+          </Border>
+          <arc:ChatThread x:Name="Thread" CurrentUserId="me" Placeholder="Reply to Chloe" Sent="OnSent"/>
+        </DockPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,56 @@
+{
+  "component": "DropdownMenu",
+  "arcName": "dropdown-menu",
+  "capturedAt": "2026-11-03T13:12:22.970992+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/dropdown-menu/markdown",
+    "page": "https://uiarc.dev/components/dropdown-menu",
+    "registry": "https://uiarc.dev/r/dropdown-menu.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/dropdown-menu/markdown",
+      "sha256": "ae95c892ecd20450cd1974b5e15e23277a0feaf618a99c3047e45b4550573797",
+      "bytes": 5660
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/dropdown-menu",
+      "sha256": "acaa565cd15a3b06d238018bd51986e9f1dab6e2689c3e22696557731f4433a7",
+      "bytes": 180366
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/dropdown-menu.json",
+      "sha256": "7c15289aff1979cf74bd02c2bb229ca1903048882fe9c0dd828f4293a67cdc44",
+      "bytes": 11844
+    },
+    {
+      "name": "registry/dropdown-menu.tsx",
+      "url": "https://uiarc.dev/r/dropdown-menu.json",
+      "sha256": "93bcd4952628899159bfe984c43d3d23d91aa2eddbaec2ee8bea864e67406981",
+      "bytes": 5701
+    },
+    {
+      "name": "registry/dropdown-menu.module.css",
+      "url": "https://uiarc.dev/r/dropdown-menu.json",
+      "sha256": "4a1a34dbbb4f327cd9843ae8df2b9ce55c3cac979cc2d5d164bd960d5bdc02ab",
+      "bytes": 4985
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

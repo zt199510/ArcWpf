@@ -172,6 +172,40 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("ReactionIconFill", Alpha(Oklch(neutrals["AccentStrong"], 0, 0), .22));
         PutBrush("SwipeNeutral", Oklch(neutrals["Foreground"] * .2 + neutrals["Surface"] * .8, 0, 0));
         PutBrush("SwipeMenuDangerHover", Alpha(Oklch(.53, .18, 10), .08));
+        // foundation.css --danger/--success as Arc ships them on 2026-11-03, and the mixes the threads, ConfirmPopover and BillingToggle use.
+        double arcDangerL = dark ? .71 : .53, arcDangerC = dark ? .155 : .18, arcDangerH = dark ? 8 : 10, arcSuccessL = dark ? .79 : .5, arcSuccessC = dark ? .14 : .12;
+        var arcDanger = Oklch(arcDangerL, arcDangerC, arcDangerH); var arcSuccess = Oklch(arcSuccessL, arcSuccessC, 162);
+        Color Tinted(double baseL, double l, double c, double h, double share) => Oklch(baseL + (l - baseL) * share, c * share, h);
+        Color Faded(Color color, double alpha) { color.A = (byte)Math.Round(255 * alpha); return color; }
+        double surfaceL = neutrals["Surface"], borderL = neutrals["Border"], foregroundL = neutrals["Foreground"], threadAccentL = dark ? .8 : .33;
+        PutBrush("ArcDanger", arcDanger); PutBrush("ArcSuccess", arcSuccess);
+        PutBrush("ArcDangerOnFill", Oklch(dark ? .19 : .99, 0, 0));
+        PutBrush("ConfirmTint", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, .06));
+        PutBrush("ConfirmEdge", Tinted(borderL, arcDangerL, arcDangerC, arcDangerH, .22));
+        PutBrush("ConfirmTrack", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, .12));
+        PutBrush("ConfirmErrorFill", Faded(arcDanger, .08));
+        PutBrush("ConfirmSuccessTint", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, .08));
+        PutBrush("ConfirmSuccessEdge", Tinted(borderL, arcSuccessL, arcSuccessC, 162, .3));
+        PutBrush("ConfirmNeutralTint", Oklch(neutrals["SurfaceMuted"], 0, 0));
+        PutBrush("ConfirmNeutralTrack", Oklch(surfaceL + (foregroundL - surfaceL) * .1, 0, 0));
+        PutBrush("DropdownDangerHighlight", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, .08));
+        PutBrush("DropdownTriggerPressed", Oklch(neutrals["SurfaceMuted"] * .45 + borderL * .55, 0, 0));
+        PutBrush("BillingBadge", Faded(Oklch(foregroundL, 0, 0), .06));
+        PutBrush("BillingBadgeActive", Faded(arcSuccess, dark ? .18 : .13));
+        PutBrush("BillingBadgeActiveInk", dark ? arcSuccess : Oklch(arcSuccessL * .88 + foregroundL * .12, arcSuccessC * .88, 162));
+        PutBrush("CompareChip", Faded(Oklch(neutrals["Background"], 0, 0), .74));
+        PutBrush("CompareLine", dark ? Oklch(foregroundL, 0, 0) : Oklch(neutrals["SurfaceRaised"], 0, 0));
+        PutBrush("CompareLineEdge", Faded(Colors.Black, .14));
+        PutBrush("CompareHairline", Faded(Oklch(foregroundL, 0, 0), .08));
+        PutBrush("ChatReactionMine", Oklch(surfaceL + (threadAccentL - surfaceL) * .08, 0, 0));
+        PutBrush("ChatReactionMineEdge", Faded(Oklch(threadAccentL, 0, 0), .28));
+        PutBrush("ChatTheirs", dark ? Oklch(neutrals["SurfaceRaised"], 0, 0) : Oklch(neutrals["SurfaceMuted"], 0, 0));
+        PutBrush("ChatMore", Faded(Colors.Black, .45));
+        PutBrush("CommentReactionMineEdge", Oklch(borderL + (threadAccentL - borderL) * .45, 0, 0));
+        PutBrush("CommentDangerHover", Faded(arcDanger, .09));
+        PutBrush("CommentSendHover", Oklch(foregroundL * .86 + neutrals["Background"] * .14, 0, 0));
+        PutBrush("CommentResolvedIcon", Faded(arcSuccess, .14));
+        PutBrush("OnImage", Colors.White);
         // signature-pad.module.css inks, per theme; rich-text-editor and onboarding-checklist css mixes.
         PutBrush("SignatureInkBlue", dark ? Oklch(.76, .12, 258) : Oklch(.46, .17, 262));
         PutBrush("SignatureInkViolet", dark ? Oklch(.77, .13, 295) : Oklch(.49, .2, 292));

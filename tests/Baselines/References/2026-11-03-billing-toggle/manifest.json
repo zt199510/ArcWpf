@@ -1,0 +1,56 @@
+{
+  "component": "BillingToggle",
+  "arcName": "billing-toggle",
+  "capturedAt": "2026-11-03T13:12:28.741405+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/billing-toggle/markdown",
+    "page": "https://uiarc.dev/components/billing-toggle",
+    "registry": "https://uiarc.dev/r/billing-toggle.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/billing-toggle/markdown",
+      "sha256": "14dbbc45b8e1dc3c284dcbc10b9fbcac540cf03a29c29b5b9e4eb0fee76d36c8",
+      "bytes": 8666
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/billing-toggle",
+      "sha256": "66798c3bee77e5fc634e85c45f54ba7a75d6560528b8dd4c193734fe55d9a5b7",
+      "bytes": 199019
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/billing-toggle.json",
+      "sha256": "3ff007b6378dafb7525f6ea7b5ce9e70271225c3b614d957cf25787e9037b901",
+      "bytes": 15283
+    },
+    {
+      "name": "registry/billing-toggle.tsx",
+      "url": "https://uiarc.dev/r/billing-toggle.json",
+      "sha256": "e17e3900f6c5efa2824b22b725c2d7501b2203491bd33b7c446fe817bf4fef20",
+      "bytes": 8861
+    },
+    {
+      "name": "registry/billing-toggle.module.css",
+      "url": "https://uiarc.dev/r/billing-toggle.json",
+      "sha256": "0695e1f157d9a0b298ed84441a46c5f50577e7b7a82381bce7df6f6bf9c1227b",
+      "bytes": 4949
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

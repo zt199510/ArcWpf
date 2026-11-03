@@ -1,0 +1,12 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.DropdownMenuPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="DropdownMenu" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="下拉菜单：指针打开不高亮、键盘打开选中首项；高亮在项间滑动，触发器标签随选择切换宽度。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.625" Height="414"><arc:DropdownMenu x:Name="Menu" Label="Project actions" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0"/></StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

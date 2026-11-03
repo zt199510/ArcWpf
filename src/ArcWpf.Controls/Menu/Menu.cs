@@ -39,19 +39,19 @@ public class Menu : Control
     public static readonly RoutedEvent ItemInvokedEvent = EventManager.RegisterRoutedEvent(nameof(ItemInvoked), RoutingStrategy.Bubble, typeof(EventHandler<MenuItemInvokedEventArgs>), typeof(Menu));
 
     // The template trigger is a plain WPF Button; the bare name would mean ArcWpf.Controls.Button and never match.
-    private System.Windows.Controls.Button? _trigger;
+    private protected System.Windows.Controls.Button? _trigger;
     private Popup? _popup;
-    private ListBox? _itemsHost;
-    private Border? _highlight;
-    private Border? _surface;
-    private TranslateTransform? _highlightMove;
-    private ScaleTransform? _surfaceScale;
+    private protected ListBox? _itemsHost;
+    private protected Border? _highlight;
+    private protected Border? _surface;
+    private protected TranslateTransform? _highlightMove;
+    private protected ScaleTransform? _surfaceScale;
     private TranslateTransform? _triggerLabelMove;
     private FrameworkElement? _chevron;
-    private readonly RotateTransform _chevronRotation = new();
-    private readonly OwnedMotion _motion = new();
-    private readonly OwnedMotion _popupMotion = new();
-    private readonly List<(ListBoxItem Item, OwnedMotion Motion)> _itemMotions = [];
+    private protected readonly RotateTransform _chevronRotation = new();
+    private protected readonly OwnedMotion _motion = new();
+    private protected readonly OwnedMotion _popupMotion = new();
+    private protected readonly List<(ListBoxItem Item, OwnedMotion Motion)> _itemMotions = [];
     private bool _presented;
     private bool _closing;
     private Window? _ownerWindow;
@@ -185,7 +185,7 @@ public class Menu : Control
 
     // .menu[data-state="closed"]: 130ms fade to 0 with scale .985, ease-standard, no pointer input; Reduced keeps only a short fade.
     // The Popup stays open until the fade ends, and a reopen meanwhile reverses from the current values.
-    private bool BeginExit()
+    private protected virtual bool BeginExit()
     {
         if (!_presented || _surface is null || _surfaceScale is null || _popup is not { IsOpen: true } || !IsLoaded) return false;
         var level = ArcMotion.GetLevel(this);
@@ -227,7 +227,7 @@ public class Menu : Control
     }
 
     private void ItemsSelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateHighlight(true);
-    private void ItemsMouseMove(object sender, MouseEventArgs e)
+    private protected virtual void ItemsMouseMove(object sender, MouseEventArgs e)
     {
         if (_itemsHost is null || FindItem(e.OriginalSource as DependencyObject) is not { } item || !item.IsEnabled) return;
         var index = Items.IndexOf(item);
@@ -235,7 +235,7 @@ public class Menu : Control
         UpdateHighlight(true);
     }
 
-    private void UpdateHighlight(bool animate)
+    private protected virtual void UpdateHighlight(bool animate)
     {
         if (_itemsHost is null || _highlight is null || _highlightMove is null || _itemsHost.SelectedIndex < 0) return;
         if (_itemsHost.ItemContainerGenerator.ContainerFromIndex(_itemsHost.SelectedIndex) is not ListBoxItem item) return;
@@ -254,7 +254,7 @@ public class Menu : Control
         _motion.Double(_highlightMove, TranslateTransform.YProperty, top, .22, animate && ArcMotion.GetLevel(this) == ArcMotionLevel.Full, spring: true);
     }
 
-    private void AnimatePopupIn()
+    private protected virtual void AnimatePopupIn()
     {
         if (_surface is null || _surfaceScale is null) return;
         bool full = ArcMotion.GetLevel(this) == ArcMotionLevel.Full;
@@ -284,7 +284,7 @@ public class Menu : Control
         }
     }
 
-    private void AnimateTriggerLabel()
+    private protected virtual void AnimateTriggerLabel()
     {
         var label = GetTemplateChild("PART_TriggerLabel") as TextBlock;
         if (label is null || _triggerLabelMove is null) return;
@@ -295,7 +295,7 @@ public class Menu : Control
         _popupMotion.Double(_triggerLabelMove, TranslateTransform.YProperty, 0, full ? .18 : 0, full, enter: true);
     }
 
-    private void AnimateChevron(bool open)
+    private protected virtual void AnimateChevron(bool open)
     {
         if (_chevron is null) return;
         bool full = ArcMotion.GetLevel(this) == ArcMotionLevel.Full && IsLoaded && IsVisible;
@@ -359,7 +359,7 @@ public class Menu : Control
         if (!inMenu) CloseAndFocus();
     }
 
-    private void SelectFirstEnabled()
+    private protected virtual void SelectFirstEnabled()
     {
         if (_itemsHost is null) return;
         var index = Items.Select((item, index) => (item, index)).FirstOrDefault(pair => pair.item.IsEnabled).index;
@@ -378,7 +378,7 @@ public class Menu : Control
         return -1;
     }
 
-    private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
+    private protected virtual CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
         double x = AlignToStart ? -AlignOffset : targetSize.Width - popupSize.Width + AlignOffset;
         double gap = AlignOffset + SideOffset;
@@ -386,7 +386,7 @@ public class Menu : Control
         return [new CustomPopupPlacement(new Point(x, targetSize.Height + gap), PopupPrimaryAxis.None), new CustomPopupPlacement(new Point(x, -popupSize.Height - gap), PopupPrimaryAxis.None)];
     }
 
-    private MenuItem? FindItem(DependencyObject? source)
+    private protected MenuItem? FindItem(DependencyObject? source)
     {
         while (source is not null)
         {

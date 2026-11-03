@@ -1,0 +1,29 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ConfirmPopoverPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ConfirmPopover" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="就地确认：按钮本身长成带后果说明的小卡片，确认键同时是进度条；成功折回按钮并显示对勾，失败留在原地说明原因。依公开预览独立实现。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.625" Height="478.6">
+        <Border Margin="0,120,0,0" CornerRadius="34" BorderThickness="1" Padding="20,8,20,8" Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}">
+          <StackPanel>
+            <TextBlock Text="Atlas settings" FontSize="16" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" Margin="0,16,0,8" LineHeight="17.6" LineStackingStrategy="BlockLineHeight"/>
+            <DockPanel Height="72">
+              <arc:ConfirmPopover x:Name="Remove" DockPanel.Dock="Right" Icon="user-minus" Label="Remove" Align="End" Title="Remove Jordan from Atlas?" Description="Jordan loses access to the project and its three environments right away. You can invite them again later." ConfirmLabel="Remove" PendingLabel="Removing..." SuccessLabel="Removed" ErrorTitle="Couldn&apos;t remove Jordan"/>
+              <arc:Avatar DisplayName="Jordan Reyes" Width="36" Height="36" BorderThickness="0" Margin="0,0,12,0" DockPanel.Dock="Left"/>
+              <StackPanel VerticalAlignment="Center"><TextBlock Text="Jordan Reyes" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/><TextBlock Text="Editor · jordan@atlas.dev" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></StackPanel>
+            </DockPanel>
+            <Rectangle Height="1" Fill="{DynamicResource ArcWpf.Brush.BorderSubtle}"/>
+            <DockPanel Height="72">
+              <arc:ConfirmPopover x:Name="Delete" DockPanel.Dock="Right" Icon="trash-2" Label="Delete" Align="End" Title="Delete Atlas?" Description="This permanently deletes 14 deployments, 3 environments and every log. It can&apos;t be undone." ConfirmText="atlas" ConfirmLabel="Delete project" PendingLabel="Deleting..." SuccessLabel="Deleted" ErrorTitle="Couldn&apos;t delete Atlas"/>
+              <StackPanel VerticalAlignment="Center"><TextBlock Text="Delete project" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/><TextBlock Text="14 deployments, 3 environments and all logs" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></StackPanel>
+            </DockPanel>
+          </StackPanel>
+        </Border>
+        <DockPanel Margin="8,14,8,0"><arc:Switch x:Name="Fail" DockPanel.Dock="Left"/><TextBlock Text="Fail the next attempt" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="14" DockPanel.Dock="Left" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/><TextBlock x:Name="Log" Text="Nothing has changed yet" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></DockPanel>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

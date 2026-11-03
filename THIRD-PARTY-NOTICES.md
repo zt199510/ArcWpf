@@ -218,3 +218,11 @@ RichTextEditor、SignaturePad、CommandMenu、OnboardingChecklist 的结构、�
 本批新增的图标路径取自 lucide-static 1.67.0（ISC）。Arc 使用的 Lucide 版本未知，未核实两者是否一致。
 
 TKCode.Arc（提交 `5680bf55414fff07398a9fecadc0b72c900fdaba`，MIT）仅作移植经验参考，未复制代码；其 Avalonia 自研编辑器引擎未采用。
+
+## 2026-11-03 六项复刻
+
+DropdownMenu、BillingToggle、ChatThread、CommentThread、ImageCompare 的结构、参数和动效依据 Arc 免费 Registry（MIT，快照见 `tests/Baselines/References/2026-11-03-*`）独立改写，不包含 React/Motion 运行时代码，也未打包 Arc 图片。Gallery 使用姓名缩写头像和原创插画。
+
+ConfirmPopover 是 Arc Pro 组件：未使用 Pro 源码，依公开预览的可见行为、DOM 几何和计算样式独立实现，API 形状与公开文档有重合。Arc 许可对 Pro 源码定义较宽，并禁止免费分发组件库；开源发布前需要项目负责人确认。Pro 文档未入库。
+
+本批新增的图标路径取自 Lucide（ISC），Arc 使用的 Lucide 版本未知，未核实两者是否一致。

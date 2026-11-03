@@ -1,0 +1,17 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.BillingTogglePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="BillingToggle" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="计费周期切换：滑块在周期间弹簧移动，节省徽标同步变字，价格数字滚动并显示原价。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <Border x:Name="Stage" Width="521.625" Padding="24" CornerRadius="34" BorderThickness="1" Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}">
+        <StackPanel>
+          <DockPanel Margin="0,0,0,16"><arc:BillingToggle x:Name="Toggle" DockPanel.Dock="Right" Label="Billing period" Value="yearly" ValueChanged="OnPeriod"/><TextBlock Text="Plans" FontSize="16" FontWeight="Medium" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/></DockPanel>
+          <StackPanel x:Name="Rows"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

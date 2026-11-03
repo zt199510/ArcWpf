@@ -1,0 +1,56 @@
+{
+  "component": "ChatThread",
+  "arcName": "chat-thread",
+  "capturedAt": "2026-11-03T13:12:33.890141+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/chat-thread/markdown",
+    "page": "https://uiarc.dev/components/chat-thread",
+    "registry": "https://uiarc.dev/r/chat-thread.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/chat-thread/markdown",
+      "sha256": "d9748a56d983710e4ed1921c15bf089268c7201410351f1bef56d031c7ead7a7",
+      "bytes": 12333
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/chat-thread",
+      "sha256": "4d84fbf609ec0fa6621729fcf57b834d27ac72e5dfe0947fbeff7a765a9085cd",
+      "bytes": 205800
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/chat-thread.json",
+      "sha256": "823fc96ff0669b486979c215c6802c63d9a0f895f9b5564a3391900cbea2e813",
+      "bytes": 57092
+    },
+    {
+      "name": "registry/chat-thread.tsx",
+      "url": "https://uiarc.dev/r/chat-thread.json",
+      "sha256": "4566c8390ec9b22cc9336349b1550fd6f58f7fc8c54f59471de5d498aef76c17",
+      "bytes": 39381
+    },
+    {
+      "name": "registry/chat-thread.module.css",
+      "url": "https://uiarc.dev/r/chat-thread.json",
+      "sha256": "31ea2e7d3e7593c5d191579e005fb1aa05bc92b541f8743eed2183171ef5a7e7",
+      "bytes": 15446
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

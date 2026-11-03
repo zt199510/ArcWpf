@@ -1,0 +1,56 @@
+{
+  "component": "ImageCompare",
+  "arcName": "image-compare",
+  "capturedAt": "2026-11-03T13:12:41.854016+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/image-compare/markdown",
+    "page": "https://uiarc.dev/components/image-compare",
+    "registry": "https://uiarc.dev/r/image-compare.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/image-compare/markdown",
+      "sha256": "17cccabf7c7ef489c514599eefd39194025361bf0c5e77a1118e39c4e39902a3",
+      "bytes": 5643
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/image-compare",
+      "sha256": "6689b48fe857e6cf7ea7dc758358dcff19c7240211454700640fbeaf7b78f908",
+      "bytes": 184195
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/image-compare.json",
+      "sha256": "bf6d9a85afece2a4de6b50f1e78b0afacd6d4012faa0f9203454495bd74ec068",
+      "bytes": 22386
+    },
+    {
+      "name": "registry/image-compare.tsx",
+      "url": "https://uiarc.dev/r/image-compare.json",
+      "sha256": "9f97bed616271952040f1845deeac711d3649f5c4e8e8e72bf88c8c9dee6977c",
+      "bytes": 17713
+    },
+    {
+      "name": "registry/image-compare.module.css",
+      "url": "https://uiarc.dev/r/image-compare.json",
+      "sha256": "d9538b7da60d8237136b9d277d3c63677f29af4397c547587b80e97d581e8e4c",
+      "bytes": 3327
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

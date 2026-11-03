@@ -82,4 +82,64 @@
       </Grid>
     </ControlTemplate></Setter.Value></Setter>
   </Style>
+  <!-- dropdown-menu.module.css. Lives beside Menu so it can reuse the host style; trigger colours are driven from DropdownMenu.cs as CSS transitions. -->
+  <ControlTemplate x:Key="ArcWpf.Dropdown.TriggerTemplate" TargetType="Button">
+    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ArcWpf.Radius.Control}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+      <ContentPresenter VerticalAlignment="Center" />
+    </Border>
+  </ControlTemplate>
+  <Style x:Key="ArcWpf.Dropdown.ItemContainerStyle" TargetType="ListBoxItem">
+    <Setter Property="OverridesDefaultStyle" Value="True" /><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" /><Setter Property="Background" Value="Transparent" /><Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Cursor" Value="Hand" /><Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem">
+      <StackPanel>
+        <Border Height="1" Margin="-4,4" Background="{DynamicResource ArcWpf.Brush.BorderSubtle}" Visibility="{Binding SeparatorVisibility}" IsHitTestVisible="False" />
+        <Border x:Name="PART_Row" Background="Transparent" MinHeight="36" Padding="11,0"><ContentPresenter VerticalAlignment="Center" /></Border>
+      </StackPanel>
+    </ControlTemplate></Setter.Value></Setter>
+    <Style.Triggers><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45" /><Setter Property="Cursor" Value="Arrow" /></Trigger></Style.Triggers>
+  </Style>
+  <DataTemplate x:Key="ArcWpf.Dropdown.ItemTemplate">
+    <StackPanel Orientation="Horizontal">
+      <ContentControl x:Name="ItemIcon" Width="17" Margin="0,0,10,0" Focusable="False" IsTabStop="False" Content="{Binding Icon}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+      <TextBlock x:Name="ItemLabel" Text="{Binding Label}" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+    </StackPanel>
+    <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding Icon}" Value="{x:Null}"><Setter TargetName="ItemIcon" Property="Visibility" Value="Collapsed" /></DataTrigger>
+      <DataTrigger Binding="{Binding IsDestructive}" Value="True"><Setter TargetName="ItemLabel" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.ArcDanger}" /><Setter TargetName="ItemIcon" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.ArcDanger}" /></DataTrigger>
+    </DataTemplate.Triggers>
+  </DataTemplate>
+  <Style TargetType="{x:Type arc:DropdownMenu}">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}" />
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type arc:DropdownMenu}">
+      <Grid>
+        <Button x:Name="PART_Trigger" Template="{StaticResource ArcWpf.Dropdown.TriggerTemplate}" MinHeight="36" Padding="12,0" BorderThickness="1" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FontSize="14" FontWeight="Medium" Cursor="Hand">
+          <StackPanel Orientation="Horizontal">
+            <ContentControl x:Name="PART_TriggerIcon" Content="{Binding Icon, RelativeSource={RelativeSource AncestorType={x:Type arc:DropdownMenu}}}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Focusable="False" IsTabStop="False" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <Grid x:Name="PART_LabelHost" VerticalAlignment="Center" ClipToBounds="True">
+              <TextBlock x:Name="PART_TriggerLabel" Text="{Binding Label, RelativeSource={RelativeSource AncestorType={x:Type arc:DropdownMenu}}}" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            </Grid>
+            <Viewbox x:Name="PART_Chevron" Width="15" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" RenderTransformOrigin=".5,.5" IsHitTestVisible="False">
+              <Canvas Width="24" Height="24"><Path Data="m6 9 6 6 6-6" Stroke="{DynamicResource ArcWpf.Brush.TextMuted}" StrokeThickness="1.8" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" /></Canvas>
+            </Viewbox>
+          </StackPanel>
+        </Button>
+        <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Custom" PlacementTarget="{Binding ElementName=PART_Trigger}" StaysOpen="True" PopupAnimation="None">
+          <Border Padding="40,6,40,56">
+            <Border x:Name="PART_Surface" MinWidth="192" Padding="5" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="{DynamicResource ArcWpf.Radius.Panel}" Effect="{DynamicResource ArcWpf.Shadow.Floating}">
+              <Grid>
+                <Border x:Name="PART_Highlight" CornerRadius="20" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" IsHitTestVisible="False" Opacity="0" />
+                <ListBox x:Name="PART_ItemsHost" Style="{StaticResource ArcWpf.Menu.ItemsHostStyle}" ItemContainerStyle="{StaticResource ArcWpf.Dropdown.ItemContainerStyle}" ItemTemplate="{StaticResource ArcWpf.Dropdown.ItemTemplate}" />
+              </Grid>
+            </Border>
+          </Border>
+        </Popup>
+      </Grid>
+    </ControlTemplate></Setter.Value></Setter>
+  </Style>
 </ResourceDictionary>
