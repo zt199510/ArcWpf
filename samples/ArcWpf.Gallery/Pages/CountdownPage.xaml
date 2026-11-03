@@ -1,0 +1,38 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.CountdownPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="Countdown" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="主讲数字跟随容器宽度缩放，会议行用紧凑胶囊；跳到最后 10 秒后，数字变形为“Live now”。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Border Style="{DynamicResource Gallery.DemoCard}" Width="521.6" VerticalAlignment="Center" TextElement.FontSize="14">
+        <StackPanel>
+          <TextBlock Text="Fieldwork 2.0 keynote" FontSize="16" FontWeight="Medium" LineHeight="19.6" LineStackingStrategy="BlockLineHeight"/>
+          <TextBlock Text="Tue, Nov 10 · 10:00 AM PT · Streamed online" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          <Border Margin="0,24,0,0" Padding="0,8" MinHeight="93">
+            <arc:Countdown x:Name="Hero" Label="Keynote starts in"/>
+          </Border>
+          <Border Margin="0,24,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.AnnouncementStageBorder}">
+            <StackPanel>
+              <Border Height="53" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ArcWpf.Brush.AnnouncementStageBorder}">
+                <DockPanel><arc:Countdown x:Name="First" Variant="Compact" CompleteLabel="Live" DockPanel.Dock="Right"/><TextBlock Text="Keynote" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></DockPanel>
+              </Border>
+              <Border Height="53" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ArcWpf.Brush.AnnouncementStageBorder}">
+                <DockPanel><arc:Countdown x:Name="Second" Variant="Compact" CompleteLabel="Live" DockPanel.Dock="Right"/><TextBlock Text="Design systems deep dive" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></DockPanel>
+              </Border>
+              <Border Height="53" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ArcWpf.Brush.AnnouncementStageBorder}">
+                <DockPanel><arc:Countdown x:Name="Third" Variant="Compact" CompleteLabel="Live" DockPanel.Dock="Right"/><TextBlock Text="Live Q&amp;A with the team" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></DockPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+            <arc:Button x:Name="Skip" Variant="Secondary" Size="Small" Content="Skip to final 10 seconds" Click="OnSkip"/>
+            <arc:Button x:Name="Restart" Variant="Ghost" Size="Small" Content="Reset" Click="OnSkip" Visibility="Collapsed"/>
+            <TextBlock x:Name="Status" Width="0" AutomationProperties.LiveSetting="Polite"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

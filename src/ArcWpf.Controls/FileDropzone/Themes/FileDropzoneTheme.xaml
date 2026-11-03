@@ -1,61 +1,198 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ArcWpf.Controls">
+  <Style x:Key="ArcWpf.FileDropzone.Remove" TargetType="Button">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Setter Property="FocusVisualStyle" Value="{DynamicResource ArcWpf.Button.FocusVisual}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Grid>
+            <Ellipse x:Name="Fill" Fill="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Opacity="0"/>
+            <Viewbox Width="16" Height="16"><Canvas Width="24" Height="24"><Path Data="M18,6 L6,18 M6,6 L18,18" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stroke="{TemplateBinding Foreground}"/></Canvas></Viewbox>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Fill" Property="Opacity" Value="1"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/></Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="ArcWpf.FileDropzone.Retry" TargetType="Button">
+    <Setter Property="Height" Value="30"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Margin" Value="3,3,6,3"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="FocusVisualStyle" Value="{DynamicResource ArcWpf.Button.FocusVisual}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Face" CornerRadius="15" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" Padding="10,0,11,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <Viewbox Width="14" Height="14" Margin="0,0,5,0"><Canvas Width="24" Height="24"><Path Data="M21,12 a9,9,0,1,1,-9,-9 c2.52,0,4.93,1,6.74,2.74 L21,8 M21,3 v5 h-5" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Stroke="{DynamicResource ArcWpf.Brush.Foreground}"/></Canvas></Viewbox>
+              <TextBlock Text="Retry" FontSize="12" FontWeight="Medium" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+            </StackPanel>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Face" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/></Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
   <DataTemplate x:Key="FileDropzoneItemTemplate" DataType="{x:Type local:FileDropzoneItem}">
-    <Border Margin="0,4,0,0" Padding="9,8" CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
-      <Grid MinHeight="42">
+    <local:FileDropzoneRow x:Name="Row" Margin="0,8,0,0" MinHeight="58" Padding="9,8,8,8" CornerRadius="18" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+      <Grid>
         <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-        <Border Width="40" Height="40" CornerRadius="9" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" ClipToBounds="True">
-          <Grid><Image x:Name="PreviewImage" Source="{Binding Preview}" Stretch="UniformToFill"/><TextBlock x:Name="TypeGlyph" Text="▱" FontSize="23" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Grid>
-        </Border>
-        <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center" MinWidth="0">
-          <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
-          <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><TextBlock Text="{Binding FormattedSize}" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><TextBlock Text="  ·  " FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><TextBlock Text="{Binding DisplayStatus}" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel>
-          <ProgressBar Height="4" Margin="0,6,0,0" Maximum="100" Value="{Binding Progress}" Foreground="{DynamicResource ArcWpf.Brush.Accent}" Background="{DynamicResource ArcWpf.Brush.Border}"><ProgressBar.Style><Style TargetType="ProgressBar"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="uploading"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></ProgressBar.Style></ProgressBar>
-          <TextBlock Text="{Binding Error}" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.Danger}" TextTrimming="CharacterEllipsis"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="failed"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+        <Grid Width="40" Height="40" VerticalAlignment="Center">
+          <Viewbox x:Name="FileIcon" Width="20" Height="20"><Canvas Width="24" Height="24"><Path Data="{Binding IconData}" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Canvas></Viewbox>
+          <Border x:Name="Thumb" CornerRadius="10" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}">
+            <Grid>
+              <Rectangle RadiusX="10" RadiusY="10">
+                <Rectangle.Fill><ImageBrush ImageSource="{Binding Thumbnail}" Stretch="UniformToFill"/></Rectangle.Fill>
+              </Rectangle>
+              <Border CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.TimelineRing}"/>
+            </Grid>
+          </Border>
+        </Grid>
+        <StackPanel Grid.Column="1" Margin="12,0,12,0" VerticalAlignment="Center" MinWidth="0">
+          <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Medium" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+          <StackPanel Orientation="Horizontal" Margin="0,1,0,0" TextElement.FontSize="12">
+            <TextBlock Text="{Binding FormattedSize}" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+            <TextBlock x:Name="Dot" Text="·" Padding="6,0" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+            <Viewbox x:Name="StateIcon" Width="14" Height="14" Margin="0,1,5,0" VerticalAlignment="Top" Visibility="Collapsed"><Canvas Width="24" Height="24"><Path x:Name="StateGlyph" StrokeThickness="2.25" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/></Canvas></Viewbox>
+            <TextBlock x:Name="StateText" Text="{Binding StatusText}" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          </StackPanel>
+          <ProgressBar x:Name="Bar" Height="4" Margin="0,7,0,2" Maximum="100" Value="{Binding Progress}" Visibility="Collapsed">
+            <ProgressBar.Template>
+              <ControlTemplate TargetType="ProgressBar">
+                <Border x:Name="PART_Track" CornerRadius="2" Background="{DynamicResource ArcWpf.Brush.Border}" ClipToBounds="True">
+                  <Border x:Name="PART_Indicator" CornerRadius="2" HorizontalAlignment="Left" Background="{DynamicResource ArcWpf.Brush.Accent}"/>
+                </Border>
+              </ControlTemplate>
+            </ProgressBar.Template>
+          </ProgressBar>
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-          <Button x:Name="PART_Retry" Tag="{Binding}" Content="↻" Width="30" Height="30" Padding="0" FontSize="16" ToolTip="Retry"><Button.Style><Style TargetType="Button"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="failed"><Setter Property="Visibility" Value="Visible"/></DataTrigger><DataTrigger Binding="{Binding Status}" Value="cancelled"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></Button.Style></Button>
-          <Button x:Name="PART_Cancel" Tag="{Binding}" Content="×" Width="30" Height="30" Padding="0" FontSize="17" ToolTip="Cancel"><Button.Style><Style TargetType="Button"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="uploading"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></Button.Style></Button>
-          <Button x:Name="PART_Remove" Tag="{Binding}" Content="×" Width="30" Height="30" Padding="0" FontSize="17" ToolTip="Remove"/>
+          <Button x:Name="PART_Retry" Tag="{Binding}" Style="{StaticResource ArcWpf.FileDropzone.Retry}" AutomationProperties.Name="Retry" Visibility="Collapsed"/>
+          <Button x:Name="PART_Cancel" Tag="{Binding}" Style="{StaticResource ArcWpf.FileDropzone.Remove}" AutomationProperties.Name="Cancel upload" Visibility="Collapsed"/>
+          <Button x:Name="PART_Remove" Tag="{Binding}" Style="{StaticResource ArcWpf.FileDropzone.Remove}" AutomationProperties.Name="Remove"/>
         </StackPanel>
       </Grid>
-    </Border>
+    </local:FileDropzoneRow>
     <DataTemplate.Triggers>
-      <DataTrigger Binding="{Binding Preview}" Value=""><Setter TargetName="PreviewImage" Property="Visibility" Value="Collapsed"/></DataTrigger>
-      <DataTrigger Binding="{Binding Preview}" Value="{x:Null}"><Setter TargetName="PreviewImage" Property="Visibility" Value="Collapsed"/></DataTrigger>
+      <DataTrigger Binding="{Binding Thumbnail}" Value="{x:Null}"><Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/></DataTrigger>
+      <DataTrigger Binding="{Binding Status}" Value="uploaded">
+        <Setter TargetName="StateIcon" Property="Visibility" Value="Visible"/>
+        <Setter TargetName="StateGlyph" Property="Data" Value="M12,2 a10,10 0 1 0 0,20 a10,10 0 1 0 0,-20 M9,12 l2,2 l4,-4"/>
+        <Setter TargetName="StateGlyph" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.LiveSuccess}"/>
+      </DataTrigger>
+      <DataTrigger Binding="{Binding Status}" Value="failed">
+        <Setter TargetName="Row" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.FileDropzoneFailedBorder}"/>
+        <Setter TargetName="StateIcon" Property="Visibility" Value="Visible"/>
+        <Setter TargetName="StateGlyph" Property="Data" Value="M12,2 a10,10 0 1 0 0,20 a10,10 0 1 0 0,-20 M12,8 v4 M12,16 h.01"/>
+        <Setter TargetName="StateGlyph" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.Danger}"/>
+        <Setter TargetName="StateText" Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Danger}"/>
+        <Setter TargetName="PART_Retry" Property="Visibility" Value="Visible"/>
+      </DataTrigger>
+      <DataTrigger Binding="{Binding Retryable}" Value="False"><Setter TargetName="PART_Retry" Property="Visibility" Value="Collapsed"/></DataTrigger>
+      <DataTrigger Binding="{Binding Status}" Value="uploading">
+        <Setter TargetName="Bar" Property="Visibility" Value="Visible"/>
+        <Setter TargetName="PART_Cancel" Property="Visibility" Value="Visible"/>
+        <Setter TargetName="PART_Remove" Property="Visibility" Value="Collapsed"/>
+      </DataTrigger>
+      <DataTrigger Binding="{Binding StatusText}" Value=""><Setter TargetName="Dot" Property="Visibility" Value="Collapsed"/></DataTrigger>
     </DataTemplate.Triggers>
   </DataTemplate>
+  <Style x:Key="ArcWpf.FileDropzone.Sheet" TargetType="Border">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="44"/>
+    <Setter Property="CornerRadius" Value="7"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceRaised}"/>
+    <Setter Property="Effect">
+      <Setter.Value><DropShadowEffect BlurRadius="4" ShadowDepth="1" Direction="270" Opacity=".06" Color="Black"/></Setter.Value>
+    </Setter>
+  </Style>
   <Style TargetType="{x:Type local:FileDropzone}">
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
     <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
-    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type local:FileDropzone}">
-      <StackPanel>
-        <Border x:Name="DropSurface" CornerRadius="18" Background="{DynamicResource ArcWpf.Brush.Surface}" Padding="1" AllowDrop="True">
-          <Grid>
-            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-            <Rectangle x:Name="DashEdge" RadiusX="17" RadiusY="17" Stroke="{DynamicResource ArcWpf.Brush.BorderStrong}" StrokeThickness="1" StrokeDashArray="3,3" Fill="Transparent" IsHitTestVisible="False"/>
-            <Border x:Name="DragWash" CornerRadius="17" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}" Opacity="0" IsHitTestVisible="False"/>
-            <Border x:Name="DragGlow" CornerRadius="17" BorderBrush="{DynamicResource ArcWpf.Brush.Accent}" BorderThickness="2" Opacity="0" IsHitTestVisible="False"/>
-            <Button x:Name="PART_Browse" Grid.Row="0" Background="Transparent" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" BorderThickness="0" Padding="25,29,25,27" HorizontalContentAlignment="Stretch">
-              <StackPanel HorizontalAlignment="Center">
-                <Grid x:Name="IconStack" Width="48" Height="45" Margin="0,0,0,8"><Border Width="31" Height="39" CornerRadius="6" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" RenderTransformOrigin=".5,1" HorizontalAlignment="Center" VerticalAlignment="Center"><Border.RenderTransform><RotateTransform Angle="-10"/></Border.RenderTransform></Border><Border Width="31" Height="39" CornerRadius="6" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" RenderTransformOrigin=".5,1" HorizontalAlignment="Center" VerticalAlignment="Center"><Border.RenderTransform><RotateTransform Angle="10"/></Border.RenderTransform></Border><Border Width="31" Height="39" CornerRadius="6" Background="{DynamicResource ArcWpf.Brush.SurfaceRaised}" BorderBrush="{DynamicResource ArcWpf.Brush.BorderStrong}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"><TextBlock Text="↑" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,3" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Border></Grid>
-                <TextBlock x:Name="NormalLabel" Text="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                <TextBlock x:Name="DropLabelText" Text="{Binding DropLabel, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Visibility="Collapsed"/>
-                <TextBlock Text="{Binding Description, RelativeSource={RelativeSource TemplatedParent}}" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" HorizontalAlignment="Center" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
-                <TextBlock x:Name="NoteText" Text="{Binding Note, RelativeSource={RelativeSource TemplatedParent}}" FontSize="11" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
-              </StackPanel>
-            </Button>
-            <ItemsControl x:Name="InsideList" Grid.Row="1" ItemsSource="{TemplateBinding Items}" ItemTemplate="{StaticResource FileDropzoneItemTemplate}" Margin="12,0,12,12" Visibility="Collapsed"/>
-          </Grid>
-        </Border>
-        <ItemsControl x:Name="OutsideList" ItemsSource="{TemplateBinding Items}" ItemTemplate="{StaticResource FileDropzoneItemTemplate}" Margin="0,8,0,0"/>
-      </StackPanel>
-      <ControlTemplate.Triggers>
-        <Trigger Property="IsDragging" Value="True"><Setter TargetName="DragWash" Property="Opacity" Value="0.55"/><Setter TargetName="DragGlow" Property="Opacity" Value="0.8"/><Setter TargetName="DashEdge" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.Accent}"/><Setter TargetName="DashEdge" Property="StrokeDashArray" Value="1,0"/><Setter TargetName="NormalLabel" Property="Visibility" Value="Collapsed"/><Setter TargetName="DropLabelText" Property="Visibility" Value="Visible"/></Trigger>
-        <Trigger SourceName="DropSurface" Property="IsMouseOver" Value="True"><Setter TargetName="DropSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter TargetName="DashEdge" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.TextMuted}"/></Trigger>
-        <Trigger Property="IsCompact" Value="True"><Setter TargetName="PART_Browse" Property="Padding" Value="20,14"/><Setter TargetName="IconStack" Property="Visibility" Value="Collapsed"/><Setter TargetName="NoteText" Property="Visibility" Value="Collapsed"/></Trigger>
-        <Trigger Property="IsListInside" Value="True"><Setter TargetName="OutsideList" Property="Visibility" Value="Collapsed"/><Setter TargetName="InsideList" Property="Visibility" Value="Visible"/></Trigger>
-      </ControlTemplate.Triggers>
-    </ControlTemplate></Setter.Value></Setter>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:FileDropzone}">
+          <StackPanel>
+            <Border x:Name="DropSurface" CornerRadius="34" Background="{DynamicResource ArcWpf.Brush.Surface}" AllowDrop="True">
+              <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <Border x:Name="DragFill" Grid.RowSpan="2" CornerRadius="34" Background="{DynamicResource ArcWpf.Brush.AccentSubtle}" Opacity="0" IsHitTestVisible="False"/>
+                <Border x:Name="DragWash" Grid.RowSpan="2" CornerRadius="34" Opacity="0" IsHitTestVisible="False"/>
+                <Rectangle x:Name="DashEdge" Grid.RowSpan="2" Margin=".5" RadiusX="33.5" RadiusY="33.5" Stroke="{DynamicResource ArcWpf.Brush.BorderStrong}" StrokeThickness="1" StrokeDashArray="3.5,3.5" IsHitTestVisible="False"/>
+                <Button x:Name="PART_Browse" Cursor="Hand" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{TemplateBinding Label}" FocusVisualStyle="{DynamicResource ArcWpf.Button.FocusVisual}">
+                  <Button.Template>
+                    <ControlTemplate TargetType="Button"><Border Background="Transparent" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate>
+                  </Button.Template>
+                  <Button.Style>
+                    <Style TargetType="Button"><Setter Property="Padding" Value="20,26,20,34"/></Style>
+                  </Button.Style>
+                  <StackPanel HorizontalAlignment="Center">
+                    <Grid x:Name="IconStack" Width="36" Height="44" Margin="0,10,0,14">
+                      <Border x:Name="PART_SheetBack" Style="{StaticResource ArcWpf.FileDropzone.Sheet}">
+                        <Canvas><Rectangle Canvas.Left="6" Canvas.Top="7" Width="16" Height="2" RadiusX="1" RadiusY="1" Opacity=".3" Fill="{DynamicResource ArcWpf.Brush.TextMuted}"/><Rectangle Canvas.Left="6" Canvas.Top="12" Width="11" Height="2" RadiusX="1" RadiusY="1" Opacity=".3" Fill="{DynamicResource ArcWpf.Brush.TextMuted}"/></Canvas>
+                      </Border>
+                      <Border x:Name="PART_SheetSide" Style="{StaticResource ArcWpf.FileDropzone.Sheet}">
+                        <Canvas><Rectangle Canvas.Left="6" Canvas.Top="7" Width="16" Height="2" RadiusX="1" RadiusY="1" Opacity=".3" Fill="{DynamicResource ArcWpf.Brush.TextMuted}"/><Rectangle Canvas.Left="6" Canvas.Top="12" Width="11" Height="2" RadiusX="1" RadiusY="1" Opacity=".3" Fill="{DynamicResource ArcWpf.Brush.TextMuted}"/></Canvas>
+                      </Border>
+                      <Border x:Name="PART_SheetFront" Style="{StaticResource ArcWpf.FileDropzone.Sheet}">
+                        <Grid>
+                          <Canvas><Rectangle Canvas.Left="6" Canvas.Top="7" Width="16" Height="2" RadiusX="1" RadiusY="1" Opacity=".3" Fill="{DynamicResource ArcWpf.Brush.TextMuted}"/><Rectangle Canvas.Left="6" Canvas.Top="12" Width="11" Height="2" RadiusX="1" RadiusY="1" Opacity=".3" Fill="{DynamicResource ArcWpf.Brush.TextMuted}"/></Canvas>
+                          <Viewbox Width="14" Height="14" VerticalAlignment="Bottom" Margin="0,0,0,5"><Canvas Width="24" Height="24"><Path Data="M12,19 V5 M5,12 L12,5 L19,12" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Stroke="{DynamicResource ArcWpf.Brush.TextMuted}"/></Canvas></Viewbox>
+                        </Grid>
+                      </Border>
+                    </Grid>
+                    <Grid>
+                      <TextBlock x:Name="NormalLabel" Text="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FontSize="14" FontWeight="Medium" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                      <TextBlock x:Name="DropLabelText" Text="{Binding DropLabel, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" FontSize="14" FontWeight="Medium" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Center" Visibility="Hidden"/>
+                    </Grid>
+                    <TextBlock x:Name="HintText" Text="{Binding Description, RelativeSource={RelativeSource TemplatedParent}}" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" HorizontalAlignment="Center" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="NoteText" Text="{Binding Note, RelativeSource={RelativeSource TemplatedParent}}" FontSize="12" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                  </StackPanel>
+                </Button>
+                <ItemsControl x:Name="InsideList" Grid.Row="1" ItemsSource="{TemplateBinding Items}" ItemTemplate="{StaticResource FileDropzoneItemTemplate}" Margin="12,0,12,12" Visibility="Collapsed" Focusable="False"/>
+              </Grid>
+            </Border>
+            <ItemsControl x:Name="OutsideList" ItemsSource="{TemplateBinding Items}" ItemTemplate="{StaticResource FileDropzoneItemTemplate}" Margin="0,4,0,0" Focusable="False"/>
+          </StackPanel>
+          <ControlTemplate.Triggers>
+            <Trigger SourceName="DropSurface" Property="IsMouseOver" Value="True"><Setter TargetName="DropSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/><Setter TargetName="DashEdge" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.TextMuted}"/></Trigger>
+            <Trigger Property="IsDragging" Value="True">
+              <Setter TargetName="DropSurface" Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/>
+              <Setter TargetName="DragFill" Property="Opacity" Value=".25"/>
+              <Setter TargetName="DragWash" Property="Opacity" Value="1"/>
+              <Setter TargetName="DashEdge" Property="StrokeDashArray" Value="{x:Null}"/>
+              <Setter TargetName="DashEdge" Property="Stroke" Value="{DynamicResource ArcWpf.Brush.Accent}"/>
+              <Setter TargetName="DashEdge" Property="Opacity" Value=".4"/>
+              <Setter TargetName="NormalLabel" Property="Visibility" Value="Hidden"/>
+              <Setter TargetName="DropLabelText" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsCompact" Value="True">
+              <Setter TargetName="PART_Browse" Property="Padding" Value="20,14"/>
+              <Setter TargetName="IconStack" Property="Visibility" Value="Collapsed"/>
+              <Setter TargetName="NoteText" Property="Visibility" Value="Collapsed"/>
+              <Setter TargetName="DropSurface" Property="CornerRadius" Value="26"/>
+              <Setter TargetName="DashEdge" Property="RadiusX" Value="25.5"/>
+              <Setter TargetName="DashEdge" Property="RadiusY" Value="25.5"/>
+            </Trigger>
+            <Trigger Property="IsListInside" Value="True"><Setter TargetName="OutsideList" Property="Visibility" Value="Collapsed"/><Setter TargetName="InsideList" Property="Visibility" Value="Visible"/></Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
   </Style>
 </ResourceDictionary>

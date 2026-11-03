@@ -16,7 +16,7 @@ public class AvatarUpload : Control
     public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(AvatarUpload), new PropertyMetadata("Upload avatar"));
     public static readonly DependencyProperty IsUploadingProperty = DependencyProperty.Register(nameof(IsUploading), typeof(bool), typeof(AvatarUpload), new PropertyMetadata(false));
     public static readonly DependencyProperty ProgressProperty = DependencyProperty.Register(nameof(Progress), typeof(double), typeof(AvatarUpload), new PropertyMetadata(0d, OnProgressChanged));
-    public static readonly DependencyProperty ErrorProperty = DependencyProperty.Register(nameof(Error), typeof(string), typeof(AvatarUpload), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty ErrorProperty = DependencyProperty.Register(nameof(Error), typeof(string), typeof(AvatarUpload), new PropertyMetadata(string.Empty, (d, e) => d.SetValue(HasErrorPropertyKey, !string.IsNullOrEmpty((string?)e.NewValue))));
     public static readonly DependencyProperty HintProperty = DependencyProperty.Register(nameof(Hint), typeof(string), typeof(AvatarUpload), new PropertyMetadata("PNG, JPG or WebP · up to 5 MB"));
     public static readonly DependencyProperty AcceptProperty = DependencyProperty.Register(nameof(Accept), typeof(string), typeof(AvatarUpload), new PropertyMetadata(".png;.jpg;.jpeg;.webp"));
     public static readonly DependencyProperty MaxSizeProperty = DependencyProperty.Register(nameof(MaxSize), typeof(long), typeof(AvatarUpload), new PropertyMetadata(5 * 1024 * 1024L));
@@ -46,13 +46,22 @@ public class AvatarUpload : Control
     public double CropOffsetX { get => (double)GetValue(CropOffsetXProperty); set => SetValue(CropOffsetXProperty, value); }
     public double CropOffsetY { get => (double)GetValue(CropOffsetYProperty); set => SetValue(CropOffsetYProperty, value); }
     public event EventHandler<string>? FileSelected;
+    public event EventHandler? Removed;
+    private static readonly DependencyPropertyKey HasErrorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasError), typeof(bool), typeof(AvatarUpload), new PropertyMetadata(false));
+    public static readonly DependencyProperty HasErrorProperty = HasErrorPropertyKey.DependencyProperty;
+    public bool HasError => (bool)GetValue(HasErrorProperty);
+    /// <summary>Clears the photo and reports it, so the caller can drop the stored file.</summary>
+    public void RemoveImage() { ImageSource = null; Error = string.Empty; Removed?.Invoke(this, EventArgs.Empty); }
     static AvatarUpload() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AvatarUpload), new FrameworkPropertyMetadata(typeof(AvatarUpload)));
+    private const double CropCircle = 184;
     private ImageSource? _pendingImage; private string? _pendingPath; private bool _dragging; private Point _dragStart; private double _dragOriginX, _dragOriginY;
     public AvatarUpload() { AllowDrop = true; Focusable = true; Drop += OnDrop; DragOver += OnDragOver; KeyDown += OnKeyDown; }
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
         if (GetTemplateChild("PART_Button") is System.Windows.Controls.Button button) button.Click += (_, _) => Browse();
+        if (GetTemplateChild("PART_Replace") is System.Windows.Controls.Button replace) replace.Click += (_, _) => Browse();
+        if (GetTemplateChild("PART_Remove") is System.Windows.Controls.Button remove) remove.Click += (_, _) => RemoveImage();
         if (GetTemplateChild("PART_Save") is System.Windows.Controls.Button save) save.Click += (_, _) => SaveCrop();
         if (GetTemplateChild("PART_Cancel") is System.Windows.Controls.Button cancel) cancel.Click += (_, _) => CancelCrop();
         if (GetTemplateChild("PART_ZoomOut") is System.Windows.Controls.Button zoomOut) zoomOut.Click += (_, _) => Zoom -= .1;
@@ -94,7 +103,7 @@ public class AvatarUpload : Control
 
     private void UpdateProgressRing()
     {
-        if (GetTemplateChild("PART_ProgressRing") is System.Windows.Shapes.Ellipse ring) ring.StrokeDashOffset = Math.Clamp(100 - Progress, 0, 100);
+        if (GetTemplateChild("PART_ProgressRing") is System.Windows.Shapes.Ellipse ring) { double units = (ring.ActualWidth - ring.StrokeThickness) * Math.PI / ring.StrokeThickness; if (units <= 0) units = 100; ring.StrokeDashArray = [units, units]; ring.StrokeDashOffset = units * (1 - Math.Clamp(Progress, 0, 100) / 100); }
     }
     public void SaveCrop()
     {
@@ -137,7 +146,7 @@ public class AvatarUpload : Control
     {
         var output = Math.Clamp(OutputSize, 32, 4096);
         var width = source.PixelWidth; var height = source.PixelHeight; var scale = Math.Max(248d / width, 248d / height) * Zoom;
-        var cropWidth = Math.Min(width, 248d / scale); var cropHeight = Math.Min(height, 248d / scale);
+        var cropWidth = Math.Min(width, CropCircle / scale); var cropHeight = Math.Min(height, CropCircle / scale);
         var centerX = width / 2d - CropOffsetX * 248d / scale; var centerY = height / 2d - CropOffsetY * 248d / scale;
         var x = Math.Clamp(centerX - cropWidth / 2d, 0, Math.Max(0, width - cropWidth)); var y = Math.Clamp(centerY - cropHeight / 2d, 0, Math.Max(0, height - cropHeight));
         var rect = new Int32Rect((int)Math.Round(x), (int)Math.Round(y), Math.Max(1, (int)Math.Round(cropWidth)), Math.Max(1, (int)Math.Round(cropHeight)));

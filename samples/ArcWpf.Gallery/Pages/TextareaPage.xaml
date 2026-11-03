@@ -9,6 +9,7 @@
     </Border>
     <Expander Header="更多状态与绑定示例" Margin="0,24,0,0" HorizontalContentAlignment="Stretch">
       <StackPanel Margin="0,16,0,0" MaxWidth="540" HorizontalAlignment="Left">
+        <arc:Textarea x:Name="Colored" Label="分段着色" Text="Ask @chloe about #launch 🚀 before Friday 👍" Description="原生编辑不变，#标签、@提及和表情各自着色。" Margin="0,0,0,20" arc:TextColoring.ColorEmoji="True" />
         <arc:Textarea Label="Notes" Text="第一行\n第二行" Description="支持换行、复制、粘贴和原生撤销。" Margin="0,0,0,20" />
         <arc:Textarea Label="校验错误" Text="内容过长" ErrorMessage="请输入 500 个字符以内的内容。" Margin="0,0,0,20" />
         <arc:Textarea Label="只读" Text="只读内容仍然可以选择和复制。" IsReadOnly="True" Margin="0,0,0,20" />

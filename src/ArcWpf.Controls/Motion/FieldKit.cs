@@ -37,6 +37,11 @@ internal static class Lucide
     public const string Send = "M14.536,21.686 a.5,.5,0,0,0,.937,-.024 l6.5,-19 a.496,.496,0,0,0,-.635,-.635 l-19,6.5 a.5,.5,0,0,0,-.024,.937 l7.93,3.18 a2,2,0,0,1,1.112,1.11 z M21.854,2.147 l-10.94,10.939";
     public const string CircleAlert = "M12,2 A10,10,0,1,1,12,22 A10,10,0,1,1,12,2 Z M12,8 V12 M12,16 H12.01";
     public const string Archive = "M3,3 h18 a1,1,0,0,1,1,1 v3 a1,1,0,0,1,-1,1 H3 a1,1,0,0,1,-1,-1 V4 a1,1,0,0,1,1,-1 z M4,8 v11 a2,2,0,0,0,2,2 h12 a2,2,0,0,0,2,-2 V8 M10,12 h4";
+    public const string ChevronUp = "M6,15 L12,9 L18,15";
+    public const string ArrowRight = "M5,12 H19 M12,5 L19,12 L12,19";
+    public const string ArrowUp = "M12,19 V5 M5,12 L12,5 L19,12";
+    public const string Pause = "M6,4 H9 V20 H6 Z M15,4 H18 V20 H15 Z";
+    public const string Play = "M6,3 L20,12 L6,21 Z";
     public const string Trash = "M10,11 v6 M14,11 v6 M19,6 v14 a2,2,0,0,1,-2,2 H7 a2,2,0,0,1,-2,-2 V6 M3,6 h18 M8,6 V4 a2,2,0,0,1,2,-2 h4 a2,2,0,0,1,2,2 v2";
 
     /// <summary>A stroked glyph whose color follows the inherited TextElement.Foreground of its container.</summary>

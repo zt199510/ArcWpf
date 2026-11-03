@@ -2,7 +2,7 @@
 
 ## 2026-11-02 Arc 后续展示与输入批次
 
-AnnouncementBar、AnimatedCounter、Countdown、Timeline、AvatarUpload、FileDropzone、MentionInput、EmojiPicker 已完成来源冻结、WPF 首版实现、Arc 主题模板、Gallery 示例和基础专项测试。Controls 与 Gallery 构建通过，8 项专项测试通过；实际窗口视觉、Popup 碰撞、中文 IME、DPI、拖放和逐帧动效仍按验证记录待验收。AvatarUpload、EmojiPicker 属于 Pro 页面公开资料独立实现，未使用 Pro Registry 源码。
+AnnouncementBar、AnimatedCounter、Countdown、Timeline、AvatarUpload、FileDropzone、MentionInput、EmojiPicker 已完成来源冻结、WPF 首版实现、Arc 主题模板、Gallery 示例和基础专项测试。Controls 与 Gallery 构建通过，8 项专项测试通过；实际窗口视觉、Popup 碰撞、中文 IME、DPI、拖放和逐帧动效仍按验证记录待验收。AvatarUpload、EmojiPicker 属于 Pro 页面公开资料独立实现，未使用 Pro Registry 源码。 2026-11-02 已对照线上页面重做并拆成独立 Gallery 页面，见 [像素记录](verification/2026-11-02-next-controls-pixel.md)；真实窗口未验证。
 
 ## 2026-11-02 控件批次统一收口
 
@@ -508,3 +508,7 @@ TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/Da
 ## 输入类 8 控件源码复刻（2026-10-31）
 
 用户要求对照 Arc 修复 PasswordStrength、MoneyInput、PhoneInput、TagInput、ShortcutRecorder、ChipGroup、Rating、ColorPicker。已冻结来源并按源码重做（API 破坏性调整见规格），构建 0 错误；测试与实际窗口未运行（Linux），见[验证记录](verification/2026-10-31-input-batch-rebuild.md)。
+
+## TextBox 分段着色（2026-11-02）
+
+用户要求让 TextBox 支持分段着色。新增附加能力 `TextColoring`（见[规格](components/TextColoring.md)），EmojiPicker 消息框和 Textarea 页已接入。离屏与相关测试通过；真实窗口和 Segoe UI Emoji 未运行，见[验证记录](verification/2026-11-02-text-coloring.md)。

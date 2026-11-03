@@ -1,0 +1,28 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TimelinePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="Timeline" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="按天分组的活动流：日期标题吸顶，每条有标记和连接线，点击展开详情；新动态从顶部推入。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Border Width="521.6" VerticalAlignment="Center" CornerRadius="34" BorderThickness="1" Padding="20,20,20,16" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" TextElement.FontSize="14">
+        <StackPanel>
+          <DockPanel Margin="0,0,0,18">
+            <arc:Button x:Name="Add" Size="Small" DockPanel.Dock="Right" VerticalAlignment="Center" Click="OnAdd">
+              <StackPanel Orientation="Horizontal">
+                <Viewbox Width="16" Height="16" Margin="2,0,8,0"><Canvas Width="24" Height="24"><Path Data="M5,12 H19 M12,5 V19" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=arc:Button}}"/></Canvas></Viewbox>
+                <TextBlock Text="Add update" FontSize="14" FontWeight="Medium" Margin="0,0,2,0"/>
+              </StackPanel>
+            </arc:Button>
+            <StackPanel>
+              <TextBlock Text="Checkout redesign" Margin="0,-2,0,2" FontSize="18" FontWeight="Medium" LineHeight="25.2" LineStackingStrategy="BlockLineHeight"/>
+              <TextBlock Text="Project activity" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+            </StackPanel>
+          </DockPanel>
+          <arc:Timeline x:Name="Feed" Label="Project activity" MaxHeight="276"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,69 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.AvatarUploadPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <Style x:Key="Chip" TargetType="Button">
+      <Setter Property="Height" Value="32"/>
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="Face" CornerRadius="16" BorderThickness="1" Padding="13,0" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+              <TextBlock Text="{TemplateBinding Content}" FontSize="12" FontWeight="Medium" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+            </Border>
+            <ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Face" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/></Trigger></ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="AvatarUpload" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="点击或拖放照片到头像；示例和失败开关模拟上传。Arc Pro 控件，依据公开文档与显示几何独立实现。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Border x:Name="Card" Style="{DynamicResource Gallery.DemoCard}" Width="521.6" VerticalAlignment="Center" TextElement.FontSize="14">
+        <StackPanel>
+          <TextBlock Text="Profile" FontSize="18" FontWeight="Medium" LineHeight="19.8" LineStackingStrategy="BlockLineHeight"/>
+          <TextBlock Text="Click or drop a photo on the avatar. Uploads are simulated." Margin="0,4,0,0" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          <arc:AvatarUpload x:Name="Avatar" Margin="0,20,0,0" Initials="EC" Label="Profile photo"/>
+          <Border Margin="0,20,0,0" Padding="0,20,0,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.AnnouncementStageBorder}">
+            <StackPanel Orientation="Horizontal">
+              <StackPanel Margin="0,0,24,0">
+                <TextBlock Text="Sample photos" FontSize="12" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Margin="0,0,0,8" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                <StackPanel x:Name="Samples" Orientation="Horizontal"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="Try a failure" FontSize="12" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Margin="0,0,0,10" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+                <StackPanel Orientation="Horizontal">
+                  <Button Content="12 MB photo" Style="{StaticResource Chip}" Click="OnLarge"/>
+                  <Button Content="PDF file" Style="{StaticResource Chip}" Margin="8,0,0,0" Click="OnPdf"/>
+                  <ToggleButton x:Name="FailNext" Margin="8,0,0,0" Height="32" MinWidth="0" MinHeight="0" Cursor="Hand">
+                    <ToggleButton.Template>
+                      <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Face" CornerRadius="16" BorderThickness="1" Padding="13,0,13,0" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+                          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border x:Name="Box" Width="14" Height="14" CornerRadius="4" BorderThickness="1" Margin="0,0,8,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderStrong}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+                              <Viewbox x:Name="Tick" Width="10" Height="10" Visibility="Collapsed"><Canvas Width="24" Height="24"><Path Data="M20,6 L9,17 L4,12" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Stroke="{DynamicResource ArcWpf.Brush.Background}"/></Canvas></Viewbox>
+                            </Border>
+                            <TextBlock Text="Fail next upload" FontSize="12" FontWeight="Medium" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+                          </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                          <Trigger Property="IsChecked" Value="True"><Setter TargetName="Box" Property="Background" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter TargetName="Tick" Property="Visibility" Value="Visible"/></Trigger>
+                          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Face" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/></Trigger>
+                        </ControlTemplate.Triggers>
+                      </ControlTemplate>
+                    </ToggleButton.Template>
+                  </ToggleButton>
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

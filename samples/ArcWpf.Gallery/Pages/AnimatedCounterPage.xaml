@@ -1,0 +1,27 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.AnimatedCounterPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="AnimatedCounter" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="每个数位在自己的列上转动，方向跟随整数的变化，像里程表一样进位；点击卡片模拟新增回复。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}">
+      <Button x:Name="Demo" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="OnClick" AutomationProperties.Name="Simulate new responses">
+        <Button.Template>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.AnnouncementStageBorder}" BorderThickness="1" CornerRadius="18" Padding="14" TextElement.FontSize="14">
+              <ContentPresenter/>
+            </Border>
+          </ControlTemplate>
+        </Button.Template>
+        <StackPanel Width="220">
+          <arc:AnimatedCounter x:Name="Counter" Label="Total responses" Value="12840"/>
+          <Grid Margin="0,7,0,0">
+            <TextBlock Text="Click to simulate new responses" FontSize="12" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+            <Viewbox Width="14" Height="14" HorizontalAlignment="Right"><Canvas Width="24" Height="24"><Path Data="M5,12 H19 M12,5 V19" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}"/></Canvas></Viewbox>
+          </Grid>
+        </StackPanel>
+      </Button>
+    </Border>
+  </StackPanel>
+</UserControl>

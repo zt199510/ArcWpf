@@ -1,3 +1,33 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ArcWpf.Controls">
-  <Style TargetType="{x:Type local:MentionInput}" BasedOn="{StaticResource {x:Type TextBox}}"><Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/><Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/><Setter Property="MinHeight" Value="88"/><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="AcceptsReturn" Value="True"/><Setter Property="Padding" Value="12"/><Setter Property="VerticalScrollBarVisibility" Value="Auto"/></Style>
+  <!-- mention-input.module.css: a 48 tall field at 16/24 with the focus border strengthening rather than a ring. -->
+  <Style TargetType="{x:Type local:MentionInput}" BasedOn="{StaticResource {x:Type TextBox}}">
+    <Setter Property="FontFamily" Value="{DynamicResource ArcWpf.Font.Body}"/>
+    <Setter Property="FontSize" Value="16"/>
+    <Setter Property="TextBlock.LineHeight" Value="24"/>
+    <Setter Property="TextBlock.LineStackingStrategy" Value="BlockLineHeight"/>
+    <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.Surface}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Border}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Setter Property="MinHeight" Value="48"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="AcceptsReturn" Value="True"/>
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:MentionInput}">
+          <Grid>
+            <Border x:Name="Field" CornerRadius="18" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+            <local:MentionTokenLayer x:Name="PART_Tokens"/>
+            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Focusable="False" Background="Transparent" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"/>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Field" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.BorderStrong}"/></Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

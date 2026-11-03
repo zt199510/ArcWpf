@@ -10,7 +10,7 @@ using System.Windows.Data;
 
 namespace ArcWpf.Controls;
 
-public sealed class MentionPerson { public string Id { get; set; } = string.Empty; public string Name { get; set; } = string.Empty; public string Role { get; set; } = string.Empty; }
+public sealed class MentionPerson { public string Id { get; set; } = string.Empty; public string Name { get; set; } = string.Empty; public string Role { get; set; } = string.Empty; public ImageSource? Avatar { get; set; } public string Initial => string.IsNullOrEmpty(Name) ? string.Empty : Name[..1]; }
 public sealed class MentionChannel { public string Id { get; set; } = string.Empty; public string Name { get; set; } = string.Empty; public string Description { get; set; } = string.Empty; }
 public enum MentionKind { Person, Channel }
 public sealed class MentionToken
@@ -40,36 +40,116 @@ public class MentionInput : TextBox
     public event EventHandler<string>? Submitted;
     public event EventHandler<MentionToken>? MentionAdded;
     private readonly Popup _popup = new() { StaysOpen = false, Placement = PlacementMode.Bottom, AllowsTransparency = true };
-    private readonly ListBox _list = new() { BorderThickness = new Thickness(0), Padding = new Thickness(4), MinWidth = 240 };
-    private readonly Border _popupSurface = new() { Padding = new Thickness(4), CornerRadius = new CornerRadius(14), BorderThickness = new Thickness(1) };
+    private readonly ListBox _list = new() { BorderThickness = new Thickness(0), Padding = new Thickness(0), Margin = new Thickness(6), Background = Brushes.Transparent };
+    private readonly Border _highlight = new() { CornerRadius = new CornerRadius(12), HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(6, 6, 6, 0), IsHitTestVisible = false, RenderTransform = new TranslateTransform() };
+    private readonly TextBlock _empty = new() { FontSize = 14, LineHeight = 19.6, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, Margin = new Thickness(14, 12, 14, 12), TextWrapping = TextWrapping.Wrap, Visibility = Visibility.Collapsed };
+    private bool _highlightPlaced;
+    private readonly Border _popupSurface = new() { Width = 272, Margin = new Thickness(PopupGutter), CornerRadius = new CornerRadius(18), BorderThickness = new Thickness(1), RenderTransformOrigin = new Point(.05, 0) };
+    private const double PopupGutter = 24;
     private string _trigger = string.Empty; private char _symbol = '@'; private string _lastText = string.Empty; private int _lastCaret; private bool _changingMentions;
-    private MentionTokenAdorner? _tokenAdorner;
+    private MentionTokenLayer? _tokenLayer;
     static MentionInput() => DefaultStyleKeyProperty.OverrideMetadata(typeof(MentionInput), new FrameworkPropertyMetadata(typeof(MentionInput)));
-    private static void OnPlaceholderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((MentionInput)d)._tokenAdorner?.InvalidateVisual();
-    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Raised"); _list.MinWidth = 272; _list.MaxHeight = 320; _list.SelectionMode = SelectionMode.Single; _list.ItemTemplateSelector = new SuggestionTemplateSelector(BuildSuggestionTemplate("@", false), BuildSuggestionTemplate("#", true)); _list.ItemContainerStyle = BuildSuggestionContainerStyle(); _popupSurface.Child = _list; TextChanged += OnTextChanged; KeyDown += OnKeyDown; Loaded += OnLoaded; Unloaded += OnUnloaded; SizeChanged += (_, _) => _tokenAdorner?.InvalidateVisual(); LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.SelectionChanged += (_, _) => { if (_list.SelectedItem is MentionPerson p) Choose(p); else if (_list.SelectedItem is MentionChannel c) Choose(c); }; _popup.Child = _popupSurface; }
+    private static void OnPlaceholderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((MentionInput)d)._tokenLayer?.InvalidateVisual();
+    public MentionInput() { People = new ObservableCollection<MentionPerson>(); Channels = new ObservableCollection<MentionChannel>(); Mentions = new ObservableCollection<MentionToken>(); AcceptsReturn = true; _popup.Placement = PlacementMode.Custom; _popup.CustomPopupPlacementCallback = PlacePopup; _popupSurface.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceRaised"); _popupSurface.SetResourceReference(Border.BorderBrushProperty, "ArcWpf.Brush.Border"); _popupSurface.SetResourceReference(Border.EffectProperty, "ArcWpf.Shadow.Floating"); _highlight.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.MentionHighlight"); _empty.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextSecondary"); _list.MaxHeight = 303; ScrollViewer.SetHorizontalScrollBarVisibility(_list, ScrollBarVisibility.Disabled); _list.SelectionChanged += (_, _) => MoveHighlight(); _list.SelectionMode = SelectionMode.Single; _list.ItemTemplateSelector = new SuggestionTemplateSelector(BuildSuggestionTemplate("@", false), BuildSuggestionTemplate("#", true)); _list.ItemContainerStyle = BuildSuggestionContainerStyle(); var popupBody = new Grid(); popupBody.Children.Add(_highlight); popupBody.Children.Add(_list); popupBody.Children.Add(_empty); _popupSurface.Child = popupBody; TextChanged += OnTextChanged; KeyDown += OnKeyDown; SizeChanged += (_, _) => _tokenLayer?.InvalidateVisual(); LostKeyboardFocus += (_, _) => _popup.IsOpen = false; _list.PreviewMouseMove += OnListHover; _list.PreviewMouseLeftButtonDown += OnListClick; _popup.Child = _popupSurface; }
     private static DataTemplate BuildSuggestionTemplate(string glyph, bool channel)
     {
-        var root = new FrameworkElementFactory(typeof(StackPanel)); root.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal); root.SetValue(FrameworkElement.MarginProperty, new Thickness(2));
-        var icon = new FrameworkElementFactory(typeof(Border)); icon.SetValue(Border.WidthProperty, 28d); icon.SetValue(Border.HeightProperty, 28d); icon.SetValue(Border.CornerRadiusProperty, new CornerRadius(14)); icon.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.SurfaceMuted");
-        var iconText = new FrameworkElementFactory(typeof(TextBlock)); iconText.SetValue(TextBlock.TextProperty, glyph); iconText.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center); iconText.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center); iconText.SetValue(TextBlock.FontSizeProperty, 12d); icon.AppendChild(iconText); root.AppendChild(icon);
-        var copy = new FrameworkElementFactory(typeof(StackPanel)); copy.SetValue(FrameworkElement.MarginProperty, new Thickness(10, 0, 0, 0));
-        var name = new FrameworkElementFactory(typeof(TextBlock)); name.SetBinding(TextBlock.TextProperty, new Binding("Name")); name.SetValue(TextBlock.FontSizeProperty, 13d); name.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium); name.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis); copy.AppendChild(name);
-        var meta = new FrameworkElementFactory(typeof(TextBlock)); meta.SetBinding(TextBlock.TextProperty, new Binding(channel ? "Description" : "Role")); meta.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted"); meta.SetValue(TextBlock.FontSizeProperty, 11d); meta.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis); copy.AppendChild(meta); root.AppendChild(copy);
+        var root = new FrameworkElementFactory(typeof(Grid));
+        root.SetValue(FrameworkElement.MarginProperty, new Thickness(8, 7, 10, 7));
+        root.SetValue(UIElement.SnapsToDevicePixelsProperty, false);
+        var column1 = new FrameworkElementFactory(typeof(ColumnDefinition)); column1.SetValue(ColumnDefinition.WidthProperty, new GridLength(38));
+        var column2 = new FrameworkElementFactory(typeof(ColumnDefinition));
+        root.AppendChild(column1); root.AppendChild(column2);
+        var mark = new FrameworkElementFactory(typeof(Grid));
+        mark.SetValue(FrameworkElement.WidthProperty, 28d); mark.SetValue(FrameworkElement.HeightProperty, 28d); mark.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Left); mark.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
+        var disc = new FrameworkElementFactory(typeof(Ellipse)); disc.SetResourceReference(Shape.FillProperty, "ArcWpf.Brush.SurfaceMuted"); mark.AppendChild(disc);
+        var letter = new FrameworkElementFactory(typeof(TextBlock));
+        if (channel) letter.SetValue(TextBlock.TextProperty, glyph); else letter.SetBinding(TextBlock.TextProperty, new Binding(nameof(MentionPerson.Initial)));
+        letter.SetValue(TextBlock.FontSizeProperty, 12d); letter.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium); letter.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center); letter.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center); letter.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextSecondary");
+        mark.AppendChild(letter);
+        if (!channel)
+        {
+            var photo = new FrameworkElementFactory(typeof(Image)); photo.SetBinding(Image.SourceProperty, new Binding(nameof(MentionPerson.Avatar))); photo.SetValue(Image.StretchProperty, Stretch.UniformToFill); photo.SetValue(UIElement.ClipProperty, PhotoClip);
+            mark.AppendChild(photo);
+        }
+        root.AppendChild(mark);
+        var text = new FrameworkElementFactory(typeof(StackPanel)); text.SetValue(Grid.ColumnProperty, 1); text.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
+        var name = new FrameworkElementFactory(typeof(TextBlock)); name.SetBinding(TextBlock.TextProperty, new Binding("Name")); name.SetValue(TextBlock.FontSizeProperty, 14d); name.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium); name.SetValue(TextBlock.LineHeightProperty, 19.6); name.SetValue(TextBlock.LineStackingStrategyProperty, LineStackingStrategy.BlockLineHeight); name.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis);
+        var nameStyle = new Style(typeof(TextBlock));
+        nameStyle.Setters.Add(new Setter(TextBlock.ForegroundProperty, new DynamicResourceExtension("ArcWpf.Brush.TextSecondary")));
+        var active = new DataTrigger { Binding = new Binding(nameof(ListBoxItem.IsSelected)) { RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ListBoxItem), 1) }, Value = true };
+        active.Setters.Add(new Setter(TextBlock.ForegroundProperty, new DynamicResourceExtension("ArcWpf.Brush.Foreground")));
+        nameStyle.Triggers.Add(active);
+        name.SetValue(FrameworkElement.StyleProperty, nameStyle);
+        var meta = new FrameworkElementFactory(typeof(TextBlock)); meta.SetBinding(TextBlock.TextProperty, new Binding(channel ? nameof(MentionChannel.Description) : nameof(MentionPerson.Role))); meta.SetValue(TextBlock.FontSizeProperty, 12d); meta.SetValue(TextBlock.LineHeightProperty, 16.8); meta.SetValue(TextBlock.LineStackingStrategyProperty, LineStackingStrategy.BlockLineHeight); meta.SetValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis); meta.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted");
+        text.AppendChild(name); text.AppendChild(meta);
+        root.AppendChild(text);
         return new DataTemplate { VisualTree = root };
     }
+    private static readonly Geometry PhotoClip = CreatePhotoClip();
+    private static Geometry CreatePhotoClip() { var clip = new EllipseGeometry(new Point(14, 14), 14, 14); clip.Freeze(); return clip; }
     private static Style BuildSuggestionContainerStyle()
     {
-        var style = new Style(typeof(ListBoxItem)); style.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(8, 7, 8, 7))); style.Setters.Add(new Setter(Control.MarginProperty, new Thickness(2))); style.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch)); style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(0))); style.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
-        var selected = new Trigger { Property = ListBoxItem.IsSelectedProperty, Value = true }; selected.Setters.Add(new Setter(Control.BackgroundProperty, new DynamicResourceExtension("ArcWpf.Brush.AccentSubtle"))); style.Triggers.Add(selected);
-        var hover = new Trigger { Property = ListBoxItem.IsMouseOverProperty, Value = true }; hover.Setters.Add(new Setter(Control.BackgroundProperty, new DynamicResourceExtension("ArcWpf.Brush.SurfaceMuted"))); style.Triggers.Add(hover); return style;
+        var style = new Style(typeof(ListBoxItem));
+        style.Setters.Add(new Setter(Control.CursorProperty, Cursors.Hand));
+        style.Setters.Add(new Setter(UIElement.FocusableProperty, false));
+        style.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch));
+        var template = new ControlTemplate(typeof(ListBoxItem));
+        var surface = new FrameworkElementFactory(typeof(Border)); surface.SetValue(Border.BackgroundProperty, Brushes.Transparent); surface.AppendChild(new FrameworkElementFactory(typeof(ContentPresenter)));
+        template.VisualTree = surface;
+        style.Setters.Add(new Setter(Control.TemplateProperty, template));
+        return style;
     }
-    private void OnLoaded(object sender, RoutedEventArgs e) { if (_tokenAdorner is not null) return; var layer = AdornerLayer.GetAdornerLayer(this); if (layer is null) return; _tokenAdorner = new MentionTokenAdorner(this); layer.Add(_tokenAdorner); }
-    private void OnUnloaded(object sender, RoutedEventArgs e) { if (_tokenAdorner is null) return; AdornerLayer.GetAdornerLayer(this)?.Remove(_tokenAdorner); _tokenAdorner = null; }
+    // One highlight glides between options instead of each row painting its own.
+    private void MoveHighlight()
+    {
+        _highlight.Visibility = _list.SelectedIndex < 0 ? Visibility.Hidden : Visibility.Visible;
+        if (_list.SelectedIndex < 0 || _list.ItemContainerGenerator.ContainerFromIndex(_list.SelectedIndex) is not ListBoxItem item || item.ActualHeight <= 0) return;
+        _list.ScrollIntoView(_list.SelectedItem);
+        double y = item.TranslatePoint(new Point(), _list).Y;
+        _highlight.Height = item.ActualHeight;
+        var move = (TranslateTransform)_highlight.RenderTransform;
+        if (_highlightPlaced && ArcMotion.GetLevel(this) == ArcMotionLevel.Full) Tween.Spring(move, TranslateTransform.YProperty, y, .3);
+        else Tween.Set(move, TranslateTransform.YProperty, y);
+        _highlightPlaced = true;
+    }
+    private void PlayOpen()
+    {
+        _highlightPlaced = false;
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, MoveHighlight);
+        var level = ArcMotion.GetLevel(this);
+        if (level == ArcMotionLevel.Off) return;
+        _popupSurface.Opacity = 0;
+        Tween.To(_popupSurface, OpacityProperty, 1, Tween.Fast, ArcEasing.Enter);
+        if (level != ArcMotionLevel.Full) return;
+        var scale = new ScaleTransform(.96, .96);
+        var move = new TranslateTransform(0, 4);
+        _popupSurface.RenderTransform = new TransformGroup { Children = { scale, move } };
+        Tween.Spring(scale, ScaleTransform.ScaleXProperty, 1, Tween.Snappy);
+        Tween.Spring(scale, ScaleTransform.ScaleYProperty, 1, Tween.Snappy);
+        Tween.Spring(move, TranslateTransform.YProperty, 0, Tween.Snappy);
+    }
+    /// <summary>Starts a mention from a toolbar button: writes the trigger at the caret, with a space before it when one is needed.</summary>
+    public void InsertTrigger(char symbol)
+    {
+        int caret = Math.Clamp(CaretIndex, 0, Text.Length);
+        string lead = caret > 0 && !char.IsWhiteSpace(Text[caret - 1]) ? " " : string.Empty;
+        Text = Text.Insert(caret, lead + symbol);
+        CaretIndex = caret + lead.Length + 1;
+        Focus();
+        RefreshSuggestions();
+    }
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
+        _tokenLayer = GetTemplateChild("PART_Tokens") as MentionTokenLayer;
+        if (_tokenLayer is not null) _tokenLayer.Owner = this;
+        if (GetTemplateChild("PART_ContentHost") is ScrollViewer host) host.ScrollChanged += (_, _) => _tokenLayer?.InvalidateVisual();
+    }
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         if (!_changingMentions) ReconcileMentions(_lastText, Text, _lastCaret);
         _lastText = Text; _lastCaret = CaretIndex; RefreshSuggestions();
-        _tokenAdorner?.InvalidateVisual();
+        _tokenLayer?.InvalidateVisual();
     }
     private void ReconcileMentions(string oldText, string newText, int hint)
     {
@@ -86,22 +166,38 @@ public class MentionInput : TextBox
         }
         foreach (var mention in Mentions.ToArray()) if (mention.Start < 0 || mention.End > newText.Length || newText[mention.Start..mention.End] != mention.Text) Mentions.Remove(mention);
     }
+    // Anchors the popover's text to the trigger character: 10 left of it, 8 below its line.
     private CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
         try
         {
-            var caret = GetRectFromCharacterIndex(Math.Clamp(CaretIndex, 0, Text.Length), true);
+            int anchor = Math.Clamp(CaretIndex - _trigger.Length - 1, 0, Text.Length);
+            var caret = GetRectFromCharacterIndex(anchor, false);
             if (caret.IsEmpty || double.IsNaN(caret.X)) caret = new Rect(0, 0, 0, ActualHeight);
             var screenCaret = PointToScreen(new Point(caret.X, caret.Bottom));
             var workArea = SystemParameters.WorkArea;
-            var roomBelow = screenCaret.Y + popupSize.Height + 6 <= workArea.Bottom;
-            var roomAbove = screenCaret.Y - caret.Height - popupSize.Height - 6 >= workArea.Top;
+            double height = popupSize.Height - PopupGutter * 2;
+            var roomBelow = screenCaret.Y + height + 8 <= workArea.Bottom;
+            var roomAbove = screenCaret.Y - caret.Height - height - 8 >= workArea.Top;
             var below = roomBelow || !roomAbove;
-            var x = Math.Clamp(caret.X, 0, Math.Max(0, ActualWidth - popupSize.Width));
-            var y = below ? caret.Bottom + 6 : caret.Top - popupSize.Height - 6;
+            var x = Math.Clamp(caret.X - 10, 0, Math.Max(0, ActualWidth - (popupSize.Width - PopupGutter * 2))) - PopupGutter;
+            var y = (below ? caret.Bottom + 8 : caret.Top - height - 8) - PopupGutter;
             return [new CustomPopupPlacement(new Point(x, y), PopupPrimaryAxis.Vertical)];
         }
-        catch { return [new CustomPopupPlacement(new Point(0, targetSize.Height + 6), PopupPrimaryAxis.Vertical)]; }
+        catch (InvalidOperationException) { return [new CustomPopupPlacement(new Point(-PopupGutter, targetSize.Height + 6 - PopupGutter), PopupPrimaryAxis.Vertical)]; }
+    }
+    private object? ItemUnder(MouseEventArgs e)
+    {
+        var node = e.OriginalSource as DependencyObject;
+        while (node is not null && node is not ListBoxItem) node = VisualTreeHelper.GetParent(node);
+        return node is ListBoxItem item ? item.DataContext : null;
+    }
+    private void OnListHover(object sender, MouseEventArgs e) { if (ItemUnder(e) is { } item && !ReferenceEquals(item, _list.SelectedItem)) _list.SelectedItem = item; }
+    private void OnListClick(object sender, MouseButtonEventArgs e)
+    {
+        // Pressing an option must not move focus out of the field, which would close the popup first.
+        if (ItemUnder(e) is MentionPerson person) Choose(person); else if (ItemUnder(e) is MentionChannel channel) Choose(channel); else return;
+        e.Handled = true;
     }
     private void RefreshSuggestions()
     {
@@ -111,8 +207,15 @@ public class MentionInput : TextBox
         _symbol = before[start]; _trigger = query;
         _list.ItemsSource = (_symbol == '@' ? People.Where(p => p.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)).Cast<object>() : Channels.Where(c => c.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)).Cast<object>()).Take(Math.Max(1, MaxSuggestions)).ToList();
         _list.SelectedIndex = _list.Items.Count > 0 ? 0 : -1;
+        bool none = _list.Items.Count == 0;
+        _list.Visibility = none ? Visibility.Collapsed : Visibility.Visible;
+        _empty.Visibility = none ? Visibility.Visible : Visibility.Collapsed;
+        _empty.Text = $"No {(_symbol == '@' ? "people" : "channels")} match \u201C{query}\u201D";
         _popup.PlacementTarget = this;
-        _popup.IsOpen = _list.Items.Count > 0;
+        bool opening = !_popup.IsOpen;
+        _popup.IsOpen = true;
+        if (opening) PlayOpen();
+        else { _popup.HorizontalOffset += 0; Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, MoveHighlight); }
     }
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
@@ -155,46 +258,53 @@ public class MentionInput : TextBox
         public SuggestionTemplateSelector(DataTemplate person, DataTemplate channel) { _person = person; _channel = channel; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container) => item is MentionChannel ? _channel : _person;
     }
+}
 
-    private sealed class MentionTokenAdorner : Adorner
+/// <summary>Paints the placeholder and the token chips under the text, in the field's own coordinates.</summary>
+internal sealed class MentionTokenLayer : FrameworkElement
+{
+    private MentionInput? _owner;
+    public MentionInput? Owner { get => _owner; set { _owner = value; InvalidateVisual(); } }
+    public MentionTokenLayer() => IsHitTestVisible = false;
+    protected override void OnRender(DrawingContext drawingContext)
     {
-        private readonly MentionInput _owner;
-        public MentionTokenAdorner(MentionInput owner) : base(owner) { _owner = owner; IsHitTestVisible = false; SnapsToDevicePixels = true; }
-        protected override void OnRender(DrawingContext drawingContext)
+        base.OnRender(drawingContext);
+        if (_owner is null) return;
+        if (string.IsNullOrEmpty(_owner.Text))
         {
-            base.OnRender(drawingContext);
-            if (string.IsNullOrEmpty(_owner.Text))
+            if (!string.IsNullOrEmpty(_owner.Placeholder))
             {
-                if (!string.IsNullOrEmpty(_owner.Placeholder))
-                {
-                    var brush = (_owner.TryFindResource("ArcWpf.Brush.TextMuted") as Brush) ?? Brushes.Gray;
-                    var typeface = new Typeface(_owner.FontFamily, _owner.FontStyle, _owner.FontWeight, _owner.FontStretch);
-                    var dpi = VisualTreeHelper.GetDpi(_owner).PixelsPerDip;
-                    var text = new FormattedText(_owner.Placeholder, System.Globalization.CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, _owner.FontSize, brush, dpi);
-                    drawingContext.DrawText(text, new Point(_owner.Padding.Left, _owner.Padding.Top));
-                }
-                return;
+                var brush = (_owner.TryFindResource("ArcWpf.Brush.TextMuted") as Brush) ?? Brushes.Gray;
+                var typeface = new Typeface(_owner.FontFamily, _owner.FontStyle, _owner.FontWeight, _owner.FontStretch);
+                var dpi = VisualTreeHelper.GetDpi(_owner).PixelsPerDip;
+                var text = new FormattedText(_owner.Placeholder, System.Globalization.CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, _owner.FontSize, brush, dpi);
+                var at = _owner.GetRectFromCharacterIndex(0);
+                double x = at.IsEmpty || double.IsNaN(at.X) ? _owner.Padding.Left : at.X, y = at.IsEmpty || double.IsNaN(at.Y) ? _owner.Padding.Top : at.Y + (at.Height - text.Height) / 2;
+                drawingContext.DrawText(text, new Point(x, y));
             }
-            if (_owner.Mentions.Count == 0) return;
-            var accent = (_owner.TryFindResource("ArcWpf.Brush.AccentSubtle") as Brush) ?? new SolidColorBrush(Color.FromArgb(36, 96, 120, 255));
-            var channel = (_owner.TryFindResource("ArcWpf.Brush.SurfaceMuted") as Brush) ?? new SolidColorBrush(Color.FromArgb(32, 128, 128, 128));
-            foreach (var token in _owner.Mentions.ToArray())
-            {
-                var start = Math.Clamp(token.Start, 0, _owner.Text.Length); var end = Math.Clamp(token.End, start, _owner.Text.Length);
-                Rect? line = null;
-                for (var index = start; index < end; index++)
-                {
-                    var rect = _owner.GetRectFromCharacterIndex(index, true);
-                    if (rect.IsEmpty || double.IsNaN(rect.X)) continue;
-                    if (line is null || Math.Abs(line.Value.Top - rect.Top) > 0.5) { if (line is not null) Draw(line.Value, token.Kind == MentionKind.Channel ? channel : accent, drawingContext); line = rect; }
-                    else line = new Rect(Math.Min(line.Value.Left, rect.Left), line.Value.Top, Math.Max(line.Value.Right, rect.Right) - Math.Min(line.Value.Left, rect.Left), Math.Max(line.Value.Height, rect.Height));
-                }
-                if (line is not null) Draw(line.Value, token.Kind == MentionKind.Channel ? channel : accent, drawingContext);
-            }
+            return;
         }
-        private static void Draw(Rect rect, Brush brush, DrawingContext context)
+        if (_owner.Mentions.Count == 0) return;
+        var accent = (_owner.TryFindResource("ArcWpf.Brush.AccentSubtle") as Brush) ?? new SolidColorBrush(Color.FromArgb(36, 96, 120, 255));
+        var channel = (_owner.TryFindResource("ArcWpf.Brush.MentionChannelToken") as Brush) ?? new SolidColorBrush(Color.FromArgb(32, 128, 128, 128));
+        foreach (var token in _owner.Mentions.ToArray())
         {
-            rect.Inflate(2.5, 1); context.DrawRoundedRectangle(brush, null, rect, 5, 5);
+            var start = Math.Clamp(token.Start, 0, _owner.Text.Length); var end = Math.Clamp(token.End, start, _owner.Text.Length);
+            Rect? line = null;
+            for (var index = start; index < end; index++)
+            {
+                var leading = _owner.GetRectFromCharacterIndex(index, false);
+                var trailing = _owner.GetRectFromCharacterIndex(index, true);
+                if (leading.IsEmpty || double.IsNaN(leading.X) || trailing.IsEmpty || double.IsNaN(trailing.X)) continue;
+                var rect = new Rect(Math.Min(leading.Left, trailing.Left), leading.Top, Math.Abs(trailing.Left - leading.Left), leading.Height);
+                if (line is null || Math.Abs(line.Value.Top - rect.Top) > 0.5) { if (line is not null) Draw(line.Value, token.Kind == MentionKind.Channel ? channel : accent, drawingContext); line = rect; }
+                else line = new Rect(Math.Min(line.Value.Left, rect.Left), line.Value.Top, Math.Max(line.Value.Right, rect.Right) - Math.Min(line.Value.Left, rect.Left), Math.Max(line.Value.Height, rect.Height));
+            }
+            if (line is not null) Draw(line.Value, token.Kind == MentionKind.Channel ? channel : accent, drawingContext);
         }
+    }
+    private static void Draw(Rect rect, Brush brush, DrawingContext context)
+    {
+        rect.Inflate(3, 0); rect.Y += (rect.Height - 22) / 2; rect.Height = 22; context.DrawRoundedRectangle(brush, null, rect, 6, 6);
     }
 }

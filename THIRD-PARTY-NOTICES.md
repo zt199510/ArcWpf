@@ -194,3 +194,11 @@ ThemeSwitch、ToggleGroup、ActionSwap、ExpandableText的结构、几何、颜�
 - Public documentation and page: https://uiarc.dev/components/undo-toast (Arc Pro; registry returns 404; no public version identifier).
 - This WPF component is independently implemented from the publicly described API and from geometry and styling displayed by the publicly served page HTML/CSS, with user authorization. No implementation JavaScript, authenticated Pro source, private registry package or paid assets were obtained or copied.
 - Gallery avatars are original gradients; no Arc images are used.
+
+## AnnouncementBar、AnimatedCounter、Countdown、Timeline、FileDropzone、MentionInput
+
+结构、几何、文案和动效参数参考Arc免费Registry组件及motion-tokens，适用上文Arc MIT许可。冻结批次见`tests/Baselines/References/2026-11-02-*`。这些控件和AvatarUpload、EmojiPicker使用的图标路径来自Lucide（ISC许可，https://lucide.dev/license）。
+
+## AvatarUpload、EmojiPicker
+
+属Arc Pro，无Registry源码。依据公开文档和公开页面显示的几何独立实现，未使用实现JS、Pro源码或付费素材。EmojiPicker目录数据来自Unicode `emoji-test.txt` 15.0（Unicode Terms of Use），排列顺序按公开页面显示调整。彩色字体解析为自行实现；不随仓库分发任何表情字体，离屏验证用的Mozilla Twemoji 0.7.0只放在临时目录。

@@ -1,19 +1,22 @@
 using System.Globalization;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 using System.Windows.Media;
 
 namespace ArcWpf.Controls;
 
+/// <summary>A number on digit wheels: each place value keeps its column, turns in the direction the whole number moved and wraps like an odometer.</summary>
+[TemplatePart(Name = "PART_Digits", Type = typeof(ContentPresenter))]
+[TemplatePart(Name = "PART_Label", Type = typeof(Grid))]
 public class AnimatedCounter : Control
 {
-    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(AnimatedCounter), new FrameworkPropertyMetadata(0d, OnValueChanged));
-    public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty));
-    public static readonly DependencyProperty PrefixProperty = DependencyProperty.Register(nameof(Prefix), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty));
-    public static readonly DependencyProperty SuffixProperty = DependencyProperty.Register(nameof(Suffix), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty));
-    public static readonly DependencyProperty DecimalsProperty = DependencyProperty.Register(nameof(Decimals), typeof(int), typeof(AnimatedCounter), new PropertyMetadata(0, OnValueChanged));
-    public static readonly DependencyProperty LocaleProperty = DependencyProperty.Register(nameof(Locale), typeof(string), typeof(AnimatedCounter), new PropertyMetadata("en-US", OnValueChanged));
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(AnimatedCounter), new FrameworkPropertyMetadata(0d, (d, _) => ((AnimatedCounter)d).UpdateText()));
+    public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty, (d, _) => ((AnimatedCounter)d).UpdateLabel(true)));
+    public static readonly DependencyProperty PrefixProperty = DependencyProperty.Register(nameof(Prefix), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty, (d, _) => ((AnimatedCounter)d).UpdateText()));
+    public static readonly DependencyProperty SuffixProperty = DependencyProperty.Register(nameof(Suffix), typeof(string), typeof(AnimatedCounter), new PropertyMetadata(string.Empty, (d, _) => ((AnimatedCounter)d).UpdateText()));
+    public static readonly DependencyProperty DecimalsProperty = DependencyProperty.Register(nameof(Decimals), typeof(int), typeof(AnimatedCounter), new PropertyMetadata(0, (d, _) => ((AnimatedCounter)d).UpdateText()));
+    public static readonly DependencyProperty LocaleProperty = DependencyProperty.Register(nameof(Locale), typeof(string), typeof(AnimatedCounter), new PropertyMetadata("en-US", (d, _) => ((AnimatedCounter)d).UpdateText()));
     public static readonly DependencyProperty AnimateOnViewProperty = DependencyProperty.Register(nameof(AnimateOnView), typeof(bool), typeof(AnimatedCounter), new PropertyMetadata(false));
     public double Value { get => (double)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
@@ -22,35 +25,78 @@ public class AnimatedCounter : Control
     public int Decimals { get => (int)GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public bool AnimateOnView { get => (bool)GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
-    private StackPanel? _digitsPanel; private TextBlock? _accessibleText; private string _displayText = string.Empty; private bool _viewAnimated;
+
+    private readonly OdometerNumber _number = new() { RevealOnLoad = false };
+    private Grid? _label;
+    private TextBlock? _labelText;
+    private bool _applied;
+
     static AnimatedCounter() => DefaultStyleKeyProperty.OverrideMetadata(typeof(AnimatedCounter), new FrameworkPropertyMetadata(typeof(AnimatedCounter)));
-    public override void OnApplyTemplate() { base.OnApplyTemplate(); _digitsPanel = GetTemplateChild("PART_Digits") as StackPanel; _accessibleText = GetTemplateChild("PART_Accessible") as TextBlock; UpdateText(false); if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }
-    protected override void OnInitialized(EventArgs e) { base.OnInitialized(e); IsVisibleChanged += (_, _) => { if (AnimateOnView && IsVisible && !_viewAnimated) { _viewAnimated = true; AnimateIn(); } }; }
-    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((AnimatedCounter)d).UpdateText(true);
-    private void UpdateText(bool animate)
+
+    public AnimatedCounter()
     {
-        if (_digitsPanel is null) return;
-        string text; try { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.GetCultureInfo(Locale)); } catch { text = Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", CultureInfo.InvariantCulture); }
-        var next = Prefix + text + Suffix; var previous = _displayText; _displayText = next; if (_accessibleText is not null) _accessibleText.Text = next; System.Windows.Automation.AutomationProperties.SetName(this, next); _digitsPanel.Children.Clear();
-        for (var index = 0; index < next.Length; index++)
-        {
-            var glyph = new TextBlock { Text = next[index].ToString(), Foreground = Foreground ?? Brushes.Black, FontSize = 32, FontWeight = FontWeights.Medium, FontFamily = (TryFindResource("ArcWpf.Font.Mono") as FontFamily) ?? new FontFamily("Consolas") };
-            glyph.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.Foreground");
-            glyph.SetResourceReference(TextBlock.FontFamilyProperty, "ArcWpf.Font.Mono");
-            if (char.IsDigit(next[index])) glyph.MinWidth = 18;
-            _digitsPanel.Children.Add(glyph);
-            if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full && index < previous.Length && previous[index] != next[index])
-            {
-                var move = new TranslateTransform { Y = string.CompareOrdinal(previous, next) > 0 ? 6 : -6 }; glyph.RenderTransform = move; glyph.Opacity = .35;
-                move.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(move.Y, 0, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
-                glyph.BeginAnimation(OpacityProperty, new DoubleAnimation(.35, 1, TimeSpan.FromSeconds(.22)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
-            }
-        }
+        Loaded += (_, _) => { if (AnimateOnView && ArcMotion.GetLevel(this) == ArcMotionLevel.Full) _number.Reveal(); else RevealNow(); };
+        IsVisibleChanged += (_, _) => { if (IsVisible && IsLoaded) _number.Reveal(); };
     }
-    private void AnimateIn()
+
+    public override void OnApplyTemplate()
     {
-        if (_digitsPanel is null) return;
-        _digitsPanel.Opacity = ArcMotion.GetLevel(this) == ArcMotionLevel.Off ? 1 : 0;
-        if (ArcMotion.GetLevel(this) != ArcMotionLevel.Off) _digitsPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromSeconds(.3)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+        base.OnApplyTemplate();
+        if (GetTemplateChild("PART_Digits") is ContentPresenter host)
+        {
+            _number.SetBinding(FontFamilyProperty, new System.Windows.Data.Binding(nameof(FontFamily)) { Source = this });
+            _number.SetBinding(FontSizeProperty, new System.Windows.Data.Binding(nameof(FontSize)) { Source = this });
+            _number.SetBinding(FontWeightProperty, new System.Windows.Data.Binding(nameof(FontWeight)) { Source = this });
+            _number.SetBinding(ForegroundProperty, new System.Windows.Data.Binding(nameof(Foreground)) { Source = this });
+            host.Content = _number;
+            _applied = true;
+        }
+        _label = GetTemplateChild("PART_Label") as Grid;
+        _labelText = null;
+        UpdateLabel(false);
+        UpdateText();
+    }
+
+    private string FormatText()
+    {
+        CultureInfo culture;
+        try { culture = CultureInfo.GetCultureInfo(Locale); } catch (CultureNotFoundException) { culture = CultureInfo.InvariantCulture; }
+        return Prefix + Value.ToString($"N{Math.Clamp(Decimals, 0, 6)}", culture) + Suffix;
+    }
+
+    private void UpdateName(string text) => AutomationProperties.SetName(this, string.IsNullOrEmpty(Label) ? text : $"{Label}: {text}");
+
+    private void RevealNow()
+    {
+        _number.Set(Value, FormatText(), false);
+        _number.Reveal();
+        _number.Stop();
+    }
+
+    private void UpdateText()
+    {
+        string text = FormatText();
+        UpdateName(text);
+        if (_applied) _number.Set(Value, text, IsLoaded);
+    }
+
+    // A changed label rises in from a soft blur while the old one lifts away, in the same slot.
+    private void UpdateLabel(bool animate)
+    {
+        UpdateName(FormatText());
+        if (_label is null) return;
+        _label.Visibility = string.IsNullOrEmpty(Label) ? Visibility.Collapsed : Visibility.Visible;
+        var next = new TextBlock { Text = Label, FontSize = 12, FontWeight = FontWeights.Normal, LineHeight = 16.8, LineStackingStrategy = LineStackingStrategy.BlockLineHeight };
+        next.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted");
+        var old = _labelText;
+        _labelText = next;
+        _label.Children.Add(next);
+        if (old is null) return;
+        if (animate && IsLoaded && ArcMotion.GetLevel(this) == ArcMotionLevel.Full)
+        {
+            Tween.Present(next, true, 12 * .3, 6, Tween.Standard, ArcEasing.Enter);
+            Tween.Present(old, false, -12 * .3, 3, Tween.Fast, ArcEasing.Standard, 0, () => _label.Children.Remove(old));
+        }
+        else _label.Children.Remove(old);
     }
 }

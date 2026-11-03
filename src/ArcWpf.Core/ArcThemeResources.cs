@@ -222,6 +222,23 @@ public sealed class ArcThemeResources : ResourceDictionary
             PutBrush($"Swap{name}Border", Tint(tone, border, "Border"));
             PutBrush($"Swap{name}HoverBorder", Tint(tone, hover, "Border"));
         }
+        PutBrush("TimelineRing", Alpha(Oklch(neutrals["Foreground"], 0, 0), .1));
+        var live = (l: dark ? .76 : .5, c: .12, h: 162d);
+        PutBrush("LiveSuccess", Oklch(live.l, live.c, live.h));
+        PutBrush("TimelineSuccess", Oklch(neutrals["Surface"] * .88 + live.l * .12, live.c * .12, live.h));
+        PutBrush("TimelineDanger", Oklch(neutrals["Surface"] * .88 + dangerL * .12, dangerC * .12, 25));
+        PutBrush("AnnouncementStageBorder", Oklch(dark ? neutrals["Border"] : .965, 0, 0));
+        PutBrush("AnnouncementPageLine", Oklch(dark ? neutrals["SurfaceMuted"] : .978, 0, 0));
+        PutBrush("FileDropzoneFailedBorder", Oklch(neutrals["Border"] * .74 + dangerL * .26, dangerC * .26, 25));
+        PutBrush("MentionHighlight", Alpha(Oklch(neutrals["Foreground"], 0, 0), .065));
+        PutBrush("MentionChannelToken", Alpha(Oklch(neutrals["Foreground"], 0, 0), .07));
+        PutBrush("AvatarScrim", Alpha(Oklch(neutrals["Surface"], 0, 0), .62));
+        PutBrush("ComposerSend", Oklch(dark ? .92 : .23, 0, 0));
+        PutBrush("AnnouncementIconHover", Alpha(Oklch(neutrals["Foreground"], 0, 0), .1));
+        PutBrush("AnnouncementInvertedHover", Alpha(Oklch(neutrals["Background"], 0, 0), .066));
+        PutBrush("AnnouncementInvertedMuted", Alpha(Oklch(neutrals["Background"], 0, 0), .66));
+        PutBrush("CountdownCompleteFill", Oklch(neutrals["Surface"] * .91 + live.l * .09, live.c * .09, live.h));
+        PutBrush("CountdownCompleteBorder", Oklch(neutrals["Border"] * .65 + live.l * .35, live.c * .35, live.h));
         PutBrush("UndoRowActionHover", Alpha(Oklch(neutrals["Foreground"], 0, 0), .07));
         this["ArcWpf.Button.Padding.Small"] = new Thickness(12, 0, 12, 0);
         this["ArcWpf.Button.Padding.Medium"] = new Thickness(16, 0, 16, 0);

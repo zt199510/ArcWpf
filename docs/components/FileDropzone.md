@@ -2,6 +2,8 @@
 
 状态：WPF 视觉层已补齐，已完成构建与 Gallery 启动检查；真实拖放、文件选择器、DPI 和主题切换仍待人工窗口验收。
 
+像素对照：2026-11-02 已按线上页面重做，结果与已知差异见 [记录](../verification/2026-11-02-next-controls-pixel.md)；离屏对比已完成，真实窗口未验证。
+
 来源：`tests/Baselines/References/2026-11-02-file-dropzone/`。使用 WPF `AllowDrop`、`DragEnter/Drop` 语义和 `OpenFileDialog`，支持多文件、数量上限和文件列表。模板已对齐 Arc 的主要层级：圆角 surface、虚线边缘、拖拽 wash/glow、纸张堆叠提示、类型文件图标占位、缩略图契约、文件大小/状态、进度条和重试/取消/移除操作。上传异步回调、进度、取消、失败/取消重试和移除条目已暴露。
 
 已实现的 WPF 扩展契约：`Note`、`DropLabel`、`MaxSize`、`ListPlacement`（`below`/`inside`）、`CompactAt`，以及 `FileDropzoneItem.Preview`、`FilePath`、`Retryable`、`FormattedSize`。超过 `MaxSize` 的文件会进入失败状态且不会启动上传。
