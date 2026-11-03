@@ -14,6 +14,9 @@ internal sealed class ControlSpring(double position, double visualDuration)
     // motion's physical(visualDuration, 0): stiffness (2pi / 1.2vd)^2, critically damped.
     public static double Physical(double visualDuration) => visualDuration * 1.2 * 3.89 / (2 * Math.PI);
 
+    // Carries a release velocity into the next settle, in units per second.
+    public void Launch(double velocity) => Velocity = velocity;
+
     public void Snap(double value) { Target = Position = value; Velocity = 0; }
 
     public bool Step(double elapsedSeconds)

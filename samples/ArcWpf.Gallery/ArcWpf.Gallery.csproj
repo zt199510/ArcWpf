@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><OutputType>WinExe</OutputType></PropertyGroup>
+  <ItemGroup><EmbeddedResource Include="Data/renewals.csv.gz" LogicalName="renewals.csv.gz" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../../src/ArcWpf.Controls/ArcWpf.Controls.csproj" /></ItemGroup>
 </Project>

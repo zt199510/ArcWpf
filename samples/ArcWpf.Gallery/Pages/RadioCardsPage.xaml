@@ -1,3 +1,41 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.RadioCardsPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
-  <StackPanel><TextBlock Text="RadioCards" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/><TextBlock Text="需要说明、价格或不可用原因的单选项。" Margin="0,0,0,16"/><Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="16"><arc:RadioCards x:Name="Main" GroupLabel="Shipping speed" SelectedValueChanged="Changed"><arc:RadioCards.Options><x:Array Type="arc:RadioCardOption"><arc:RadioCardOption Value="standard" Label="Standard" Description="4 to 6 business days" Meta="Free"/><arc:RadioCardOption Value="express" Label="Express" Description="2 business days" Meta="$12"/><arc:RadioCardOption Value="overnight" Label="Overnight" Description="Not available for this address" Meta="$29" Disabled="True"/></x:Array></arc:RadioCards.Options></arc:RadioCards></Border><TextBlock x:Name="Status" Margin="0,12,0,0"/></StackPanel>
+<UserControl x:Class="ArcWpf.Gallery.Pages.RadioCardsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <Style x:Key="Legend" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+      <Setter Property="LineHeight" Value="19.6"/>
+      <Setter Property="LineStackingStrategy" Value="BlockLineHeight"/>
+      <Setter Property="Margin" Value="0,0,0,10"/>
+      <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    </Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="RadioCards" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="需要说明、价格或不可用原因的单选项。一个选中环在卡片间弹簧滑动。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="522">
+        <TextBlock Text="Plan" Style="{StaticResource Legend}"/>
+        <arc:RadioCards x:Name="Plan" GroupLabel="Plan" SelectedValue="two">
+          <arc:RadioCards.Options>
+            <arc:RadioCardOption Value="one" Label="One bag" Description="12 oz, whole bean" Meta="$18"/>
+            <arc:RadioCardOption Value="two" Label="Two bags" Description="Two origins each month" Meta="$34"/>
+            <arc:RadioCardOption Value="bulk" Label="Bulk" Description="5 lb for the office" Meta="$72"/>
+            <arc:RadioCardOption Value="decaf" Label="Decaf" Description="Swiss water process" DisabledReason="Back in stock October 14" Meta="$19" Disabled="True"/>
+          </arc:RadioCards.Options>
+        </arc:RadioCards>
+        <TextBlock Text="Delivery" Style="{StaticResource Legend}" Margin="0,24,0,10"/>
+        <arc:RadioCards x:Name="Delivery" GroupLabel="Delivery" Layout="List" SelectedValue="standard">
+          <arc:RadioCards.Options>
+            <arc:RadioCardOption Value="standard" Label="Standard" Description="5 to 7 business days" Meta="Free" Icon="package"/>
+            <arc:RadioCardOption Value="express" Label="Express" Description="2 business days" Meta="$12" Icon="truck"/>
+            <arc:RadioCardOption Value="overnight" Label="Overnight" Description="Tomorrow by 10 am" Meta="$29" Icon="zap"/>
+            <arc:RadioCardOption Value="pickup" Label="Pickup" Description="At the Mission roastery" DisabledReason="Not available for your address" Meta="Free" Icon="store" Disabled="True"/>
+          </arc:RadioCards.Options>
+        </arc:RadioCards>
+      </StackPanel>
+    </Border>
+  </StackPanel>
 </UserControl>

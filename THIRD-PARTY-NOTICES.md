@@ -202,3 +202,11 @@ ThemeSwitch、ToggleGroup、ActionSwap、ExpandableText的结构、几何、颜�
 ## AvatarUpload、EmojiPicker
 
 属Arc Pro，无Registry源码。依据公开文档和公开页面显示的几何独立实现，未使用实现JS、Pro源码或付费素材。EmojiPicker目录数据来自Unicode `emoji-test.txt` 15.0（Unicode Terms of Use），排列顺序按公开页面显示调整。彩色字体解析为自行实现；不随仓库分发任何表情字体，离屏验证用的Mozilla Twemoji 0.7.0只放在临时目录。
+
+## ArcDataGrid
+
+属Arc Pro（https://uiarc.dev/components/data-grid ），Registry返回404，无公开版本号。依据公开预览可见的几何、样式和行为独立实现，未使用Pro源码、未反编译实现JS、未打包付费素材。图标路径为Lucide（ISC许可），以路径数据写入`ArcDataGridIcon`，未引入Lucide运行库。Gallery演示数据`renewals.csv.gz`由公开预览的导出功能取得，仅用于示例。
+
+## 2026-11-03 五项复刻
+
+Carousel、RadioCards、CookieConsent、Reactions、SwipeActions 的结构、参数和动效依据 Arc 免费 Registry 独立改写为 WPF，适用上文 Arc MIT 许可。新增图标路径来自 Lucide（ISC）。Gallery 使用原创渐变，未使用 Arc 的产品照片或头像。TKCode.Arc 提交 5680bf55414fff07398a9fecadc0b72c900fdaba（MIT）只用于核对行为覆盖，未复制代码。

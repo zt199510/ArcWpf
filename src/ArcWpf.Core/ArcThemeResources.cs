@@ -122,6 +122,17 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("UserMenuTriggerPressed", Oklch(MixL("SurfaceMuted", "Foreground", .08), 0, 0));
         // .thumb is surface-raised in light; [data-theme="dark"] mixes foreground 20% into it and drops the shadow.
         PutBrush("UserMenuThumb", Oklch(dark ? MixL("SurfaceRaised", "Foreground", .2) : neutrals["SurfaceRaised"], 0, 0));
+        // ArcDataGrid, measured from the public data-grid preview; there is no frozen source (Arc Pro). Dark danger is not measured.
+        double gridAccent = dark ? .8 : .33;
+        PutBrush("DataGridLine", Oklch(dark ? .25 : .965, 0, 0));
+        // The range wash blends in oklab on the web; these alphas land on the same pixels when composited in sRGB.
+        var gridRange = Oklch(gridAccent, 0, 0); gridRange.A = dark ? (byte)22 : (byte)24;
+        PutBrush("DataGridRange", gridRange);
+        PutBrush("DataGridAccent", Oklch(gridAccent, 0, 0));
+        PutBrush("DataGridHeadActive", Oklch(MixL("Surface", "SurfaceMuted", .7), 0, 0));
+        PutBrush("DataGridChecked", Oklch(gridAccent * .05 + neutrals["Surface"] * .95, 0, 0));
+        PutBrush("DataGridSearchFocus", Oklch(MixL("SurfaceMuted", "Border", .4), 0, 0));
+        PutBrush("DataGridDanger", Oklch(dark ? .72 : .53, dark ? .15 : .18, 10));
         this["ArcWpf.Radius.Control"] = new CornerRadius(18);
         this["ArcWpf.Radius.Panel"] = new CornerRadius(26);
         this["ArcWpf.Radius.Pill"] = new CornerRadius(9999);
@@ -150,6 +161,17 @@ public sealed class ArcThemeResources : ResourceDictionary
         double accentL = dark ? .8 : .33;
         (double l, double c, double h) warning = (dark ? .83 : .58, dark ? .17 : .18, dark ? 80 : 75), success = (dark ? .78 : .49, dark ? .18 : .19, 150);
         Color Tint((double l, double c, double h) tone, double share, string neutral) => Oklch(tone.l * share + neutrals[neutral] * (1 - share), tone.c * share, tone.h);
+        // radio-cards, reactions and swipe-actions css mixes. Neutral roles, so oklab lightness carries the mix. Dark values are derived, not measured.
+        double reactionAccent = dark ? .8 : .33;
+        PutBrush("RadioCardChecked", Oklch(neutrals["ControlOn"] * .04 + neutrals["Surface"] * .96, 0, 0));
+        PutBrush("ReactionPressedEdge", Oklch(reactionAccent * .45 + neutrals["Border"] * .55, 0, 0));
+        PutBrush("ReactionPressedHoverEdge", Oklch(reactionAccent * .65 + neutrals["Border"] * .35, 0, 0));
+        PutBrush("ReactionPressedHover", Oklch(reactionAccent * .17 + neutrals["Surface"] * .83, 0, 0));
+        PutBrush("ReactionPressedActive", Oklch(reactionAccent * .18 + neutrals["Surface"] * .82, 0, 0));
+        PutBrush("ReactionOptionRing", Alpha(Oklch(reactionAccent, 0, 0), .45));
+        PutBrush("ReactionIconFill", Alpha(Oklch(neutrals["AccentStrong"], 0, 0), .22));
+        PutBrush("SwipeNeutral", Oklch(neutrals["Foreground"] * .2 + neutrals["Surface"] * .8, 0, 0));
+        PutBrush("SwipeMenuDangerHover", Alpha(Oklch(.53, .18, 10), .08));
         PutBrush("RatingKept", Alpha(Oklch(warning.l, warning.c, warning.h), .3));
         PutBrush("ChipSelectedBorder", Oklch(accentL * .42 + neutrals["Border"] * .58, 0, 0));
         PutBrush("ChipSelectedSurface", Oklch(accentL * .11 + neutrals["Surface"] * .89, 0, 0));

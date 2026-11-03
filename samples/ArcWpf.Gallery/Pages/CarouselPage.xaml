@@ -4,19 +4,9 @@
              xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
     <TextBlock Text="Carousel" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
-    <TextBlock Text="拖拽、左右键、指示点或底部箭头浏览相邻卡片；自动播放可暂停。" TextWrapping="Wrap" Margin="0,0,0,16"/>
-    <Border Style="{DynamicResource Gallery.PreviewCanvas}" MinHeight="280" Padding="16">
-      <arc:Carousel x:Name="Main" Label="Harbour suites" SlideWidth="250" SlideGap="12" HorizontalAlignment="Stretch" Interval="0:0:5" IsPlaying="False">
-        <Border Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="18" Padding="24"><StackPanel><TextBlock Text="Sea view suite" FontSize="22" FontWeight="SemiBold"/><TextBlock Text="Morning light and a quiet harbour." Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel></Border>
-        <Border Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="18" Padding="24"><StackPanel><TextBlock Text="Garden suite" FontSize="22" FontWeight="SemiBold"/><TextBlock Text="A sheltered room for slow afternoons." Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel></Border>
-        <Border Background="{DynamicResource ArcWpf.Brush.Surface}" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" BorderThickness="1" CornerRadius="18" Padding="24"><StackPanel><TextBlock Text="Loft suite" FontSize="22" FontWeight="SemiBold"/><TextBlock Text="High windows over the old town." Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/></StackPanel></Border>
-      </arc:Carousel>
+    <TextBlock Text="拖动、甩动、方向键或下方控件翻页。活动项居中，指示器随轨道伸缩。图片为原创渐变占位。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <arc:Carousel x:Name="Stage" Width="522" Label="Featured products" SlideWidth="256" SlideGap="16" Interval="0:0:5"/>
     </Border>
-    <TextBlock Text="受控索引与自动播放" FontWeight="Medium" Margin="0,24,0,12"/>
-    <StackPanel Orientation="Horizontal">
-      <Button Content="上一张" Click="Previous" Margin="0,0,8,0"/>
-      <Button Content="下一张" Click="Next" Margin="0,0,8,0"/>
-      <TextBlock x:Name="Status" VerticalAlignment="Center"/>
-    </StackPanel>
   </StackPanel>
 </UserControl>

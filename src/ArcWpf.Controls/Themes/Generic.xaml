@@ -91,6 +91,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/CookieConsent/Themes/CookieConsentTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Reactions/Themes/ReactionsTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/SwipeActions/Themes/SwipeActionsTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ArcDataGrid/Themes/ArcDataGridTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

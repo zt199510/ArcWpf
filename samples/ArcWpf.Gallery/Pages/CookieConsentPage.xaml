@@ -1,1 +1,37 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.CookieConsentPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><Grid><StackPanel><TextBlock Text="CookieConsent" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/><TextBlock Text="同意栏、偏好面板和重新打开按钮共用一个状态模型。" TextWrapping="Wrap"/><Button Content="打开偏好设置" Click="Open" HorizontalAlignment="Left" Margin="0,12,0,0"/></StackPanel><arc:CookieConsent x:Name="Consent" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,24,0,0" Position="Bottom" ConsentChanged="Changed"/></Grid></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.CookieConsentPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <Style x:Key="Pill" TargetType="Border">
+      <Setter Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceMuted}"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="CookieConsent" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="一个表面在同意条、偏好面板和重开按钮之间弹簧变形。可选类别默认关闭，拒绝与接受一样容易。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <Border x:Name="Stage" Width="522" Height="480" CornerRadius="34" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" ClipToBounds="False">
+        <Grid>
+          <Grid>
+            <Border Height="44" VerticalAlignment="Top" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}"/>
+            <Border Style="{StaticResource Pill}" Margin="20,18,0,0" Width="56" Height="8" CornerRadius="4"/>
+            <Border Style="{StaticResource Pill}" Margin="94,19,0,0" Width="32" Height="6" CornerRadius="3"/>
+            <Border Style="{StaticResource Pill}" Margin="138,19,0,0" Width="32" Height="6" CornerRadius="3"/>
+            <Border Style="{StaticResource Pill}" Margin="182,19,0,0" Width="32" Height="6" CornerRadius="3"/>
+            <Border Style="{StaticResource Pill}" Margin="480,12,0,0" Width="20" Height="20" CornerRadius="10"/>
+            <Border Style="{StaticResource Pill}" Margin="20,68,0,0" Width="220" Height="12" CornerRadius="6"/>
+            <Border Style="{StaticResource Pill}" Margin="20,92,0,0" Width="140" Height="8" CornerRadius="4"/>
+            <Border Style="{StaticResource Pill}" Margin="20,124,0,0" Width="153" Height="72" CornerRadius="14"/>
+            <Border Style="{StaticResource Pill}" Margin="183,124,0,0" Width="153" Height="72" CornerRadius="14"/>
+            <Border Style="{StaticResource Pill}" Margin="346,124,0,0" Width="154" Height="72" CornerRadius="14"/>
+            <Border Style="{StaticResource Pill}" Margin="20,206,0,0" Width="480" Height="160" CornerRadius="14"/>
+          </Grid>
+          <arc:CookieConsent x:Name="Consent"/>
+        </Grid>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

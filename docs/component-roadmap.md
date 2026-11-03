@@ -124,7 +124,12 @@ PresenceStack 最近一次修正已根据公开页面 HTML/CSS调整，专项 9/
 - [x] More 按钮改为包含 leading/trailing 全部动作的原生 ContextMenu。
 - [x] 动作层改为真实 WPF 按钮，补齐 tone、图标/文案、点击命中、Escape 和外部点击关闭。
 - [x] 动作层随揭示距离连续伸展，外侧动作在长拖拽时承担覆盖区域。
-- [ ] 菜单视觉主题、真实触摸、多 DPI 和窗口验收。
+- [x] 菜单视觉主题：已改为自绘 Popup。
+- [ ] 真实触摸、多 DPI 和窗口验收。
+
+### 2026-11-03 五项复刻审计
+
+上述五项的“完成”判断已被 [复刻审计](verification/2026-11-03-replica-batch-audit.md) 取代：并排比较发现它们远未达到复刻要求，已按 Arc 源码重写。离屏对比和 56 项专项测试通过；真实窗口、拖拽和触摸仍待验收。
 
 ## 2026-11-02 新增控件批次
 
@@ -155,7 +160,7 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 
 ### 第四批：数据展示（M4-D）
 
-`SortableDataTable`、`ReorderableList`、`FilterToolbar`、`TreeTable`、`CodeBlock`、`JSONViewer`。CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成本批次实现；后续若扩展虚拟化、异步懒加载或 DataGrid 编辑语义，应另立范围，不把复杂契约偷偷扩展进基础控件。
+`SortableDataTable`、`ReorderableList`、`FilterToolbar`、`TreeTable`、`CodeBlock`、`JSONViewer`。CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成本批次实现；后续若扩展虚拟化、异步懒加载或 DataGrid 编辑语义，应另立范围，不把复杂契约偷偷扩展进基础控件。2026-11-03 用户指定的 Arc Data grid 已按独立范围实现为 `ArcDataGrid`（待验收，见 [规格](components/ArcDataGrid.md)）；`SortableDataTable` 契约未变。
 
 ### 暂缓
 

@@ -1,1 +1,31 @@
-<UserControl x:Class="ArcWpf.Gallery.Pages.SwipeActionsPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls"><StackPanel><TextBlock Text="SwipeActions" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/><TextBlock Text="横向拖拽列表行显示操作；桌面用户可使用更多操作按钮。" Margin="0,0,0,16"/><Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8"><arc:SwipeActions Label="Inbox"><arc:SwipeActionsRow RowLabel="Harbour update" Content="Harbour update · 3 unread"/><arc:SwipeActionsRow RowLabel="Release notes" Content="Release notes · Friday"/></arc:SwipeActions></Border></StackPanel></UserControl>
+<UserControl x:Class="ArcWpf.Gallery.Pages.SwipeActionsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="SwipeActions" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="横向滑动行露出操作，长滑直接提交；每行也有包含相同操作的菜单。头像为原创渐变占位。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="440">
+        <DockPanel Height="20.6" Margin="4,0,4,12">
+          <TextBlock x:Name="Left" DockPanel.Dock="Right" Margin="0,1,0,0" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          <TextBlock Text="Inbox" FontSize="18" FontWeight="Medium" LineHeight="19.8" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+        </DockPanel>
+        <!-- The stage keeps its height as rows leave, so the footer never jumps. -->
+        <Grid Height="330">
+          <arc:SwipeActions x:Name="Inbox" Label="Inbox" VerticalAlignment="Top"/>
+          <TextBlock x:Name="Empty" Visibility="Collapsed" Text="Inbox zero. Nothing left to triage." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+        </Grid>
+        <DockPanel Height="36" Margin="4,12,0,0">
+          <arc:Button x:Name="Undo" DockPanel.Dock="Right" Visibility="Collapsed" Click="OnUndo" Variant="Secondary" Size="Small" Width="84" Margin="8,0,0,0">
+            <StackPanel Orientation="Horizontal">
+              <arc:ArcDataGridIcon Icon="undo-2" Size="16" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+              <TextBlock Text="Undo" VerticalAlignment="Center"/>
+            </StackPanel>
+          </arc:Button>
+          <TextBlock x:Name="Status" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Text="Swipe a message, or use its menu."/>
+        </DockPanel>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

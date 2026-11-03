@@ -1,32 +1,28 @@
 using System.Windows;
 using System.Windows.Automation;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Threading;
 
 namespace ArcWpf.Controls;
 
-/// <summary>Arc 风格的居中轮播：相邻卡片保持可见，支持拖拽、键盘、指示点和可选自动播放。</summary>
-[TemplatePart(Name = "PART_Viewport", Type = typeof(ScrollViewer))]
-[TemplatePart(Name = "PART_Track", Type = typeof(FrameworkElement))]
-[TemplatePart(Name = "PART_Play", Type = typeof(System.Windows.Controls.Button))]
-[TemplatePart(Name = "PART_Indicators", Type = typeof(CarouselIndicators))]
+/// <summary>A row of slides browsed by dragging, flicking, the arrow keys or the controls below it. The active slide sits in the center and the page indicator stretches into a pill that travels with the track.</summary>
+[TemplatePart(Name = "PART_Viewport", Type = typeof(FrameworkElement))]
+[TemplatePart(Name = "PART_Track", Type = typeof(CarouselTrack))]
+[TemplatePart(Name = "PART_Controls", Type = typeof(Grid))]
 public class Carousel : ItemsControl
 {
-    public static readonly RoutedCommand PreviousCommand = new();
-    public static readonly RoutedCommand NextCommand = new();
-    public static readonly RoutedCommand TogglePlayCommand = new();
-    public static readonly RoutedCommand SelectCommand = new();
-    public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(Carousel), new FrameworkPropertyMetadata("Carousel"));
-    public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(Carousel), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIndexChanged));
-    public static readonly DependencyProperty SlideWidthProperty = DependencyProperty.Register(nameof(SlideWidth), typeof(double), typeof(Carousel), new FrameworkPropertyMetadata(340d, OnLayoutChanged, CoerceSize));
-    public static readonly DependencyProperty SlideGapProperty = DependencyProperty.Register(nameof(SlideGap), typeof(double), typeof(Carousel), new FrameworkPropertyMetadata(16d, OnLayoutChanged, CoerceSize));
-    public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register(nameof(Interval), typeof(TimeSpan), typeof(Carousel), new FrameworkPropertyMetadata(TimeSpan.Zero, OnIntervalChanged));
-    public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register(nameof(IsPlaying), typeof(bool), typeof(Carousel), new FrameworkPropertyMetadata(false, OnPlayingChanged));
-    private static readonly DependencyPropertyKey IsDraggingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsDragging), typeof(bool), typeof(Carousel), new FrameworkPropertyMetadata(false));
-    public static readonly DependencyProperty IsDraggingProperty = IsDraggingPropertyKey.DependencyProperty;
+    private const double Slop = 6, Flick = 360, Dot = 6, Pill = 22, RestScale = .9, RestOpacity = .5;
+
+    public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(nameof(Label), typeof(string), typeof(Carousel), new FrameworkPropertyMetadata("Carousel", (d, e) => AutomationProperties.SetName(d, (string)e.NewValue)));
+    public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(Carousel), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIndexChanged, CoerceIndex));
+    public static readonly DependencyProperty SlideWidthProperty = DependencyProperty.Register(nameof(SlideWidth), typeof(double), typeof(Carousel), new FrameworkPropertyMetadata(340d, OnLayoutChanged), value => value is double size && size > 0);
+    public static readonly DependencyProperty SlideGapProperty = DependencyProperty.Register(nameof(SlideGap), typeof(double), typeof(Carousel), new FrameworkPropertyMetadata(16d, OnLayoutChanged), value => value is double size && size >= 0);
+    public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register(nameof(Interval), typeof(TimeSpan), typeof(Carousel), new FrameworkPropertyMetadata(TimeSpan.Zero, (d, _) => ((Carousel)d).RebuildControls()));
+    public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register(nameof(IsPlaying), typeof(bool), typeof(Carousel), new FrameworkPropertyMetadata(false, (d, _) => ((Carousel)d).PlayingChanged()));
+    private static readonly DependencyPropertyKey IsDraggingKey = DependencyProperty.RegisterReadOnly(nameof(IsDragging), typeof(bool), typeof(Carousel), new FrameworkPropertyMetadata(false));
+    public static readonly DependencyProperty IsDraggingProperty = IsDraggingKey.DependencyProperty;
 
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public int SelectedIndex { get => (int)GetValue(SelectedIndexProperty); set => SetValue(SelectedIndexProperty, value); }
@@ -37,125 +33,485 @@ public class Carousel : ItemsControl
     public bool IsDragging => (bool)GetValue(IsDraggingProperty);
     public event EventHandler? SelectedIndexChanged;
 
-    private ScrollViewer? _viewport; private FrameworkElement? _track; private CarouselIndicators? _indicators; private bool _dragging; private Point _dragStart; private double _origin; private DispatcherTimer? _timer; private bool _hover; private bool _focus; private double _lastPointerX; private int _lastPointerTime; private double _releaseVelocity;
-    static Carousel() { DefaultStyleKeyProperty.OverrideMetadata(typeof(Carousel), new FrameworkPropertyMetadata(typeof(Carousel))); }
-    public Carousel() { KeyboardNavigation.SetDirectionalNavigation(this, KeyboardNavigationMode.Local); CommandBindings.Add(new CommandBinding(PreviousCommand, (_, _) => Previous())); CommandBindings.Add(new CommandBinding(NextCommand, (_, _) => Next())); CommandBindings.Add(new CommandBinding(TogglePlayCommand, (_, _) => IsPlaying = !IsPlaying)); CommandBindings.Add(new CommandBinding(SelectCommand, (_, e) => { if (e.Parameter is int i) SelectedIndex = i; })); ItemContainerGenerator.StatusChanged += (_, _) => { if (ItemContainerGenerator.Status == System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated) UpdateIndicators(); }; Loaded += (_, _) => { UpdatePosition(false); RestartTimer(); }; Unloaded += (_, _) => StopTimer(); }
+    private FrameworkElement? _viewport;
+    private CarouselTrack? _track;
+    private Grid? _controls;
+    private TextBlock? _announcer;
+    private ArcChromeButton? _play, _previous, _next;
+    private ContentControl? _playGlyph;
+    private StackPanel? _tabs;
+    private readonly List<(ArcChromeButton Tab, Border Dot, Border Fill, Border Drain)> _dots = [];
+    private double[] _drains = [];
+    private readonly SpringDriver _driver;
+    private readonly ControlSpring _x;
+    private double _step = 1;
+    private int _target;
+    private bool _hovered, _focusPaused, _subscribed;
+    private long _lastFrame;
+    private double _refillFrom, _refillT = 1;
+    private int _refillIndex = -1;
+    private DragState? _drag;
+    private bool _swallowClick;
+    private sealed class DragState { public double StartX, StartY, Origin; public int From; public bool? Horizontal; public bool Caught; public List<(long Time, double X)> Samples = []; }
+
+    static Carousel() => DefaultStyleKeyProperty.OverrideMetadata(typeof(Carousel), new FrameworkPropertyMetadata(typeof(Carousel)));
+
+    public Carousel()
+    {
+        Focusable = false;
+        _driver = new SpringDriver(ApplyPosition);
+        _x = _driver.Add(0, ArcSpring.Smooth);
+        Loaded += (_, _) => { Sync(); UpdateClock(); };
+        Unloaded += (_, _) => { _driver.Finish(); StopClock(); };
+        SizeChanged += (_, _) => Sync();
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new FrameworkElementAutomationPeer(this);
+
+    private int LastIndex => Math.Max(0, Items.Count - 1);
+    private bool Reduced => ArcMotion.GetLevel(this) != ArcMotionLevel.Full;
+    private bool Animated => IsLoaded && !Reduced;
+    private bool CanRotate => Interval > TimeSpan.Zero && Items.Count > 1 && !Reduced;
+    private bool Running => CanRotate && IsPlaying && !_hovered && !_focusPaused && !IsDragging && IsVisible;
+    internal double Position => _step > 0 ? -_x.Position / _step : 0;
+    internal double SlideSize => Math.Min(ActualWidth > 0 ? ActualWidth * .8 : SlideWidth, SlideWidth);
+    internal double Drain(int index) => index >= 0 && index < _drains.Length ? _drains[index] : 0;
+
+    private static object CoerceIndex(DependencyObject d, object value)
+    {
+        var carousel = (Carousel)d;
+        return carousel.Items.Count == 0 ? value : Math.Clamp((int)value, 0, carousel.LastIndex);
+    }
+
+    private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var carousel = (Carousel)d;
+        if (carousel._target != (int)e.NewValue) { carousel._target = (int)e.NewValue; carousel.Glide(carousel._target); }
+        carousel.UpdateActive();
+        carousel.UpdateClock();
+        carousel.SelectedIndexChanged?.Invoke(carousel, EventArgs.Empty);
+    }
+
+    private static void OnLayoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var carousel = (Carousel)d; carousel._track?.InvalidateMeasure(); carousel.Sync(); }
+
+    protected override void OnItemsChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        base.OnItemsChanged(e);
+        CoerceValue(SelectedIndexProperty);
+        RebuildControls();
+        Sync();
+    }
 
     public override void OnApplyTemplate()
     {
-        Release(); base.OnApplyTemplate();
-        _viewport = GetTemplateChild("PART_Viewport") as ScrollViewer; _track = GetTemplateChild("PART_Track") as FrameworkElement; _indicators = GetTemplateChild("PART_Indicators") as CarouselIndicators; if (_indicators is not null) { _indicators.Owner = this; _indicators.ItemsSource = Items; _indicators.RefreshState(); }
-        if (_viewport is not null) { _viewport.PreviewMouseLeftButtonDown += DragDown; _viewport.PreviewMouseMove += DragMove; _viewport.PreviewMouseLeftButtonUp += DragUp; _viewport.PreviewTouchDown += HandleTouchDown; _viewport.PreviewTouchMove += HandleTouchMove; _viewport.PreviewTouchUp += HandleTouchUp; _viewport.PreviewMouseWheel += Wheel; _viewport.MouseEnter += Hover; _viewport.MouseLeave += Hover; _viewport.GotKeyboardFocus += FocusChanged; _viewport.LostKeyboardFocus += FocusChanged; }
-        UpdatePosition(false); Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(UpdateIndicators)); RestartTimer();
-    }
-    private void Release() { if (_viewport is null) return; _viewport.PreviewMouseLeftButtonDown -= DragDown; _viewport.PreviewMouseMove -= DragMove; _viewport.PreviewMouseLeftButtonUp -= DragUp; _viewport.PreviewTouchDown -= HandleTouchDown; _viewport.PreviewTouchMove -= HandleTouchMove; _viewport.PreviewTouchUp -= HandleTouchUp; _viewport.PreviewMouseWheel -= Wheel; _viewport.MouseEnter -= Hover; _viewport.MouseLeave -= Hover; _viewport.GotKeyboardFocus -= FocusChanged; _viewport.LostKeyboardFocus -= FocusChanged; _viewport = null; _track = null; _indicators = null; StopTimer(); }
-    private static object CoerceSize(DependencyObject _, object value) => Math.Max(1, (double)value);
-    private static void OnLayoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) => ((Carousel)d).UpdatePosition(false);
-    private static void OnIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { var c = (Carousel)d; c.CoerceIndex(); c.UpdatePosition(true); c.SelectedIndexChanged?.Invoke(c, EventArgs.Empty); c.RestartTimer(); }
-    private static void OnIntervalChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) => ((Carousel)d).RestartTimer();
-    private static void OnPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) => ((Carousel)d).RestartTimer();
-    private void CoerceIndex() { int last = Math.Max(0, Items.Count - 1); if (SelectedIndex < 0) SetCurrentValue(SelectedIndexProperty, 0); else if (SelectedIndex > last) SetCurrentValue(SelectedIndexProperty, last); }
-    private void UpdatePosition(bool animate)
-    {
-        if (_track is null || _viewport is null || Items.Count == 0) return;
-        CoerceIndex(); double step = SlideWidth + SlideGap; double center = Math.Max(0, (_viewport.ActualWidth - SlideWidth) / 2); double x = center - SelectedIndex * step;
-        if (_track.RenderTransform is not TranslateTransform t) _track.RenderTransform = t = new TranslateTransform();
-        var level = ArcMotion.GetLevel(this);
-        if (animate && IsLoaded && level == ArcMotionLevel.Full)
+        if (_viewport is not null)
         {
-            // Arc 的 snap 是可打断 spring；Tween.Spring 会从当前动画帧继续，避免快速连续翻页时跳回旧位置。
-            Tween.Spring(t, TranslateTransform.XProperty, x, Tween.Morph);
+            _viewport.PreviewMouseLeftButtonDown -= OnPress;
+            _viewport.PreviewMouseMove -= OnMove;
+            _viewport.PreviewMouseLeftButtonUp -= OnRelease;
+            _viewport.LostMouseCapture -= OnLostCapture;
+            _viewport.MouseEnter -= OnEnter;
+            _viewport.MouseLeave -= OnLeave;
         }
-        else if (animate && IsLoaded && level == ArcMotionLevel.Reduced)
+        base.OnApplyTemplate();
+        _viewport = GetTemplateChild("PART_Viewport") as FrameworkElement;
+        _track = GetTemplateChild("PART_Track") as CarouselTrack;
+        _controls = GetTemplateChild("PART_Controls") as Grid;
+        _announcer = GetTemplateChild("PART_Announcer") as TextBlock;
+        if (_track is not null) { _track.Owner = this; }
+        if (_viewport is not null)
         {
-            Tween.To(t, TranslateTransform.XProperty, x, Tween.Fast, ArcEasing.Standard);
+            AutomationProperties.SetName(_viewport, "Slides");
+            _viewport.PreviewMouseLeftButtonDown += OnPress;
+            _viewport.PreviewMouseMove += OnMove;
+            _viewport.PreviewMouseLeftButtonUp += OnRelease;
+            _viewport.LostMouseCapture += OnLostCapture;
+            _viewport.MouseEnter += OnEnter;
+            _viewport.MouseLeave += OnLeave;
         }
-        else { t.BeginAnimation(TranslateTransform.XProperty, null); t.X = x; }
-        AutomationProperties.SetName(_viewport, $"{Label}, {SelectedIndex + 1} of {Items.Count}");
-        UpdateIndicators();
-        UpdateSlideVisuals(t.X, step);
+        RebuildControls();
     }
-    private void UpdateIndicators()
+
+    private void OnEnter(object sender, MouseEventArgs e) { _hovered = true; UpdateClock(); }
+    private void OnLeave(object sender, MouseEventArgs e) { _hovered = false; UpdateClock(); }
+
+    protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (_indicators is null) return;
-        for (var i = 0; i < Items.Count; i++) if (_indicators.ItemContainerGenerator.ContainerFromIndex(i) is CarouselIndicator indicator) indicator.IsActive = i == SelectedIndex;
+        base.OnIsKeyboardFocusWithinChanged(e);
+        _focusPaused = IsKeyboardFocusWithin && !ReferenceEquals(Keyboard.FocusedElement, _play) && (InputManager.Current.MostRecentInputDevice is KeyboardDevice);
+        UpdateClock();
     }
-    private void UpdateSlideVisuals(double trackX, double step)
+
+    // ---- Position ----
+    private void Sync()
     {
-        if (step <= 0) return;
+        if (_track is null || ActualWidth <= 0) { return; }
+        double slide = SlideSize, step = slide + SlideGap;
+        bool changed = step != _step;
+        _step = step;
+        if (changed && _drag is null) { _driver.Stop(); _x.Snap(-_target * step); }
+        double inset = Math.Max(0, (ActualWidth - slide) / 2);
+        if (_controls is not null)
+        {
+            bool tight = ActualWidth <= 340;
+            _controls.Margin = new Thickness(tight ? Math.Max(0, inset - 8) : inset, 16, tight ? Math.Max(0, inset - 8) : inset, 0);
+            foreach (var (tab, _, _, _) in _dots) { tab.Padding = new Thickness(tight ? 4 : 5, 0, tight ? 4 : 5, 0); }
+        }
+        ApplyPosition();
+    }
+
+    /// <summary>Scale, dim and the indicator all read the track position, so they never lag the pointer.</summary>
+    private void ApplyPosition()
+    {
+        if (_track is null) { return; }
+        _track.Offset = _x.Position;
+        double position = Position;
+        _track.ApplyEmphasis(position, RestScale, RestOpacity);
+        double clamped = Math.Clamp(position, 0, LastIndex);
+        for (int i = 0; i < _dots.Count; i++)
+        {
+            double emphasis = Math.Max(0, 1 - Math.Abs(clamped - i));
+            var (_, dot, fill, drain) = _dots[i];
+            dot.Width = Dot + (Pill - Dot) * emphasis;
+            fill.Opacity = emphasis;
+            if (i != _target && Math.Abs(position - i) >= 1 && i < _drains.Length && _drains[i] != 0) { _drains[i] = 0; }
+            ApplyDrain(i, drain, dot.Width);
+        }
+    }
+
+    private void ApplyDrain(int index, Border drain, double width) => drain.Width = width * (index < _drains.Length ? _drains[index] : 0);
+
+    private void Glide(int to, double velocity = 0)
+    {
+        double target = -to * _step;
+        if (!Animated) { _driver.Stop(); _driver.Snap(_x, target); return; }
+        _x.Launch(velocity);
+        _driver.Animate(_x, target, ArcSpring.Smooth);
+    }
+
+    private void Select(int to, double velocity = 0, bool announce = true)
+    {
+        int next = Math.Clamp(to, 0, LastIndex);
+        _target = next;
+        Glide(next, velocity);
+        if (next == SelectedIndex) { return; }
+        SelectedIndex = next;
+        if (announce && _announcer is not null) { _announcer.Text = SlideLabel(next); }
+    }
+
+    private string SlideLabel(int index) => $"{index + 1} of {Items.Count}";
+
+    public void Next() => Select(_target + 1);
+    public void Previous() => Select(_target - 1);
+    public void First() => Select(0);
+    public void Last() => Select(LastIndex);
+
+    private void UpdateActive()
+    {
+        _track?.SetActive(SelectedIndex);
+        if (_previous is not null) { _previous.Refresh(true); _previous.Opacity = SelectedIndex == 0 ? .5 : 1; _previous.Cursor = SelectedIndex == 0 ? Cursors.Arrow : Cursors.Hand; }
+        if (_next is not null) { _next.Refresh(true); _next.Opacity = SelectedIndex == LastIndex ? .5 : 1; _next.Cursor = SelectedIndex == LastIndex ? Cursors.Arrow : Cursors.Hand; }
+        for (int i = 0; i < _dots.Count; i++) { _dots[i].Tab.IsTabStop = i == SelectedIndex; }
+    }
+
+    // ---- Dragging ----
+    private static double Rubber(double overshoot, double dimension) => overshoot * dimension * .55 / (dimension + .55 * overshoot);
+    private static double Unrubber(double distance, double dimension) => distance * dimension / (.55 * Math.Max(1, dimension - distance));
+    private double Min => -LastIndex * _step;
+    private double Band(double raw) { double size = Math.Max(1, ActualWidth); return raw > 0 ? Rubber(raw, size) : raw < Min ? Min - Rubber(Min - raw, size) : raw; }
+    private double Unband(double shown) { double size = Math.Max(1, ActualWidth); return shown > 0 ? Unrubber(shown, size) : shown < Min ? Min - Unrubber(Min - shown, size) : shown; }
+
+    private void OnPress(object sender, MouseButtonEventArgs e)
+    {
+        if (Items.Count < 2 || _drag is not null) { return; }
+        _swallowClick = false;
+        // Touching a visibly moving track catches it where it is. A settling tail is left alone so a press still selects.
+        bool caught = _driver.IsRunning && Math.Abs(_x.Position + _target * _step) > 12;
+        if (caught) { _driver.Stop(); }
+        var point = e.GetPosition(this);
+        _drag = new DragState { StartX = point.X, StartY = point.Y, From = _target, Caught = caught };
+    }
+
+    private void OnMove(object sender, MouseEventArgs e)
+    {
+        if (_drag is null || e.LeftButton != MouseButtonState.Pressed) { return; }
+        var point = e.GetPosition(this);
+        if (_drag.Horizontal is null)
+        {
+            double dx = point.X - _drag.StartX, dy = point.Y - _drag.StartY;
+            if (Math.Abs(dx) < Slop && Math.Abs(dy) < Slop) { return; }
+            if (Math.Abs(dy) > Math.Abs(dx)) { _drag.Horizontal = false; return; }
+            _drag.Horizontal = true;
+            _driver.Stop();
+            _drag.StartX = point.X;
+            _drag.Origin = Unband(_x.Position);
+            _viewport?.CaptureMouse();
+            if (_viewport is not null) { _viewport.Cursor = Cursors.SizeWE; }
+            SetValue(IsDraggingKey, true);
+            UpdateClock();
+        }
+        if (_drag.Horizontal != true) { return; }
+        _x.Snap(Band(_drag.Origin + point.X - _drag.StartX));
+        ApplyPosition();
+        _drag.Samples.Add((Environment.TickCount64, point.X));
+        if (_drag.Samples.Count > 16) { _drag.Samples.RemoveAt(0); }
+    }
+
+    private void OnRelease(object sender, MouseButtonEventArgs e) => Finish(e.GetPosition(this).X, false);
+    private void OnLostCapture(object sender, MouseEventArgs e) { if (_drag?.Horizontal == true && Mouse.LeftButton == MouseButtonState.Pressed) { Finish(0, true); } }
+
+    private static double VelocityOf(List<(long Time, double X)> samples, long now)
+    {
+        var recent = samples.Where(sample => now - sample.Time <= 90).ToList();
+        if (recent.Count < 2 || now - recent[^1].Time > 50) { return 0; }
+        return recent[^1].Time > recent[0].Time ? (recent[^1].X - recent[0].X) / ((recent[^1].Time - recent[0].Time) / 1000d) : 0;
+    }
+
+    private void Finish(double x, bool cancelled)
+    {
+        var drag = _drag;
+        if (drag is null) { return; }
+        _drag = null;
+        if (drag.Horizontal == true)
+        {
+            _swallowClick = true;
+            SetValue(IsDraggingKey, false);
+            if (_viewport is not null) { _viewport.Cursor = Cursors.Hand; if (_viewport.IsMouseCaptured) { _viewport.ReleaseMouseCapture(); } }
+            double velocity = cancelled ? 0 : VelocityOf(drag.Samples, Environment.TickCount64);
+            // The landing slide comes from where the flick would carry the track, not from where the pointer let go.
+            double projected = velocity / 1000 * .995 / .005;
+            int to = (int)Math.Round(-(_x.Position + projected) / _step);
+            if (Math.Abs(velocity) > Flick) { int direction = velocity < 0 ? 1 : -1; if ((to - drag.From) * direction < 1) { to = drag.From + direction; } }
+            Select(to, velocity);
+            UpdateClock();
+        }
+        else if (drag.Caught) { _swallowClick = true; Select((int)Math.Round(-_x.Position / _step)); }
+        else if (!cancelled && drag.Horizontal is null && _track is not null)
+        {
+            int hit = _track.SlideAt(x, this);
+            if (hit >= 0 && hit != _target) { _swallowClick = true; Select(hit); }
+        }
+    }
+
+    protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
+    {
+        base.OnPreviewMouseLeftButtonUp(e);
+        if (_swallowClick) { _swallowClick = false; e.Handled = e.OriginalSource is DependencyObject source && _viewport?.IsAncestorOf(source) == true; }
+    }
+
+    protected override void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        base.OnPreviewKeyDown(e);
+        if (e.Handled || Items.Count < 2 || (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Windows)) != 0 || Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase) { return; }
+        int? to = e.Key switch { Key.Left => _target - 1, Key.Right => _target + 1, Key.Home => 0, Key.End => LastIndex, _ => null };
+        if (to is null) { return; }
+        e.Handled = true;
+        int next = Math.Clamp(to.Value, 0, LastIndex);
+        bool onTab = _dots.Any(dot => ReferenceEquals(dot.Tab, Keyboard.FocusedElement));
+        Select(next);
+        if (onTab) { _dots[next].Tab.Focus(); }
+    }
+
+    // ---- Controls ----
+    private void RebuildControls()
+    {
+        if (_controls is null) { return; }
+        _controls.Children.Clear();
+        _controls.ColumnDefinitions.Clear();
+        _dots.Clear();
+        _play = _previous = _next = null;
+        _drains = new double[Items.Count];
+        _controls.Visibility = Items.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+        foreach (var width in new[] { GridLength.Auto, GridLength.Auto, new GridLength(1, GridUnitType.Star), GridLength.Auto }) { _controls.ColumnDefinitions.Add(new ColumnDefinition { Width = width }); }
+        if (Items.Count < 2) { return; }
+
+        if (CanRotate)
+        {
+            _play = ControlButton(IsPlaying ? "Pause slide rotation" : "Start slide rotation");
+            _playGlyph = new ContentControl { Focusable = false, Width = 16, Height = 16, IsHitTestVisible = false };
+            _play.Content = _playGlyph;
+            _play.Click += (_, _) => IsPlaying = !IsPlaying;
+            _play.Margin = new Thickness(0, 0, 8, 0);
+            _controls.Children.Add(_play);
+            UpdatePlayGlyph(false);
+        }
+
+        _tabs = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        AutomationProperties.SetName(_tabs, "Choose a slide");
+        Grid.SetColumn(_tabs, 1);
         for (int i = 0; i < Items.Count; i++)
         {
-            if (ItemContainerGenerator.ContainerFromIndex(i) is not CarouselItem item) continue;
-            var distance = Math.Abs((trackX + i * step) / step);
-            var emphasis = Math.Max(0, 1 - Math.Min(1, distance));
-            item.IsActive = i == SelectedIndex;
-            item.Width = SlideWidth;
-            item.Margin = new Thickness(SlideGap / 2, 0, SlideGap / 2, 0);
-            item.Opacity = 0.5 + 0.5 * emphasis;
-            item.RenderTransform = new ScaleTransform(0.9 + 0.1 * emphasis, 0.9 + 0.1 * emphasis);
+            int index = i;
+            var fill = new Border { Opacity = 0 };
+            fill.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.Foreground");
+            var drain = new Border { HorizontalAlignment = HorizontalAlignment.Right, Width = 0 };
+            drain.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.BorderStrong");
+            var inner = new Grid { Children = { fill, drain } };
+            var dot = new Border { Width = Dot, Height = Dot, CornerRadius = new CornerRadius(3), Child = inner, ClipToBounds = true };
+            dot.SizeChanged += (_, _) => inner.Clip = new RectangleGeometry(new Rect(0, 0, dot.ActualWidth, Dot), 3, 3);
+            dot.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.BorderStrong");
+            var tab = new ArcChromeButton(18) { Content = dot, Height = 36, Padding = new Thickness(5, 0, 5, 0), Roles = _ => (null, null, null) };
+            AutomationProperties.SetName(tab, SlideLabel(index));
+            tab.Click += (_, _) => Select(index);
+            tab.MouseEnter += (_, _) => { if (fill.Opacity < 1) { dot.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.TextMuted"); } };
+            tab.MouseLeave += (_, _) => dot.SetResourceReference(Border.BackgroundProperty, "ArcWpf.Brush.BorderStrong");
+            _tabs.Children.Add(tab);
+            _dots.Add((tab, dot, fill, drain));
+        }
+        _controls.Children.Add(_tabs);
+
+        var arrows = new StackPanel { Orientation = Orientation.Horizontal };
+        Grid.SetColumn(arrows, 3);
+        _previous = ControlButton("Previous slide");
+        _previous.Content = ArcText.Icon("chevron-left", 18, _previous.Ink);
+        _previous.Click += (_, _) => { if (_target > 0) { Previous(); } };
+        _next = ControlButton("Next slide");
+        _next.Content = ArcText.Icon("chevron-right", 18, _next.Ink);
+        _next.Margin = new Thickness(8, 0, 0, 0);
+        _next.Click += (_, _) => { if (_target < LastIndex) { Next(); } };
+        arrows.Children.Add(_previous);
+        arrows.Children.Add(_next);
+        _controls.Children.Add(arrows);
+        UpdateActive();
+        Sync();
+    }
+
+    private ArcChromeButton ControlButton(string name)
+    {
+        var button = new ArcChromeButton(18, 1) { Width = 36, Height = 36 };
+        button.Roles = b => (b.IsMouseOver && b.Opacity == 1 ? "SurfaceMuted" : "Surface", "Border", b.Opacity < 1 ? "TextMuted" : "Foreground");
+        AutomationProperties.SetName(button, name);
+        return button;
+    }
+
+    private void UpdatePlayGlyph(bool animate)
+    {
+        if (_play is null || _playGlyph is null) { return; }
+        AutomationProperties.SetName(_play, IsPlaying ? "Pause slide rotation" : "Start slide rotation");
+        var icon = ArcText.Icon(IsPlaying ? "pause" : "play", 15, _play.Ink);
+        icon.Fill = _play.Ink;
+        _playGlyph.Content = icon;
+        if (!animate || Reduced) { return; }
+        var scale = new ScaleTransform(.6, .6, 7.5, 7.5);
+        icon.RenderTransform = scale;
+        icon.Opacity = 0;
+        var motion = new OwnedMotion();
+        motion.Double(icon, OpacityProperty, 1, .16, true, enter: true);
+        motion.Double(scale, ScaleTransform.ScaleXProperty, 1, .24, true, enter: true);
+        motion.Double(scale, ScaleTransform.ScaleYProperty, 1, .24, true, enter: true);
+    }
+
+    private void PlayingChanged()
+    {
+        UpdatePlayGlyph(IsLoaded);
+        // Pausing refills the pill: this slide stays until the viewer moves on.
+        if (!IsPlaying && SelectedIndex < _drains.Length)
+        {
+            _refillIndex = SelectedIndex;
+            _refillFrom = _drains[SelectedIndex];
+            _refillT = Reduced ? 1 : 0;
+            if (Reduced) { _drains[SelectedIndex] = 0; }
+        }
+        UpdateClock();
+    }
+
+    // ---- Rotation clock ----
+    private void UpdateClock()
+    {
+        bool needed = Running || _refillT < 1;
+        if (needed && !_subscribed) { _subscribed = true; _lastFrame = System.Diagnostics.Stopwatch.GetTimestamp(); CompositionTarget.Rendering += OnFrame; }
+        else if (!needed) { StopClock(); }
+    }
+
+    private void StopClock()
+    {
+        if (!_subscribed) { return; }
+        _subscribed = false;
+        CompositionTarget.Rendering -= OnFrame;
+    }
+
+    private void OnFrame(object? sender, EventArgs e)
+    {
+        long now = System.Diagnostics.Stopwatch.GetTimestamp();
+        AdvanceClock(System.Diagnostics.Stopwatch.GetElapsedTime(_lastFrame, now).TotalSeconds);
+        _lastFrame = now;
+    }
+
+    internal void AdvanceClock(double seconds)
+    {
+        if (_refillT < 1 && _refillIndex >= 0 && _refillIndex < _drains.Length)
+        {
+            _refillT = Math.Min(1, _refillT + seconds / .24);
+            _drains[_refillIndex] = _refillFrom * (1 - ArcEasing.Standard.Ease(_refillT));
+        }
+        if (Running && SelectedIndex < _drains.Length)
+        {
+            _drains[SelectedIndex] += seconds / Interval.TotalSeconds;
+            if (_drains[SelectedIndex] >= 1)
+            {
+                _drains[SelectedIndex] = 1;
+                ApplyPosition();
+                Select(SelectedIndex >= LastIndex ? 0 : SelectedIndex + 1, 0, false);
+            }
+        }
+        ApplyPosition();
+        UpdateClock();
+    }
+}
+
+/// <summary>Lays slides in a row with side padding that centers the first and last, and applies each slide's distance-based scale and dim.</summary>
+public sealed class CarouselTrack : Panel
+{
+    internal Carousel? Owner { get; set; }
+    private readonly TranslateTransform _translate = new();
+    public CarouselTrack() => RenderTransform = _translate;
+    internal double Offset { get => _translate.X; set => _translate.X = value; }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        double slide = Owner?.SlideSize ?? availableSize.Width, height = 0;
+        foreach (UIElement child in InternalChildren) { child.Measure(new Size(slide, double.PositiveInfinity)); height = Math.Max(height, child.DesiredSize.Height); }
+        return new Size(double.IsInfinity(availableSize.Width) ? slide : availableSize.Width, height);
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        double slide = Owner?.SlideSize ?? finalSize.Width, gap = Owner?.SlideGap ?? 0, x = (finalSize.Width - slide) / 2;
+        foreach (UIElement child in InternalChildren)
+        {
+            child.Arrange(new Rect(x, 0, slide, finalSize.Height));
+            child.RenderTransformOrigin = new Point(.5, .5);
+            x += slide + gap;
+        }
+        Owner?.Dispatcher.InvokeAsync(() => ApplyEmphasis(Owner.Position, .9, .5), System.Windows.Threading.DispatcherPriority.Render);
+        return finalSize;
+    }
+
+    internal void ApplyEmphasis(double position, double restScale, double restOpacity)
+    {
+        for (int i = 0; i < InternalChildren.Count; i++)
+        {
+            double t = Math.Clamp(Math.Abs(position - i), 0, 1);
+            var child = InternalChildren[i];
+            double scale = 1 + (restScale - 1) * t;
+            child.RenderTransform = new ScaleTransform(scale, scale);
+            child.Opacity = 1 + (restOpacity - 1) * t;
         }
     }
-    private void RestartTimer() { StopTimer(); if (!IsPlaying || _hover || _focus || IsDragging || Interval <= TimeSpan.Zero || Items.Count < 2) return; _timer = new DispatcherTimer { Interval = Interval }; _timer.Tick += (_, _) => Next(); _timer.Start(); }
-    private void StopTimer() { if (_timer is not null) { _timer.Stop(); _timer = null; } }
-    private void Hover(object? s, MouseEventArgs e) { _hover = _viewport?.IsMouseOver == true; RestartTimer(); }
-    private void FocusChanged(object? s, KeyboardFocusChangedEventArgs e) { _focus = _viewport?.IsKeyboardFocusWithin == true; RestartTimer(); }
-    private void DragDown(object sender, MouseButtonEventArgs e) { if (Items.Count < 2 || e.ChangedButton != MouseButton.Left) return; _dragging = true; SetValue(IsDraggingPropertyKey, true); _dragStart = e.GetPosition(_viewport); _origin = (_track?.RenderTransform as TranslateTransform)?.X ?? 0; _lastPointerX = _dragStart.X; _lastPointerTime = e.Timestamp; _releaseVelocity = 0; _viewport?.CaptureMouse(); StopTimer(); e.Handled = true; }
-    private void DragMove(object sender, MouseEventArgs e) { if (!_dragging || _viewport is null || _track is null) return; var p = e.GetPosition(_viewport); UpdatePointer(p.X, e.Timestamp); if (_track.RenderTransform is not TranslateTransform t) _track.RenderTransform = t = new TranslateTransform(); t.X = _origin + p.X - _dragStart.X; UpdateSlideVisuals(t.X, SlideWidth + SlideGap); }
-    private void DragUp(object sender, MouseButtonEventArgs e) { if (!_dragging) return; var p = e.GetPosition(_viewport); UpdatePointer(p.X, e.Timestamp); FinishDrag(p.X - _dragStart.X, _releaseVelocity); _viewport?.ReleaseMouseCapture(); e.Handled = true; }
-    private void HandleTouchDown(object? sender, TouchEventArgs e) { if (Items.Count < 2 || _dragging || _viewport is null) return; _dragging = true; SetValue(IsDraggingPropertyKey, true); _dragStart = e.GetTouchPoint(_viewport).Position; _origin = (_track?.RenderTransform as TranslateTransform)?.X ?? 0; _lastPointerX = _dragStart.X; _lastPointerTime = e.Timestamp; _releaseVelocity = 0; _viewport.CaptureTouch(e.TouchDevice); StopTimer(); e.Handled = true; }
-    private void HandleTouchMove(object? sender, TouchEventArgs e) { if (!_dragging || _viewport is null || _track is null) return; var p = e.GetTouchPoint(_viewport).Position; UpdatePointer(p.X, e.Timestamp); if (_track.RenderTransform is not TranslateTransform t) _track.RenderTransform = t = new TranslateTransform(); t.X = _origin + p.X - _dragStart.X; UpdateSlideVisuals(t.X, SlideWidth + SlideGap); e.Handled = true; }
-    private void HandleTouchUp(object? sender, TouchEventArgs e) { if (!_dragging || _viewport is null) return; var p = e.GetTouchPoint(_viewport).Position; UpdatePointer(p.X, e.Timestamp); FinishDrag(p.X - _dragStart.X, _releaseVelocity); _viewport.ReleaseTouchCapture(e.TouchDevice); e.Handled = true; }
-    private void UpdatePointer(double x, int timestamp) { var elapsed = Math.Max(1, timestamp - _lastPointerTime); _releaseVelocity = (x - _lastPointerX) / (elapsed / 1000d); _lastPointerX = x; _lastPointerTime = timestamp; }
-    private void FinishDrag(double delta, double velocity)
+
+    internal void SetActive(int index)
     {
-        _dragging = false; SetValue(IsDraggingPropertyKey, false);
-        const double flick = 560;
-        // Project a short part of the release velocity, matching the web track's flick behavior.
-        var projected = delta + Math.Clamp(velocity * .10, -SlideWidth, SlideWidth);
-        if (Math.Abs(velocity) >= flick) { if (velocity < 0) Next(); else Previous(); }
-        else if (Math.Abs(projected) > Math.Max(24, (SlideWidth + SlideGap) * .18)) { if (projected < 0) Next(); else Previous(); }
-        else UpdatePosition(true);
-        RestartTimer();
+        for (int i = 0; i < InternalChildren.Count; i++) { InternalChildren[i].IsEnabled = i == index; }
     }
-    private void Wheel(object? sender, MouseWheelEventArgs e) { if (Items.Count < 2) return; if (Math.Abs(e.Delta) < 1) return; if (e.Delta < 0) Next(); else Previous(); e.Handled = true; }
-    public void Next() { if (Items.Count > 0) SelectedIndex = Math.Min(Items.Count - 1, SelectedIndex + 1); }
-    public void Previous() { if (Items.Count > 0) SelectedIndex = Math.Max(0, SelectedIndex - 1); }
-    public void First() => SelectedIndex = 0;
-    public void Last() => SelectedIndex = Math.Max(0, Items.Count - 1);
-    protected override void OnPreviewKeyDown(KeyEventArgs e) { base.OnPreviewKeyDown(e); if (e.Handled) return; switch (e.Key) { case Key.Left: Previous(); e.Handled = true; break; case Key.Right: Next(); e.Handled = true; break; case Key.Home: First(); e.Handled = true; break; case Key.End: Last(); e.Handled = true; break; case Key.Space when Interval > TimeSpan.Zero: IsPlaying = !IsPlaying; e.Handled = true; break; } }
-    protected override DependencyObject GetContainerForItemOverride() => new CarouselItem();
-    protected override bool IsItemItsOwnContainerOverride(object item) => item is CarouselItem;
-    protected override void PrepareContainerForItemOverride(DependencyObject element, object item) { base.PrepareContainerForItemOverride(element, item); if (element is CarouselItem c) { c.Index = ItemContainerGenerator.IndexFromContainer(c); c.IsActive = c.Index == SelectedIndex; } }
-}
 
-public sealed class CarouselIndicators : ItemsControl
-{
-    public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(nameof(Owner), typeof(Carousel), typeof(CarouselIndicators), new FrameworkPropertyMetadata(null, OnOwnerChanged));
-    public Carousel? Owner { get => (Carousel?)GetValue(OwnerProperty); set => SetValue(OwnerProperty, value); }
-    public CarouselIndicators() => ItemContainerGenerator.StatusChanged += (_, _) => { if (ItemContainerGenerator.Status == System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated) RefreshState(); };
-    private static void OnOwnerChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) => ((CarouselIndicators)d).RefreshState();
-    internal void RefreshState() { for (var i = 0; i < Items.Count; i++) if (ItemContainerGenerator.ContainerFromIndex(i) is CarouselIndicator indicator) { indicator.Owner = Owner; indicator.IsActive = i == Owner?.SelectedIndex; } }
-    protected override DependencyObject GetContainerForItemOverride() => new CarouselIndicator();
-    protected override bool IsItemItsOwnContainerOverride(object item) => item is CarouselIndicator;
-    protected override void PrepareContainerForItemOverride(DependencyObject element, object item) { base.PrepareContainerForItemOverride(element, item); if (element is CarouselIndicator indicator) { indicator.Index = ItemContainerGenerator.IndexFromContainer(indicator); indicator.Owner = Owner; indicator.IsActive = indicator.Index == Owner?.SelectedIndex; } }
-}
-
-public sealed class CarouselIndicator : Button
-{
-    public static readonly DependencyProperty IndexProperty = DependencyProperty.Register(nameof(Index), typeof(int), typeof(CarouselIndicator));
-    public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(nameof(IsActive), typeof(bool), typeof(CarouselIndicator));
-    public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(nameof(Owner), typeof(Carousel), typeof(CarouselIndicator));
-    public int Index { get => (int)GetValue(IndexProperty); set => SetValue(IndexProperty, value); }
-    public bool IsActive { get => (bool)GetValue(IsActiveProperty); set => SetValue(IsActiveProperty, value); }
-    public Carousel? Owner { get => (Carousel?)GetValue(OwnerProperty); set => SetValue(OwnerProperty, value); }
-    protected override void OnClick() { base.OnClick(); if (Owner is not null) Owner.SelectedIndex = Index; }
-}
-
-public sealed class CarouselItem : ContentControl
-{
-    public static readonly DependencyProperty IndexProperty = DependencyProperty.Register(nameof(Index), typeof(int), typeof(CarouselItem), new FrameworkPropertyMetadata(0));
-    public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(nameof(IsActive), typeof(bool), typeof(CarouselItem), new FrameworkPropertyMetadata(false));
-    public int Index { get => (int)GetValue(IndexProperty); set => SetValue(IndexProperty, value); }
-    public bool IsActive { get => (bool)GetValue(IsActiveProperty); set => SetValue(IsActiveProperty, value); }
-    static CarouselItem() { DefaultStyleKeyProperty.OverrideMetadata(typeof(CarouselItem), new FrameworkPropertyMetadata(typeof(CarouselItem))); }
+    internal int SlideAt(double x, UIElement relative)
+    {
+        for (int i = 0; i < InternalChildren.Count; i++)
+        {
+            var child = (FrameworkElement)InternalChildren[i];
+            double left = child.TranslatePoint(new Point(0, 0), relative).X, right = child.TranslatePoint(new Point(child.ActualWidth, 0), relative).X;
+            if (x >= left && x <= right) { return i; }
+        }
+        return -1;
+    }
 }

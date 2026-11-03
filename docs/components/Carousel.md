@@ -1,6 +1,6 @@
 # Carousel
 
-状态：实现完成，真实窗口视觉与触摸验收待执行。
+状态：按 Arc 源码重写，离屏对比通过；真实窗口、拖拽与触摸验收待执行。
 
 ## 来源
 
@@ -22,3 +22,11 @@ Arc Free Carousel，采集批次 `2026-11-03-carousel`，来源冻结于 `tests/
 ## 验证
 
 `CarouselTests` 4/4 通过；Controls 与 Gallery 构建通过。真实窗口的明暗主题、DPI、触摸、甩动惯性和动效观感待验收。
+
+## 2026-11-03 复刻审计后的实现
+
+本节取代上文与它冲突的旧说明。此前的实现距 Arc 很远，测试通过并不代表复刻达标，详见 [验证记录](../verification/2026-11-03-replica-batch-audit.md)。
+
+活动项居中，相邻项按距离缩放到 .9、变暗到 .5，指示器宽度从 6 到 22 随轨道连续变化。拖动用 SLOP 6、FLICK 360、速度投影和橡皮筋；轮播的消耗条可暂停并回填。默认幻灯片宽度 min(80%W, SlideWidth)，容器不超过 340 时收紧控件行。
+
+模板部件改为 `PART_Viewport`、`PART_Track`（`CarouselTrack`）、`PART_Controls`、`PART_Announcer`；旧的 `PART_Play` 与 `CarouselIndicators` 已移除。未做虚拟化，所有幻灯片都会实例化。

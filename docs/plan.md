@@ -94,6 +94,7 @@ Search已完成来源冻结、原生Input派生控件、清除入口及动效、
 - 导航与展示组：菜单、树、列表、分页、卡片和进度；先验证选择和虚拟化。
 - 图表与手势组：纯算法、坐标/命中、拖拽、过渡分别验证。
 - 高复杂度组：DataGrid、富文本、工作流画布另写技术方案与成本评估；不阻塞基础控件发布。
+  - 2026-11-03：用户指定复刻 Arc Data grid，实现为 `ArcDataGrid`，状态待验收，见 [规格](components/ArcDataGrid.md)。富文本、工作流画布不变。
 
 每组进入条件：依赖设施已稳定、来源可用、规格含可测的退出条件。一次完成一个纵向交付，再据实估算下一组，不在 M0 给出无依据的整体工期。
 
@@ -526,3 +527,5 @@ TreeView、Breadcrumb、Menu、NumberInput、Progress、Pagination、Calendar/Da
 ## TextBox 分段着色（2026-11-02）
 
 用户要求让 TextBox 支持分段着色。新增附加能力 `TextColoring`（见[规格](components/TextColoring.md)），EmojiPicker 消息框和 Textarea 页已接入。离屏与相关测试通过；真实窗口和 Segoe UI Emoji 未运行，见[验证记录](verification/2026-11-02-text-coloring.md)。
+
+2026-11-03：用户要求复核 Carousel、RadioCards、CookieConsent、Reactions、SwipeActions，并以 TKCode.Arc 为参考。审计发现五项远未达到复刻要求，已按 Arc 源码重写，详见 [复刻审计](verification/2026-11-03-replica-batch-audit.md)。状态为离屏对比通过、真实窗口待验收，未标为已完成。

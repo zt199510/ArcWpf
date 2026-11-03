@@ -53,19 +53,62 @@ public sealed class CarouselTests
         finally { window.Close(); }
     });
     [TestMethod]
-    public void WindowRendersActiveIndicatorPill() => Sta.Run(() =>
+    public void TrackPlacesSlidesAroundTheCenterAndDimsNeighbours() => Sta.Run(() =>
     {
-        var carousel = new Carousel { Width = 420, Height = 220 };
-        carousel.Items.Add("one"); carousel.Items.Add("two"); carousel.Items.Add("three");
+        var carousel = new Carousel { Width = 522, SlideWidth = 256 };
+        for (int i = 0; i < 3; i++) { carousel.Items.Add(new Border { Height = 300 }); }
         carousel.SelectedIndex = 1;
-        var window = new Window { Content = carousel, Width = 520, Height = 300, ShowInTaskbar = false };
+        var window = new Window { Content = carousel, Width = 620, Height = 500, ShowInTaskbar = false };
         try
         {
             window.Show(); Sta.Pump(); carousel.UpdateLayout();
-            var indicators = (CarouselIndicators)carousel.Template.FindName("PART_Indicators", carousel)!;
-            Assert.AreEqual(3, indicators.Items.Count);
-            Assert.IsTrue(((CarouselIndicator)indicators.ItemContainerGenerator.ContainerFromIndex(1)!).IsActive);
-            Assert.IsFalse(((CarouselIndicator)indicators.ItemContainerGenerator.ContainerFromIndex(0)!).IsActive);
+            Assert.AreEqual(1d, carousel.Position, .001);
+            var track = (CarouselTrack)carousel.Template.FindName("PART_Track", carousel)!;
+            var active = (FrameworkElement)track.Children[1];
+            Assert.AreEqual(1d, active.Opacity, .001);
+            Assert.AreEqual(.5, track.Children[0].Opacity, .001);
+            var center = active.TranslatePoint(new Point(active.ActualWidth / 2, 0), carousel).X;
+            Assert.AreEqual(261d, center, .5, "the active slide sits in the middle of the viewport");
+        }
+        finally { window.Close(); }
+    });
+
+    [TestMethod]
+    public void RotationDrainsThePillAndAdvancesAndPausingRefills() => Sta.Run(() =>
+    {
+        var carousel = new Carousel { Width = 400, Interval = TimeSpan.FromSeconds(2), IsPlaying = true };
+        for (int i = 0; i < 2; i++) { carousel.Items.Add(new Border { Height = 100 }); }
+        var window = new Window { Content = carousel, Width = 500, Height = 300, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); carousel.UpdateLayout();
+            carousel.AdvanceClock(1);
+            Assert.AreEqual(.5, carousel.Drain(0), .05);
+            carousel.IsPlaying = false;
+            for (int i = 0; i < 10; i++) { carousel.AdvanceClock(.05); }
+            Assert.AreEqual(0d, carousel.Drain(0), .001);
+            Assert.AreEqual(0, carousel.SelectedIndex);
+            carousel.IsPlaying = true;
+            carousel.AdvanceClock(2.1);
+            Assert.AreEqual(1, carousel.SelectedIndex);
+        }
+        finally { window.Close(); }
+    });
+
+    [TestMethod]
+    public void ReducedMotionHasNoRotationButKeepsTheControls() => Sta.Run(() =>
+    {
+        var carousel = new Carousel { Width = 400, Interval = TimeSpan.FromSeconds(1), IsPlaying = true };
+        ArcMotion.SetLevel(carousel, ArcMotionLevel.Off);
+        for (int i = 0; i < 2; i++) { carousel.Items.Add(new Border { Height = 100 }); }
+        var window = new Window { Content = carousel, Width = 500, Height = 300, ShowInTaskbar = false };
+        try
+        {
+            window.Show(); Sta.Pump(); carousel.UpdateLayout();
+            carousel.AdvanceClock(5);
+            Assert.AreEqual(0, carousel.SelectedIndex);
+            carousel.Next();
+            Assert.AreEqual(1d, carousel.Position, .001, "reduced motion jumps to the slide at once");
         }
         finally { window.Close(); }
     });
