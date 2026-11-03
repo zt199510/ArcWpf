@@ -92,6 +92,10 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/Reactions/Themes/ReactionsTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/SwipeActions/Themes/SwipeActionsTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ArcDataGrid/Themes/ArcDataGridTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/SignaturePad/Themes/SignaturePadTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/OnboardingChecklist/Themes/OnboardingChecklistTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/CommandMenu/Themes/CommandMenuTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/RichTextEditor/Themes/RichTextEditorTheme.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 

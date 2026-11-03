@@ -162,9 +162,13 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 
 `SortableDataTable`、`ReorderableList`、`FilterToolbar`、`TreeTable`、`CodeBlock`、`JSONViewer`。CodeBlock、JSONViewer、SortableDataTable、TreeTable 已完成本批次实现；后续若扩展虚拟化、异步懒加载或 DataGrid 编辑语义，应另立范围，不把复杂契约偷偷扩展进基础控件。2026-11-03 用户指定的 Arc Data grid 已按独立范围实现为 `ArcDataGrid`（待验收，见 [规格](components/ArcDataGrid.md)）；`SortableDataTable` 契约未变。
 
+### 2026-11-03 第四批复刻
+
+- [x] 用户明确要求后，`RichTextEditor`、`SignaturePad` 移出暂缓，并与 `CommandMenu`、`OnboardingChecklist` 一起完成实现、Gallery 和专项测试；状态待验收，见 [验证记录](verification/2026-11-03-batch4-replication.md)。
+
 ### 暂缓
 
-`RichTextEditor`、`SignaturePad`、图表 14 项、Advanced charts、Carousel/Card stack、Text effects、Media/Activity 复杂组件以及所有 Pro 条目。它们分别涉及编辑器模型、绘制/命中测试、数据可视化、手势或付费来源边界，应单独立项，不作为下一批连续移植。
+图表 14 项、Advanced charts、Carousel/Card stack、Text effects、Media/Activity 复杂组件以及所有 Pro 条目。它们分别涉及编辑器模型、绘制/命中测试、数据可视化、手势或付费来源边界，应单独立项，不作为下一批连续移植。
 
 ### 建议的实际开工顺序
 

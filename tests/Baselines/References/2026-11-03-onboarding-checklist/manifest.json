@@ -1,0 +1,56 @@
+{
+  "component": "OnboardingChecklist",
+  "arcName": "onboarding-checklist",
+  "capturedAt": "2026-11-03T09:49:44.944368+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/onboarding-checklist/markdown",
+    "page": "https://uiarc.dev/components/onboarding-checklist",
+    "registry": "https://uiarc.dev/r/onboarding-checklist.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/onboarding-checklist/markdown",
+      "sha256": "ebbd8feb7119f1252c88e3ab205af0c5fee0fb77ba9a5ccd04fb11e365dcdd83",
+      "bytes": 6663
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/onboarding-checklist",
+      "sha256": "61f39e018a8c62e133650f7694aae27fcafd58589d3f5141f911473254f1cef4",
+      "bytes": 189322
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/onboarding-checklist.json",
+      "sha256": "c1820297c05597c88bea91a58b7fd13e1317d5fe548c8b6db6ea0f1a635a6fd7",
+      "bytes": 35278
+    },
+    {
+      "name": "registry/onboarding-checklist.tsx",
+      "url": "https://uiarc.dev/r/onboarding-checklist.json",
+      "sha256": "74b252594a15b747ac090300a9a9967c8ab472f221fcef08b7a96f8b50912e47",
+      "bytes": 24745
+    },
+    {
+      "name": "registry/onboarding-checklist.module.css",
+      "url": "https://uiarc.dev/r/onboarding-checklist.json",
+      "sha256": "768e85ab736535f724d042cc2b3f122c7ec5a4a03761817fccbf92b23caf5dfc",
+      "bytes": 8735
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

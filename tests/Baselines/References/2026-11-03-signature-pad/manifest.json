@@ -1,0 +1,56 @@
+{
+  "component": "SignaturePad",
+  "arcName": "signature-pad",
+  "capturedAt": "2026-11-03T09:49:37.529793+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/signature-pad/markdown",
+    "page": "https://uiarc.dev/components/signature-pad",
+    "registry": "https://uiarc.dev/r/signature-pad.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/signature-pad/markdown",
+      "sha256": "706691735375de8fb6f00dfd284f9561278d20a31e30c257cc8be48f605ce080",
+      "bytes": 7991
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/signature-pad",
+      "sha256": "f0cbf126dfdeddc51f0342ee73d59ced1607b160dff04841e75bb8d2a5bdc237",
+      "bytes": 190564
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/signature-pad.json",
+      "sha256": "1a2d83ef41a7bc98b53032ac2837a926a6d131eccce5ae80d737053f5fe4f233",
+      "bytes": 36801
+    },
+    {
+      "name": "registry/signature-pad.tsx",
+      "url": "https://uiarc.dev/r/signature-pad.json",
+      "sha256": "59549b8aaac417b7bc987e459fa8c398ef813c60bcb4646750d8c446cefb56eb",
+      "bytes": 29601
+    },
+    {
+      "name": "registry/signature-pad.module.css",
+      "url": "https://uiarc.dev/r/signature-pad.json",
+      "sha256": "b3ab146170d37529c118b881a13e46c9076066597f3bbb2cc0e88cb3ce191917",
+      "bytes": 5316
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

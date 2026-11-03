@@ -210,3 +210,11 @@ ThemeSwitch、ToggleGroup、ActionSwap、ExpandableText的结构、几何、颜�
 ## 2026-11-03 五项复刻
 
 Carousel、RadioCards、CookieConsent、Reactions、SwipeActions 的结构、参数和动效依据 Arc 免费 Registry 独立改写为 WPF，适用上文 Arc MIT 许可。新增图标路径来自 Lucide（ISC）。Gallery 使用原创渐变，未使用 Arc 的产品照片或头像。TKCode.Arc 提交 5680bf55414fff07398a9fecadc0b72c900fdaba（MIT）只用于核对行为覆盖，未复制代码。
+
+## 2026-11-03 四项复刻
+
+RichTextEditor、SignaturePad、CommandMenu、OnboardingChecklist 的结构、参数和动效依据 Arc 免费 Registry（MIT，快照见 `tests/Baselines/References/2026-11-03-*`）独立改写，不包含 React/Motion 运行时代码，也未打包 Arc 的图片素材。
+
+本批新增的图标路径取自 lucide-static 1.67.0（ISC）。Arc 使用的 Lucide 版本未知，未核实两者是否一致。
+
+TKCode.Arc（提交 `5680bf55414fff07398a9fecadc0b72c900fdaba`，MIT）仅作移植经验参考，未复制代码；其 Avalonia 自研编辑器引擎未采用。

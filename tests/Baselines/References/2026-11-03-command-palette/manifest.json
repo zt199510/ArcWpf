@@ -1,0 +1,56 @@
+{
+  "component": "CommandMenu",
+  "arcName": "command-palette",
+  "capturedAt": "2026-11-03T09:49:41.265653+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/blocks/command-palette/markdown",
+    "page": "https://uiarc.dev/components/blocks/command-palette",
+    "registry": "https://uiarc.dev/r/command-palette.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/blocks/command-palette/markdown",
+      "sha256": "6249bc6ab76c83ced8567857d16493d6bf5f490b0a770a14b19e642e46963b7e",
+      "bytes": 7160
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/blocks/command-palette",
+      "sha256": "baa0bd92ff339e58188f6e41877281eb8ff9545762dbef9dc8cca32fc7666f46",
+      "bytes": 208251
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/command-palette.json",
+      "sha256": "7da27f04bd719a6d9427476171b723afbe9f069f69957927719f868f267ccf17",
+      "bytes": 23848
+    },
+    {
+      "name": "registry/command-palette.tsx",
+      "url": "https://uiarc.dev/r/command-palette.json",
+      "sha256": "b6f1354a62a8a3b162b8a7ea24c4cba8964928c2e9d30a163b2b9f8ba7e76c0a",
+      "bytes": 16590
+    },
+    {
+      "name": "registry/command-palette.module.css",
+      "url": "https://uiarc.dev/r/command-palette.json",
+      "sha256": "7a6c8d1d2dbbd3fd2c1b59247aad375ee63d46f5d4e5db4e1629a7f74982b993",
+      "bytes": 5754
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

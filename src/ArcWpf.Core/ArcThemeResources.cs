@@ -172,6 +172,14 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("ReactionIconFill", Alpha(Oklch(neutrals["AccentStrong"], 0, 0), .22));
         PutBrush("SwipeNeutral", Oklch(neutrals["Foreground"] * .2 + neutrals["Surface"] * .8, 0, 0));
         PutBrush("SwipeMenuDangerHover", Alpha(Oklch(.53, .18, 10), .08));
+        // signature-pad.module.css inks, per theme; rich-text-editor and onboarding-checklist css mixes.
+        PutBrush("SignatureInkBlue", dark ? Oklch(.76, .12, 258) : Oklch(.46, .17, 262));
+        PutBrush("SignatureInkViolet", dark ? Oklch(.77, .13, 295) : Oklch(.49, .2, 292));
+        PutBrush("SignatureSweep", Alpha(Oklch(neutrals["Foreground"], 0, 0), .05));
+        PutBrush("EditorSlashHighlight", Alpha(Oklch(neutrals["Foreground"], 0, 0), .065));
+        PutBrush("EditorLinkLine", Alpha(Oklch(reactionAccent, 0, 0), .45));
+        PutBrush("EditorSelection", Alpha(Oklch(reactionAccent, 0, 0), .22));
+        PutBrush("ChecklistRowHover", Alpha(Oklch(neutrals["SurfaceMuted"], 0, 0), .6));
         PutBrush("RatingKept", Alpha(Oklch(warning.l, warning.c, warning.h), .3));
         PutBrush("ChipSelectedBorder", Oklch(accentL * .42 + neutrals["Border"] * .58, 0, 0));
         PutBrush("ChipSelectedSurface", Oklch(accentL * .11 + neutrals["Surface"] * .89, 0, 0));

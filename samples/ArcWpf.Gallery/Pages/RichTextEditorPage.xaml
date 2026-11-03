@@ -1,0 +1,99 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.RichTextEditorPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <Style x:Key="HistoryButton" TargetType="arc:Button">
+      <Setter Property="Variant" Value="Ghost"/>
+      <Setter Property="Size" Value="Small"/>
+      <Setter Property="Width" Value="32"/>
+      <Setter Property="Height" Value="32"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="Margin" Value="0,0,2,0"/>
+      <Style.Triggers>
+        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".4"/></Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="Segment" TargetType="RadioButton">
+      <Setter Property="GroupName" Value="RichTextOutput"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="RadioButton">
+            <Border x:Name="Highlight" Height="26" Padding="12,0" CornerRadius="13" Background="Transparent">
+              <ContentPresenter VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Highlight" Property="Background" Value="{DynamicResource ArcWpf.Brush.SurfaceRaised}"/>
+                <Setter TargetName="Highlight" Property="Effect" Value="{DynamicResource ArcWpf.Shadow.Resting}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <TextBlock Text="RichTextEditor" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="轻量富文本编辑器：输入 Markdown 快捷语法，选中文字出现浮动工具栏，空行输入 / 打开块菜单，同时输出 HTML 和 Markdown。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <Border x:Name="Stage" Width="521.625" Height="680" CornerRadius="34" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" Effect="{DynamicResource ArcWpf.Shadow.Resting}">
+        <Grid x:Name="Card" ClipToBounds="True" SizeChanged="OnCardSize">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="53"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="250"/>
+          </Grid.RowDefinitions>
+          <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
+            <Grid Margin="12,0,12,0">
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <arc:Button x:Name="UndoButton" Style="{StaticResource HistoryButton}" ToolTip="Undo" AutomationProperties.Name="Undo" IsEnabled="False" Click="OnUndo">
+                  <arc:ArcDataGridIcon Icon="undo-2" Size="16" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+                </arc:Button>
+                <arc:Button x:Name="RedoButton" Style="{StaticResource HistoryButton}" ToolTip="Redo" AutomationProperties.Name="Redo" IsEnabled="False" Click="OnRedo">
+                  <arc:ArcDataGridIcon Icon="redo-2" Size="16" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+                </arc:Button>
+                <arc:Button Style="{StaticResource HistoryButton}" ToolTip="Reset" AutomationProperties.Name="Reset" Click="OnReset">
+                  <arc:ArcDataGridIcon Icon="rotate-ccw" Size="16" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+                </arc:Button>
+              </StackPanel>
+              <TextBlock x:Name="WordCount" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+            </Grid>
+          </Border>
+          <arc:OverlayScrollViewer Grid.Row="1">
+            <arc:RichTextEditor x:Name="Editor" Margin="24,22,24,22" VerticalAlignment="Top" ValueChanged="OnValueChanged" HistoryChanged="OnHistoryChanged"/>
+          </arc:OverlayScrollViewer>
+          <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="48"/>
+                <RowDefinition Height="*"/>
+              </Grid.RowDefinitions>
+              <Border Grid.RowSpan="2" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" Opacity=".5"/>
+              <Border Margin="12,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="32" CornerRadius="16" Padding="3" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}">
+                <StackPanel Orientation="Horizontal">
+                  <RadioButton x:Name="MarkdownTab" Style="{StaticResource Segment}" Content="Markdown" IsChecked="True" Checked="OnTab"/>
+                  <RadioButton x:Name="HtmlTab" Style="{StaticResource Segment}" Content="HTML" Checked="OnTab"/>
+                </StackPanel>
+              </Border>
+              <arc:Button x:Name="CopyButton" Variant="Ghost" Size="Small" FontSize="12" Width="84" Height="32" Padding="0" Margin="0,8,12,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="OnCopy">
+                <StackPanel Orientation="Horizontal">
+                  <arc:ArcDataGridIcon Icon="copy" Size="16" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                  <TextBlock x:Name="CopyText" Text="Copy" VerticalAlignment="Center"/>
+                </StackPanel>
+              </arc:Button>
+              <arc:OverlayScrollViewer Grid.Row="1">
+                <TextBlock x:Name="Source" Margin="18,4.6,18,9" FontFamily="{DynamicResource ArcWpf.Font.Mono}" FontSize="12" LineHeight="20.8" LineStackingStrategy="BlockLineHeight" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+              </arc:OverlayScrollViewer>
+            </Grid>
+          </Border>
+        </Grid>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

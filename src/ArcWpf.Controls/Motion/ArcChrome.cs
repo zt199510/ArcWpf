@@ -149,7 +149,7 @@ internal class ArcChromeButton : System.Windows.Controls.Button
         return Templates[radius] = template;
     }
 
-    private static Style FocusFor(double radius)
+    internal static Style FocusFor(double radius)
     {
         if (FocusStyles.TryGetValue(radius, out var style)) { return style; }
         var ring = new FrameworkElementFactory(typeof(Border));

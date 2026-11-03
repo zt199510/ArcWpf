@@ -16,6 +16,8 @@ Reactions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 4 项�
 
 SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 项专项测试；现已补齐真实动作按钮、tone、点击命中、Escape/外部关闭和动作层连续伸展。Controls/Gallery 构建通过。真实触摸、多 DPI、菜单主题和窗口验收仍待补齐。本轮五项控件均已建立实现和验证入口。
 
+2026-11-03 第四批：RichTextEditor、SignaturePad、CommandMenu、OnboardingChecklist 已实现并接入 Gallery，专项测试 99/99 通过，离屏对比完成；真实窗口、IME、触控和真实剪贴板未运行，状态待验收，见 [验证记录](verification/2026-11-03-batch4-replication.md)。
+
 2026-11-03 五控件批次收口复核：Carousel、RadioCards、CookieConsent、Reactions、SwipeActions 专项测试 18/18 通过，Gallery 构建 0 警告/0 错误，`git diff --check` 通过。验证记录见 [五控件批次验证](verification/2026-11-03-interaction-batch.md)；真实窗口、触摸、DPI、读屏和逐帧动效仍保持待验收边界。
 
 ## 2026-11-02 控件批次统一收口

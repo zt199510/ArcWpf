@@ -1,0 +1,15 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.SignaturePadPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="SignaturePad" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="手写签名板：笔宽随压感或速度变化，支持撤销/重做、擦除、回放和 PNG/SVG 导出。" TextWrapping="Wrap" Margin="0,0,0,16"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="53" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.625">
+        <arc:SignaturePad x:Name="Pad" Signer="Emma Collins" StrokesChanged="OnStrokes"/>
+        <arc:Button x:Name="Adopt" Variant="Primary" Content="Adopt and sign" HorizontalAlignment="Right" Margin="0,16,0,0" IsEnabled="False"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

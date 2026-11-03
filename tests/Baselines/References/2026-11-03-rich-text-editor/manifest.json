@@ -1,0 +1,56 @@
+{
+  "component": "RichTextEditor",
+  "arcName": "rich-text-editor",
+  "capturedAt": "2026-11-03T09:49:33.766977+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/rich-text-editor/markdown",
+    "page": "https://uiarc.dev/components/rich-text-editor",
+    "registry": "https://uiarc.dev/r/rich-text-editor.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/rich-text-editor/markdown",
+      "sha256": "b8b38b5a57bdd356b629d10a5a6716bc053e79fbe868eebb6183eca03d56d410",
+      "bytes": 11989
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/rich-text-editor",
+      "sha256": "735dbf761b654be248b50b479c0ec0a2c9fb0dfa4b547ff1df160a75070f3cb9",
+      "bytes": 208108
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/rich-text-editor.json",
+      "sha256": "1371e45b3dfe94d47077609e411b9dd001d2be5aa17adbc8b603f237c7fd9918",
+      "bytes": 89535
+    },
+    {
+      "name": "registry/rich-text-editor.tsx",
+      "url": "https://uiarc.dev/r/rich-text-editor.json",
+      "sha256": "daa384e877a82da12ea82d96781e13879ca4605ee3c91966af65b340d109a869",
+      "bytes": 78122
+    },
+    {
+      "name": "registry/rich-text-editor.module.css",
+      "url": "https://uiarc.dev/r/rich-text-editor.json",
+      "sha256": "6833c362e0f58e0dcd24705d9d378b4bc6745dd2faa25e22c41ffebe9b7ae05a",
+      "bytes": 7244
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "2bf044514f274c3e62505c2ebfb66dc1fc73134f12474db1ac0de05be24fd491",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}
