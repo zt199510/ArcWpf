@@ -1,0 +1,56 @@
+{
+  "component": "FloatingButtonGroup",
+  "arcName": "floating-button-group",
+  "capturedAt": "2026-11-03T14:37:50.836242+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/floating-button-group/markdown",
+    "page": "https://uiarc.dev/components/floating-button-group",
+    "registry": "https://uiarc.dev/r/floating-button-group.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/floating-button-group/markdown",
+      "sha256": "c255fd81cf8e200304043c88ef4af6e332208940e703a92d57b401ae32a509c5",
+      "bytes": 12713
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/floating-button-group",
+      "sha256": "3a699671f75a5e3cdf74332ba39737116d89bb8f1152068d27b0777ec3d32b78",
+      "bytes": 213515
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/floating-button-group.json",
+      "sha256": "db0c5625dcfd66ea942a462ccf6dffdaf76a2816c3c6ef21701ae46df15d5d0d",
+      "bytes": 24553
+    },
+    {
+      "name": "registry/floating-button-group.tsx",
+      "url": "https://uiarc.dev/r/floating-button-group.json",
+      "sha256": "2de3b52da32ed257e749b07971f7c3888dae127f7c1bafcbfdd7488a7b453d11",
+      "bytes": 15960
+    },
+    {
+      "name": "registry/floating-button-group.module.css",
+      "url": "https://uiarc.dev/r/floating-button-group.json",
+      "sha256": "a79a1fa8cb57d963f66d61678c2ba76becd41bb169e7ded0b3054f125a4f9f6e",
+      "bytes": 6830
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.FloatingButtonGroupPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="FloatingButtonGroup" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="柔和按钮托盘：一块共享高亮在按钮间形变，禁用项只显示工具提示，切换项保留淡色。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Canvas x:Name="Stage" Width="521.625" Height="293">
+        <arc:FloatingButtonGroup x:Name="Wide" Canvas.Left="92.3" Canvas.Top="0" Label="Editor actions" ItemInvoked="OnWide"/>
+        <arc:FloatingButtonGroup x:Name="Rail" Canvas.Left="149.3" Canvas.Top="78" Label="Canvas tools" Orientation="Vertical" IconOnly="True" ItemInvoked="OnRail"/>
+        <arc:FloatingButtonGroup x:Name="Selection" Canvas.Left="227.3" Canvas.Top="166.5" Label="Message actions" Variant="Floating" Size="Small" IconOnly="True" ItemInvoked="OnSelection"/>
+      </Canvas>
+    </Border>
+  </StackPanel>
+</UserControl>

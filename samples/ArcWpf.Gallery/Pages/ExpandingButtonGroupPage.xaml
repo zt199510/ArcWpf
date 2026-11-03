@@ -1,0 +1,16 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ExpandingButtonGroupPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ExpandingButtonGroup" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="紧凑图标胶囊：悬停或聚焦的操作接管文字，邻居滑开；操作完成后就地画对勾并换成过去式。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="100.8,8,100.8,8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="336" HorizontalAlignment="Left">
+        <arc:ExpandingButtonGroup x:Name="Mail" Label="Message actions" HorizontalAlignment="Left"/>
+        <arc:ExpandingButtonGroup x:Name="File" Label="File actions" Size="Small" HorizontalAlignment="Left" Margin="0,20,0,0"/>
+        <arc:ExpandingButtonGroup x:Name="Page" Label="Page actions" HorizontalAlignment="Left" Margin="0,20,0,0"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

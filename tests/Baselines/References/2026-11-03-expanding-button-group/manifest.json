@@ -1,0 +1,56 @@
+{
+  "component": "ExpandingButtonGroup",
+  "arcName": "expanding-button-group",
+  "capturedAt": "2026-11-03T14:37:56.220394+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/expanding-button-group/markdown",
+    "page": "https://uiarc.dev/components/expanding-button-group",
+    "registry": "https://uiarc.dev/r/expanding-button-group.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/expanding-button-group/markdown",
+      "sha256": "80a6bf4c83bc2320bb4384af060d7409e2b58ed5a27a7669b98e7bc8720a404d",
+      "bytes": 11576
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/expanding-button-group",
+      "sha256": "c41d7b49d17a790bc1be089c0f3670928deb9b1833b8115226d430e23b7897fc",
+      "bytes": 206476
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/expanding-button-group.json",
+      "sha256": "dd1138f994fefb680afb68bcaa3f3abc64a472a0f4060bd61d70996dddcb1cd4",
+      "bytes": 24262
+    },
+    {
+      "name": "registry/expanding-button-group.tsx",
+      "url": "https://uiarc.dev/r/expanding-button-group.json",
+      "sha256": "a41472ade73b7bd4ba8d528056791d5b997d937fb9b9caad8ce7c142b5b5536e",
+      "bytes": 18128
+    },
+    {
+      "name": "registry/expanding-button-group.module.css",
+      "url": "https://uiarc.dev/r/expanding-button-group.json",
+      "sha256": "86fb44cde48fa77b0785fe2e42c75880358eb1403879adf2d9a4349d361677c9",
+      "bytes": 4390
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

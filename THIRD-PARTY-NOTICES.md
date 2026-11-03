@@ -226,3 +226,11 @@ DropdownMenu、BillingToggle、ChatThread、CommentThread、ImageCompare 的结�
 ConfirmPopover 是 Arc Pro 组件：未使用 Pro 源码，依公开预览的可见行为、DOM 几何和计算样式独立实现，API 形状与公开文档有重合。Arc 许可对 Pro 源码定义较宽，并禁止免费分发组件库；开源发布前需要项目负责人确认。Pro 文档未入库。
 
 本批新增的图标路径取自 Lucide（ISC），Arc 使用的 Lucide 版本未知，未核实两者是否一致。
+
+## 2026-11-03 第六批复刻
+
+FloatingButtonGroup、ExpandingButtonGroup、CardStack 的结构、参数和动效依据 Arc 免费 Registry（MIT，快照见 `tests/Baselines/References/2026-11-03-*`）独立改写，不包含 React/Motion 运行时代码。
+
+LiquidTabBar、CoverFlow 是 Arc Pro 组件：未使用 Pro 源码，未阅读 Pro 文档正文，依公开预览的可见行为、DOM 几何和计算样式独立实现，API 自行命名。Arc 许可对 Pro 源码定义较宽，并禁止免费分发组件库；开源发布前需要项目负责人确认。Gallery 的 CoverFlow 图片为程序绘制的原创图，未使用 Arc 的照片。
+
+本批新增的图标路径取自 lucide-static 1.67.0（ISC），Arc 使用的 Lucide 版本未知，未核实两者是否一致。

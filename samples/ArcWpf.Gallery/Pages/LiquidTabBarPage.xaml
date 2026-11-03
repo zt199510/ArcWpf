@@ -1,0 +1,16 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.LiquidTabBarPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="LiquidTabBar" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="透镜选择在标签间滑动：透镜是整行的第二份副本，经过之处图标填充、文字反色；悬停时朝目标方向微微伸出。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Grid x:Name="Stage" Width="521.625" Height="260">
+        <arc:LiquidTabBar x:Name="Bar" Label="Sections" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,56.8,0,0" SelectionChanged="OnTab"/>
+        <TextBlock x:Name="Note" Text="Your feed" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,122.2,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+        <arc:SegmentedControl x:Name="Modes" Label="Label mode" HorizontalAlignment="Center" VerticalAlignment="Bottom" SelectedValuePath="Tag" SelectedValue="selected" SelectionChanged="OnMode"><arc:SegmentedItem Content="Active label" Tag="selected"/><arc:SegmentedItem Content="All labels" Tag="all"/><arc:SegmentedItem Content="Icons only" Tag="none"/></arc:SegmentedControl>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

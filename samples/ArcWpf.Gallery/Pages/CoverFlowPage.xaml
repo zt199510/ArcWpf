@@ -1,0 +1,30 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.CoverFlowPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="CoverFlow" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="透视轨道：每张卡片是真实的透视平面，带接触阴影和倒影；可拖动、甩动、点击侧卡，也可用方向键和 Home/End。图片为原创绘制。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.625">
+        <arc:CoverFlow x:Name="Flow" Label="Hikes" SelectedIndex="2" SelectionChanged="OnHike"/>
+        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}" Margin="0,16,0,0" Padding="0,16,0,8">
+          <DockPanel>
+            <ToggleButton x:Name="Save" DockPanel.Dock="Right" Height="36" Width="128" VerticalAlignment="Center" Click="OnSave" Cursor="Hand">
+              <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
+                <Border x:Name="Frame" CornerRadius="18" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                <ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="Frame" Property="Background" Value="{DynamicResource ArcWpf.Brush.Foreground}"/><Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource ArcWpf.Brush.Foreground}"/></Trigger></ControlTemplate.Triggers>
+              </ControlTemplate></ToggleButton.Template>
+              <StackPanel Orientation="Horizontal"><arc:ArcDataGridIcon x:Name="SaveIcon" Icon="bookmark" Size="16" Stroke="{DynamicResource ArcWpf.Brush.Foreground}" Margin="0,0,6,0" VerticalAlignment="Center"/><TextBlock x:Name="SaveText" Text="Save hike" FontSize="14" FontWeight="Medium" VerticalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/></StackPanel>
+            </ToggleButton>
+            <StackPanel Orientation="Horizontal">
+              <StackPanel Margin="0,0,32,0"><TextBlock Text="Round trip" FontSize="12" LineHeight="15.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><arc:AnimatedCounter x:Name="Miles" Decimals="1" Suffix=" mi" FontSize="18" FontWeight="Medium" Height="18" Margin="0,8,0,1.4" HorizontalAlignment="Left" AnimateOnView="False"/></StackPanel>
+              <StackPanel Margin="0,0,32,0"><TextBlock Text="Elevation gain" FontSize="12" LineHeight="15.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><arc:AnimatedCounter x:Name="Gain" Suffix=" ft" FontSize="18" FontWeight="Medium" Height="18" Margin="0,8,0,1.4" HorizontalAlignment="Left" AnimateOnView="False"/></StackPanel>
+              <StackPanel><TextBlock Text="Best light" FontSize="12" LineHeight="15.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/><TextBlock x:Name="Light" FontSize="18" LineHeight="23.4" LineStackingStrategy="BlockLineHeight" Margin="0,4,0,0" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/></StackPanel>
+            </StackPanel>
+          </DockPanel>
+        </Border>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

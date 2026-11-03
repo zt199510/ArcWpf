@@ -1,0 +1,56 @@
+{
+  "component": "CardStack",
+  "arcName": "card-stack",
+  "capturedAt": "2026-11-03T14:38:01.095872+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/card-stack/markdown",
+    "page": "https://uiarc.dev/components/card-stack",
+    "registry": "https://uiarc.dev/r/card-stack.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/card-stack/markdown",
+      "sha256": "706a11141273b3dd820d58446395dbb9fd54f8d44a1acd0ebe75d793c6134f75",
+      "bytes": 5860
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/card-stack",
+      "sha256": "6b57920c86db3c02d52adddf3e24338d347a34c4dd3316c39053c19c85ba1cea",
+      "bytes": 192253
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/card-stack.json",
+      "sha256": "2365b199cf4abdb18edb3524c07dd8695b40cffcf9f66f9d81b04d8263466c49",
+      "bytes": 27784
+    },
+    {
+      "name": "registry/card-stack.tsx",
+      "url": "https://uiarc.dev/r/card-stack.json",
+      "sha256": "dfab6b6961d0e53bda207c3c0267104875d44b16bedecd1e77f2461b23097b66",
+      "bytes": 20415
+    },
+    {
+      "name": "registry/card-stack.module.css",
+      "url": "https://uiarc.dev/r/card-stack.json",
+      "sha256": "cc56bd67bcebd7c04440c7a474e98b2074dda8fcd9cea21d4381e6f16398f959",
+      "bytes": 5856
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}
