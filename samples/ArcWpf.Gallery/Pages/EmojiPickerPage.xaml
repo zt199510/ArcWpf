@@ -2,13 +2,39 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <UserControl.Resources>
+    <Style x:Key="SentText" TargetType="TextBox">
+      <Setter Property="IsReadOnly" Value="True"/>
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="IsTabStop" Value="False"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <Setter Property="Margin" Value="0,2,0,0"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="AcceptsReturn" Value="True"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+      <Setter Property="arc:TextColoring.ColorEmoji" Value="True"/>
+      <Setter Property="TextBlock.LineHeight" Value="19.6"/>
+      <Setter Property="TextBlock.LineStackingStrategy" Value="BlockLineHeight"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="TextBox"><ScrollViewer x:Name="PART_ContentHost" Margin="-2,0" Focusable="False" VerticalScrollBarVisibility="Disabled"/></ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
   <StackPanel>
     <TextBlock Text="EmojiPicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
     <TextBlock Text="搜索、分类书签、肤色菜单和预览；按住 Shift 可连选。Arc Pro 控件，依据公开文档与显示几何独立实现。" TextWrapping="Wrap" Margin="0,0,0,16"/>
     <Border Style="{DynamicResource Gallery.PreviewCanvas}">
       <Border x:Name="Thread" Width="480" VerticalAlignment="Center" CornerRadius="34" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" TextElement.FontSize="14">
         <StackPanel>
-          <Grid Margin="20,20,20,0">
+          <arc:OverlayScrollViewer x:Name="MessageScroller" MaxHeight="280" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Focusable="False">
+          <StackPanel x:Name="Messages" Margin="20,20,20,16">
+          <Grid>
             <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition/></Grid.ColumnDefinitions>
             <Ellipse Width="28" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left"><Ellipse.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#EF3FB8" Offset="0"/><GradientStop Color="#6FB8D8" Offset="1"/></LinearGradientBrush></Ellipse.Fill></Ellipse>
             <StackPanel Grid.Column="1">
@@ -16,7 +42,7 @@
               <TextBlock Text="Launch checklist is green. Shipping the pricing page at 3pm unless anyone objects." Margin="0,2,0,0" TextWrapping="Wrap" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
             </StackPanel>
           </Grid>
-          <Grid Margin="20,16,20,16">
+          <Grid Margin="0,16,0,0">
             <Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition/></Grid.ColumnDefinitions>
             <Ellipse Width="28" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left"><Ellipse.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#5A4FC8" Offset="0"/><GradientStop Color="#7FE03A" Offset="1"/></LinearGradientBrush></Ellipse.Fill></Ellipse>
             <StackPanel Grid.Column="1">
@@ -24,19 +50,27 @@
               <TextBlock Text="Copy is final and the screenshots are swapped in." Margin="0,2,0,0" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
             </StackPanel>
           </Grid>
+          </StackPanel>
+          </arc:OverlayScrollViewer>
           <Border Margin="12,0,12,12" CornerRadius="26" BorderThickness="1" Padding="12,12,12,8" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
             <StackPanel>
-              <TextBox x:Name="Message" arc:TextColoring.ColorEmoji="True" Text="Looks great, ship it" Height="44" Margin="0" FontSize="14" AcceptsReturn="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" Padding="1,0" AutomationProperties.Name="Message">
+              <Grid>
+              <TextBox x:Name="Message" arc:TextColoring.ColorEmoji="True" Text="Looks great, ship it " Height="44" Margin="0" FontSize="14" AcceptsReturn="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" Padding="2,0" TextBlock.LineHeight="19.6" TextBlock.LineStackingStrategy="BlockLineHeight" AutomationProperties.Name="Message" TextChanged="OnMessageChanged" PreviewKeyDown="OnMessageKeyDown">
                 <TextBox.Template><ControlTemplate TargetType="TextBox"><ScrollViewer x:Name="PART_ContentHost" Focusable="False"/></ControlTemplate></TextBox.Template>
               </TextBox>
+              <TextBlock x:Name="MessagePlaceholder" Text="Message #launch" Visibility="Collapsed" Margin="4,0,0,0" FontSize="14" LineHeight="19.6" LineStackingStrategy="BlockLineHeight" IsHitTestVisible="False" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+              </Grid>
               <DockPanel Margin="0,8,0,0">
-                <Button DockPanel.Dock="Right" Width="32" Height="32" MinWidth="0" MinHeight="0" Cursor="Hand" AutomationProperties.Name="Send">
+                <Button x:Name="Send" Click="OnSend" DockPanel.Dock="Right" Width="32" Height="32" MinWidth="0" MinHeight="0" Cursor="Hand" AutomationProperties.Name="Send">
                   <Button.Template>
                     <ControlTemplate TargetType="Button">
                       <Grid>
                         <Ellipse Fill="{DynamicResource ArcWpf.Brush.ComposerSend}"/>
                         <Viewbox Width="16" Height="16"><Canvas Width="24" Height="24"><Path Data="M12,19 V5 M5,12 L12,5 L19,12" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Stroke="{DynamicResource ArcWpf.Brush.Background}"/></Canvas></Viewbox>
                       </Grid>
+                      <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".35"/><Setter Property="Cursor" Value="Arrow"/></Trigger>
+                      </ControlTemplate.Triggers>
                     </ControlTemplate>
                   </Button.Template>
                 </Button>

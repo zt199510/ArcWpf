@@ -7,6 +7,30 @@ namespace ArcWpf.Tests;
 [TestClass]
 public sealed class NextArcControlsPixelTests
 {
+    [TestMethod] public void CounterRowIsOneEmTallWithDigitsCentred() => Sta.Run(() =>
+    {
+        var counter = new AnimatedCounter { Label = "Total", Value = 12840, FontFamily = new FontFamily("Arial"), FontSize = 36, VerticalAlignment = VerticalAlignment.Top };
+        var window = new Window { Content = counter, Width = 400, Height = 200, Left = -4000, Top = -4000, ShowInTaskbar = false, ShowActivated = false, WindowStyle = WindowStyle.None };
+        window.Show();
+        counter.UpdateLayout();
+        var slot = (FrameworkElement)counter.Template.FindName("PART_Digits", counter);
+        Assert.AreEqual(36d, slot.ActualHeight);
+        Assert.AreEqual(16.8 + 8 + 36, counter.ActualHeight, .01);
+        var number = (FrameworkElement)System.Windows.Media.VisualTreeHelper.GetChild(slot, 0);
+        Assert.AreEqual(slot.ActualHeight / 2, number.TranslatePoint(new Point(0, number.ActualHeight / 2), slot).Y, .01);
+        window.Close();
+    });
+
+    [TestMethod] public void BarReportsOpenChanges() => Sta.Run(() =>
+    {
+        var bar = new AnnouncementBar();
+        int changes = 0;
+        bar.IsOpenChanged += (_, _) => changes++;
+        bar.Close();
+        bar.IsOpen = true;
+        Assert.AreEqual(2, changes);
+    });
+
     [TestMethod] public void CountdownCompletesWithAnInjectedClock() => Sta.Run(() =>
     {
         var now = new DateTimeOffset(2026, 11, 10, 18, 0, 0, TimeSpan.Zero);

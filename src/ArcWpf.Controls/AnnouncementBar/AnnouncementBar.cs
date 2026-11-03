@@ -33,7 +33,7 @@ public class AnnouncementBar : Control
     public static readonly DependencyProperty MessagesProperty = DependencyProperty.Register(nameof(Messages), typeof(ObservableCollection<string>), typeof(AnnouncementBar), new PropertyMetadata(null, OnSourceChanged));
     public static readonly DependencyProperty AnnouncementsProperty = DependencyProperty.Register(nameof(Announcements), typeof(ObservableCollection<AnnouncementItem>), typeof(AnnouncementBar), new PropertyMetadata(null, OnSourceChanged));
     public static readonly DependencyProperty IndexProperty = DependencyProperty.Register(nameof(Index), typeof(int), typeof(AnnouncementBar), new PropertyMetadata(0, OnIndexChanged));
-    public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(AnnouncementBar), new PropertyMetadata(true, (d, _) => ((AnnouncementBar)d).UpdateOpen(true)));
+    public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(AnnouncementBar), new PropertyMetadata(true, (d, _) => ((AnnouncementBar)d).OnIsOpenChanged()));
     public static readonly DependencyProperty AutoPlayProperty = DependencyProperty.Register(nameof(AutoPlay), typeof(bool), typeof(AnnouncementBar), new PropertyMetadata(true, (d, _) => ((AnnouncementBar)d).UpdateClock()));
     public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register(nameof(Interval), typeof(TimeSpan), typeof(AnnouncementBar), new PropertyMetadata(TimeSpan.FromSeconds(6), (d, _) => ((AnnouncementBar)d).UpdateClock()));
     public static readonly DependencyProperty DismissibleProperty = DependencyProperty.Register(nameof(Dismissible), typeof(bool), typeof(AnnouncementBar), new PropertyMetadata(true, (d, _) => ((AnnouncementBar)d).UpdateControls()));
@@ -63,6 +63,7 @@ public class AnnouncementBar : Control
 
     public event EventHandler<AnnouncementItem>? ActionInvoked;
     public event EventHandler<AnnouncementItem>? CountdownEnded;
+    public event EventHandler? IsOpenChanged;
 
     private FrameworkElement? _root, _controls;
     private Border? _bar;
@@ -165,6 +166,12 @@ public class AnnouncementBar : Control
     public void Next() { if (Count > 1) { _direction = 1; Index = (Index + 1) % Count; } }
     public void Previous() { if (Count > 1) { _direction = -1; Index = (Index - 1 + Count) % Count; } }
     public void Close() => IsOpen = false;
+
+    private void OnIsOpenChanged()
+    {
+        UpdateOpen(true);
+        IsOpenChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     // Next rises from below and leaves upward; previous runs the other way.
     private void ShowCurrent(bool animate)

@@ -22,6 +22,17 @@
               <Border Width="124.7" Height="8" CornerRadius="4" HorizontalAlignment="Left" Margin="0,10,0,0" Background="{DynamicResource ArcWpf.Brush.AnnouncementPageLine}"/>
             </StackPanel>
           </StackPanel>
+          <Button x:Name="ShowAgain" Visibility="Collapsed" Click="OnShowAgain" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,14,0" Height="36" MinWidth="0" MinHeight="0" Cursor="Hand" FontSize="14" Foreground="{DynamicResource ArcWpf.Brush.Foreground}">
+            <Button.Template>
+              <ControlTemplate TargetType="Button">
+                <Border CornerRadius="18" Padding="12,0" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}"><ContentPresenter VerticalAlignment="Center"/></Border>
+              </ControlTemplate>
+            </Button.Template>
+            <StackPanel Orientation="Horizontal">
+              <Viewbox Width="14" Height="14"><Canvas Width="24" Height="24"><Path Data="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5" StrokeThickness="1.75" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Stroke="{DynamicResource ArcWpf.Brush.Foreground}"/></Canvas></Viewbox>
+              <TextBlock Text="Show again" Margin="6,0,0,0" VerticalAlignment="Center" LineHeight="19.6" LineStackingStrategy="BlockLineHeight"/>
+            </StackPanel>
+          </Button>
         </Grid>
       </Border>
     </Border>
