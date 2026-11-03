@@ -26,7 +26,8 @@ public class AnimatedCounter : Control
     public string Locale { get => (string)GetValue(LocaleProperty); set => SetValue(LocaleProperty, value); }
     public bool AnimateOnView { get => (bool)GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
 
-    private readonly OdometerNumber _number = new() { RevealOnLoad = false };
+    private const double LetterSpacing = -.03;
+    private readonly OdometerNumber _number = new() { RevealOnLoad = false, Tracking = LetterSpacing };
     private Grid? _label;
     private TextBlock? _labelText;
     private bool _applied;
@@ -49,12 +50,28 @@ public class AnimatedCounter : Control
             _number.SetBinding(FontWeightProperty, new System.Windows.Data.Binding(nameof(FontWeight)) { Source = this });
             _number.SetBinding(ForegroundProperty, new System.Windows.Data.Binding(nameof(Foreground)) { Source = this });
             host.Content = _number;
+            CentreDigits();
             _applied = true;
         }
         _label = GetTemplateChild("PART_Label") as Grid;
         _labelText = null;
         UpdateLabel(false);
         UpdateText();
+    }
+
+    protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (_applied && (e.Property == FontSizeProperty || e.Property == FontFamilyProperty || e.Property == FontWeightProperty)) CentreDigits();
+    }
+
+    // The digit row is one em tall (line-height 1), while a font's natural line is taller, so the row overflows evenly above and below.
+    private void CentreDigits()
+    {
+        var line = new TextBlock { Text = "0", FontFamily = FontFamily, FontSize = FontSize, FontWeight = FontWeight };
+        line.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        double overflow = (FontSize - line.DesiredSize.Height) / 2;
+        _number.Margin = new Thickness(0, overflow, 0, overflow);
     }
 
     private string FormatText()

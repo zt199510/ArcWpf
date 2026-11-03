@@ -11,7 +11,7 @@
         <ControlTemplate TargetType="{x:Type local:AnimatedCounter}">
           <StackPanel>
             <Grid x:Name="PART_Label" Margin="0,0,0,8"/>
-            <ContentPresenter x:Name="PART_Digits" Height="36" HorizontalAlignment="Left"/>
+            <ContentPresenter x:Name="PART_Digits" Height="{TemplateBinding FontSize}" HorizontalAlignment="Left"/>
           </StackPanel>
         </ControlTemplate>
       </Setter.Value>

@@ -7,3 +7,5 @@
 来源：`tests/Baselines/References/2026-11-02-announcement-bar/`，Arc 免费 Registry。Arc 结构为公告文本、前后导航、暂停/关闭和高度收缩；WPF 版本保留多消息轮播、悬停暂停、间隔、关闭、tone 和键盘按钮，并支持 CTA 与公告项倒计时显示。
 
 主要 API：`Messages`（兼容简化文本列表）、`Announcements`（消息、CTA、倒计时目标）、`Index`、`IsOpen`、`AutoPlay`、`Interval`、`Controls`、`IsPaused`、`Dismissible`、`Tone`。消息切换在 Full 动效级别下按方向做上下滑入/滑出并清理旧时钟；controls 开启时进度轨道随轮播间隔运行，悬停、焦点和暂停会停止并保留当前进度；Gallery 使用 Arc 主示例的低噪声中性条。
+
+2026-11-02：新增 `IsOpenChanged` 事件，在 `IsOpen` 变化时触发。Gallery 用它显示 Show again 按钮，这个按钮属于演示页，不属于控件。

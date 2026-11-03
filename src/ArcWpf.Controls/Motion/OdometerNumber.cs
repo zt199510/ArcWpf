@@ -9,6 +9,8 @@ namespace ArcWpf.Controls;
 
 internal sealed class OdometerNumber : UserControl
 {
+    /// <summary>Letter spacing in ems, like CSS letter-spacing. Set it before the first value, because columns keep the width they were built with.</summary>
+    internal double Tracking { get; init; }
     private sealed record Part(string Key, char Character, bool Digit);
     private readonly StackPanel _track = new() { Orientation = Orientation.Horizontal };
     private readonly Dictionary<string, DigitColumn> _digits = [];
@@ -134,7 +136,7 @@ internal sealed class OdometerNumber : UserControl
         var symbol = new TextBlock
         {
             Text = text, FontFamily = FontFamily, FontSize = FontSize, FontWeight = FontWeight,
-            VerticalAlignment = VerticalAlignment.Center, IsHitTestVisible = false
+            VerticalAlignment = VerticalAlignment.Center, IsHitTestVisible = false, Margin = new Thickness(0, 0, Tracking * FontSize, 0)
         };
         BindingOperations.SetBinding(symbol, TextBlock.ForegroundProperty, new Binding(nameof(Foreground)) { Source = this });
         return symbol;
@@ -184,7 +186,8 @@ internal sealed class OdometerNumber : UserControl
             var weight = owner.FontWeight;
             var measure = new TextBlock { Text = "0", FontFamily = family, FontSize = size, FontWeight = weight };
             measure.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            double width = Math.Max(1, measure.DesiredSize.Width);
+            double glyphWidth = Math.Max(1, measure.DesiredSize.Width);
+            double width = Math.Max(1, glyphWidth + owner.Tracking * size);
             NaturalWidth = width;
             _height = Math.Max(1, measure.DesiredSize.Height);
             Root = new Grid { Width = width, Height = _height, ClipToBounds = true, IsHitTestVisible = false };
@@ -195,11 +198,12 @@ internal sealed class OdometerNumber : UserControl
             {
                 var glyph = new TextBlock
                 {
-                    Text = (index % 10).ToString(CultureInfo.InvariantCulture), Width = width, Height = _height,
+                    Text = (index % 10).ToString(CultureInfo.InvariantCulture), Width = glyphWidth, Height = _height,
                     FontFamily = family, FontSize = size, FontWeight = weight, TextAlignment = TextAlignment.Center,
                     IsHitTestVisible = false
                 };
                 BindingOperations.SetBinding(glyph, TextBlock.ForegroundProperty, new Binding(nameof(Foreground)) { Source = owner });
+                Canvas.SetLeft(glyph, (width - glyphWidth) / 2);
                 Canvas.SetTop(glyph, index * _height);
                 _strip.Children.Add(glyph);
             }
