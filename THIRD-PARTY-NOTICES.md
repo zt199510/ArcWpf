@@ -240,3 +240,7 @@ LiquidTabBar、CoverFlow 是 Arc Pro 组件：未使用 Pro 源码，未阅读 P
 TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 的结构、路径、参数和动效依据 Arc 免费 Registry（MIT，快照见 `tests/Baselines/References/2026-11-03-*`）独立改写，不包含 React/Motion 运行时。
 
 本批新增的图标路径（sparkles、folder-sync）取自 lucide-static 1.67.0（ISC），Arc 使用的 Lucide 版本未知，未核实两者是否一致。
+
+## 2026-11-03 第八批复刻
+
+ScrubInput、ElasticSlider、RulerSlider、Sparkline、Gauge 参考 Arc 免费 Registry（MIT），快照在 `tests/Baselines/References/2026-11-03-*`。代码为 WPF 独立重写，未引入 React 或 Motion。新增图标路径（volume、volume-2、snail、rabbit、rotate-cw、square-round-corner、blend）取自 Arc 页面快照中的 Lucide（ISC）。Gallery 示例插图为本项目原创。

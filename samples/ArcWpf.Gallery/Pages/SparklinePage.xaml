@@ -1,0 +1,17 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.SparklinePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="Sparkline" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="小型折线图：滚入视口时从左向右绘制，换数据时从当前形状变形；悬停、拖动或方向键可逐点查看。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="360">
+        <arc:Sparkline x:Name="Users" Label="Daily active users" DrawWidth="360" DrawHeight="101.647"/>
+        <arc:SegmentedControl x:Name="Range" Label="Range" HorizontalAlignment="Left" Margin="0,20,0,0" SelectedValuePath="Tag" SelectedValue="w" SelectionChanged="OnRange">
+          <arc:SegmentedItem Content="1W" Tag="w"/><arc:SegmentedItem Content="1M" Tag="m"/><arc:SegmentedItem Content="1Y" Tag="y"/>
+        </arc:SegmentedControl>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -16,6 +16,7 @@ Reactions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 4 项�
 
 SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 项专项测试；现已补齐真实动作按钮、tone、点击命中、Escape/外部关闭和动作层连续伸展。Controls/Gallery 构建通过。真实触摸、多 DPI、菜单主题和窗口验收仍待补齐。本轮五项控件均已建立实现和验证入口。
 
+2026-11-03 第八批：ScrubInput、ElasticSlider、RulerSlider、Sparkline、Gauge 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch8-replication.md)。
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。

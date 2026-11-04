@@ -1,0 +1,56 @@
+{
+  "component": "Gauge",
+  "arcName": "gauge",
+  "capturedAt": "2026-11-04T01:37:42.025510+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/gauge/markdown",
+    "page": "https://uiarc.dev/components/gauge",
+    "registry": "https://uiarc.dev/r/gauge.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/gauge/markdown",
+      "sha256": "aac0999a7ba12126123903bdd183f12b3c56fe48f536ed208025f27c761d99f2",
+      "bytes": 6656
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/gauge",
+      "sha256": "3cc3d0e1323ba68f8de418a882d3a7f400e5a17122b58980f668d12396606ae7",
+      "bytes": 177188
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/gauge.json",
+      "sha256": "9d6abf8090a5f0e0ec22cac871bfbec5af0c4f824091c0d6bc698880320bbb01",
+      "bytes": 11525
+    },
+    {
+      "name": "registry/gauge.tsx",
+      "url": "https://uiarc.dev/r/gauge.json",
+      "sha256": "c8cab550f9d0b7d0482e266cd7280c293c725efb2d417275edb8ce2040784441",
+      "bytes": 7998
+    },
+    {
+      "name": "registry/gauge.module.css",
+      "url": "https://uiarc.dev/r/gauge.json",
+      "sha256": "523456638d3edcb059c858c732bd7b9a264848da72f6b99838c3c089c335238c",
+      "bytes": 2532
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

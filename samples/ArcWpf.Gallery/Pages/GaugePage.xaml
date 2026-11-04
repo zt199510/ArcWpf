@@ -1,0 +1,26 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.GaugePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="Gauge" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="270 度环形读数：滚入视口时填充并计数，越过阈值时颜色和状态文字一起切换，状态不只靠颜色表达。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="240">
+        <arc:Gauge x:Name="Health" Label="Workspace health" Value="72">
+          <arc:Gauge.Thresholds>
+            <arc:GaugeThresholdCollection>
+              <arc:GaugeThreshold From="0" Tone="Danger" Label="At risk"/>
+              <arc:GaugeThreshold From="30" Tone="Warning" Label="Needs attention"/>
+              <arc:GaugeThreshold From="70" Tone="Success" Label="Healthy"/>
+            </arc:GaugeThresholdCollection>
+          </arc:Gauge.Thresholds>
+        </arc:Gauge>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+          <arc:Button x:Name="Lower" Variant="Secondary" Size="Small" Width="36" Height="36" Padding="0" AutomationProperties.Name="Lower workspace health" Click="OnLower"><arc:ArcDataGridIcon Icon="minus" Size="16" Stroke="{DynamicResource ArcWpf.Brush.Foreground}"/></arc:Button>
+          <arc:Button x:Name="Raise" Variant="Secondary" Size="Small" Width="36" Height="36" Padding="0" Margin="8,0,0,0" AutomationProperties.Name="Raise workspace health" Click="OnRaise"><arc:ArcDataGridIcon Icon="plus" Size="16" Stroke="{DynamicResource ArcWpf.Brush.Foreground}"/></arc:Button>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

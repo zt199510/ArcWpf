@@ -102,6 +102,11 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/TextReveal/Themes/TextRevealTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/TextShimmer/Themes/TextShimmerTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/InViewTitle/Themes/InViewTitleTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ScrubInput/Themes/ScrubInputTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ElasticSlider/Themes/ElasticSliderTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/RulerSlider/Themes/RulerSliderTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Sparkline/Themes/SparklineTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/Gauge/Themes/GaugeTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/FloatingButtonGroup/Themes/FloatingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandingButtonGroup/Themes/ExpandingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CardStack/Themes/CardStackTheme.xaml" />

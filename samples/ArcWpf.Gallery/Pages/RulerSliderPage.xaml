@@ -1,0 +1,16 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.RulerSliderPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="RulerSlider" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="卷尺式取值：刻度在固定指针下滑动，可拖动、甩动后惯性落到刻度、越界回弹或点击滑到目标，读数逐位滚动。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="420">
+        <arc:RulerSlider x:Name="Tall" Label="Height" Minimum="120" Maximum="220" Value="172" Unit="cm" ValueChanged="OnTall"/>
+        <TextBlock HorizontalAlignment="Center" FontSize="12" LineHeight="16.8" LineStackingStrategy="BlockLineHeight" Margin="0,8,0,0" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}">That is <Run x:Name="Imperial" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/></TextBlock>
+        <arc:RulerSlider x:Name="Weight" Label="Weight" Minimum="30" Maximum="150" Step=".5" Spacing="12" Value="68.5" Unit="kg" Margin="0,32,0,0"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

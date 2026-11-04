@@ -179,8 +179,10 @@ public sealed class ArcThemeResources : ResourceDictionary
         Color Faded(Color color, double alpha) { color.A = (byte)Math.Round(255 * alpha); return color; }
         double surfaceL = neutrals["Surface"], borderL = neutrals["Border"], foregroundL = neutrals["Foreground"], threadAccentL = dark ? .8 : .33;
         PutBrush("ArcDanger", arcDanger); PutBrush("ArcSuccess", arcSuccess);
+        PutBrush("ArcWarning", Oklch(dark ? .83 : .55, .12, dark ? 78 : 68));
         PutBrush("ArcDangerOnFill", Oklch(dark ? .19 : .99, 0, 0));
         PutBrush("FloatTray", Alpha(Oklch(foregroundL, 0, 0), dark ? .06 : .045));
+        PutBrush("ScrubWash", Alpha(Oklch(foregroundL, 0, 0), .06)); PutBrush("ScrubWashHeld", Alpha(Oklch(foregroundL, 0, 0), .1)); PutBrush("ScrubUnitHover", Alpha(Oklch(foregroundL, 0, 0), .07));
         PutBrush("FloatTrayEdge", Alpha(Oklch(foregroundL, 0, 0), dark ? .05 : .03));
         PutBrush("FloatHighlight", Alpha(Oklch(foregroundL, 0, 0), dark ? .09 : .07));
         PutBrush("FloatHighlightPress", Alpha(Oklch(foregroundL, 0, 0), dark ? .15 : .12));

@@ -1,0 +1,56 @@
+{
+  "component": "Sparkline",
+  "arcName": "sparkline",
+  "capturedAt": "2026-11-04T01:37:35.926559+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/sparkline/markdown",
+    "page": "https://uiarc.dev/components/sparkline",
+    "registry": "https://uiarc.dev/r/sparkline.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/sparkline/markdown",
+      "sha256": "f0d448c068bd34adc7a39f5de734e10cd5dbe0e19ef400173b36d770c1d94784",
+      "bytes": 7346
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/sparkline",
+      "sha256": "e397e0d4865588c03b71c4ad0af5edf6399e43d094e08c3dfae44b66ca783694",
+      "bytes": 187967
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/sparkline.json",
+      "sha256": "bd311156bd460d88fbdb0bc4fef999ae06bb3393a8030113367e79d4342f1f1d",
+      "bytes": 22639
+    },
+    {
+      "name": "registry/sparkline.tsx",
+      "url": "https://uiarc.dev/r/sparkline.json",
+      "sha256": "b61f2b54bac7774d7af8d3a0b0939584487d72c0f2d20131cc2f14e915b05859",
+      "bytes": 18496
+    },
+    {
+      "name": "registry/sparkline.module.css",
+      "url": "https://uiarc.dev/r/sparkline.json",
+      "sha256": "0b7995379fb5a7955d48ff95871e06494a6092ca028c0c5d43aade2f364d844b",
+      "bytes": 2863
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

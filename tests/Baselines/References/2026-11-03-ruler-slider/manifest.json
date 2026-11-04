@@ -1,0 +1,56 @@
+{
+  "component": "RulerSlider",
+  "arcName": "ruler-slider",
+  "capturedAt": "2026-11-04T01:37:31.738910+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/ruler-slider/markdown",
+    "page": "https://uiarc.dev/components/ruler-slider",
+    "registry": "https://uiarc.dev/r/ruler-slider.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/ruler-slider/markdown",
+      "sha256": "136a6bf9539e636c0409b5f0c08fce6b89d8b4461bc78b6e4cc315962e31465d",
+      "bytes": 7487
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/ruler-slider",
+      "sha256": "e2c3dd1c878ffc12109d7dfbadc6d2aa5c5902ee9bdef050e437111b24527b40",
+      "bytes": 190380
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/ruler-slider.json",
+      "sha256": "1d057df1f30b30bb309fcc5e7d9d177bb1be497485ec8914740f420ad66c5a06",
+      "bytes": 18418
+    },
+    {
+      "name": "registry/ruler-slider.tsx",
+      "url": "https://uiarc.dev/r/ruler-slider.json",
+      "sha256": "b0042cee660e0fc8366956a41e27e73ee2eae5241602365c3132c1af77060602",
+      "bytes": 13698
+    },
+    {
+      "name": "registry/ruler-slider.module.css",
+      "url": "https://uiarc.dev/r/ruler-slider.json",
+      "sha256": "5f24cb764bf79e611271be8fea4b5fc62e3cb33aa1a35ad1590644178ca1d967",
+      "bytes": 3439
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

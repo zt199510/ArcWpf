@@ -1,0 +1,56 @@
+{
+  "component": "ScrubInput",
+  "arcName": "scrub-input",
+  "capturedAt": "2026-11-04T01:37:22.635462+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/scrub-input/markdown",
+    "page": "https://uiarc.dev/components/scrub-input",
+    "registry": "https://uiarc.dev/r/scrub-input.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/scrub-input/markdown",
+      "sha256": "9e9612a9eeaa692344cdefd01fb451fa6086832f3b040dc3cb54a9113917c3cb",
+      "bytes": 9602
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/scrub-input",
+      "sha256": "29766f08b77f0a6fe367dcc92a7134e039ea3ddb3689c56becd70c7c305a1b59",
+      "bytes": 203860
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/scrub-input.json",
+      "sha256": "ba705613dbc373d60c7ce762cc98f9721a9a46fd9de3f5cb8114e265ca68238f",
+      "bytes": 30707
+    },
+    {
+      "name": "registry/scrub-input.tsx",
+      "url": "https://uiarc.dev/r/scrub-input.json",
+      "sha256": "f05fc474a66617ba5e5112046bed99ff654ba6c53c0113db89863a3d4c62144e",
+      "bytes": 23542
+    },
+    {
+      "name": "registry/scrub-input.module.css",
+      "url": "https://uiarc.dev/r/scrub-input.json",
+      "sha256": "0067119fad41efad6df6ffb8009d3b227da30b087032ef444143ebc0a5e07507",
+      "bytes": 5373
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}
