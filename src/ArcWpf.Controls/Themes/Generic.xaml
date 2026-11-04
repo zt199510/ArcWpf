@@ -107,6 +107,11 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/RulerSlider/Themes/RulerSliderTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Sparkline/Themes/SparklineTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/Gauge/Themes/GaugeTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ShareAccess/Themes/ShareAccessTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/MetricTicker/Themes/MetricTickerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/RealtimeStream/Themes/RealtimeStreamTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TocProgress/Themes/TocProgressTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/WalletStack/Themes/WalletStackTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/FloatingButtonGroup/Themes/FloatingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandingButtonGroup/Themes/ExpandingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CardStack/Themes/CardStackTheme.xaml" />

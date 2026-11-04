@@ -1,0 +1,21 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TocProgressPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="TocProgress" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="阅读进度目录：一条线沿标题层级弯折，读过的部分填色，圆点跟随滚动；当前标题高亮并显示剩余时间，点击标题滚动到该位置。文章为示例内容。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.6">
+        <Border CornerRadius="26" BorderThickness="1" Padding="16,16,16,12" Margin="0,0,0,16" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+          <arc:TocProgress x:Name="Toc" ReadingTime="6"/>
+        </Border>
+        <Border Height="420" CornerRadius="26" BorderThickness="1" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+          <arc:ScrollArea x:Name="Reader" Label="Article" Fade="0">
+            <StackPanel x:Name="Article" Margin="20,24,20,40"/>
+          </arc:ScrollArea>
+        </Border>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -182,6 +182,9 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("ArcWarning", Oklch(dark ? .83 : .55, .12, dark ? 78 : 68));
         PutBrush("ArcDangerOnFill", Oklch(dark ? .19 : .99, 0, 0));
         PutBrush("FloatTray", Alpha(Oklch(foregroundL, 0, 0), dark ? .06 : .045));
+        // RealtimeStream and TocProgress, measured from the public previews (Arc Pro, no frozen source). TocTrack in dark is not measured.
+        PutBrush("ChartLine", dark ? Color.FromRgb(85, 173, 255) : Color.FromRgb(31, 125, 207)); PutBrush("ChartAnomaly", dark ? Color.FromRgb(156, 55, 190) : Color.FromRgb(113, 40, 165));
+        PutBrush("TocTrack", Oklch(dark ? .40 : .866, 0, 0));
         PutBrush("ScrubWash", Alpha(Oklch(foregroundL, 0, 0), .06)); PutBrush("ScrubWashHeld", Alpha(Oklch(foregroundL, 0, 0), .1)); PutBrush("ScrubUnitHover", Alpha(Oklch(foregroundL, 0, 0), .07));
         PutBrush("FloatTrayEdge", Alpha(Oklch(foregroundL, 0, 0), dark ? .05 : .03));
         PutBrush("FloatHighlight", Alpha(Oklch(foregroundL, 0, 0), dark ? .09 : .07));

@@ -1,0 +1,28 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ShareAccessPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ShareAccess" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="文档分享面板：输入姓名或邮箱生成 chip，按角色邀请；成员改角色或移除后可撤销，通用访问切换为链接时图标与说明一起变化。示例为虚构人员。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.6" Height="745">
+        <Border Height="54" CornerRadius="27" BorderThickness="1" Padding="18,8,8,8" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" Margin="0,0,0,10">
+          <Grid>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <arc:ArcDataGridIcon Icon="file-text" Size="18" VerticalAlignment="Center" Margin="0,0,8,0" Stroke="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+              <TextBlock Text="Q3 launch plan" FontSize="14" FontWeight="Medium" VerticalAlignment="Center"/>
+            </StackPanel>
+            <arc:Button x:Name="Toggle" Click="OnToggle" Size="Small" Height="36" HorizontalAlignment="Right">
+              <StackPanel Orientation="Horizontal">
+                <arc:ArcDataGridIcon Icon="share-2" Size="16" VerticalAlignment="Center" Margin="0,0,6,0" Stroke="{DynamicResource ArcWpf.Brush.Background}"/>
+                <TextBlock Text="Share" VerticalAlignment="Center"/>
+              </StackPanel>
+            </arc:Button>
+          </Grid>
+        </Border>
+        <arc:ShareAccess x:Name="Panel" Title="Q3 launch plan" SelfId="jasmine" HorizontalAlignment="Right" Width="440" Link="https://fieldwork.example/d/q3-launch"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

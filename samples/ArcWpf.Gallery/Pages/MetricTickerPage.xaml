@@ -1,0 +1,23 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.MetricTickerPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="MetricTicker" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="实时指标条：放不下时循环漂移，数字像里程表一样滚动，变化时增量闪烁；悬停或聚焦暂停漂移并展开走势面板。示例数据为模拟。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="521.6">
+        <Grid Margin="0,0,0,12">
+          <TextBlock Text="Product health" FontSize="16" LineHeight="22.4" FontWeight="Medium" VerticalAlignment="Center"/>
+          <arc:Button x:Name="Stream" Variant="Secondary" Size="Small" HorizontalAlignment="Right" Height="36" Click="OnStream">
+            <StackPanel Orientation="Horizontal">
+              <arc:ArcDataGridIcon x:Name="StreamIcon" Icon="pause" Size="16" VerticalAlignment="Center" Margin="0,0,6,0" Stroke="{DynamicResource ArcWpf.Brush.Foreground}"/>
+              <TextBlock x:Name="StreamText" Text="Pause stream" VerticalAlignment="Center"/>
+            </StackPanel>
+          </arc:Button>
+        </Grid>
+        <arc:MetricTicker x:Name="Ticker" Label="Product health" Margin="0,0,0,176"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

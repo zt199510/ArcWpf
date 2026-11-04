@@ -169,6 +169,11 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 - [x] RulerSlider 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch8-replication.md)
 - [x] Sparkline 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch8-replication.md)
 - [x] Gauge 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch8-replication.md)
+- [x] ShareAccess 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
+- [x] MetricTicker 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
+- [x] RealtimeStream 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
+- [x] TocProgress 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
+- [x] WalletStack 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
 
 ### 2026-11-03 第七批复刻
 
