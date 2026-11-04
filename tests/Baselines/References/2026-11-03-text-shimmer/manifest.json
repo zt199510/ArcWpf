@@ -1,0 +1,56 @@
+{
+  "component": "TextShimmer",
+  "arcName": "text-shimmer",
+  "capturedAt": "2026-11-04T00:31:18.620108+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/text-shimmer/markdown",
+    "page": "https://uiarc.dev/components/text-shimmer",
+    "registry": "https://uiarc.dev/r/text-shimmer.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/text-shimmer/markdown",
+      "sha256": "d22b39ac2f65a028c04a4f17a618b2991f61b5c23a90098c29cdf539eb65ab87",
+      "bytes": 4808
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/text-shimmer",
+      "sha256": "6446348b1d349e848ef289e27372bb3915b742eece574554c6f37616fb099ab1",
+      "bytes": 178950
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/text-shimmer.json",
+      "sha256": "1e7bff48541186a4da10bb2e841f5aeba625d86c61c2dde2b9a3bc7acdac3141",
+      "bytes": 8705
+    },
+    {
+      "name": "registry/text-shimmer.tsx",
+      "url": "https://uiarc.dev/r/text-shimmer.json",
+      "sha256": "021bfe6d2ae791f2e4e3832473e2bb76b01e929aded277025810013045950236",
+      "bytes": 6551
+    },
+    {
+      "name": "registry/text-shimmer.module.css",
+      "url": "https://uiarc.dev/r/text-shimmer.json",
+      "sha256": "a16da76e363bd7cec888c848b67043f5e1000f8bf9f1b3cc57a0dd01109ace4b",
+      "bytes": 1047
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

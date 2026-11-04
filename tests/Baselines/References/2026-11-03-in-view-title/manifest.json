@@ -1,0 +1,56 @@
+{
+  "component": "InViewTitle",
+  "arcName": "in-view-title",
+  "capturedAt": "2026-11-04T00:31:26.338320+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/in-view-title/markdown",
+    "page": "https://uiarc.dev/components/in-view-title",
+    "registry": "https://uiarc.dev/r/in-view-title.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/in-view-title/markdown",
+      "sha256": "af06f6654d2d8c45f21b153db3b0e2d7a851b6bc49194c9a1e80d61e994a90d3",
+      "bytes": 4910
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/in-view-title",
+      "sha256": "29aa7617d50792541bf2b06d02ddd37b52e255afe828a0dbc5b92f86acf3129b",
+      "bytes": 178381
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/in-view-title.json",
+      "sha256": "052566e23bf337036b4ac8edc4a09493d87553cd66dea0bc528cee2bb3bd3c05",
+      "bytes": 9238
+    },
+    {
+      "name": "registry/in-view-title.tsx",
+      "url": "https://uiarc.dev/r/in-view-title.json",
+      "sha256": "2046b2490078f2884fd15dba7e943ca6d13a69b1bd81e5087d7be1252e606681",
+      "bytes": 6588
+    },
+    {
+      "name": "registry/in-view-title.module.css",
+      "url": "https://uiarc.dev/r/in-view-title.json",
+      "sha256": "7af8fbeef5d0d75b4d5853b88d0bd6cb6834073f6548746a6350183666ffac44",
+      "bytes": 1535
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

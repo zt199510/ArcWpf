@@ -20,6 +20,8 @@ internal sealed class SpringDriver(Action apply)
         return spring;
     }
 
+    public void Remove(ControlSpring spring) => _springs.Remove(spring);
+
     public void Animate(ControlSpring spring, double target, double visualDuration)
     {
         spring.Tune(visualDuration);

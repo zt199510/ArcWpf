@@ -98,6 +98,10 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/RichTextEditor/Themes/RichTextEditorTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/BillingToggle/Themes/BillingToggleTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ImageCompare/Themes/ImageCompareTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TextMorph/Themes/TextMorphTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TextReveal/Themes/TextRevealTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TextShimmer/Themes/TextShimmerTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/InViewTitle/Themes/InViewTitleTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/FloatingButtonGroup/Themes/FloatingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandingButtonGroup/Themes/ExpandingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CardStack/Themes/CardStackTheme.xaml" />

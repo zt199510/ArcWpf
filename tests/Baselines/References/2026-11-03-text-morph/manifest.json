@@ -1,0 +1,56 @@
+{
+  "component": "TextMorph",
+  "arcName": "text-morph",
+  "capturedAt": "2026-11-04T00:31:11.361271+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/text-morph/markdown",
+    "page": "https://uiarc.dev/components/text-morph",
+    "registry": "https://uiarc.dev/r/text-morph.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/text-morph/markdown",
+      "sha256": "98a5ea0c93ce94fbdccf2f37a658ab0aff222ff18168758abf691ab1a3b0524d",
+      "bytes": 4784
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/text-morph",
+      "sha256": "ab6f446c571e6c773436c82255f84c7cb120ab80b2b49da67f80aa95d81821bf",
+      "bytes": 176183
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/text-morph.json",
+      "sha256": "13b71d8e9977f7310f803a916242e82d8bfd88527672a9934ae1cef11d8424bd",
+      "bytes": 7235
+    },
+    {
+      "name": "registry/text-morph.tsx",
+      "url": "https://uiarc.dev/r/text-morph.json",
+      "sha256": "24b6559369ab4e5ca84e4465f3c9e4a973f3c259e90a539f8778c0cc0b9042c2",
+      "bytes": 5000
+    },
+    {
+      "name": "registry/text-morph.module.css",
+      "url": "https://uiarc.dev/r/text-morph.json",
+      "sha256": "bd51e5ba739e7b7272ad4b46fb500617aaaefb2ae4303010edaea6057f975989",
+      "bytes": 1202
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

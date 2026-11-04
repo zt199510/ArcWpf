@@ -1,0 +1,56 @@
+{
+  "component": "TextReveal",
+  "arcName": "text-reveal",
+  "capturedAt": "2026-11-04T00:31:15.047508+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/text-reveal/markdown",
+    "page": "https://uiarc.dev/components/text-reveal",
+    "registry": "https://uiarc.dev/r/text-reveal.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/text-reveal/markdown",
+      "sha256": "80e6e6a32dd93866ee45bfca6cd50efa162aa23c690513a92277517bf5d5f400",
+      "bytes": 4608
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/text-reveal",
+      "sha256": "919669d1214902f07b2945f32fea4860abdd905b6982cb5cb1725da223e17926",
+      "bytes": 176990
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/text-reveal.json",
+      "sha256": "00e04528d9a73b89d01612bb3db0b0869b8c469cb5daa8a19082d7c37be5a1b9",
+      "bytes": 5024
+    },
+    {
+      "name": "registry/text-reveal.tsx",
+      "url": "https://uiarc.dev/r/text-reveal.json",
+      "sha256": "cd72c228df506da37391e2b5a6a91a21048de3e034e995d9815a91dcd2979bbf",
+      "bytes": 2376
+    },
+    {
+      "name": "registry/text-reveal.module.css",
+      "url": "https://uiarc.dev/r/text-reveal.json",
+      "sha256": "83a08d89b710a79bf93f535dabd486efd5b9c8a54a3efeffdd3be9e820fe69c0",
+      "bytes": 1654
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

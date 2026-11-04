@@ -1,0 +1,56 @@
+{
+  "component": "IconMorph",
+  "arcName": "icon-morph",
+  "capturedAt": "2026-11-04T00:31:22.281757+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/icon-morph/markdown",
+    "page": "https://uiarc.dev/components/icon-morph",
+    "registry": "https://uiarc.dev/r/icon-morph.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/icon-morph/markdown",
+      "sha256": "d2b974edb9887e33020f6ebf3e65c8174894bba19f329fd3c1c617b18fb753e3",
+      "bytes": 7763
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/icon-morph",
+      "sha256": "0e9baab254f668b52fb6c79e4ad296cab8613a5d756c6cc088b1972e46900da2",
+      "bytes": 187144
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/icon-morph.json",
+      "sha256": "024a7c334af81b0364441dbb9b673f6f6598a91985ef0ecb289d7ae0da2dc4ce",
+      "bytes": 14095
+    },
+    {
+      "name": "registry/icon-morph.tsx",
+      "url": "https://uiarc.dev/r/icon-morph.json",
+      "sha256": "3b4007971a84b9915567d53ad1ee6472143571208955f0c7f05c4840b0eecca3",
+      "bytes": 12435
+    },
+    {
+      "name": "registry/icon-morph.module.css",
+      "url": "https://uiarc.dev/r/icon-morph.json",
+      "sha256": "10e3e55bfce92594e8ad3ca400f9b6d27684b2f0223976a7f4975bad4d7916a8",
+      "bytes": 300
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}
