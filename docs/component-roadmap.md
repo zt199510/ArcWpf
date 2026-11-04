@@ -174,6 +174,17 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 - [x] RealtimeStream 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
 - [x] TocProgress 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
 - [x] WalletStack 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch9-replication.md)
+- [x] ActivityHeatmap 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch10-replication.md)
+- [x] BarChart 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch10-replication.md)
+- [x] LineChart 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch10-replication.md)
+- [x] DonutChart 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch10-replication.md)
+- [x] FunnelChart 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch10-replication.md)
+- [x] PromptInput 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
+- [x] StreamingMessage 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
+- [x] ToolCallCard 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
+- [x] ReasoningBlock 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
+- [x] CitationList / SourcePopover 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
+- [x] ModelPicker 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
 
 ### 2026-11-03 第七批复刻
 

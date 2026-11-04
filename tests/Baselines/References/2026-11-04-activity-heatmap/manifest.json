@@ -1,0 +1,56 @@
+{
+  "component": "ActivityHeatmap",
+  "arcName": "activity-heatmap",
+  "capturedAt": "2026-11-04T08:14:55.011777+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/activity-heatmap/markdown",
+    "page": "https://uiarc.dev/components/activity-heatmap",
+    "registry": "https://uiarc.dev/r/activity-heatmap.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/activity-heatmap/markdown",
+      "sha256": "1c3f1bb7a76fd36ed883d24b6416531714181c53cd5d68acd1a094f261c5b785",
+      "bytes": 7752
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/activity-heatmap",
+      "sha256": "fb2ad72510d39c8bb0eec23a4246ca3d17957676adc70a0e26e2a49a707a0815",
+      "bytes": 269513
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/activity-heatmap.json",
+      "sha256": "dbba257f5b337cb9ec7081e0cc6240b93ccb1e1438c09552f1c450df5435f499",
+      "bytes": 36790
+    },
+    {
+      "name": "registry/activity-heatmap.tsx",
+      "url": "https://uiarc.dev/r/activity-heatmap.json",
+      "sha256": "47b16d2211727d8f1a4b4791e777f4f8d3791d55a68aad9625377e63e8db0933",
+      "bytes": 25799
+    },
+    {
+      "name": "registry/activity-heatmap.module.css",
+      "url": "https://uiarc.dev/r/activity-heatmap.json",
+      "sha256": "b509d20ff7f152093a2f5c6b87d4391b2a80d9ad63dd1cf5846cb8d5def240a4",
+      "bytes": 9227
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

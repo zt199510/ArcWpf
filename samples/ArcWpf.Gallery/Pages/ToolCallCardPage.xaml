@@ -1,0 +1,22 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ToolCallCardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ToolCallCard" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="工具调用（Arc Pro 组件，按公开文档与展示几何独立实现）：状态、参数、结果与折叠；分组在运行时展开、成功后自动收起，失败留在视野内。样例标记仅属 Gallery。" TextWrapping="Wrap" Margin="0,0,0,12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Border x:Name="Stage" Style="{DynamicResource Gallery.DemoCard}" Width="522" HorizontalAlignment="Center">
+        <StackPanel>
+          <WrapPanel Margin="0,0,0,16">
+            <arc:Button Variant="Secondary" x:Name="Run" Content="Run again" Click="OnRun" Margin="0,0,8,0"/>
+            <arc:Button Variant="Secondary" x:Name="Ask" Content="Ask approval" Click="OnAsk"/>
+          </WrapPanel>
+          <arc:ToolCallGroup x:Name="Group" RetryRequested="OnRetry"/>
+          <arc:ToolCallCard x:Name="Approval" Margin="0,16,0,0" ApproveRequested="OnAllow" DenyRequested="OnDeny"/>
+          <TextBlock x:Name="Log" Margin="0,12,0,0" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

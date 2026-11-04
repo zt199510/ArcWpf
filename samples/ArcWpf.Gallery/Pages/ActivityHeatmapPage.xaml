@@ -1,0 +1,23 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ActivityHeatmapPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ActivityHeatmap" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="贡献日历：单元格沿对角线波浪进入，提示气泡在单元格间滑动；切换年份按日期方向扫过重新着色，图例可预览或固定某一等级。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Border x:Name="Stage" Style="{DynamicResource Gallery.DemoCard}" Width="522" HorizontalAlignment="Center">
+        <StackPanel>
+          <arc:ActivityHeatmap x:Name="Heat" Label="Emma Collins's contributions" DateChosen="OnDate">
+            <arc:ActivityHeatmap.Actions>
+              <arc:SegmentedControl x:Name="Range" Label="Range" SelectedValuePath="Tag" SelectedValue="2025" SelectionChanged="OnRange"><arc:SegmentedItem Content="2025" Tag="2025"/><arc:SegmentedItem Content="2024" Tag="2024"/><arc:SegmentedItem Content="2023" Tag="2023"/></arc:SegmentedControl>
+            </arc:ActivityHeatmap.Actions>
+          </arc:ActivityHeatmap>
+          <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.BorderSubtle}" Margin="0,16,0,0" Padding="0,16,0,0">
+            <TextBlock x:Name="Detail" FontSize="14" LineHeight="19.6" TextWrapping="Wrap" MinHeight="39.2" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+          </Border>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

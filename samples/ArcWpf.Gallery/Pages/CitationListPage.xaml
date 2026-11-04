@@ -1,0 +1,23 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.CitationListPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="CitationList / SourcePopover" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="引用来源（Arc Pro 组件，按公开文档与展示几何独立实现）：搜索中逐张到达的来源卡、堆叠的其余来源、悬停的来源详情浮层与正文引用高亮。" TextWrapping="Wrap" Margin="0,0,0,12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Border x:Name="Stage" Style="{DynamicResource Gallery.DemoCard}" Width="522" HorizontalAlignment="Center">
+        <StackPanel>
+          <WrapPanel Margin="0,0,0,16">
+            <arc:Button Variant="Secondary" Content="Search again" Click="OnSearch" Margin="0,0,8,0"/>
+            <arc:Button Variant="Secondary" Content="Fail" Click="OnFail"/>
+          </WrapPanel>
+          <arc:CitationList x:Name="List" Query="stripe webhook signature raw body" RetryRequested="OnRetry" SourceClicked="OnSource">
+            <TextBlock x:Name="Answer" TextWrapping="Wrap" FontSize="16" LineHeight="25.6" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+          </arc:CitationList>
+          <TextBlock x:Name="Log" Margin="0,12,0,0" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

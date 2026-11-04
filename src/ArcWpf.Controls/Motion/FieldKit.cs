@@ -44,6 +44,36 @@ internal static class Lucide
     public const string Play = "M6,3 L20,12 L6,21 Z";
     public const string Trash = "M10,11 v6 M14,11 v6 M19,6 v14 a2,2,0,0,1,-2,2 H7 a2,2,0,0,1,-2,-2 V6 M3,6 h18 M8,6 V4 a2,2,0,0,1,2,-2 h4 a2,2,0,0,1,2,2 v2";
 
+    // 2026-11-04 AI surfaces (lucide-static 0.460.0, ISC).
+    public const string Globe = "M2,12.0 A10,10 0 1 1 22,12.0 A10,10 0 1 1 2,12.0 Z M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20 M2 12h20";
+    public const string Brain = "M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4 M17.599 6.5a3 3 0 0 0 .399-1.375 M6.003 5.125A3 3 0 0 0 6.401 6.5 M3.477 10.896a4 4 0 0 1 .585-.396 M19.938 10.5a4 4 0 0 1 .585.396 M6 18a4 4 0 0 1-1.967-.516 M19.967 17.484A4 4 0 0 1 18 18";
+    public const string Mic = "M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z M19 10v2a7 7 0 0 1-14 0v-2 M12,19 L12,22";
+    public const string Paperclip = "m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48";
+    public const string FileText = "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8";
+    public const string Languages = "m5 8 6 6 m4 14 6-6 2-3 M2 5h12 M7 2h1 m22 22-5-10-5 10 M14 18h6";
+    public const string Lightbulb = "M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5 M9 18h6 M10 22h4";
+    public const string Wrench = "M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z";
+    public const string Shield = "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z";
+    public const string Ban = "M2,12.0 A10,10 0 1 1 22,12.0 A10,10 0 1 1 2,12.0 Z m4.9 4.9 14.2 14.2";
+    public const string Copy = "M10,8.0 h10 a2,2 0 0 1 2,2 v10 a2,2 0 0 1 -2,2 h-10 a2,2 0 0 1 -2,-2 v-10 a2,2 0 0 1 2,-2 Z M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2";
+    public const string AtSign = "M8,12.0 A4,4 0 1 1 16,12.0 A4,4 0 1 1 8,12.0 Z M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8";
+    public const string Camera = "M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z M9,13.0 A3,3 0 1 1 15,13.0 A3,3 0 1 1 9,13.0 Z";
+    public const string Layers = "m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65 m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65";
+    public const string Gauge = "m12 14 4-4 M3.34 19a10 10 0 1 1 17.32 0";
+    public const string Pencil = "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z m15 5 4 4";
+    public const string Bug = "m8 2 1.88 1.88 M14.12 3.88 16 2 M9 7.13v-1a3.003 3.003 0 1 1 6 0v1 M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6 M12 20v-9 M6.53 9C4.6 8.8 3 7.1 3 5 M6 13H2 M3 21c0-2.1 1.7-3.9 3.8-4 M20.97 5c0 2.1-1.6 3.8-3.5 4 M22 13h-4 M17.2 17c2.1.1 3.8 1.9 3.8 4";
+    public const string SearchX = "m13.5 8.5-5 5 m8.5 8.5 5 5 M3,11.0 A8,8 0 1 1 19,11.0 A8,8 0 1 1 3,11.0 Z m21 21-4.3-4.3";
+    public const string ChevronRight = "m9 18 6-6-6-6";
+    public const string ChevronLeft = "m15 18-6-6 6-6";
+    public const string ThumbsUp = "M7 10v12 M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z";
+    public const string ThumbsDown = "M17 14V2 M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z";
+    public const string Square = "M5,3.0 h14 a2,2 0 0 1 2,2 v14 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v-14 a2,2 0 0 1 2,-2 Z";
+    public const string ExternalLink = "M15 3h6v6 M10 14 21 3 M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6";
+    public const string ArrowDown = "M12 5v14 m19 12-7 7-7-7";
+    public const string Hammer = "m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9 m18 15 4-4 m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5";
+    public const string Image = "M5,3.0 h14 a2,2 0 0 1 2,2 v14 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v-14 a2,2 0 0 1 2,-2 Z M7,9.0 A2,2 0 1 1 11,9.0 A2,2 0 1 1 7,9.0 Z m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21";
+    public const string CircleCheck = "M2,12.0 A10,10 0 1 1 22,12.0 A10,10 0 1 1 2,12.0 Z m9 12 2 2 4-4";
+
     /// <summary>A stroked glyph whose color follows the inherited TextElement.Foreground of its container.</summary>
     public static Viewbox Glyph(string data, double size, double stroke = 1.75)
     {

@@ -1,0 +1,21 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ReasoningBlockPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ReasoningBlock" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="思考过程（Arc Pro 组件，按公开文档与展示几何独立实现）：进行中显示实时滚动的文本与计时，完成后可展开步骤；支持停止、错误与重试。" TextWrapping="Wrap" Margin="0,0,0,12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Border x:Name="Stage" Style="{DynamicResource Gallery.DemoCard}" Width="522" HorizontalAlignment="Center">
+        <StackPanel>
+          <WrapPanel Margin="0,0,0,16">
+            <arc:Button Variant="Secondary" Content="Think again" Click="OnThink" Margin="0,0,8,0"/>
+            <arc:Button Variant="Secondary" Content="Fail" Click="OnFail" Margin="0,0,8,0"/>
+            <arc:Switch x:Name="Plain" Content="Plain" Click="OnPlain"/>
+          </WrapPanel>
+          <arc:ReasoningBlock x:Name="Block" CanStop="True" CanRetry="True" StopRequested="OnStop" RetryRequested="OnRetry"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

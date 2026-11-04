@@ -112,6 +112,17 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/RealtimeStream/Themes/RealtimeStreamTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/TocProgress/Themes/TocProgressTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/WalletStack/Themes/WalletStackTheme.xaml" />
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ActivityHeatmap/Themes/ActivityHeatmapTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/BarChart/Themes/BarChartTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/LineChart/Themes/LineChartTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/DonutChart/Themes/DonutChartTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/FunnelChart/Themes/FunnelChartTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ReasoningBlock/Themes/ReasoningBlockTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ToolCallCard/Themes/ToolCallCardTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/CitationList/Themes/CitationListTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ModelPicker/Themes/ModelPickerTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/StreamingMessage/Themes/StreamingMessageTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/PromptInput/Themes/PromptInputTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/FloatingButtonGroup/Themes/FloatingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/ExpandingButtonGroup/Themes/ExpandingButtonGroupTheme.xaml" />
     <ResourceDictionary Source="/ArcWpf.Controls;component/CardStack/Themes/CardStackTheme.xaml" />

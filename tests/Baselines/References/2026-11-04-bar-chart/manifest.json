@@ -1,0 +1,56 @@
+{
+  "component": "BarChart",
+  "arcName": "bar-chart",
+  "capturedAt": "2026-11-04T08:14:58.867654+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/bar-chart/markdown",
+    "page": "https://uiarc.dev/components/bar-chart",
+    "registry": "https://uiarc.dev/r/bar-chart.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/bar-chart/markdown",
+      "sha256": "cc1d90df5c62adae55fb46c2cb095601e8a9fa7930ef49e7778fdef158aa1e75",
+      "bytes": 7352
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/bar-chart",
+      "sha256": "c8d9119bc261ac8c28360224c0cb8f2f2e72d82f4724a632c93f97c2a74239b4",
+      "bytes": 182071
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/bar-chart.json",
+      "sha256": "142e679514af4aab6cfeee4a69629f7b62887250584f4108d2c3ed45a9bbb463",
+      "bytes": 32067
+    },
+    {
+      "name": "registry/bar-chart.tsx",
+      "url": "https://uiarc.dev/r/bar-chart.json",
+      "sha256": "cca5e519cc0ed8588f9a7e087c5e8b449a0960f8cc66e6d64544d336382d042e",
+      "bytes": 26004
+    },
+    {
+      "name": "registry/bar-chart.module.css",
+      "url": "https://uiarc.dev/r/bar-chart.json",
+      "sha256": "e647e55f0622ff4f8f17d7890a987138d185aadb4bda1dd0ab83b456d48acd1c",
+      "bytes": 4580
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}

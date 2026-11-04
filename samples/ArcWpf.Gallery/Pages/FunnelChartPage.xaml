@@ -1,0 +1,23 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.FunnelChartPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="FunnelChart" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="转化漏斗（Arc Pro 组件，按公开文档与展示几何独立实现）：一条平滑收窄的带，分段可拆分或单独查看，切换时从当前形状变形；圆点流经并按真实流失比例离开，悬停聚焦某一步。" TextWrapping="Wrap" Margin="0,0,0,18" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Border x:Name="Stage" Style="{DynamicResource Gallery.DemoCard}" Width="522" HorizontalAlignment="Center">
+        <StackPanel>
+          <TextBlock Text="Checkout funnel" FontSize="16" FontWeight="Medium" Foreground="{DynamicResource ArcWpf.Brush.Foreground}" VerticalAlignment="Center"/>
+          <TextBlock x:Name="Meta" FontSize="14" LineHeight="19.6" Margin="0,2,0,12" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          <WrapPanel Margin="0,0,0,24">
+            <arc:SegmentedControl Margin="0,0,16,0" x:Name="Device" Label="Range" SelectedValuePath="Tag" SelectedValue="total" SelectionChanged="OnView"><arc:SegmentedItem Content="All" Tag="total"/><arc:SegmentedItem Content="Mobile" Tag="mobile"/><arc:SegmentedItem Content="Desktop" Tag="desktop"/></arc:SegmentedControl>
+            <arc:Switch x:Name="Split" Content="Split" Margin="0,0,16,0" Click="OnSwitch"/>
+            <arc:Switch x:Name="Flow" Content="Flow" IsChecked="True" Click="OnSwitch"/>
+          </WrapPanel>
+          <arc:FunnelChart x:Name="Chart" Label="Checkout funnel" Unit="sessions"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

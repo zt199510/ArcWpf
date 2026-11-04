@@ -1,0 +1,56 @@
+{
+  "component": "LineChart",
+  "arcName": "line-chart",
+  "capturedAt": "2026-11-04T08:15:02.771361+00:00",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/line-chart/markdown",
+    "page": "https://uiarc.dev/components/line-chart",
+    "registry": "https://uiarc.dev/r/line-chart.json",
+    "license": "https://uiarc.dev/license",
+    "motion": "https://uiarc.dev/r/arc-motion-tokens.json"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "url": "https://uiarc.dev/components/line-chart/markdown",
+      "sha256": "24931044f317c9183726b4f072ef5d008084b69dd81f8cb2573138292efc8e4a",
+      "bytes": 10361
+    },
+    {
+      "name": "page.txt",
+      "url": "https://uiarc.dev/components/line-chart",
+      "sha256": "0589f197b90561c2d767ca0c13c95a4f429179de8ee078b18d2661d4b3268ed9",
+      "bytes": 204661
+    },
+    {
+      "name": "registry.txt",
+      "url": "https://uiarc.dev/r/line-chart.json",
+      "sha256": "ec4a4b7095dab32a40be5f541a87498937ddb72f620784c02f860ae49d5cfd57",
+      "bytes": 36487
+    },
+    {
+      "name": "registry/line-chart.tsx",
+      "url": "https://uiarc.dev/r/line-chart.json",
+      "sha256": "f05816e33d5d7b323e2cf63d16863919f9c4b633ba6bdef99dc45c85d0da59ed",
+      "bytes": 28262
+    },
+    {
+      "name": "registry/line-chart.module.css",
+      "url": "https://uiarc.dev/r/line-chart.json",
+      "sha256": "6ab0971d5471b39ea9b03a78fefb8bb4f641326160299943a2983b72133dfb55",
+      "bytes": 6620
+    },
+    {
+      "name": "license.txt",
+      "url": "https://uiarc.dev/license",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "motion.txt",
+      "url": "https://uiarc.dev/r/arc-motion-tokens.json",
+      "sha256": "2adf39247da5320283f23c446cea7976572c693bcadf9dc7d9c4e7e4e217b141",
+      "bytes": 2360
+    }
+  ]
+}
