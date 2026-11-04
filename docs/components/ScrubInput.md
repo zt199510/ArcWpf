@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | 拖标签：3px 后进入拖动，Shift ×10、Alt ×0.1 并显示标签 | `spring.snappy`；源码确认 | `Advance/Tag` | `ScrubStepsByTravelAndSlopHoldsItBack`、`ModifiersChangeTheStepAndShowATag` | 真实窗口未观察 |
 | 到达上下限：外壳拉伸、内容偏移，释放回弹 | 上限 12，`physical(.34)`；源码确认 | `Advance/Paint/EndScrub` | `StrainsPastALimitAndSpringsBack`；si-strain 图 | 真实窗口未观察 |
-| 指针锁定：隐藏并复位系统光标，绘制替身光标并在窗口边缘环绕 | WPF 适配（无 Pointer Lock API） | `Lock`、`ScrubCursorAdorner` | 未在真实窗口运行 | 真实窗口未观察 |
+| 指针锁定：隐藏系统光标并读取移动增量，接近屏幕边缘才回绕，结束时回到起点；绘制替身光标并在窗口边缘环绕 | WPF 适配（无 Pointer Lock API） | `Lock`、`ScrubCursorAdorner` | 未在真实窗口运行 | 真实窗口未观察 |
 | 输入非法：红边 900ms 并抖动 | `physical(.3)`，-260px/s；源码确认 | `FlagInvalid` | `InvalidEntryRestoresAndFlags`；si-invalid 对照图 | 真实窗口未观察 |
 | 值变化：填充 smooth 滑动，拖动时 1:1 | `spring.smooth`；源码确认 | `AimFill` | `TrackNeedsBothLimitsAndFollowsTheValue` | 真实窗口未观察 |
 | 切换单位：旧上移新上升，按下缩放 .94 | `spring.snappy`、.12s；源码确认 | `ScrubUnitSwap`、`PressUnit` | `UnitsCycleAndTypedUnitsSwitch`；si-unit 对照图 | 真实窗口未观察 |

@@ -63,6 +63,21 @@ public sealed class ScrubInputTests
     });
 
     [TestMethod]
+    public void PressOnTheHandleStartsAScrubThroughRoutedInput() => Run(input =>
+    {
+        input.HandleForTest.RaiseEvent(new System.Windows.Input.MouseButtonEventArgs(System.Windows.Input.Mouse.PrimaryDevice, 0, System.Windows.Input.MouseButton.Left) { RoutedEvent = UIElement.MouseDownEvent });
+        Assert.IsTrue(input.PressedForTest);
+        input.EndForTest();
+    });
+
+    [TestMethod]
+    public void LockedPointerReadsTravelInDips() => Sta.Run(() =>
+    {
+        double dip = 1.5, middle = (SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth / 2) * dip;
+        Assert.AreEqual(20, ScrubInput.LockedTravelForTest((int)middle, (int)middle + 30, dip), 1e-9);
+    });
+
+    [TestMethod]
     public void ModifiersChangeTheStepAndShowATag() => Run(input =>
     {
         input.BeginForTest();

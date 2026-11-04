@@ -106,7 +106,8 @@ internal sealed class ScrubField : TextBox
         host.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
         host.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
         host.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-        host.SetValue(PaddingProperty, new Thickness(4, 0, 0, 0));
+        // 4px in CSS; the text view adds its own 1px.
+        host.SetValue(PaddingProperty, new Thickness(3, 0, 0, 0));
         var template = new ControlTemplate(typeof(TextBox)) { VisualTree = host };
         template.Seal();
         return template;
@@ -253,7 +254,7 @@ public class ScrubInput : Control
     public event EventHandler<ScrubInputChangedEventArgs>? ValueCommitted;
     public event EventHandler<string>? UnitChanged;
 
-    private sealed class Drag { public double LastX; public double Travel; public double Raw; public double Start; public bool Moved; public bool Locked; public bool Mouse; public POINT Anchor; public double CursorX; public double CursorY; }
+    private sealed class Drag { public double LastX; public double Travel; public double Raw; public double Start; public bool Moved; public bool Locked; public bool Mouse; public POINT Anchor; public POINT Last; public double CursorX; public double CursorY; }
     [StructLayout(LayoutKind.Sequential)] private struct POINT { public int X, Y; }
     [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)] private static extern bool GetCursorPos(out POINT point);
     [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)] private static extern bool SetCursorPos(int x, int y);
@@ -326,6 +327,9 @@ public class ScrubInput : Control
     internal double FillForTest => _fill.Position;
     internal double FillTargetForTest => _fill.Target;
     internal bool ScrubbingForTest => _scrubbing;
+    internal bool PressedForTest => _drag is not null;
+    internal FrameworkElement HandleForTest => _handle;
+    internal static double LockedTravelForTest(int lastX, int nowX, double dip) => LockedTravel(new Drag { Last = new POINT { X = lastX } }, new POINT { X = nowX }, dip);
     internal bool InvalidForTest => _invalid;
     internal string TextForTest => _field.Text;
     internal string? TagForTest => _tag.Visibility == Visibility.Visible ? _tagText.Text : null;
@@ -480,9 +484,9 @@ public class ScrubInput : Control
             {
                 _unitHost.Children.Clear();
                 _plainUnit = null;
-                _swap = new ScrubUnitSwap(12, _unitInk);
                 _cycle = new ArcChromeButton(6) { MinWidth = 18, Height = 22, Padding = new Thickness(4, 0, 4, 0), RenderTransform = _unitPress, RenderTransformOrigin = new Point(.5, .5) };
                 _cycle.Roles = button => (button.IsMouseOver && button.IsEnabled ? "ScrubUnitHover" : null, null, button.IsMouseOver && button.IsEnabled ? "Foreground" : "TextMuted");
+                _swap = new ScrubUnitSwap(12, _cycle.Ink);
                 _cycle.Content = _swap;
                 _cycle.Click += (_, _) => CycleUnit();
                 _cycle.PreviewMouseLeftButtonDown += (_, _) => PressUnit(.94);
@@ -680,10 +684,8 @@ public class ScrubInput : Control
         double dx;
         if (state.Locked)
         {
-            GetCursorPos(out POINT now);
-            double dip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
-            dx = (now.X - state.Anchor.X) / dip;
-            if (now.X != state.Anchor.X || now.Y != state.Anchor.Y) { SetCursorPos(state.Anchor.X, state.Anchor.Y); }
+            if (!GetCursorPos(out POINT now)) { return; }
+            dx = LockedTravel(state, now, VisualTreeHelper.GetDpi(this).PixelsPerDip);
             if (dx == 0) { return; }
         }
         else
@@ -696,6 +698,19 @@ public class ScrubInput : Control
         Advance(state, dx, modifiers.HasFlag(ModifierKeys.Shift), modifiers.HasFlag(ModifierKeys.Alt));
     }
 
+    // The hidden pointer keeps moving and only its travel is read, so absolute devices (remote desktop, virtual machines, tablets) scrub normally. It goes back to the middle only when a long drag nears the screen's edge.
+    private static double LockedTravel(Drag state, POINT now, double dip)
+    {
+        double travel = (now.X - state.Last.X) / dip;
+        state.Last = now;
+        double left = SystemParameters.VirtualScreenLeft * dip, width = SystemParameters.VirtualScreenWidth * dip;
+        const double Edge = 48;
+        if (now.X - left >= Edge && left + width - now.X > Edge) { return travel; }
+        state.Last = new POINT { X = (int)(left + width / 2), Y = now.Y };
+        SetCursorPos(state.Last.X, state.Last.Y);
+        return travel;
+    }
+
     private void Advance(Drag state, double dx, bool shift, bool alt)
     {
         state.Travel += dx;
@@ -703,7 +718,7 @@ public class ScrubInput : Control
         {
             if (Math.Abs(state.Travel) < Slop) { return; }
             state.Moved = true;
-            Keyboard.ClearFocus();
+            if (IsKeyboardFocusWithin) { Keyboard.ClearFocus(); }
             Mouse.OverrideCursor = Cursors.SizeWE;
             _scrubbing = true;
             States(true);
@@ -741,6 +756,7 @@ public class ScrubInput : Control
         _cursor.Move(state.CursorX, state.CursorY);
         layer.Add(_cursor);
         Mouse.OverrideCursor = Cursors.None;
+        if (GetCursorPos(out POINT now)) { state.Last = now; }
         state.Locked = true;
         Tag();
     }
@@ -828,6 +844,8 @@ public class ScrubInput : Control
     {
         if (_drag is not { } state) { return; }
         _drag = null;
+        // The pointer comes back where the scrub started, as it does when a browser's pointer lock ends.
+        if (state.Locked) { SetCursorPos(state.Anchor.X, state.Anchor.Y); }
         Mouse.OverrideCursor = null;
         if (_cursor is not null) { _layer?.Remove(_cursor); _cursor = null; }
         UnhookWindow();
