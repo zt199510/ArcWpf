@@ -191,6 +191,14 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 - [x] ApprovalCard 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
 - [x] ArtifactPreview 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
 
+### 2026-11-05 桌面 Agent 控件
+
+- [x] DiffView 完成实现、Gallery 和专项测试；Arc 没有对应组件；状态为待验收，见[验证记录](verification/2026-11-05-diff-view.md)
+- [ ] TerminalOutput
+- [ ] TreeView、Tabs 增强
+- [ ] ArcWindow
+- [ ] 长会话虚拟化、CodeBlock 性能（先用真实会话测出瓶颈）
+
 ### 2026-11-03 第七批复刻
 
 - [x] `TextMorph`、`TextReveal`、`TextShimmer`、`IconMorph`、`InViewTitle` 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。

@@ -29,6 +29,8 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 
 2026-11-04 接入 Pi.NET：samples/ArcWpf.AiAssistant 新增基于 Pi.Agent / Pi.Ai 1.4.5 的真实后端，由环境变量选择，无 Key 时回到模拟；控件库不依赖 Pi。真实模型和真实 Windows 未运行，状态待验收，见 [验证记录](verification/2026-11-04-pi-net-backend.md)。
 
+2026-11-05 桌面 Agent 控件：用户确认方向为“DSH 风格的 Windows 原生桌面 Agent”，基于 ArcWpf + Pi.NET，只参考 DeepSeek Harness 的体验和设计，不重写整个 DSH。控件顺序：DiffView、TerminalOutput、TreeView 与 Tabs 增强、ArcWindow，最后按真实会话的瓶颈做长会话虚拟化和 CodeBlock 性能。它与运动控制应用的主次关系、第一阶段用哪个模型，用户尚未决定。DiffView 已实现并接入 Gallery，真实 Windows 未运行，状态待验收，见[规格](components/DiffView.md)和[验证记录](verification/2026-11-05-diff-view.md)；其余控件未开始。
+
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。

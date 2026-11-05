@@ -25,16 +25,6 @@ public class CodeBlock : Control
     public static readonly DependencyProperty IsExpandedProperty = IsExpandedPropertyKey.DependencyProperty;
     public static readonly RoutedUICommand ToggleExpandedCommand = new("Toggle code block", nameof(ToggleExpandedCommand), typeof(CodeBlock));
 
-    private static readonly HashSet<string> Keywords = new(StringComparer.Ordinal)
-    {
-        "abstract", "as", "async", "await", "break", "case", "catch", "class", "const", "continue", "default", "delete", "do", "else", "enum", "export", "extends", "finally", "for", "from", "function", "get", "if", "implements", "import", "in", "instanceof", "interface", "let", "new", "of", "private", "protected", "public", "readonly", "return", "set", "static", "switch", "throw", "try", "type", "typeof", "var", "void", "while", "with", "yield", "true", "false", "null", "undefined", "NaN", "Infinity", "SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "DELETE"
-    };
-    private static readonly HashSet<string> Types = new(StringComparer.Ordinal)
-    {
-        "Array", "Boolean", "Date", "Error", "Map", "Number", "Promise", "Record", "Set", "String", "ReactNode", "HTMLElement", "HTMLButtonElement", "Event", "unknown", "never", "void", "any", "boolean", "number", "string", "object"
-    };
-    private static readonly HashSet<char> Punctuation = new("{}[]();,.<>:=+*/!?|&-".ToCharArray());
-    private static readonly Regex TokenPattern = new(@"/\*[\s\S]*?\*/|//[^\n]*|<!--[\s\S]*?-->|`(?:\\.|[^`\\])*`|""(?:\\.|[^""\\])*""|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][\w$-]*\b|[{}[\]();,.<>:=+*/!?|&-]", RegexOptions.CultureInvariant);
     // code-block.module.css .pre: 14px at line-height 1.7 with padding 20.
     private const double FontSizeOfSource = 14, LineHeight = 23.8, SourcePadding = 20, BaselineLift = 2;
 
@@ -184,29 +174,13 @@ public class CodeBlock : Control
                 }
             }
         }
-        foreach (Match match in TokenPattern.Matches(code))
+        foreach (Match match in CodeTokens.Pattern.Matches(code))
         {
             if (cursor < match.Index) Emit(code[cursor..match.Index], null);
-            Emit(match.Value, TokenKey(match.Value, code, match.Index, language));
+            Emit(match.Value, CodeTokens.Key(match.Value, code, match.Index, language));
             cursor = match.Index + match.Length;
         }
         if (cursor < code.Length) Emit(code[cursor..], null);
-    }
-
-    private static string? TokenKey(string value, string source, int index, string language)
-    {
-        if (value.StartsWith("//", StringComparison.Ordinal) || value.StartsWith("/*", StringComparison.Ordinal) || value.StartsWith("<!--", StringComparison.Ordinal)) return "ArcWpf.Brush.TextMuted";
-        string after = source[(index + value.Length)..];
-        if (value[0] is '"' or '\'' or '`') return language == "json" && after.TrimStart().StartsWith(':') ? "ArcWpf.Brush.CodeProperty" : "ArcWpf.Brush.CodeString";
-        if (char.IsAsciiDigit(value[0])) return "ArcWpf.Brush.CodeNumber";
-        if (Keywords.Contains(value)) return "ArcWpf.Brush.CodeKeyword";
-        if (Types.Contains(value)) return "ArcWpf.Brush.CodeType";
-        if (value.Length == 1 && Punctuation.Contains(value[0])) return "ArcWpf.Brush.TextSecondary";
-        string before = source[..index];
-        if (language is "tsx" or "jsx" or "html" or "vue" && (before.EndsWith('<') || before.EndsWith("</", StringComparison.Ordinal))) return "ArcWpf.Brush.CodeType";
-        if (after.TrimStart().StartsWith('(') && language != "json") return "ArcWpf.Brush.CodeFunction";
-        if (language is "css" or "tsx" or "jsx" && after.TrimStart() is [':' or '=', ..]) return "ArcWpf.Brush.CodeProperty";
-        return null;
     }
 
     private static Run Token(string text, string key)

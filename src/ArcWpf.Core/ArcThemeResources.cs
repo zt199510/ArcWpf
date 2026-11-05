@@ -194,6 +194,9 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("FloatRule", Alpha(Oklch(foregroundL, 0, 0), .12));
         PutBrush("ExpandDanger", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .14 : .1));
         PutBrush("ExpandDone", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .14 : .1));
+        PutBrush("DiffAdded", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .16 : .12)); PutBrush("DiffAddedWord", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .36 : .3));
+        PutBrush("DiffRemoved", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .16 : .1)); PutBrush("DiffRemovedWord", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .36 : .26));
+        PutBrush("DiffSelection", Alpha(Oklch(foregroundL, 0, 0), dark ? .14 : .1));
         PutBrush("StackAccent", Oklch(threadAccentL, 0, 0));
         PutBrush("StackAccentStrong", Oklch(neutrals["AccentStrong"], 0, 0));
         PutBrush("StackShade", Alpha(Oklch(0, 0, 0), dark ? .22 : .035));

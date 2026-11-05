@@ -1,0 +1,24 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.DiffViewPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="DiffView" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="代码改动查看（Arc 没有 diff 组件，这是 ArcWpf 的设计）：单栏与并排、折叠未改动行、行内高亮、多文件。Ctrl+C 复制选中行，F7 / Shift+F7 跳转改动，Shift+滚轮横向滚动。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,12"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:DiffView x:Name="Main" Mode="Split" Height="420" MinSplitWidth="640"/>
+    </Border>
+    <TextBlock Text="从 git patch 解析：改名、权限变化、未包含的区段不可展开" FontWeight="Medium" Margin="0,20,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:DiffView x:Name="Patch" MaxBodyHeight="220"/>
+    </Border>
+    <TextBlock Text="审批时要看清的情况：隐藏字符、只改换行符、二进制" FontWeight="Medium" Margin="0,20,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:DiffView x:Name="Careful" MaxBodyHeight="160"/>
+    </Border>
+    <TextBlock Text="20,000 行文件（虚拟化，只创建视口内的行）" FontWeight="Medium" Margin="0,20,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:DiffView x:Name="Large" Height="280"/>
+    </Border>
+  </StackPanel>
+</UserControl>
