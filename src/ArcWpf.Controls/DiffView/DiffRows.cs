@@ -2,7 +2,6 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -158,10 +157,12 @@ internal sealed class DiffPalette(FrameworkElement owner)
 {
     public Brush Added { get; } = Find(owner, "DiffAdded");
     public Brush AddedWord { get; } = Find(owner, "DiffAddedWord");
-    public Brush AddedEdge { get; } = Find(owner, "ArcSuccess");
+    public Brush AddedStrong { get; } = Find(owner, "DiffAddedStrong");
+    public Brush AddedSign { get; } = Find(owner, "ArcSuccess");
     public Brush Removed { get; } = Find(owner, "DiffRemoved");
     public Brush RemovedWord { get; } = Find(owner, "DiffRemovedWord");
-    public Brush RemovedEdge { get; } = Find(owner, "ArcDanger");
+    public Brush RemovedStrong { get; } = Find(owner, "DiffRemovedStrong");
+    public Brush RemovedSign { get; } = Find(owner, "ArcDanger");
     public Brush Selection { get; } = Find(owner, "DiffSelection");
     public Brush Empty { get; } = Find(owner, "SurfaceMuted");
     public Brush Rule { get; } = Find(owner, "BorderSubtle");
@@ -181,67 +182,23 @@ internal sealed class DiffPalette(FrameworkElement owner)
     private static Brush Find(FrameworkElement owner, string role) => owner.TryFindResource("ArcWpf.Brush." + role) as Brush ?? Brushes.Gray;
 }
 
-// A ListBox keeps virtualization, selection, keyboard movement and automation. Only the row drawing is custom.
-internal sealed class DiffRowList : ListBox
+internal sealed class DiffRowList : DrawnRowList
 {
-    public const double RowHeight = 20, TextSize = 13;
-    private readonly HashSet<DiffRowItem> _live = [];
     private DiffPalette? _palette;
-    private double _scrollX;
-    private ScrollViewer? _scroller;
 
-    public DiffRowList()
-    {
-        OverridesDefaultStyle = true;
-        Focusable = true;
-        FocusVisualStyle = null;
-        Background = Brushes.Transparent;
-        BorderThickness = new Thickness(0);
-        SelectionMode = SelectionMode.Extended;
-        VirtualizingPanel.SetIsVirtualizing(this, true);
-        VirtualizingPanel.SetVirtualizationMode(this, VirtualizationMode.Recycling);
-        VirtualizingPanel.SetScrollUnit(this, ScrollUnit.Item);
-        ItemsPanel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
-        var scroller = new FrameworkElementFactory(typeof(OverlayScrollViewer));
-        scroller.SetValue(ScrollViewer.CanContentScrollProperty, true);
-        scroller.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Disabled);
-        scroller.SetValue(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto);
-        scroller.AppendChild(new FrameworkElementFactory(typeof(ItemsPresenter)));
-        Template = new ControlTemplate(typeof(ListBox)) { VisualTree = scroller };
-        SetResourceReference(FontFamilyProperty, "ArcWpf.Font.Mono");
-        ThemeWatch.Add(this, Repaint);
-    }
+    public DiffRowList() => ThemeWatch.Add(this, Repaint);
 
     public bool IsSplit { get; set; }
     public int NumberDigits { get; set; } = 1;
     public int TextVersion { get; private set; }
-    public double Cell { get; private set; } = 7;
     public DiffPalette Palette => _palette ??= new DiffPalette(this);
-    public Typeface Face => new(FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
-    public double PixelsPerDip => VisualTreeHelper.GetDpi(this).PixelsPerDip;
     public double NumberWidth => Math.Ceiling(Cell * NumberDigits) + 12;
     public double UnifiedGutter => NumberWidth * 2 + SignWidth;
     public double SplitGutter => NumberWidth + SignWidth;
     public double SignWidth => Math.Ceiling(Cell) + 12;
-    public int LiveCountForTest => _live.Count;
-    public ScrollViewer? Scroller => _scroller ??= FindScroller(this);
     public event Action<DiffRow>? GapInvoked;
-    public event Action<double>? HorizontalWheel;
-    public event Action<double>? HorizontalKey;
-    public event Action? CopyRequested;
     /// <summary>Which version a copy takes in split view: the side last clicked.</summary>
     public bool CopiesOldSide { get; private set; }
-
-    public double ScrollX
-    {
-        get => _scrollX;
-        set { if (_scrollX != value) { _scrollX = value; InvalidateRows(); } }
-    }
-
-    public void MeasureCell()
-    {
-        Cell = new FormattedText("0", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, Face, TextSize, Brushes.Black, PixelsPerDip).WidthIncludingTrailingWhitespace;
-    }
 
     public void Repaint()
     {
@@ -249,8 +206,6 @@ internal sealed class DiffRowList : ListBox
         TextVersion++;
         InvalidateRows();
     }
-
-    public void InvalidateRows() { foreach (var item in _live) { item.InvalidateVisual(); } }
 
     public void NoteClick(double x) { if (IsSplit) { CopiesOldSide = x < ActualWidth / 2; } }
 
@@ -262,96 +217,37 @@ internal sealed class DiffRowList : ListBox
 
     protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
     {
-        base.PrepareContainerForItemOverride(element, item);
         var container = (DiffRowItem)element;
         var row = (DiffRow)item;
         container.Row = row;
         container.Cursor = row.IsGap && row.CanExpand ? Cursors.Hand : null;
         AutomationProperties.SetName(container, row.Spoken);
-        _live.Add(container);
-        container.InvalidateVisual();
+        base.PrepareContainerForItemOverride(element, item);
     }
 
     protected override void ClearContainerForItemOverride(DependencyObject element, object item)
     {
         base.ClearContainerForItemOverride(element, item);
-        var container = (DiffRowItem)element;
-        container.Row = null;
-        _live.Remove(container);
-    }
-
-    protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
-    {
-        base.OnPreviewMouseWheel(e);
-        if (e.Handled) { return; }
-        if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0)
-        {
-            HorizontalWheel?.Invoke(-e.Delta / 120.0 * Cell * 8);
-            e.Handled = true;
-            return;
-        }
-        // At either end the wheel belongs to whatever scrolls around the diff, such as the chat it sits in.
-        if (Scroller is { } scroller && (e.Delta > 0 ? scroller.VerticalOffset <= 0 : scroller.VerticalOffset >= scroller.ScrollableHeight) && VisualTreeHelper.GetParent(this) is UIElement parent)
-        {
-            e.Handled = true;
-            parent.RaiseEvent(new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) { RoutedEvent = MouseWheelEvent, Source = this });
-        }
+        ((DiffRowItem)element).Row = null;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Key is Key.Left or Key.Right && Keyboard.Modifiers == ModifierKeys.None)
-        {
-            HorizontalKey?.Invoke((e.Key == Key.Left ? -1 : 1) * Cell * 8);
-            e.Handled = true;
-            return;
-        }
         if (e.Key is Key.Enter or Key.Space && SelectedItem is DiffRow { IsGap: true, CanExpand: true } gap)
         {
             InvokeGap(gap);
             e.Handled = true;
             return;
         }
-        if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
-        {
-            CopyRequested?.Invoke();
-            e.Handled = true;
-            return;
-        }
         base.OnKeyDown(e);
-    }
-
-    private static ScrollViewer? FindScroller(DependencyObject root)
-    {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
-        {
-            var child = VisualTreeHelper.GetChild(root, i);
-            if (child is ScrollViewer found) { return found; }
-            if (FindScroller(child) is { } nested) { return nested; }
-        }
-        return null;
     }
 }
 
-internal sealed class DiffRowItem : ListBoxItem
+internal sealed class DiffRowItem : DrawnRowItem
 {
-    public DiffRowItem()
-    {
-        OverridesDefaultStyle = true;
-        Template = null;
-        FocusVisualStyle = null;
-        Height = DiffRowList.RowHeight;
-        Padding = new Thickness(0);
-        SnapsToDevicePixels = true;
-    }
-
     public DiffRow? Row { get; set; }
 
     private DiffRowList? List => ItemsControl.ItemsControlFromItemContainer(this) as DiffRowList;
-
-    protected override Size MeasureOverride(Size constraint) => new(0, DiffRowList.RowHeight);
-
-    protected override Size ArrangeOverride(Size arrangeBounds) => arrangeBounds;
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
@@ -368,10 +264,6 @@ internal sealed class DiffRowItem : ListBoxItem
     protected override void OnMouseEnter(MouseEventArgs e) { base.OnMouseEnter(e); if (Row is { IsGap: true }) { InvalidateVisual(); } }
 
     protected override void OnMouseLeave(MouseEventArgs e) { base.OnMouseLeave(e); if (Row is { IsGap: true }) { InvalidateVisual(); } }
-
-    protected override void OnSelected(RoutedEventArgs e) { base.OnSelected(e); InvalidateVisual(); }
-
-    protected override void OnUnselected(RoutedEventArgs e) { base.OnUnselected(e); InvalidateVisual(); }
 
     protected override void OnRender(DrawingContext dc)
     {
@@ -407,7 +299,7 @@ internal sealed class DiffRowItem : ListBoxItem
         var palette = list.Palette;
         var side = row.Old ?? row.New!;
         var kind = side.Line.Kind;
-        Fill(dc, palette, kind, 0, width, height);
+        Fill(dc, palette, kind, 0, width, list.UnifiedGutter - 4, height);
         double number = list.NumberWidth;
         Number(dc, list, row.Old?.Line.OldNumber, number - 6, height);
         Number(dc, list, row.New?.Line.NewNumber, number * 2 - 6, height);
@@ -420,17 +312,18 @@ internal sealed class DiffRowItem : ListBoxItem
         var palette = list.Palette;
         if (side is null) { dc.DrawRectangle(palette.Empty, null, new Rect(x, 0, width, height)); return; }
         var kind = side.Line.Kind;
-        Fill(dc, palette, kind, x, width, height);
+        Fill(dc, palette, kind, x, width, list.SplitGutter - 4, height);
         Number(dc, list, old ? side.Line.OldNumber : side.Line.NewNumber, x + list.NumberWidth - 6, height);
         Sign(dc, list, kind, x + list.NumberWidth + 6, height);
         Body(dc, list, side, x + list.SplitGutter, width - list.SplitGutter, height);
     }
 
-    private static void Fill(DrawingContext dc, DiffPalette palette, DiffLineKind kind, double x, double width, double height)
+    // code-suggestion .row: a tinted line under a slightly stronger gutter.
+    private static void Fill(DrawingContext dc, DiffPalette palette, DiffLineKind kind, double x, double width, double gutter, double height)
     {
         if (kind == DiffLineKind.Context) { return; }
         dc.DrawRectangle(kind == DiffLineKind.Added ? palette.Added : palette.Removed, null, new Rect(x, 0, width, height));
-        dc.DrawRectangle(kind == DiffLineKind.Added ? palette.AddedEdge : palette.RemovedEdge, null, new Rect(x, 0, 3, height));
+        dc.DrawRectangle(kind == DiffLineKind.Added ? palette.AddedStrong : palette.RemovedStrong, null, new Rect(x, 0, gutter, height));
     }
 
     private static void Number(DrawingContext dc, DiffRowList list, int? number, double right, double height)
@@ -444,7 +337,7 @@ internal sealed class DiffRowItem : ListBoxItem
     {
         if (kind == DiffLineKind.Context) { return; }
         var palette = list.Palette;
-        var text = new FormattedText(kind == DiffLineKind.Added ? "+" : "-", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, list.Face, DiffRowList.TextSize, kind == DiffLineKind.Added ? palette.AddedEdge : palette.RemovedEdge, list.PixelsPerDip);
+        var text = new FormattedText(kind == DiffLineKind.Added ? "+" : "-", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, list.Face, DiffRowList.TextSize, kind == DiffLineKind.Added ? palette.AddedSign : palette.RemovedSign, list.PixelsPerDip);
         dc.DrawText(text, new Point(x, Math.Round((height - text.Height) / 2)));
     }
 
@@ -470,8 +363,10 @@ internal sealed class DiffRowItem : ListBoxItem
         if (side.Text is not null && side.TextVersion == list.TextVersion) { return; }
         var palette = list.Palette;
         string shown = side.Shown;
-        var text = new FormattedText(shown, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, list.Face, DiffRowList.TextSize, palette.Ink, list.PixelsPerDip);
-        if (side.Language is { } language && shown.Length <= 2000) { ApplyTokens(text, palette, shown, language); }
+        // code-suggestion: a removed line reads quietly, in one color.
+        bool removed = side.Line.Kind == DiffLineKind.Removed;
+        var text = new FormattedText(shown, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, list.Face, DiffRowList.TextSize, removed ? palette.InkQuiet : palette.Ink, list.PixelsPerDip);
+        if (!removed && side.Language is { } language && shown.Length <= 2000) { ApplyTokens(text, palette, shown, language); }
         if (side.Marks is { } marks) { foreach (var (start, length) in marks) { text.SetForegroundBrush(palette.Mark, start, length); } }
         side.Text = text;
         side.ChangedShape = side.Changed is { Length: > 0 } changed ? text.BuildHighlightGeometry(new Point(0, 0), changed.Start, changed.Length) : null;

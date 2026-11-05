@@ -1,0 +1,28 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.TerminalOutputPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="TerminalOutput" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="命令输出（ArcWpf 的设计，外观参考 Arc 的 Typewriter terminal 公开页面）：颜色、会自我改写的进度行、跟随最新一行。这里的输出都是模拟的，不运行任何命令。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,12"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+          <arc:Button x:Name="Install" Content="安装（进度）" Margin="0,0,8,0" Click="InstallClicked"/>
+          <arc:Button x:Name="Fail" Content="失败的测试" Margin="0,0,8,0" Click="FailClicked"/>
+          <arc:Button x:Name="Flood" Content="大量输出" Margin="0,0,8,0" Click="FloodClicked"/>
+          <arc:Button x:Name="Screen" Content="全屏程序" Click="ScreenClicked"/>
+        </StackPanel>
+        <arc:TerminalOutput x:Name="Output" Height="360" StopRequested="StopRequested"/>
+      </StackPanel>
+    </Border>
+    <TextBlock Text="放进 StackPanel（不限高）：长度受限并继续虚拟化" FontWeight="Medium" Margin="0,20,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:TerminalOutput x:Name="Colors" Command="printf colors" Status="Succeeded" MaxBodyHeight="200"/>
+    </Border>
+    <TextBlock Text="还没有输出" FontWeight="Medium" Margin="0,20,0,8"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <arc:TerminalOutput x:Name="Waiting" Command="dotnet restore" Status="Running"/>
+    </Border>
+  </StackPanel>
+</UserControl>

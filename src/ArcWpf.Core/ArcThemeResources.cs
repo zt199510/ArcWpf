@@ -194,8 +194,14 @@ public sealed class ArcThemeResources : ResourceDictionary
         PutBrush("FloatRule", Alpha(Oklch(foregroundL, 0, 0), .12));
         PutBrush("ExpandDanger", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .14 : .1));
         PutBrush("ExpandDone", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .14 : .1));
-        PutBrush("DiffAdded", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .16 : .12)); PutBrush("DiffAddedWord", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .36 : .3));
-        PutBrush("DiffRemoved", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .16 : .1)); PutBrush("DiffRemovedWord", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .36 : .26));
+        // code-suggestion: added 10% and 16% of success, removed 9% and 15% of danger, over the surface.
+        PutBrush("DiffAdded", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, .1)); PutBrush("DiffAddedStrong", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, .16)); PutBrush("DiffAddedWord", Tinted(surfaceL, arcSuccessL, arcSuccessC, 162, dark ? .36 : .3));
+        PutBrush("DiffRemoved", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, .09)); PutBrush("DiffRemovedStrong", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, .15)); PutBrush("DiffRemovedWord", Tinted(surfaceL, arcDangerL, arcDangerC, arcDangerH, dark ? .36 : .26));
+        // ANSI colors a program picks by name, kept readable on either surface: black and white trade places with the text color.
+        (double L, double C, double H)[] ansi = dark
+            ? [(.62, 0, 0), (.72, .16, 25), (.78, .16, 150), (.84, .14, 90), (.74, .13, 250), (.74, .14, 320), (.8, .1, 200), (.86, 0, 0), (.7, 0, 0), (.78, .16, 25), (.84, .16, 150), (.9, .14, 90), (.8, .13, 250), (.8, .14, 320), (.86, .1, 200), (.96, 0, 0)]
+            : [(.25, 0, 0), (.5, .17, 25), (.5, .14, 150), (.54, .12, 85), (.48, .15, 255), (.48, .16, 320), (.52, .1, 200), (.45, 0, 0), (.4, 0, 0), (.56, .18, 25), (.56, .15, 150), (.6, .13, 85), (.54, .16, 255), (.54, .17, 320), (.58, .11, 200), (.55, 0, 0)];
+        for (int i = 0; i < ansi.Length; i++) { PutBrush("TerminalAnsi" + i, Oklch(ansi[i].L, ansi[i].C, ansi[i].H)); }
         PutBrush("DiffSelection", Alpha(Oklch(foregroundL, 0, 0), dark ? .14 : .1));
         PutBrush("StackAccent", Oklch(threadAccentL, 0, 0));
         PutBrush("StackAccentStrong", Oklch(neutrals["AccentStrong"], 0, 0));

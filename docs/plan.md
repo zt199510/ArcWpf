@@ -31,6 +31,8 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 
 2026-11-05 桌面 Agent 控件：用户确认方向为“DSH 风格的 Windows 原生桌面 Agent”，基于 ArcWpf + Pi.NET，只参考 DeepSeek Harness 的体验和设计，不重写整个 DSH。控件顺序：DiffView、TerminalOutput、TreeView 与 Tabs 增强、ArcWindow，最后按真实会话的瓶颈做长会话虚拟化和 CodeBlock 性能。它与运动控制应用的主次关系、第一阶段用哪个模型，用户尚未决定。DiffView 已实现并接入 Gallery，真实 Windows 未运行，状态待验收，见[规格](components/DiffView.md)和[验证记录](verification/2026-11-05-diff-view.md)；其余控件未开始。
 
+2026-11-05 TerminalOutput：实现完成，状态待验收，尚未接入真实进程和审批流程。同时更正“Arc 没有 diff 组件”的错误记录，DiffView 行样式按 Arc Code suggestion 的公开样式校准。见[验证记录](verification/2026-11-05-terminal-output.md)。
+
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。

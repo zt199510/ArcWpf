@@ -127,6 +127,7 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ApprovalCard/Themes/ApprovalCardTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/ArtifactPreview/Themes/ArtifactPreviewTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/DiffView/Themes/DiffViewTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/TerminalOutput/Themes/TerminalOutputTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/StreamingMessage/Themes/StreamingMessageTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/PromptInput/Themes/PromptInputTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/FloatingButtonGroup/Themes/FloatingButtonGroupTheme.xaml" />

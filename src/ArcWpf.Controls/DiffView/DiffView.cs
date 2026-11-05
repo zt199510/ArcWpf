@@ -15,7 +15,8 @@ namespace ArcWpf.Controls;
 public enum DiffViewMode { Unified, Split }
 
 /// <summary>
-/// Shows what changed in one or more files, for reviewing an agent's edits before they are allowed. Arc has no such component.
+/// Shows what changed in one or more files, for reviewing an agent's edits before they are allowed. Takes its look from Arc's Code suggestion, which reviews one file's hunks;
+/// its docs leave large and side-by-side diffs to a dedicated tool, and this is that tool.
 /// A reader decides from this view, so whatever can't be shown as a line is stated in a note rather than left out.
 /// </summary>
 [TemplatePart(Name = "PART_Path", Type = typeof(TextBlock))]
@@ -75,8 +76,7 @@ public class DiffView : Control
         _expandAll.Click += (_, _) => ExpandAll();
         _modeToggle.Click += (_, _) => SetCurrentValue(ModeProperty, Mode == DiffViewMode.Split ? DiffViewMode.Unified : DiffViewMode.Split);
         _rows.GapInvoked += Expand;
-        _rows.HorizontalWheel += ScrollBy;
-        _rows.HorizontalKey += ScrollBy;
+        _rows.HorizontalRequested += ScrollBy;
         _rows.CopyRequested += CopySelection;
         AddHandler(KeyDownEvent, new KeyEventHandler(ChangeKeys), true);
         SizeChanged += (_, _) => { ClipFrame(); if (ResolveMode() != EffectiveMode) { Rebuild(true); } else { UpdateBar(); UpdateActions(); } };
@@ -250,9 +250,9 @@ public class DiffView : Control
         block.Inlines.Clear();
         if (file.IsBinary) { return; }
         var plus = new Run("+" + file.AddedLines.ToString("N0", CultureInfo.InvariantCulture));
-        plus.SetResourceReference(TextElement.ForegroundProperty, "ArcWpf.Brush.ArcSuccess");
+        plus.SetResourceReference(TextElement.ForegroundProperty, file.AddedLines > 0 ? "ArcWpf.Brush.ArcSuccess" : "ArcWpf.Brush.TextMuted");
         var minus = new Run("  −" + file.RemovedLines.ToString("N0", CultureInfo.InvariantCulture));
-        minus.SetResourceReference(TextElement.ForegroundProperty, "ArcWpf.Brush.ArcDanger");
+        minus.SetResourceReference(TextElement.ForegroundProperty, file.RemovedLines > 0 ? "ArcWpf.Brush.ArcDanger" : "ArcWpf.Brush.TextMuted");
         block.Inlines.Add(plus);
         block.Inlines.Add(minus);
     }

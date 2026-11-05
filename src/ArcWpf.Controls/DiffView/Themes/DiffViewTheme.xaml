@@ -29,7 +29,7 @@
           </Border>
           <StackPanel x:Name="PART_Notes" Grid.Row="2"/>
           <Grid x:Name="PART_Body" Grid.Row="3" Background="Transparent">
-            <Decorator x:Name="PART_RowsHost"/>
+            <Decorator x:Name="PART_RowsHost" Margin="0,6"/>
             <TextBlock x:Name="PART_Empty" Visibility="Collapsed" Margin="16,28" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" FontSize="13" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
             <ScrollBar x:Name="PART_HorizontalBar" Orientation="Horizontal" VerticalAlignment="Bottom" Opacity="0" Visibility="Collapsed" Minimum="0"/>
           </Grid>

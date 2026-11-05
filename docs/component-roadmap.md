@@ -193,8 +193,8 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 
 ### 2026-11-05 桌面 Agent 控件
 
-- [x] DiffView 完成实现、Gallery 和专项测试；Arc 没有对应组件；状态为待验收，见[验证记录](verification/2026-11-05-diff-view.md)
-- [ ] TerminalOutput
+- [x] DiffView 完成实现、Gallery 和专项测试；功能是 ArcWpf 的设计，行样式按 Arc Code suggestion 的公开样式校准；状态为待验收，见[验证记录](verification/2026-11-05-diff-view.md)
+- [x] TerminalOutput 完成实现、Gallery 和专项测试；实时行为是 ArcWpf 的设计（Arc 的 `log-stream` 查不到），外观参考 Typewriter terminal 公开样式；状态为待验收，见[验证记录](verification/2026-11-05-terminal-output.md)
 - [ ] TreeView、Tabs 增强
 - [ ] ArcWindow
 - [ ] 长会话虚拟化、CodeBlock 性能（先用真实会话测出瓶颈）

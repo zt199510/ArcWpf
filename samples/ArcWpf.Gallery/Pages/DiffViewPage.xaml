@@ -4,7 +4,7 @@
              xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
   <StackPanel>
     <TextBlock Text="DiffView" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
-    <TextBlock Text="代码改动查看（Arc 没有 diff 组件，这是 ArcWpf 的设计）：单栏与并排、折叠未改动行、行内高亮、多文件。Ctrl+C 复制选中行，F7 / Shift+F7 跳转改动，Shift+滚轮横向滚动。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,12"/>
+    <TextBlock Text="代码改动查看（ArcWpf 的设计，行样式参考 Arc 的 Code suggestion 公开页面）：单栏与并排、折叠未改动行、行内高亮、多文件。Ctrl+C 复制选中行，F7 / Shift+F7 跳转改动，Shift+滚轮横向滚动。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,12"/>
     <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
       <arc:DiffView x:Name="Main" Mode="Split" Height="420" MinSplitWidth="640"/>
     </Border>
