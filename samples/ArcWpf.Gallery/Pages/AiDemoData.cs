@@ -29,6 +29,7 @@ internal static class AiDemoData
     public static readonly AiMark GitHub = new(Paths.GitHub);
     public static readonly AiMark Linear = new(Paths.Linear, Color.FromRgb(0x5E, 0x6A, 0xD2));
     public static readonly AiMark Postgres = new(Paths.Postgres, Color.FromRgb(0x41, 0x69, 0xE1));
+    public static readonly AiMark Vercel = new("M12 2.5 23 21.5H1Z");
     public static readonly AiMark[] AllMarks = [Claude, OpenAI, Gemini, GitHub, Linear, Postgres, new(Paths.Slack), new(Paths.Stripe), new(Paths.Mozilla), new(Paths.Vercel), new(Paths.Wikipedia), new(Paths.StackOverflow), new(Paths.Notion)];
 
     private static readonly ModelEffort[] AllEfforts = [ModelEffort.Low, ModelEffort.Medium, ModelEffort.High, ModelEffort.ExtraHigh, ModelEffort.Max];

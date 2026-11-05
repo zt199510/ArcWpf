@@ -185,6 +185,11 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 - [x] ReasoningBlock 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
 - [x] CitationList / SourcePopover 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
 - [x] ModelPicker 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)
+- [x] AttachmentTray 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
+- [x] MessageActions 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
+- [x] ConversationSidebar 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
+- [x] ApprovalCard 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
+- [x] ArtifactPreview 完成实现、Gallery 和专项测试；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)
 
 ### 2026-11-03 第七批复刻
 

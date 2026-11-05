@@ -37,6 +37,8 @@ public sealed class PromptAttachment(string name) : INotifyPropertyChanged
     public string? Detail { get; init; }
     public string? FilePath { get; init; }
     public string? PastedText { get; init; }
+    /// <summary>A thumbnail to show. Without one, an image file at <see cref="FilePath"/> is loaded instead.</summary>
+    public System.Windows.Media.ImageSource? Preview { get; init; }
     public PromptAttachmentStatus Status { get => _status; set { if (_status != value) { _status = value; Raise(nameof(Status)); } } }
     /// <summary>0 to 1 while uploading.</summary>
     public double Progress { get => _progress; set { if (_progress != value) { _progress = value; Raise(nameof(Progress)); } } }

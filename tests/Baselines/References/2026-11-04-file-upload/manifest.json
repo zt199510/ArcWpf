@@ -1,0 +1,38 @@
+{
+  "component": "AttachmentTray",
+  "arcName": "file-upload",
+  "capturedAt": "2026-11-04",
+  "urls": {
+    "markdown": "https://uiarc.dev/components/blocks/file-upload/markdown",
+    "page": "https://uiarc.dev/components/blocks/file-upload",
+    "registry": "https://uiarc.dev/r/file-upload.json",
+    "license": "https://uiarc.dev/license"
+  },
+  "files": [
+    {
+      "name": "markdown.txt",
+      "sha256": "4320a2535cca379f78c2fae6f09686c4ca01ab3ed3dfd94fd369259e021d96fe",
+      "bytes": 5757
+    },
+    {
+      "name": "registry.txt",
+      "sha256": "a673548acff33ad5b54eee5378bee1d8c747eacf1b2e038ef426e32a3b2c1ef0",
+      "bytes": 23049
+    },
+    {
+      "name": "license.txt",
+      "sha256": "ca5e65f0886f05b65951840ac69db1daa4785842ae14b3370c6c32348855c112",
+      "bytes": 81833
+    },
+    {
+      "name": "registry/file-upload.tsx",
+      "sha256": "568d3932d11ee7bf261545e8d4f1cf7e4b0a2fc40f974d3baf381d1df28954a3",
+      "bytes": 16844
+    },
+    {
+      "name": "registry/file-upload.module.css",
+      "sha256": "3a4ef30a0872ce36c9d0ed5cc792cdeb96349594d1a43b8f67fdd456f4c57153",
+      "bytes": 4742
+    }
+  ]
+}

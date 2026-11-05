@@ -257,6 +257,9 @@ public class StreamingMessage : Control
 
     private bool Running => Status is StreamingStatus.Thinking or StreamingStatus.Streaming;
 
+    // ArtifactPreview shows a finished document: it has its own copy action, so the reply foot stays away.
+    internal bool HidesFoot { get; set; }
+
     internal string RevealedForTest => _target[.._revealed];
     internal int ViewCountForTest => _views.Count;
     internal StreamingBlockKind KindForTest(int index) => _views[index].Kind;
@@ -555,7 +558,7 @@ public class StreamingMessage : Control
         _errorText.Text = string.IsNullOrEmpty(Error) ? "Reply failed" : "Reply failed. " + Error;
         // The foot appears once the words have landed, not when the model stopped sending.
         bool settled = !Running && !IsRevealing;
-        _foot.Visibility = settled ? Visibility.Visible : Visibility.Collapsed;
+        _foot.Visibility = settled && !HidesFoot ? Visibility.Visible : Visibility.Collapsed;
         _copy.Visibility = (Text ?? "").Length > 0 ? Visibility.Visible : Visibility.Collapsed;
         _retry.Visibility = CanRetry ? Visibility.Visible : Visibility.Collapsed;
         _stopped.Visibility = Status == StreamingStatus.Stopped ? Visibility.Visible : Visibility.Collapsed;

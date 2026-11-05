@@ -1,0 +1,19 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.ApprovalCardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="ApprovalCard" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="审批卡片（Arc Pro agent-approvals 的单个请求，按公开文档与展示几何独立实现）：风险、可编辑参数、拒绝、始终允许、批准、发送失败重试、拒绝后重新请求。a / Enter 批准，d 拒绝。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,12"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <StackPanel x:Name="Stage" Width="522" HorizontalAlignment="Center">
+        <arc:ApprovalCard x:Name="Card" Workspace="Northwind"/>
+        <WrapPanel Margin="0,12,0,0">
+          <arc:Button x:Name="FailButton" Content="Fail the next send" Variant="Secondary" Margin="0,0,8,6" Click="OnFail"/>
+          <arc:Button x:Name="NextButton" Content="Next request" Variant="Secondary" Margin="0,0,8,6" Click="OnNext"/>
+        </WrapPanel>
+        <TextBlock x:Name="Log" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FontSize="12"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

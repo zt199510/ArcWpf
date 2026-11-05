@@ -23,6 +23,7 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 2026-11-04 第十批：ActivityHeatmap、BarChart、LineChart、DonutChart、FunnelChart 已实现并接入 Gallery；FunnelChart 为 Arc Pro，依据公开文档和页面显示独立实现；真实 Windows 窗口、触控、高 DPI 未运行，状态待验收，见[验证记录](verification/2026-11-04-batch10-replication.md)。
 
 2026-11-04 第十一批：PromptInput、StreamingMessage、ToolCallCard、ReasoningBlock、CitationList / SourcePopover、ModelPicker 已实现并接入 Gallery；均为 Arc Pro，依据公开文档和页面显示结果独立实现；74 项专项测试和真实输入已运行，状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)。
+2026-11-04 第十二批：AttachmentTray、MessageActions、ConversationSidebar、ApprovalCard、ArtifactPreview 已实现并接入 Gallery；ConversationSidebar 与 ArtifactPreview 在 Arc 中没有同名组件，属 ArcWpf 组合设计；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)。
 
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 

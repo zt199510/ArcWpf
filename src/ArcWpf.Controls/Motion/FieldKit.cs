@@ -54,7 +54,7 @@ internal static class Lucide
     public const string Lightbulb = "M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5 M9 18h6 M10 22h4";
     public const string Wrench = "M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z";
     public const string Shield = "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z";
-    public const string Ban = "M2,12.0 A10,10 0 1 1 22,12.0 A10,10 0 1 1 2,12.0 Z m4.9 4.9 14.2 14.2";
+    public const string Ban = "M2,12.0 A10,10 0 1 1 22,12.0 A10,10 0 1 1 2,12.0 Z M4.9 4.9l14.2 14.2";
     public const string Copy = "M10,8.0 h10 a2,2 0 0 1 2,2 v10 a2,2 0 0 1 -2,2 h-10 a2,2 0 0 1 -2,-2 v-10 a2,2 0 0 1 2,-2 Z M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2";
     public const string AtSign = "M8,12.0 A4,4 0 1 1 16,12.0 A4,4 0 1 1 8,12.0 Z M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8";
     public const string Camera = "M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z M9,13.0 A3,3 0 1 1 15,13.0 A3,3 0 1 1 9,13.0 Z";
@@ -73,6 +73,13 @@ internal static class Lucide
     public const string Hammer = "m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9 m18 15 4-4 m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5";
     public const string Image = "M5,3.0 h14 a2,2 0 0 1 2,2 v14 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v-14 a2,2 0 0 1 2,-2 Z M7,9.0 A2,2 0 1 1 11,9.0 A2,2 0 1 1 7,9.0 Z m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21";
     public const string CircleCheck = "M2,12.0 A10,10 0 1 1 22,12.0 A10,10 0 1 1 2,12.0 Z m9 12 2 2 4-4";
+    public const string ShieldCheck = "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z M9 12l2 2 4-4";
+    public const string ShieldAlert = "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z M12 8v4 M12 16h.01";
+    public const string ShieldX = "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z M14.5 9.5l-5 5 M9.5 9.5l5 5";
+    public const string User = "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2 M8,7 A4,4 0 1 1 16,7 A4,4 0 1 1 8,7 Z";
+    public const string TextQuote = "M17 6H3 M21 12H8 M21 18H8 M3 12v6";
+    public const string Download = "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3";
+    public const string SquarePen = "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z";
 
     /// <summary>A stroked glyph whose color follows the inherited TextElement.Foreground of its container.</summary>
     public static Viewbox Glyph(string data, double size, double stroke = 1.75)

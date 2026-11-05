@@ -88,9 +88,9 @@ internal static class AiUi
         return button;
     }
 
-    public static ToolbarButton Icon(string glyph, double hit, double size, string name)
+    public static ToolbarButton Icon(string glyph, double hit, double size, string name, double radius = -1)
     {
-        var button = new ToolbarButton(hit / 3) { Width = hit, Height = hit, Padding = new Thickness(0), Content = Lucide.Glyph(glyph, size), Roles = self => (self.IsPressed ? "ControlTrack" : self.IsMouseOver ? "SurfaceMuted" : null, null, self.IsMouseOver ? "Foreground" : "TextSecondary") };
+        var button = new ToolbarButton(radius >= 0 ? radius : hit / 3) { Width = hit, Height = hit, Padding = new Thickness(0), Content = Lucide.Glyph(glyph, size), Roles = self => (self.IsPressed ? "ControlTrack" : self.IsMouseOver ? "SurfaceMuted" : null, null, self.IsMouseOver ? "Foreground" : "TextSecondary") };
         System.Windows.Automation.AutomationProperties.SetName(button, name);
         return button;
     }
@@ -117,7 +117,9 @@ internal sealed class FadeSwap : Panel
 
     public UIElement? Current => _current;
 
-    public void Set(FrameworkElement view)
+    public void Clear() { _current = null; Children.Clear(); InvalidateMeasure(); }
+
+    public void Set(FrameworkElement view, double rise = 2, double seconds = .16)
     {
         var old = _current as FrameworkElement;
         _current = view;
@@ -125,11 +127,11 @@ internal sealed class FadeSwap : Panel
         InvalidateMeasure();
         if (old is null) { return; }
         if (!IsLoaded || Tween.Level(this) == ArcMotionLevel.Off) { Children.Remove(old); return; }
-        var rise = new TranslateTransform(0, 2);
-        view.RenderTransform = rise;
+        var move = new TranslateTransform(0, rise);
+        view.RenderTransform = move;
         view.Opacity = 0;
-        Tween.To(view, OpacityProperty, 1, .16, ArcEasing.Enter);
-        Tween.To(rise, TranslateTransform.YProperty, 0, .16, ArcEasing.Enter);
+        Tween.To(view, OpacityProperty, 1, seconds, ArcEasing.Enter);
+        Tween.To(move, TranslateTransform.YProperty, 0, seconds, ArcEasing.Enter);
         old.IsHitTestVisible = false;
         Tween.To(old, OpacityProperty, 0, .1, ArcEasing.Standard, 0, () => Children.Remove(old));
     }
@@ -257,10 +259,10 @@ internal sealed class CopyAction : ContentControl
     internal bool ShowsCheckForTest { get; private set; }
     internal Action<string>? WriteForTest { get; set; }
 
-    public CopyAction(Func<string> value, string name, double hit = 28)
+    public CopyAction(Func<string> value, string name, double hit = 28, double radius = -1)
     {
         _value = value;
-        _button = AiUi.Icon(Lucide.Copy, hit, 16, name);
+        _button = AiUi.Icon(Lucide.Copy, hit, 16, name, radius);
         _face.Set(Lucide.Glyph(Lucide.Copy, 16));
         _button.Content = _face;
         _button.Click += (_, _) => Copy();

@@ -1,0 +1,22 @@
+<UserControl x:Class="ArcWpf.Gallery.Pages.MessageActionsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls">
+  <StackPanel>
+    <TextBlock Text="MessageActions" FontSize="19" FontWeight="Medium" Margin="0,0,0,8"/>
+    <TextBlock Text="消息操作（Arc Pro response-feedback 与 ai-chat 操作行，按公开文档与展示几何独立实现）：复制、重新生成与停止同位切换、点赞/点踩带追问面板、引用。" TextWrapping="Wrap" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,0,0,12"/>
+    <Border Style="{DynamicResource Gallery.PreviewCanvas}" Padding="8" MinHeight="0">
+      <Border x:Name="Stage" Style="{DynamicResource Gallery.DemoCard}" Width="522" HorizontalAlignment="Center">
+        <StackPanel>
+          <TextBlock x:Name="Reply" TextWrapping="Wrap" FontSize="14" LineHeight="24" Margin="0,0,0,10"/>
+          <arc:MessageActions x:Name="Actions"/>
+          <WrapPanel Margin="0,16,0,0">
+            <arc:Button x:Name="GenerateButton" Content="Start generating" Variant="Secondary" Margin="0,0,8,6" Click="OnGenerate"/>
+            <arc:Button x:Name="FailButton" Content="Fail the next send" Variant="Secondary" Margin="0,0,8,6" Click="OnFail"/>
+          </WrapPanel>
+          <TextBlock x:Name="Log" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}" FontSize="12"/>
+        </StackPanel>
+      </Border>
+    </Border>
+  </StackPanel>
+</UserControl>

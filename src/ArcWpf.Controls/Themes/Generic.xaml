@@ -121,6 +121,11 @@
     <ResourceDictionary Source="/ArcWpf.Controls;component/ToolCallCard/Themes/ToolCallCardTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/CitationList/Themes/CitationListTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/ModelPicker/Themes/ModelPickerTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/AttachmentTray/Themes/AttachmentTrayTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/MessageActions/Themes/MessageActionsTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ConversationSidebar/Themes/ConversationSidebarTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ApprovalCard/Themes/ApprovalCardTheme.xaml"/>
+    <ResourceDictionary Source="/ArcWpf.Controls;component/ArtifactPreview/Themes/ArtifactPreviewTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/StreamingMessage/Themes/StreamingMessageTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/PromptInput/Themes/PromptInputTheme.xaml"/>
     <ResourceDictionary Source="/ArcWpf.Controls;component/FloatingButtonGroup/Themes/FloatingButtonGroupTheme.xaml" />
