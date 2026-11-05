@@ -257,8 +257,8 @@ public class StreamingMessage : Control
 
     private bool Running => Status is StreamingStatus.Thinking or StreamingStatus.Streaming;
 
-    // ArtifactPreview shows a finished document: it has its own copy action, so the reply foot stays away.
-    internal bool HidesFoot { get; set; }
+    /// <summary>Leaves out the foot for a host that has its own actions, such as MessageActions or a document with its own copy.</summary>
+    public bool HidesFoot { get; set; }
 
     internal string RevealedForTest => _target[.._revealed];
     internal int ViewCountForTest => _views.Count;

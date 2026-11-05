@@ -25,6 +25,8 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 2026-11-04 第十一批：PromptInput、StreamingMessage、ToolCallCard、ReasoningBlock、CitationList / SourcePopover、ModelPicker 已实现并接入 Gallery；均为 Arc Pro，依据公开文档和页面显示结果独立实现；74 项专项测试和真实输入已运行，状态为待验收，见[验证记录](verification/2026-11-04-batch11-replication.md)。
 2026-11-04 第十二批：AttachmentTray、MessageActions、ConversationSidebar、ApprovalCard、ArtifactPreview 已实现并接入 Gallery；ConversationSidebar 与 ArtifactPreview 在 Arc 中没有同名组件，属 ArcWpf 组合设计；状态为待验收，见[验证记录](verification/2026-11-04-batch12-replication.md)。
 
+2026-11-04 AI 助手面板：按用户要求做成独立 WPF 程序 samples/ArcWpf.AiAssistant，不放进 Gallery。组合会话栏、串流回复、工具调用、审批、结果预览、附件和输入框；回复由脚本模拟，后端接口 IAssistantBackend 可替换真实模型。同时修复运行时切主题后 chrome 按钮读到旧颜色的库缺陷；真实 Windows 未运行，状态待验收，见 [验证记录](verification/2026-11-04-ai-assistant-sample.md)。
+
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。

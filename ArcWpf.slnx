@@ -2,6 +2,7 @@
   <Folder Name="/samples/">
     <Project Path="samples/ArcWpf.Consumer/ArcWpf.Consumer.csproj" />
     <Project Path="samples/ArcWpf.Gallery/ArcWpf.Gallery.csproj" />
+    <Project Path="samples/ArcWpf.AiAssistant/ArcWpf.AiAssistant.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ArcWpf.Controls/ArcWpf.Controls.csproj" />

@@ -1,0 +1,77 @@
+<UserControl x:Class="ArcWpf.AiAssistant.AssistantPanel" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:arc="clr-namespace:ArcWpf.Controls;assembly=ArcWpf.Controls" SizeChanged="OnSizeChanged">
+  <UserControl.Resources>
+    <Style x:Key="Icon" TargetType="Path">
+      <Setter Property="Width" Value="18"/><Setter Property="Height" Value="18"/><Setter Property="Stretch" Value="Uniform"/>
+      <Setter Property="StrokeThickness" Value="1.5"/><Setter Property="StrokeStartLineCap" Value="Round"/><Setter Property="StrokeEndLineCap" Value="Round"/><Setter Property="StrokeLineJoin" Value="Round"/>
+      <Setter Property="Stroke" Value="{DynamicResource ArcWpf.Brush.Foreground}"/>
+    </Style>
+    <Style x:Key="Heading" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="13"/><Setter Property="FontWeight" Value="Medium"/><Setter Property="Margin" Value="0,0,0,8"/>
+      <Setter Property="Foreground" Value="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+    </Style>
+  </UserControl.Resources>
+  <Grid x:Name="Root">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition x:Name="SideColumn" Width="280"/>
+      <ColumnDefinition/>
+      <ColumnDefinition x:Name="PaneColumn" Width="0"/>
+    </Grid.ColumnDefinitions>
+
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions><RowDefinition Height="56"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+      <Grid Margin="12,0,12,0">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <arc:Button x:Name="SideToggle" Variant="Ghost" Size="Small" Width="36" Height="36" Padding="0" AutomationProperties.Name="Show chats" Visibility="Collapsed" Margin="0,0,8,0" Click="ToggleSide">
+          <Path Style="{StaticResource Icon}" Data="M3,5 H21 V19 H3 Z M9,5 V19"/>
+        </arc:Button>
+        <TextBlock x:Name="Title" Grid.Column="1" FontSize="15" FontWeight="Medium" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+        <Border Grid.Column="2" CornerRadius="10" Padding="8,2,8,2" Margin="8,0,8,0" VerticalAlignment="Center" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" ToolTip="Replies are scripted: no model and no network">
+          <TextBlock Text="Simulated" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+        </Border>
+        <arc:Button x:Name="PaneToggle" Grid.Column="3" Variant="Ghost" Size="Small" Height="36" Padding="8,0,8,0" AutomationProperties.Name="Show results" Margin="0,0,4,0" Click="TogglePane">
+          <StackPanel Orientation="Horizontal">
+            <Path Style="{StaticResource Icon}" Data="M3,5 H21 V19 H3 Z M15,5 V19"/>
+            <TextBlock x:Name="PaneCount" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="13" Visibility="Collapsed"/>
+          </StackPanel>
+        </arc:Button>
+        <arc:ThemeSwitch x:Name="Theme" Grid.Column="4" IconOnly="True" VerticalAlignment="Center" ThemeChanged="OnThemeChanged"/>
+      </Grid>
+
+      <Grid Grid.Row="1">
+        <arc:StreamingScrollHost x:Name="Scroller"/>
+        <StackPanel x:Name="Welcome" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460" Margin="24">
+          <TextBlock Text="What should we work on?" FontSize="24" FontWeight="Medium" HorizontalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
+          <TextBlock Text="This assistant is simulated. Replies are scripted, with no model and no network." FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Margin="0,8,0,20" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          <ItemsControl x:Name="Starters"/>
+        </StackPanel>
+      </Grid>
+
+      <arc:PromptInput x:Name="Composer" Grid.Row="2" MaxWidth="760" Margin="24,0,24,16" Placeholder="Ask the assistant"/>
+    </Grid>
+
+    <Border x:Name="Scrim" Grid.ColumnSpan="3" Background="#66000000" Visibility="Collapsed" Panel.ZIndex="1" MouseLeftButtonDown="CloseOverlays"/>
+
+    <Border x:Name="Side" Panel.ZIndex="2" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}">
+      <arc:ConversationSidebar x:Name="Sidebar" Margin="12"/>
+    </Border>
+
+    <Border x:Name="Pane" Grid.Column="2" Panel.ZIndex="2" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ArcWpf.Brush.Border}" Background="{DynamicResource ArcWpf.Brush.Surface}" Visibility="Collapsed">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="16">
+          <Grid Margin="0,0,0,8">
+            <TextBlock Style="{StaticResource Heading}" Text="Results" Margin="0" VerticalAlignment="Center"/>
+            <arc:Button Variant="Ghost" Size="Small" Width="32" Height="32" Padding="0" HorizontalAlignment="Right" AutomationProperties.Name="Close results" Click="ClosePane">
+              <Path Style="{StaticResource Icon}" Width="14" Height="14" Data="M18,6 L6,18 M6,6 L18,18"/>
+            </arc:Button>
+          </Grid>
+          <arc:ArtifactPreview x:Name="Results" EmptyText="Results from a reply appear here"/>
+          <StackPanel x:Name="FilesSection" Visibility="Collapsed" Margin="0,20,0,0">
+            <TextBlock Style="{StaticResource Heading}" Text="Files in this chat"/>
+            <arc:AttachmentTray x:Name="Files" Layout="List"/>
+          </StackPanel>
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+  </Grid>
+</UserControl>

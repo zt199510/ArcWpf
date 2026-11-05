@@ -334,6 +334,8 @@ public sealed class ArcThemeResources : ResourceDictionary
             ShadowDepth = dark ? 22 : 20, Direction = 270, Opacity = dark ? .34 : .105 };
         floating.Freeze();
         this["ArcWpf.Shadow.Floating"] = floating;
+        // Written last: a change here means every token above already holds its new value.
+        this["ArcWpf.ThemeRevision"] = new object();
     }
 
     private void PutBrush(string name, Color color)

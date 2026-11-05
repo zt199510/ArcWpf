@@ -23,6 +23,12 @@ dotnet run --project samples/ArcWpf.Gallery/ArcWpf.Gallery.csproj
 dotnet run --project samples/ArcWpf.Consumer/ArcWpf.Consumer.csproj
 ~~~
 
+AI 助手面板（独立程序，回复为脚本模拟，不连接模型和网络）：
+
+~~~powershell
+dotnet run --project samples/ArcWpf.AiAssistant/ArcWpf.AiAssistant.csproj
+~~~
+
 Gallery 通过分组导航浏览组件，包含 DatePicker、Breadcrumb 等页面，支持主题/动效等级切换、状态和绑定示例。可用启动参数 `--page=date-picker` 或 `--page=breadcrumb` 直接打开对应页面。
 
 ## 在 WPF 应用中接入
@@ -57,7 +63,7 @@ IsLoading 保留内容测量并阻止控件发起的 Click/Command；不阻止�
 
 - src/ArcWpf.Core：语义资源、尺寸与动效等级。
 - src/ArcWpf.Controls：WPF 原生控件与默认模板。
-- samples/ArcWpf.Gallery：组件演示；samples/ArcWpf.Consumer：独立接入示例。
+- samples/ArcWpf.Gallery：组件演示；samples/ArcWpf.Consumer：独立接入示例；samples/ArcWpf.AiAssistant：AI 助手面板示例程序。
 - tests/ArcWpf.Tests：STA 程序化测试。
 - [Button 首版验证记录](docs/verification/2026-10-25-button.md)：已测与未测范围。
 - [实施计划](docs/plan.md)、[架构规范](docs/architecture.md)、[共同契约](docs/components/contracts.md)。

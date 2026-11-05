@@ -12,6 +12,7 @@
     <ProjectReference Include="../../src/ArcWpf.Controls/ArcWpf.Controls.csproj" />
     <ProjectReference Include="../../samples/ArcWpf.Gallery/ArcWpf.Gallery.csproj" />
     <ProjectReference Include="../../samples/ArcWpf.Consumer/ArcWpf.Consumer.csproj" />
+    <ProjectReference Include="../../samples/ArcWpf.AiAssistant/ArcWpf.AiAssistant.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,7 +23,8 @@ internal static class ThemeWatch
     public static void Add(FrameworkElement element, Action callback)
     {
         Callbacks.AddOrUpdate(element, callback);
-        element.SetResourceReference(ProbeProperty, "ArcWpf.Brush.Surface");
+        // Dynamic references update as each token is written, so a theme's first token would call back while the rest still hold old colors.
+        element.SetResourceReference(ProbeProperty, "ArcWpf.ThemeRevision");
     }
     private static void OnProbe(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

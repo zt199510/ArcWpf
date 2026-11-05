@@ -1,0 +1,5 @@
+<Window x:Class="ArcWpf.AiAssistant.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ArcWpf.AiAssistant"
+        Title="ArcWpf AI Assistant" Width="1240" Height="800" MinWidth="420" MinHeight="520" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource ArcWpf.Brush.Surface}">
+  <local:AssistantPanel x:Name="Panel"/>
+</Window>

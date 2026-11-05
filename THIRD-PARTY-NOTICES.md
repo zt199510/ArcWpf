@@ -268,7 +268,7 @@ ActivityHeatmap、BarChart、LineChart、DonutChart 参考 Arc 免费 Registry�
 - These WPF components (PromptInput, StreamingMessage, ToolCallCard, ReasoningBlock, CitationList, ModelPicker) are independently implemented from the publicly described APIs and from geometry and styling displayed by the publicly served pages. No implementation JavaScript, authenticated Pro source or private registry package was used.
 - Local reference copies stay under work/refs/batch11 and are not redistributed. SHA-256 values are recorded in docs/references/components/.
 - The added icons are from lucide-static 0.460.0 (ISC).
-- Brand marks in the Gallery sample data only (samples/ArcWpf.Gallery/Pages/AiDemoData.cs) are path data from Simple Icons 13.0.0, with the Claude mark from 14.0.0 (CC0). The library ships none. The marks remain trademarks of their owners and are used here only to identify sample tools and models.
+- Brand marks in sample data only (samples/ArcWpf.Gallery/Pages/AiDemoData.cs and samples/ArcWpf.AiAssistant/SampleData.cs) are path data from Simple Icons 13.0.0, with the Claude mark from 14.0.0 (CC0). The library ships none. The marks remain trademarks of their owners and are used here only to identify sample tools and models.
 
 ## AI surfaces, second group (2026-11-04)
 
