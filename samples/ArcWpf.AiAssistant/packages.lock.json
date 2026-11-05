@@ -2,6 +2,29 @@
   "version": 1,
   "dependencies": {
     "net10.0-windows7.0": {
+      "Pi.Agent": {
+        "type": "Direct",
+        "requested": "[1.4.5, )",
+        "resolved": "1.4.5",
+        "contentHash": "XiZVQc1P5Oti83IdzOz0mpSOkI+ZDyqUjKspHGMLFiaN93kDEjzcWGTUvHvILQpHZtTUtgSMn7QyFWBlOb0ilQ==",
+        "dependencies": {
+          "Pi.Ai": "1.4.5"
+        }
+      },
+      "Pi.Ai": {
+        "type": "Direct",
+        "requested": "[1.4.5, )",
+        "resolved": "1.4.5",
+        "contentHash": "PVvDgS+tKg1F6veEdQlDl1nTIxwkfwUBN04bP2b8zQ8rrhNNgnGYCkJsLFMvfcYYmr6jOT7c48oEw+1r/XgfaA==",
+        "dependencies": {
+          "Pi.Telemetry": "1.4.5"
+        }
+      },
+      "Pi.Telemetry": {
+        "type": "Transitive",
+        "resolved": "1.4.5",
+        "contentHash": "n4Cie/PEIdxfNyrvmhhiqMvoZF0fAV56/I4nWVu/r5PP7RUYEWPDzuY2fwQRakRynvAe1KrwOMMgTcYLQvhbDg=="
+      },
       "arcwpf.controls": {
         "type": "Project",
         "dependencies": {

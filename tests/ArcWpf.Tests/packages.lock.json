@@ -152,10 +152,33 @@
         "resolved": "13.0.3",
         "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
+      "Pi.Agent": {
+        "type": "Transitive",
+        "resolved": "1.4.5",
+        "contentHash": "XiZVQc1P5Oti83IdzOz0mpSOkI+ZDyqUjKspHGMLFiaN93kDEjzcWGTUvHvILQpHZtTUtgSMn7QyFWBlOb0ilQ==",
+        "dependencies": {
+          "Pi.Ai": "1.4.5"
+        }
+      },
+      "Pi.Ai": {
+        "type": "Transitive",
+        "resolved": "1.4.5",
+        "contentHash": "PVvDgS+tKg1F6veEdQlDl1nTIxwkfwUBN04bP2b8zQ8rrhNNgnGYCkJsLFMvfcYYmr6jOT7c48oEw+1r/XgfaA==",
+        "dependencies": {
+          "Pi.Telemetry": "1.4.5"
+        }
+      },
+      "Pi.Telemetry": {
+        "type": "Transitive",
+        "resolved": "1.4.5",
+        "contentHash": "n4Cie/PEIdxfNyrvmhhiqMvoZF0fAV56/I4nWVu/r5PP7RUYEWPDzuY2fwQRakRynvAe1KrwOMMgTcYLQvhbDg=="
+      },
       "arcwpf.aiassistant": {
         "type": "Project",
         "dependencies": {
-          "ArcWpf.Controls": "[1.0.0, )"
+          "ArcWpf.Controls": "[1.0.0, )",
+          "Pi.Agent": "[1.4.5, )",
+          "Pi.Ai": "[1.4.5, )"
         }
       },
       "arcwpf.consumer": {

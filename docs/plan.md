@@ -27,6 +27,8 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 
 2026-11-04 AI 助手面板：按用户要求做成独立 WPF 程序 samples/ArcWpf.AiAssistant，不放进 Gallery。组合会话栏、串流回复、工具调用、审批、结果预览、附件和输入框；回复由脚本模拟，后端接口 IAssistantBackend 可替换真实模型。同时修复运行时切主题后 chrome 按钮读到旧颜色的库缺陷；真实 Windows 未运行，状态待验收，见 [验证记录](verification/2026-11-04-ai-assistant-sample.md)。
 
+2026-11-04 接入 Pi.NET：samples/ArcWpf.AiAssistant 新增基于 Pi.Agent / Pi.Ai 1.4.5 的真实后端，由环境变量选择，无 Key 时回到模拟；控件库不依赖 Pi。真实模型和真实 Windows 未运行，状态待验收，见 [验证记录](verification/2026-11-04-pi-net-backend.md)。
+
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。

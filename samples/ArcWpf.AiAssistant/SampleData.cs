@@ -183,7 +183,7 @@ internal static class SampleData
         Content = """{"simulated":true,"database":"app_production","pending":["0042_processed_events","0043_refund_index"]}""",
     };
 
-    public const string MigrationFailed = "The database did not answer in time, so I have no list yet. Use **Retry** on the tool card to run the query again.";
+    public const string MigrationFailed = "The database did not answer in time, so I have no list yet. Use **Retry** on the tool card to run this turn again.";
     public const string MigrationAnswer = "There are **two pending migrations**: `0042_processed_events` and `0043_refund_index`. Neither has been applied. This is a simulated result.";
 
     public const string DroppedStart = "Here is the start of an answer that will not reach the end, because the simulated connection breaks off";
@@ -191,7 +191,7 @@ internal static class SampleData
 
     public static string PlainAnswer(AssistantRequest request)
     {
-        string files = request.Files.Count > 0 ? $" I can see {string.Join(", ", request.Files.Select(name => $"`{name}`"))} attached, but a simulated assistant does not read them." : "";
+        string files = request.Files.Count > 0 ? $" I can see {string.Join(", ", request.Files.Select(file => $"`{file.Name}`"))} attached, but a simulated assistant does not read them." : "";
         string web = request.Tools.Contains("web") ? " Web search is on, so the sources below are sample links." : "";
         string model = request.ModelName is { } name ? $" You picked **{name}**, which changes the label only." : "";
         return $"This is a simulated reply: no model ran.{model}{files}{web}\n\nAsk about a **webhook**, **migrations** or a **connection drop** to see tools, approvals and failures.";

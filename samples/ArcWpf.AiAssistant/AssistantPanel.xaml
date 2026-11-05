@@ -26,8 +26,8 @@
           <Path Style="{StaticResource Icon}" Data="M3,5 H21 V19 H3 Z M9,5 V19"/>
         </arc:Button>
         <TextBlock x:Name="Title" Grid.Column="1" FontSize="15" FontWeight="Medium" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
-        <Border Grid.Column="2" CornerRadius="10" Padding="8,2,8,2" Margin="8,0,8,0" VerticalAlignment="Center" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}" ToolTip="Replies are scripted: no model and no network">
-          <TextBlock Text="Simulated" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
+        <Border x:Name="Badge" Grid.Column="2" CornerRadius="10" Padding="8,2,8,2" Margin="8,0,8,0" VerticalAlignment="Center" Background="{DynamicResource ArcWpf.Brush.SurfaceMuted}">
+          <TextBlock x:Name="BadgeText" FontSize="12" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}"/>
         </Border>
         <arc:Button x:Name="PaneToggle" Grid.Column="3" Variant="Ghost" Size="Small" Height="36" Padding="8,0,8,0" AutomationProperties.Name="Show results" Margin="0,0,4,0" Click="TogglePane">
           <StackPanel Orientation="Horizontal">
@@ -42,7 +42,7 @@
         <arc:StreamingScrollHost x:Name="Scroller"/>
         <StackPanel x:Name="Welcome" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460" Margin="24">
           <TextBlock Text="What should we work on?" FontSize="24" FontWeight="Medium" HorizontalAlignment="Center" Foreground="{DynamicResource ArcWpf.Brush.Foreground}"/>
-          <TextBlock Text="This assistant is simulated. Replies are scripted, with no model and no network." FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Margin="0,8,0,20" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
+          <TextBlock x:Name="WelcomeText" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Margin="0,8,0,20" Foreground="{DynamicResource ArcWpf.Brush.TextMuted}"/>
           <ItemsControl x:Name="Starters"/>
         </StackPanel>
       </Grid>

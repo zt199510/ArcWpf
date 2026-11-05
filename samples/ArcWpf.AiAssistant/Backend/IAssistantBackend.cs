@@ -2,10 +2,13 @@ using ArcWpf.Controls;
 
 namespace ArcWpf.AiAssistant.Backend;
 
-/// <summary>What the person sent. Attempt counts the regenerates and retries of this turn.</summary>
-public sealed record AssistantRequest(string Text, IReadOnlyList<string> Files, string? Model, string? ModelName, AiMark? ModelMark, IReadOnlyList<string> Tools, int Attempt = 0);
+/// <summary>A file on a question. PastedText is set for a long paste, FilePath for a file on disk, and neither for a sample.</summary>
+public sealed record AssistantFile(string Name, string? FilePath = null, string? PastedText = null);
 
-/// <summary>One step of a reply. A stream that ends with <see cref="ApprovalNeeded"/> waits for <see cref="IAssistantBackend.ContinueAsync"/>.</summary>
+/// <summary>What the person sent. An Attempt above zero runs the turn again and replaces the session's previous turn.</summary>
+public sealed record AssistantRequest(string Text, IReadOnlyList<AssistantFile> Files, string? Model, string? ModelName, AiMark? ModelMark, IReadOnlyList<string> Tools, int Attempt = 0);
+
+/// <summary>One step of a reply.</summary>
 public abstract record AssistantEvent
 {
     public sealed record Reasoning(string Delta) : AssistantEvent;
@@ -13,28 +16,45 @@ public abstract record AssistantEvent
     public sealed record Text(string Delta) : AssistantEvent;
     /// <summary>A tool call started or changed. Calls are matched by Id.</summary>
     public sealed record Tool(ToolCallData Call) : AssistantEvent;
-    public sealed record ApprovalNeeded(ApprovalRequest Request) : AssistantEvent;
+    /// <summary>The stream pauses until Answer is set. Stopping the run withdraws the question.</summary>
+    public sealed record ApprovalNeeded(ApprovalRequest Request, TaskCompletionSource<ApprovalDecision> Answer) : AssistantEvent;
     public sealed record Sources(IReadOnlyList<CitationSource> Items) : AssistantEvent;
     public sealed record Artifact(ArtifactItem Item) : AssistantEvent;
     public sealed record Progress(double Value) : AssistantEvent;
 }
 
-/// <summary>What resumes a paused or failed part of a reply.</summary>
-public abstract record AssistantContinuation
-{
-    public sealed record Approval(ApprovalDecision Decision) : AssistantContinuation;
-    public sealed record ToolRetry(ToolCallData Call) : AssistantContinuation;
-}
-
 /// <summary>A failed reply. Message is the short reason the thread shows.</summary>
 public sealed class AssistantException(string message) : Exception(message);
 
-/// <summary>
-/// The model behind the panel. It holds no state between calls, as a model API does: tool approval ends one stream and the answer starts the next.
-/// Implement this over a real API to replace <see cref="SimulatedBackend"/>.
-/// </summary>
+/// <summary>One chat with the model. It remembers the conversation, so the panel holds one per chat.</summary>
+public interface IAssistantSession
+{
+    /// <summary>Runs one turn. Cancelling ends the stream with an OperationCanceledException; a failed reply ends it with an AssistantException.</summary>
+    IAsyncEnumerable<AssistantEvent> RunAsync(AssistantRequest request, CancellationToken cancellation);
+}
+
+/// <summary>What the panel offers around a backend.</summary>
+public sealed record AssistantProfile
+{
+    public bool IsSimulated { get; init; }
+    public string Badge { get; init; } = "";
+    public string BadgeHint { get; init; } = "";
+    public string Welcome { get; init; } = "";
+    public IReadOnlyList<PickerProvider> Providers { get; init; } = [];
+    public IReadOnlyList<PickerModel> Models { get; init; } = [];
+    public IReadOnlyList<string> FeaturedModels { get; init; } = [];
+    public IReadOnlyList<PromptCommand> Commands { get; init; } = [];
+    public IReadOnlyList<PromptMentionGroup> Mentions { get; init; } = [];
+    public IReadOnlyList<PromptAttachAction> AttachActions { get; init; } = [];
+    public IReadOnlyList<PromptTool> Tools { get; init; } = [];
+    public IReadOnlyList<(string Label, string Prompt)> Starters { get; init; } = [];
+    /// <summary>Earlier chats to show. They are for looking at and do not reach the model.</summary>
+    public IReadOnlyList<(string Id, string Title, string Group, string Question, string Answer, bool Archived)> History { get; init; } = [];
+}
+
+/// <summary>The model behind the panel. Implement this over a real API to replace <see cref="SimulatedBackend"/>.</summary>
 public interface IAssistantBackend
 {
-    IAsyncEnumerable<AssistantEvent> StreamAsync(AssistantRequest request, CancellationToken cancellation);
-    IAsyncEnumerable<AssistantEvent> ContinueAsync(AssistantRequest request, AssistantContinuation continuation, CancellationToken cancellation);
+    AssistantProfile Profile { get; }
+    IAssistantSession CreateSession();
 }

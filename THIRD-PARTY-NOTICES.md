@@ -1,5 +1,9 @@
 # Third-party notices
 
+## Pi.NET（2026-11-04）
+
+samples/ArcWpf.AiAssistant 通过 NuGet 引用 Pi.Agent、Pi.Ai 1.4.5（及其依赖 Pi.Telemetry 1.4.5），来源 https://github.com/AIDotNet/pi.net ，MIT 许可，Copyright (c) 2025 Mario Zechner，Copyright (c) 2026 xuzeyu (pi.net port)。只有该示例依赖，ArcWpf.Core 和 ArcWpf.Controls 不依赖。
+
 ## Search 补充（2026-10-26）
 
 Search参考Arc免费Search field Registry（https://uiarc.dev/r/search-field.json）及motion tokens，适用下文Arc MIT许可。冻结源码、CSS、Markdown、许可页与SHA-256在`tests/Baselines/References/2026-10-26-search`。图标按Search/X几何重绘为WPF Path；无React/Motion/Lucide运行依赖。原生编辑和动画适配为项目实现。

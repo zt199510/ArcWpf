@@ -14,24 +14,45 @@ public sealed class AiAssistantTests
 {
     private static readonly AssistantRequest Webhook = new("Fix the webhook", [], "opus-5.5", "Claude Opus 5.5", null, []);
 
-    private static List<AssistantEvent> Collect(IAsyncEnumerable<AssistantEvent> stream)
+    // Reads a stream to its end and answers each approval from the script.
+    private static List<AssistantEvent> Collect(IAsyncEnumerable<AssistantEvent> stream, Func<ApprovalRequest, ApprovalDecision>? answer = null)
     {
         var events = new List<AssistantEvent>();
-        var task = Task.Run(async () => { await foreach (var item in stream) { events.Add(item); } });
-        task.GetAwaiter().GetResult();
+        Task.Run(async () =>
+        {
+            await foreach (var item in stream)
+            {
+                events.Add(item);
+                if (item is AssistantEvent.ApprovalNeeded ask && answer is not null) { ask.Answer.TrySetResult(answer(ask.Request)); }
+            }
+        }).GetAwaiter().GetResult();
         return events;
     }
 
     private static string Words(IEnumerable<AssistantEvent> events) => string.Concat(events.OfType<AssistantEvent.Text>().Select(item => item.Delta));
 
-    private static ApprovalDecision Decision(ApprovalOutcome outcome) => new(new ApprovalRequest(), outcome, new Dictionary<string, string> { ["path"] = "a.ts" }, false);
+    private static ApprovalDecision Decision(ApprovalRequest request, ApprovalOutcome outcome, params (string Key, string Value)[] edits)
+    {
+        var arguments = request.Arguments.ToDictionary(item => item.Label, item => item.Value);
+        foreach (var (key, value) in edits) { arguments[key] = value; }
+        return new ApprovalDecision(request, outcome, arguments, edits.Length > 0);
+    }
+
+    private static IAssistantSession Simulated() => new SimulatedBackend { Pace = 0 }.CreateSession();
 
     [TestMethod]
-    public void WebhookStreamEndsAtTheApprovalWithoutWriting()
+    public void WebhookWaitsForTheAnswerBeforeWriting()
     {
-        var backend = new SimulatedBackend { Pace = 0 };
-        var events = Collect(backend.StreamAsync(Webhook, CancellationToken.None));
-        Assert.IsInstanceOfType<AssistantEvent.ApprovalNeeded>(events[^1]);
+        var events = new List<AssistantEvent>();
+        using var stop = new CancellationTokenSource();
+        Assert.Throws<OperationCanceledException>(() => Task.Run(async () =>
+        {
+            await foreach (var item in Simulated().RunAsync(Webhook, stop.Token))
+            {
+                events.Add(item);
+                if (item is AssistantEvent.ApprovalNeeded) { stop.Cancel(); }
+            }
+        }).GetAwaiter().GetResult());
         Assert.AreEqual("", Words(events));
         Assert.IsFalse(events.OfType<AssistantEvent.Artifact>().Any());
         Assert.IsFalse(events.OfType<AssistantEvent.Tool>().Any(item => item.Call.Id == "apply"));
@@ -40,8 +61,7 @@ public sealed class AiAssistantTests
     [TestMethod]
     public void ApprovingUsesTheEditedPathAndProducesAllFourResultKinds()
     {
-        var backend = new SimulatedBackend { Pace = 0 };
-        var events = Collect(backend.ContinueAsync(Webhook, new AssistantContinuation.Approval(Decision(ApprovalOutcome.Approved)), CancellationToken.None));
+        var events = Collect(Simulated().RunAsync(Webhook, CancellationToken.None), request => Decision(request, ApprovalOutcome.Approved, ("path", "a.ts")));
         var apply = events.OfType<AssistantEvent.Tool>().Last().Call;
         Assert.AreEqual(ToolCallStatus.Success, apply.Status);
         StringAssert.Contains(apply.Title, "a.ts");
@@ -50,24 +70,21 @@ public sealed class AiAssistantTests
     }
 
     [TestMethod]
-    public void DenyingRunsNoToolAndProducesNoResults()
+    public void DenyingRunsNoWriteAndProducesNoResults()
     {
-        var backend = new SimulatedBackend { Pace = 0 };
-        var events = Collect(backend.ContinueAsync(Webhook, new AssistantContinuation.Approval(Decision(ApprovalOutcome.Denied)), CancellationToken.None));
-        Assert.IsFalse(events.OfType<AssistantEvent.Tool>().Any());
+        var events = Collect(Simulated().RunAsync(Webhook, CancellationToken.None), request => Decision(request, ApprovalOutcome.Denied));
+        Assert.IsFalse(events.OfType<AssistantEvent.Tool>().Any(item => item.Call.Id == "apply"));
         Assert.IsFalse(events.OfType<AssistantEvent.Artifact>().Any());
         Assert.AreNotEqual("", Words(events));
     }
 
     [TestMethod]
-    public void FailedToolRecoversThroughItsRetry()
+    public void FailedToolRecoversOnTheNextAttempt()
     {
-        var backend = new SimulatedBackend { Pace = 0 };
         var request = Webhook with { Text = "check migrations" };
-        var first = Collect(backend.StreamAsync(request, CancellationToken.None));
-        var failed = first.OfType<AssistantEvent.Tool>().Last().Call;
-        Assert.AreEqual(ToolCallStatus.Error, failed.Status);
-        var second = Collect(backend.ContinueAsync(request, new AssistantContinuation.ToolRetry(failed), CancellationToken.None));
+        var first = Collect(Simulated().RunAsync(request, CancellationToken.None));
+        Assert.AreEqual(ToolCallStatus.Error, first.OfType<AssistantEvent.Tool>().Last().Call.Status);
+        var second = Collect(Simulated().RunAsync(request with { Attempt = 1 }, CancellationToken.None));
         Assert.AreEqual(ToolCallStatus.Success, second.OfType<AssistantEvent.Tool>().Last().Call.Status);
         Assert.AreEqual(1, second.OfType<AssistantEvent.Artifact>().Count());
     }
@@ -75,19 +92,17 @@ public sealed class AiAssistantTests
     [TestMethod]
     public void ConnectionDropFailsOnlyTheFirstAttempt()
     {
-        var backend = new SimulatedBackend { Pace = 0 };
         var request = Webhook with { Text = "simulate a connection drop" };
-        Assert.ThrowsExactly<AssistantException>(() => Collect(backend.StreamAsync(request, CancellationToken.None)));
-        Assert.AreNotEqual("", Words(Collect(backend.StreamAsync(request with { Attempt = 1 }, CancellationToken.None))));
+        Assert.ThrowsExactly<AssistantException>(() => Collect(Simulated().RunAsync(request, CancellationToken.None)));
+        Assert.AreNotEqual("", Words(Collect(Simulated().RunAsync(request with { Attempt = 1 }, CancellationToken.None))));
     }
 
     [TestMethod]
     public void CancellationEndsAScript()
     {
-        var backend = new SimulatedBackend { Pace = 0 };
         using var cancel = new CancellationTokenSource();
         cancel.Cancel();
-        Assert.ThrowsExactly<OperationCanceledException>(() => Collect(backend.StreamAsync(Webhook, cancel.Token)));
+        Assert.Throws<OperationCanceledException>(() => Collect(Simulated().RunAsync(Webhook, cancel.Token)));
     }
 
     private sealed record Ui(AssistantPanel Panel, PromptInput Composer, ConversationSidebar Sidebar, StreamingScrollHost Thread, ArtifactPreview Results, AttachmentTray Files);
@@ -110,6 +125,12 @@ public sealed class AiAssistantTests
     {
         ui.Composer.TextBoxForTest.Text = text;
         ui.Composer.KeyForTest(Key.Enter);
+        Sta.Pump();
+    }
+
+    private static void Click(System.Windows.Controls.Primitives.ButtonBase button)
+    {
+        button.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
         Sta.Pump();
     }
 
@@ -150,7 +171,7 @@ public sealed class AiAssistantTests
     public void AChatWaitsAtTheCardAndKeepsTheComposerBusy() => With(ui =>
     {
         Send(ui, "fix the webhook");
-        Assert.IsNotNull(Last<ApprovalCard>(ui));
+        Until(() => Last<ApprovalCard>(ui) is not null);
         Assert.AreEqual(ApprovalStatus.Pending, Last<ApprovalCard>(ui)!.Status);
         Assert.IsTrue(ui.Composer.IsGenerating);
         Assert.AreEqual(0, ui.Results.Items.Count);
@@ -161,6 +182,7 @@ public sealed class AiAssistantTests
     public void ApprovingFillsTheResultsAndFreesTheComposer() => With(ui =>
     {
         Send(ui, "fix the webhook");
+        Until(() => Last<ApprovalCard>(ui) is not null);
         Last<ApprovalCard>(ui)!.Decide(ApprovalOutcome.Approved);
         Until(() => !ui.Composer.IsGenerating);
         Assert.AreEqual(ApprovalStatus.Approved, Last<ApprovalCard>(ui)!.Status);
@@ -170,39 +192,53 @@ public sealed class AiAssistantTests
     });
 
     [TestMethod]
-    public void StoppingAtTheCardWithdrawsItAndRequestAgainCanStillFinish() => With(ui =>
+    public void StoppingAtTheCardWithdrawsItAndRequestAgainRunsTheTurnAgain() => With(ui =>
     {
         Send(ui, "fix the webhook");
-        ui.Composer.SendForTest.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
-        Sta.Pump();
+        Until(() => Last<ApprovalCard>(ui) is not null);
         var card = Last<ApprovalCard>(ui)!;
+        Click(ui.Composer.SendForTest);
+        Until(() => !ui.Composer.IsGenerating);
         Assert.AreEqual(ApprovalStatus.NotSent, card.Status);
-        Assert.IsFalse(ui.Composer.IsGenerating);
-        card.AgainForTest!.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
-        Sta.Pump();
+        Click(card.AgainForTest!);
+        Until(() => Last<ApprovalCard>(ui) is { } next && next != card);
         Assert.IsTrue(ui.Composer.IsGenerating);
         Last<ApprovalCard>(ui)!.Decide(ApprovalOutcome.Approved);
         Until(() => !ui.Composer.IsGenerating);
         Assert.AreEqual(4, ui.Results.Items.Count);
+        Assert.AreEqual(1, Finder<ApprovalCard>(ui.Thread).Count());
     });
 
     [TestMethod]
-    public void StoppingWhileAnAnswerIsSendingRunsNothing() => With(ui =>
+    public void RegenerateClearsTheOldResults() => With(ui =>
     {
         Send(ui, "fix the webhook");
-        var card = Last<ApprovalCard>(ui)!;
-        card.Decide(ApprovalOutcome.Approved);
-        Assert.AreEqual(ApprovalStatus.Sending, card.Status);
-        ui.Composer.SendForTest.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
-        Until(() => card.Status == ApprovalStatus.NotSent);
+        Until(() => Last<ApprovalCard>(ui) is not null);
+        Last<ApprovalCard>(ui)!.Decide(ApprovalOutcome.Approved);
+        Until(() => !ui.Composer.IsGenerating);
+        Click(Last<MessageActions>(ui)!.RegenerateForTest);
         Assert.AreEqual(0, ui.Results.Items.Count);
-        Assert.IsFalse(ui.Composer.IsGenerating);
+        Until(() => Last<ApprovalCard>(ui) is { Status: ApprovalStatus.Pending });
+        Assert.AreEqual(1, Finder<ApprovalCard>(ui.Thread).Count());
+    });
+
+    [TestMethod]
+    public void AToolThatFailedRunsTheTurnAgainFromItsCard() => With(ui =>
+    {
+        Send(ui, "check migrations");
+        Until(() => !ui.Composer.IsGenerating);
+        Assert.AreEqual(ToolCallStatus.Error, Last<ToolCallGroup>(ui)!.Calls![0].Status);
+        var retry = Finder<System.Windows.Controls.Primitives.ButtonBase>(Last<ToolCallGroup>(ui)!).First(button => System.Windows.Automation.AutomationProperties.GetName(button).StartsWith("Retry", StringComparison.Ordinal));
+        Click(retry);
+        Until(() => !ui.Composer.IsGenerating && Last<ToolCallGroup>(ui)?.Calls![0].Status == ToolCallStatus.Success);
+        Assert.AreEqual(1, ui.Results.Items.Count);
     });
 
     [TestMethod]
     public void EachChatKeepsItsOwnThreadDraftResultsAndFiles() => With(ui =>
     {
         Send(ui, "fix the webhook");
+        Until(() => Last<ApprovalCard>(ui) is not null);
         Last<ApprovalCard>(ui)!.Decide(ApprovalOutcome.Approved);
         Until(() => !ui.Composer.IsGenerating);
         string first = ui.Sidebar.SelectedId!;

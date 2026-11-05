@@ -9,22 +9,41 @@ public sealed class SimulatedBackend : IAssistantBackend
     /// <summary>Scales every pause. Zero runs a script without waiting.</summary>
     public double Pace { get; init; } = 1;
 
-    public IAsyncEnumerable<AssistantEvent> StreamAsync(AssistantRequest request, CancellationToken cancellation)
-    {
-        string text = request.Text.ToLowerInvariant();
-        if (text.Contains("webhook")) { return Webhook(request, cancellation); }
-        if (text.Contains("migration")) { return Migrations(cancellation); }
-        if (text.Contains("connection drop")) { return Dropped(request, cancellation); }
-        return Plain(request, cancellation);
-    }
+    /// <summary>Why the real backend did not start, shown instead of the usual hint.</summary>
+    public string? Note { get; init; }
 
-    public IAsyncEnumerable<AssistantEvent> ContinueAsync(AssistantRequest request, AssistantContinuation continuation, CancellationToken cancellation) => continuation switch
+    public AssistantProfile Profile => _profile with { BadgeHint = Note ?? _profile.BadgeHint, Welcome = Note is null ? _profile.Welcome : $"This assistant is simulated. {Note}" };
+
+    private readonly AssistantProfile _profile = new()
     {
-        AssistantContinuation.Approval { Decision.Outcome: ApprovalOutcome.Denied } => PatchDenied(cancellation),
-        AssistantContinuation.Approval approval => PatchApplied(approval.Decision, cancellation),
-        AssistantContinuation.ToolRetry => MigrationsRetried(cancellation),
-        _ => throw new ArgumentOutOfRangeException(nameof(continuation)),
+        IsSimulated = true,
+        Badge = "Simulated",
+        BadgeHint = "Replies are scripted: no model and no network",
+        Welcome = "This assistant is simulated. Replies are scripted, with no model and no network.",
+        Providers = SampleData.Providers,
+        Models = SampleData.Models,
+        FeaturedModels = SampleData.Featured,
+        Commands = SampleData.Commands,
+        Mentions = SampleData.Mentions,
+        AttachActions = SampleData.AttachActions,
+        Tools = SampleData.Tools(),
+        Starters = SampleData.Starters,
+        History = SampleData.History,
     };
+
+    public IAssistantSession CreateSession() => new Session(this);
+
+    private sealed class Session(SimulatedBackend owner) : IAssistantSession
+    {
+        public IAsyncEnumerable<AssistantEvent> RunAsync(AssistantRequest request, CancellationToken cancellation)
+        {
+            string text = request.Text.ToLowerInvariant();
+            if (text.Contains("webhook")) { return owner.Webhook(request, cancellation); }
+            if (text.Contains("migration")) { return owner.Migrations(request, cancellation); }
+            if (text.Contains("connection drop")) { return owner.Dropped(request, cancellation); }
+            return owner.Plain(request, cancellation);
+        }
+    }
 
     private async IAsyncEnumerable<AssistantEvent> Webhook(AssistantRequest request, [EnumeratorCancellation] CancellationToken cancellation)
     {
@@ -46,11 +65,16 @@ public sealed class SimulatedBackend : IAssistantBackend
         yield return new AssistantEvent.Progress(0.45);
 
         await Wait(300, cancellation);
-        yield return new AssistantEvent.ApprovalNeeded(SampleData.PatchRequest(request.ModelName, request.ModelMark));
-    }
+        var answer = new TaskCompletionSource<ApprovalDecision>(TaskCreationOptions.RunContinuationsAsynchronously);
+        yield return new AssistantEvent.ApprovalNeeded(SampleData.PatchRequest(request.ModelName, request.ModelMark), answer);
+        var decision = await answer.Task.WaitAsync(cancellation);
 
-    private async IAsyncEnumerable<AssistantEvent> PatchApplied(ApprovalDecision decision, [EnumeratorCancellation] CancellationToken cancellation)
-    {
+        if (decision.Outcome == ApprovalOutcome.Denied)
+        {
+            await foreach (var delta in Words(SampleData.DeniedAnswer, cancellation)) { yield return new AssistantEvent.Text(delta); }
+            yield break;
+        }
+
         yield return new AssistantEvent.Progress(0.55);
         var apply = SampleData.ApplyCall(decision.Arguments["path"]);
         yield return new AssistantEvent.Tool(apply with { Status = ToolCallStatus.Running, Output = null, DurationMs = null });
@@ -62,26 +86,19 @@ public sealed class SimulatedBackend : IAssistantBackend
         await foreach (var delta in Words(SampleData.WebhookAnswer, cancellation)) { yield return new AssistantEvent.Text(delta); }
     }
 
-    private async IAsyncEnumerable<AssistantEvent> PatchDenied([EnumeratorCancellation] CancellationToken cancellation)
-    {
-        await foreach (var delta in Words(SampleData.DeniedAnswer, cancellation)) { yield return new AssistantEvent.Text(delta); }
-    }
-
-    private async IAsyncEnumerable<AssistantEvent> Migrations([EnumeratorCancellation] CancellationToken cancellation)
+    private async IAsyncEnumerable<AssistantEvent> Migrations(AssistantRequest request, [EnumeratorCancellation] CancellationToken cancellation)
     {
         await Wait(300, cancellation);
         var call = SampleData.MigrationCall;
         yield return new AssistantEvent.Tool(call with { Status = ToolCallStatus.Running });
         await Wait(1000, cancellation);
-        yield return new AssistantEvent.Tool(call with { Status = ToolCallStatus.Error, Message = "Connection to app_production timed out after 5s" });
-        await foreach (var delta in Words(SampleData.MigrationFailed, cancellation)) { yield return new AssistantEvent.Text(delta); }
-    }
-
-    private async IAsyncEnumerable<AssistantEvent> MigrationsRetried([EnumeratorCancellation] CancellationToken cancellation)
-    {
-        var call = SampleData.MigrationCall;
-        yield return new AssistantEvent.Tool(call with { Status = ToolCallStatus.Running });
-        await Wait(900, cancellation);
+        // The first attempt times out so that Retry has something to recover from.
+        if (request.Attempt == 0)
+        {
+            yield return new AssistantEvent.Tool(call with { Status = ToolCallStatus.Error, Message = "Connection to app_production timed out after 5s" });
+            await foreach (var delta in Words(SampleData.MigrationFailed, cancellation)) { yield return new AssistantEvent.Text(delta); }
+            yield break;
+        }
         yield return new AssistantEvent.Tool(call with { Status = ToolCallStatus.Success, Output = SampleData.MigrationOutput, DurationMs = 880 });
         yield return new AssistantEvent.Artifact(SampleData.MigrationArtifact);
         await foreach (var delta in Words(SampleData.MigrationAnswer, cancellation)) { yield return new AssistantEvent.Text(delta); }

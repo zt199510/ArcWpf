@@ -8,22 +8,20 @@ namespace ArcWpf.AiAssistant;
 /// <summary>One question and its reply. It turns the backend's events into controls and owns the reply's run, so a chat keeps working while another one is on screen.</summary>
 internal sealed class TurnView : StackPanel
 {
-    private readonly IAssistantBackend? _backend;
+    private readonly IAssistantSession? _session;
     private readonly StackPanel _body = new();
     private readonly Dictionary<string, ToolCallGroup> _groups = [];
-    private readonly HashSet<string> _stoppedCalls = [];
+    private readonly List<StreamingMessage> _segments = [];
     private readonly List<ArtifactItem> _artifacts = [];
     private AssistantRequest _request = new("", [], null, null, null, []);
+    private IReadOnlyList<CitationSource>? _sources;
     private CancellationTokenSource? _run;
     private StreamingMessage? _message;
-    private MessageActions? _actions;
     private ReasoningBlock? _reasoning;
     private ToolCallGroup? _group;
     private ApprovalCard? _waiting;
-    private CancellationTokenSource? _sending;
+    private TaskCompletionSource<ApprovalDecision>? _answer;
     private bool _canRegenerate = true;
-
-    private IAssistantBackend Backend => _backend ?? throw new InvalidOperationException("A settled turn does not run.");
 
     public bool IsBusy { get; private set; }
     public double? Progress { get; private set; }
@@ -34,9 +32,9 @@ internal sealed class TurnView : StackPanel
     public event EventHandler<ArtifactItem>? ArtifactRemoved;
     public event EventHandler<string>? QuoteRequested;
 
-    public TurnView(IAssistantBackend backend, AssistantRequest request)
+    public TurnView(IAssistantSession session, AssistantRequest request)
     {
-        _backend = backend;
+        _session = session;
         _request = request;
         Margin = new Thickness(0, 0, 0, 28);
         Children.Add(Question(request.Text, request.Files));
@@ -45,59 +43,61 @@ internal sealed class TurnView : StackPanel
 
     private TurnView(string question, string answer)
     {
+        _canRegenerate = false;
         Margin = new Thickness(0, 0, 0, 28);
         Children.Add(Question(question, []));
         Children.Add(_body);
-        _message = new StreamingMessage { Text = answer, Status = StreamingStatus.Done, HidesFoot = true, ShowFeedback = false, CanRetry = false, Margin = new Thickness(0, 0, 0, 4) };
-        _body.Children.Add(_message);
+        _body.Children.Add(new StreamingMessage { Text = answer, Status = StreamingStatus.Done, HidesFoot = true, ShowFeedback = false, CanRetry = false, Margin = new Thickness(0, 0, 0, 4) });
         _body.Children.Add(new MessageActions { Text = answer, CanRegenerate = false, CanQuote = false, HorizontalAlignment = HorizontalAlignment.Left });
     }
 
     /// <summary>A reply from an earlier session: nothing runs and it cannot be generated again.</summary>
-    public static TurnView Settled(string question, string answer) => new(question, answer) { _canRegenerate = false };
+    public static TurnView Settled(string question, string answer) => new(question, answer);
 
+    /// <summary>Only the newest turn of a chat can run again, since the ones after it were built on this answer.</summary>
     public bool CanRegenerate
     {
         get => _canRegenerate;
-        set { _canRegenerate = value; if (_actions is not null) { _actions.CanRegenerate = value; } }
+        set
+        {
+            _canRegenerate = value;
+            foreach (var child in _body.Children)
+            {
+                switch (child)
+                {
+                    case MessageActions actions: actions.CanRegenerate = value; break;
+                    case StreamingMessage message: message.CanRetry = value; break;
+                    case ApprovalCard card when card.Status is ApprovalStatus.Denied or ApprovalStatus.NotSent: card.IsEnabled = value; break;
+                }
+            }
+        }
     }
 
-    public void Start() => Run(token => Backend.StreamAsync(_request, token));
+    public void Start() => Run();
 
     public void Regenerate()
     {
+        if (!_canRegenerate) { return; }
         _request = _request with { Attempt = _request.Attempt + 1 };
         Reset();
-        Start();
+        Run();
     }
 
-    public void Stop()
-    {
-        if (_waiting is { } card)
-        {
-            // Nothing is running while the card waits, so stopping withdraws the question. An answer on its way ends as NotSent through its own cancellation.
-            _waiting = null;
-            if (card.Status == ApprovalStatus.Sending) { _sending?.Cancel(); } else { card.Status = ApprovalStatus.NotSent; }
-            SetBusy(false);
-            return;
-        }
-        _run?.Cancel();
-    }
+    public void Stop() => _run?.Cancel();
 
-    private async void Run(Func<CancellationToken, IAsyncEnumerable<AssistantEvent>> stream)
+    private async void Run()
     {
-        _run?.Cancel();
         var run = _run = new CancellationTokenSource();
         SetBusy(true);
-        BeginMessage();
+        Begin();
         try
         {
-            await foreach (var item in stream(run.Token).WithCancellation(run.Token))
+            await foreach (var item in _session!.RunAsync(_request, run.Token).WithCancellation(run.Token))
             {
                 if (run != _run) { return; }
                 Apply(item);
             }
-            if (run == _run && _waiting is null) { Finish(); }
+            if (run == _run) { Finish(); }
         }
         catch (OperationCanceledException) { if (run == _run) { Stopped(); } }
         catch (AssistantException ex) { if (run == _run) { Failed(ex.Message); } }
@@ -110,6 +110,7 @@ internal sealed class TurnView : StackPanel
             case AssistantEvent.Reasoning step:
                 if (_reasoning is null)
                 {
+                    EndSegment();
                     _reasoning = new ReasoningBlock { Status = ReasoningStatus.Thinking, ModelName = _request.ModelName, ModelMark = _request.ModelMark, CanStop = false, CanRetry = false };
                     Place(_reasoning);
                 }
@@ -118,15 +119,18 @@ internal sealed class TurnView : StackPanel
             case AssistantEvent.ReasoningDone done when _reasoning is not null:
                 _reasoning.Seconds = done.Seconds;
                 _reasoning.Status = ReasoningStatus.Done;
+                _reasoning = null;
+                Begin();
                 break;
             case AssistantEvent.Tool tool:
                 Update(tool.Call);
                 break;
             case AssistantEvent.ApprovalNeeded approval:
-                Ask(approval.Request);
+                Ask(approval.Request, approval.Answer);
                 break;
-            case AssistantEvent.Sources sources when _message is not null:
-                _message.Sources = sources.Items;
+            case AssistantEvent.Sources sources:
+                _sources = sources.Items;
+                if (_message is not null) { _message.Sources = _sources; }
                 break;
             case AssistantEvent.Artifact artifact:
                 _artifacts.Add(artifact.Item);
@@ -136,31 +140,18 @@ internal sealed class TurnView : StackPanel
                 Progress = progress.Value;
                 StateChanged?.Invoke(this, EventArgs.Empty);
                 break;
-            case AssistantEvent.Text text when _message is not null:
-                Words(text.Delta);
+            case AssistantEvent.Text text:
+                _group = null;
+                if (_message is null) { Begin(); }
+                _message!.Append(text.Delta);
+                _message.Status = StreamingStatus.Streaming;
                 break;
-        }
-    }
-
-    private void Words(string delta)
-    {
-        _message!.Visibility = Visibility.Visible;
-        _message.Append(delta);
-        _message.Status = StreamingStatus.Streaming;
-        if (_actions is null)
-        {
-            _actions = new MessageActions { IsGenerating = true, CanRegenerate = _canRegenerate, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 4, 0, 0) };
-            _actions.StopRequested += (_, _) => Stop();
-            _actions.RegenerateRequested += (_, _) => Regenerate();
-            _actions.QuoteRequested += (_, quote) => QuoteRequested?.Invoke(this, quote);
-            _actions.SubmitFeedback = _ => Task.Delay(400);
-            _body.Children.Add(_actions);
         }
     }
 
     private void Update(ToolCallData call)
     {
-        if (_message is not null && _message.Text.Length == 0) { _message.Visibility = Visibility.Collapsed; }
+        EndSegment();
         if (!_groups.TryGetValue(call.Id, out var group))
         {
             group = _group ??= NewGroup();
@@ -170,125 +161,101 @@ internal sealed class TurnView : StackPanel
         int at = calls.FindIndex(existing => existing.Id == call.Id);
         if (at >= 0) { calls[at] = call; } else { calls.Add(call); }
         group.Calls = calls;
+        // Once every tool is back the model is working again, and the thread should say so.
+        if (!_groups.Values.Distinct().Any(entry => entry.Calls!.Any(item => item.Status == ToolCallStatus.Running))) { Begin(); }
     }
 
     private ToolCallGroup NewGroup()
     {
         var group = new ToolCallGroup { AutoCollapse = true };
-        group.RetryRequested += (_, e) => RetryTool(e.Call);
+        // A retry runs the whole turn: the model decides again with what it now knows.
+        group.RetryRequested += (_, _) => { if (!IsBusy) { Regenerate(); } };
         Place(group);
         return group;
     }
 
-    private void RetryTool(ToolCallData call)
+    private void Ask(ApprovalRequest request, TaskCompletionSource<ApprovalDecision> answer)
     {
-        if (IsBusy) { return; }
-        // A call the person stopped has no paused step to return to, so the whole reply runs again.
-        if (_stoppedCalls.Contains(call.Id)) { Regenerate(); return; }
-        Clear(_message, _actions);
-        Run(token => Backend.ContinueAsync(_request, new AssistantContinuation.ToolRetry(call), token));
-    }
-
-    private void Ask(ApprovalRequest request)
-    {
+        EndSegment();
         _group = null;
-        if (_message is not null) { _message.Visibility = Visibility.Collapsed; }
-        var card = new ApprovalCard { Request = request, Workspace = "arc-ui/web", SendDecision = _ => { _sending = new CancellationTokenSource(); return Task.Delay(400, _sending.Token); } };
+        var card = new ApprovalCard { Request = request, Workspace = "this computer" };
         card.Decided += (_, decision) =>
         {
             if (_waiting != card) { return; }
             _waiting = null;
-            Clear(_message, _actions);
-            Run(token => Backend.ContinueAsync(_request, new AssistantContinuation.Approval(decision), token));
+            Begin();
+            answer.TrySetResult(decision);
         };
-        card.RequestedAgain += (_, _) =>
-        {
-            // Asking again replaces whatever followed the first answer.
-            _run?.Cancel();
-            _run = null;
-            int at = _body.Children.IndexOf(card);
-            while (_body.Children.Count > at + 1)
-            {
-                if (_body.Children[at + 1] is ToolCallGroup group) { foreach (var key in _groups.Where(pair => pair.Value == group).Select(pair => pair.Key).ToList()) { _groups.Remove(key); } }
-                _body.Children.RemoveAt(at + 1);
-            }
-            foreach (var artifact in _artifacts) { ArtifactRemoved?.Invoke(this, artifact); }
-            _artifacts.Clear();
-            _message = null;
-            _actions = null;
-            _group = null;
-            _waiting = card;
-            SetBusy(true);
-        };
+        card.RequestedAgain += (_, _) => Regenerate();
         Place(card);
         _waiting = card;
-        _group = null;
+        _answer = answer;
     }
 
-    private void BeginMessage()
+    // The next words of the reply, shown as thinking until they arrive.
+    private void Begin()
     {
-        _message = new StreamingMessage { Status = StreamingStatus.Thinking, ModelName = _request.ModelName, ModelMark = _request.ModelMark, HidesFoot = true, ShowFeedback = false, CanStop = false };
+        EndSegment();
+        _message = new StreamingMessage { Status = StreamingStatus.Thinking, Sources = _sources, ModelName = _segments.Count == 0 ? _request.ModelName : null, ModelMark = _segments.Count == 0 ? _request.ModelMark : null, HidesFoot = true, ShowFeedback = false, CanStop = false, CanRetry = _canRegenerate };
         _message.RetryRequested += (_, _) => Regenerate();
-        _body.Children.Add(_message);
+        Place(_message);
     }
 
-    private void Place(UIElement element)
+    // A reply can speak before and after its tools. A placeholder that never got words goes away.
+    private void EndSegment()
     {
-        if (element is FrameworkElement framed) { framed.Margin = new Thickness(0, 0, 0, 12); }
-        if (_message is null) { _body.Children.Add(element); }
-        else { _body.Children.Insert(_body.Children.IndexOf(_message), element); }
+        if (_message is not { } message) { return; }
+        _message = null;
+        if (message.Text.Length == 0) { _body.Children.Remove(message); return; }
+        message.Status = StreamingStatus.Done;
+        _segments.Add(message);
+    }
+
+    private void Place(FrameworkElement element)
+    {
+        element.Margin = new Thickness(0, 0, 0, 12);
+        _body.Children.Add(element);
     }
 
     private void Finish()
     {
-        _message!.Status = StreamingStatus.Done;
-        if (_actions is { } actions)
+        EndSegment();
+        string text = string.Join("\n\n", _segments.Select(segment => segment.Text));
+        if (text.Length > 0)
         {
-            actions.Text = _message.Text;
-            actions.IsGenerating = false;
+            var actions = new MessageActions { Text = text, CanRegenerate = _canRegenerate, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, -8, 0, 0), SubmitFeedback = _ => Task.Delay(400) };
+            actions.RegenerateRequested += (_, _) => Regenerate();
+            actions.QuoteRequested += (_, quote) => QuoteRequested?.Invoke(this, quote);
+            _body.Children.Add(actions);
         }
         SetBusy(false);
     }
 
     private void Stopped()
     {
-        EndReasoning(ReasoningStatus.Stopped);
+        if (_reasoning is not null) { _reasoning.Status = ReasoningStatus.Stopped; }
+        if (_waiting is { } card) { card.Status = ApprovalStatus.NotSent; _waiting = null; }
         foreach (var group in _groups.Values.Distinct())
         {
-            var calls = (group.Calls ?? []).Select(call =>
-            {
-                if (call.Status != ToolCallStatus.Running) { return call; }
-                _stoppedCalls.Add(call.Id);
-                return call with { Status = ToolCallStatus.Error, Message = "Stopped before it finished" };
-            }).ToList();
-            group.Calls = calls;
+            group.Calls = [.. group.Calls!.Select(call => call.Status == ToolCallStatus.Running ? call with { Status = ToolCallStatus.Error, Message = "Stopped before it finished" } : call)];
         }
         EndMessage(StreamingStatus.Stopped, null);
     }
 
     private void Failed(string reason)
     {
-        EndReasoning(ReasoningStatus.Error);
+        if (_reasoning is not null) { _reasoning.Status = ReasoningStatus.Error; }
         EndMessage(StreamingStatus.Error, reason);
-    }
-
-    private void EndReasoning(ReasoningStatus status)
-    {
-        if (_reasoning is { Status: ReasoningStatus.Thinking }) { _reasoning.Status = status; }
     }
 
     private void EndMessage(StreamingStatus status, string? error)
     {
-        Clear(_actions);
-        _actions = null;
-        if (_message is { } message)
-        {
-            // A cut or failed reply has no MessageActions, so its own foot offers Copy and Retry.
-            message.HidesFoot = false;
-            message.Visibility = Visibility.Visible;
-            message.Error = error;
-            message.Status = status;
-        }
+        // A cut or failed reply has no MessageActions, so its own foot offers Copy and Retry.
+        if (_message is null) { Begin(); }
+        var message = _message!;
+        message.HidesFoot = false;
+        message.Error = error;
+        message.Status = status;
         SetBusy(false);
     }
 
@@ -296,23 +263,19 @@ internal sealed class TurnView : StackPanel
     {
         _run?.Cancel();
         _run = null;
+        _answer?.TrySetCanceled();
+        _answer = null;
         _waiting = null;
         _reasoning = null;
         _group = null;
         _message = null;
-        _actions = null;
+        _sources = null;
         _groups.Clear();
-        _stoppedCalls.Clear();
+        _segments.Clear();
         _body.Children.Clear();
         foreach (var artifact in _artifacts) { ArtifactRemoved?.Invoke(this, artifact); }
         _artifacts.Clear();
-    }
-
-    private void Clear(params UIElement?[] elements)
-    {
-        foreach (var element in elements) { if (element is not null) { _body.Children.Remove(element); } }
-        if (elements.Contains(_message)) { _message = null; }
-        if (elements.Contains(_actions)) { _actions = null; }
+        Progress = null;
     }
 
     private void SetBusy(bool busy)
@@ -322,7 +285,7 @@ internal sealed class TurnView : StackPanel
         StateChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private static FrameworkElement Question(string text, IReadOnlyList<string> files)
+    private static FrameworkElement Question(string text, IReadOnlyList<AssistantFile> files)
     {
         var stack = new StackPanel();
         var words = new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap, FontSize = 14, LineHeight = 21 };
@@ -330,7 +293,7 @@ internal sealed class TurnView : StackPanel
         if (text.Length > 0) { stack.Children.Add(words); }
         if (files.Count > 0)
         {
-            var names = new TextBlock { Text = string.Join(", ", files), FontSize = 12, LineHeight = 17, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, text.Length > 0 ? 4 : 0, 0, 0) };
+            var names = new TextBlock { Text = string.Join(", ", files.Select(file => file.Name)), FontSize = 12, LineHeight = 17, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, text.Length > 0 ? 4 : 0, 0, 0) };
             names.SetResourceReference(TextBlock.ForegroundProperty, "ArcWpf.Brush.TextMuted");
             stack.Children.Add(names);
         }

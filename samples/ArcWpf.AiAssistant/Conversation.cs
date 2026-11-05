@@ -1,12 +1,14 @@
 using System.Windows.Controls;
+using ArcWpf.AiAssistant.Backend;
 using ArcWpf.Controls;
 
 namespace ArcWpf.AiAssistant;
 
 /// <summary>What a chat keeps while another one is on screen.</summary>
-internal sealed class Conversation(ConversationItem item)
+internal sealed class Conversation(ConversationItem item, Lazy<IAssistantSession> session)
 {
     public ConversationItem Item { get; } = item;
+    public IAssistantSession Session => session.Value;
     public StackPanel Thread { get; } = new();
     public List<ArtifactItem> Artifacts { get; } = [];
     public List<PromptAttachment> Files { get; } = [];

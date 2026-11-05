@@ -29,6 +29,17 @@ AI 助手面板（独立程序，回复为脚本模拟，不连接模型和网�
 dotnet run --project samples/ArcWpf.AiAssistant/ArcWpf.AiAssistant.csproj
 ~~~
 
+没有 Key 时回复为脚本模拟。设置环境变量后通过 [Pi.NET](https://github.com/AIDotNet/pi.net) 连接真实模型，消息和附件内容会发给该服务商：
+
+| 变量 | 说明 |
+|---|---|
+| `ANTHROPIC_API_KEY` | 使用 Anthropic，默认模型 `claude-opus-5-5` |
+| `OPENAI_API_KEY` | 使用 OpenAI 或兼容接口，必须同时设置 `ARCWPF_AI_MODELS` |
+| `OPENAI_BASE_URL` | 可选，兼容接口地址，例如 `https://example.com/v1` |
+| `ARCWPF_AI_MODELS` | 可选，逗号分隔的模型列表 |
+| `ARCWPF_AI_THINKING` | 可选，Pi 的 ThinkingLevel 名称 |
+| `ARCWPF_AI_BACKEND` | 设为 `simulated` 时强制使用模拟 |
+
 Gallery 通过分组导航浏览组件，包含 DatePicker、Breadcrumb 等页面，支持主题/动效等级切换、状态和绑定示例。可用启动参数 `--page=date-picker` 或 `--page=breadcrumb` 直接打开对应页面。
 
 ## 在 WPF 应用中接入

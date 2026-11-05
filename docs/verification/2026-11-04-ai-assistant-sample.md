@@ -2,9 +2,11 @@
 
 状态：**待验收**。范围：独立程序 `samples/ArcWpf.AiAssistant`，以及为它修改的两处库代码。
 
+用户反馈：提交 `e3323c7` 的模拟对话收到“ai 對話沒問題”，记录为该版本对话流程人工通过；未测项不因此标记通过。之后后端已重构，见 [Pi.NET 后端验证](2026-11-04-pi-net-backend.md)。
+
 ## 范围调整
 
-用户要求 AI 助手面板单独做成 WPF 程序，不放进 Gallery。程序不引用 Gallery，示例数据也是自己的一份。回复由 `SimulatedBackend` 按脚本产生，**没有模型、没有网络，不读取附件，也不改任何文件**，界面上标有 Simulated。接真实模型时实现 `IAssistantBackend`，再赋给 `AssistantPanel.Backend`；这条路径**未运行**。
+用户要求 AI 助手面板单独做成 WPF 程序，不放进 Gallery。程序不引用 Gallery，示例数据也是自己的一份。回复由 `SimulatedBackend` 按脚本产生，**没有模型、没有网络，不读取附件，也不改任何文件**，界面上标有 Simulated。当时接真实模型的路径未运行，现已由 Pi.NET 后端实现。
 
 是否由运动控制框架使用这个面板，用户尚未确认，本次没有按它设计。
 

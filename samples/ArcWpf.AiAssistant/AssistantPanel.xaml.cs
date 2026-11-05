@@ -27,14 +27,6 @@ public partial class AssistantPanel : UserControl
     public AssistantPanel()
     {
         InitializeComponent();
-        Composer.Commands = SampleData.Commands;
-        Composer.Mentions = SampleData.Mentions;
-        Composer.AttachActions = SampleData.AttachActions;
-        Composer.Tools = SampleData.Tools();
-        Composer.Models = SampleData.Models;
-        Composer.Providers = SampleData.Providers;
-        Composer.FeaturedModels = SampleData.Featured;
-        Composer.Model = SampleData.Featured[0];
         Composer.Submitted += OnSubmitted;
         Composer.StopRequested += (_, _) => _chat.Last?.Stop();
         Composer.AttachRequested += OnAttachRequested;
@@ -49,42 +41,72 @@ public partial class AssistantPanel : UserControl
         Sidebar.Renamed += (_, e) => { if (e.Item == _chat.Item) { Title.Text = e.Item.Title; } };
         Sidebar.Archived += (_, e) => { if (e.Item == _chat.Item) { ShowNextAfterArchive(); } };
 
-        foreach (var (label, prompt) in SampleData.Starters)
+        Apply();
+    }
+
+    /// <summary>Replaces the scripted replies with a real model.</summary>
+    public IAssistantBackend Backend
+    {
+        get => _backend;
+        set
+        {
+            _backend = value ?? throw new ArgumentNullException(nameof(value));
+            Apply();
+        }
+    }
+
+    // Everything on screen comes from the backend's profile, so changing backend starts over.
+    private void Apply()
+    {
+        var profile = _backend.Profile;
+        Composer.Commands = [.. profile.Commands];
+        Composer.Mentions = [.. profile.Mentions];
+        Composer.AttachActions = [.. profile.AttachActions];
+        Composer.Tools = [.. profile.Tools];
+        Composer.Models = [.. profile.Models];
+        Composer.Providers = [.. profile.Providers];
+        Composer.FeaturedModels = [.. profile.FeaturedModels];
+        Composer.Model = profile.Models.FirstOrDefault()?.Id;
+        BadgeText.Text = profile.Badge;
+        Badge.ToolTip = profile.BadgeHint;
+        WelcomeText.Text = profile.Welcome;
+
+        Starters.Items.Clear();
+        foreach (var (label, prompt) in profile.Starters)
         {
             var starter = new Button { Content = label, Variant = ButtonVariant.Secondary, Margin = new Thickness(0, 0, 0, 8), HorizontalAlignment = HorizontalAlignment.Stretch };
             starter.Click += (_, _) => Composer.SetPrompt(prompt);
             Starters.Items.Add(starter);
         }
 
-        foreach (var past in SampleData.History)
+        _chat = null!;
+        _chats.Clear();
+        Sidebar.Conversations.Clear();
+        foreach (var past in profile.History)
         {
-            var chat = new Conversation(new ConversationItem(past.Id, past.Title, past.Group) { IsArchived = past.Archived });
+            var chat = Open(new ConversationItem(past.Id, past.Title, past.Group) { IsArchived = past.Archived });
             chat.Thread.Children.Add(TurnView.Settled(past.Question, past.Answer));
-            Frame(chat);
-            _chats[past.Id] = chat;
             Sidebar.Conversations.Add(chat.Item);
         }
         NewChat();
     }
 
-    /// <summary>Replaces the scripted replies with a real model.</summary>
-    public IAssistantBackend Backend { get => _backend; set => _backend = value ?? throw new ArgumentNullException(nameof(value)); }
+    private Conversation Open(ConversationItem item)
+    {
+        var backend = _backend;
+        var chat = new Conversation(item, new Lazy<IAssistantSession>(backend.CreateSession));
+        chat.Thread.MaxWidth = 760;
+        chat.Thread.Margin = new Thickness(24, 8, 24, 8);
+        return _chats[item.Id] = chat;
+    }
 
     private void NewChat()
     {
         if (_chat is { IsEmpty: true }) { Composer.Focus(); return; }
-        var chat = new Conversation(new ConversationItem($"chat-{++_nextChat}", "New chat", "Today"));
-        Frame(chat);
-        _chats[chat.Item.Id] = chat;
+        var chat = Open(new ConversationItem($"chat-{++_nextChat}", "New chat", "Today"));
         Sidebar.Conversations.Insert(0, chat.Item);
         Show(chat);
         Composer.Focus();
-    }
-
-    private static void Frame(Conversation chat)
-    {
-        chat.Thread.MaxWidth = 760;
-        chat.Thread.Margin = new Thickness(24, 8, 24, 8);
     }
 
     private void Show(Conversation chat)
@@ -124,9 +146,9 @@ public partial class AssistantPanel : UserControl
     {
         var chat = _chat;
         var message = e.Message;
-        var model = SampleData.Models.FirstOrDefault(item => item.Id == message.Model);
+        var model = _backend.Profile.Models.FirstOrDefault(item => item.Id == message.Model);
         var tools = message.Tools;
-        var request = new AssistantRequest(message.Text, [.. message.Attachments.Select(item => item.Name)], message.Model, model?.Name, model?.Mark, tools);
+        var request = new AssistantRequest(message.Text, [.. message.Attachments.Select(item => new AssistantFile(item.Name, item.FilePath, item.PastedText))], message.Model, model?.Name, model?.Mark, tools);
 
         // Send leaves a failed file behind, so it should not stay listed as part of the chat.
         foreach (var file in chat.Files.Where(file => file.Status == PromptAttachmentStatus.Error).ToList()) { Forget(file); }
@@ -139,7 +161,7 @@ public partial class AssistantPanel : UserControl
         }
         if (chat.Last is { } previous) { previous.CanRegenerate = false; }
 
-        var turn = new TurnView(_backend, request);
+        var turn = new TurnView(chat.Session, request);
         turn.StateChanged += (_, _) => { if (_chat == chat) { Sync(); } };
         turn.ArtifactAdded += (_, item) =>
         {
@@ -187,7 +209,8 @@ public partial class AssistantPanel : UserControl
         Files.Items.Add(file);
         if (ActualWidth >= InlinePaneFrom) { _chat.PaneOpen = true; }
         Relayout();
-        if (file.PastedText is null) { Upload(file, _chat); }
+        // A real backend reads the file when the message goes, so only the script pretends to upload.
+        if (file.PastedText is null && _backend.Profile.IsSimulated) { Upload(file, _chat); }
     }
 
     private void Forget(PromptAttachment file)

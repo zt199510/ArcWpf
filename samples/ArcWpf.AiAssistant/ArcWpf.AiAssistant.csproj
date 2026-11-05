@@ -1,4 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><OutputType>WinExe</OutputType></PropertyGroup>
-  <ItemGroup><ProjectReference Include="../../src/ArcWpf.Controls/ArcWpf.Controls.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ArcWpf.Controls/ArcWpf.Controls.csproj" />
+    <PackageReference Include="Pi.Agent" Version="1.4.5" />
+    <PackageReference Include="Pi.Ai" Version="1.4.5" />
+  </ItemGroup>
 </Project>
