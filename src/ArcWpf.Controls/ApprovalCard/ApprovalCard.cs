@@ -75,6 +75,7 @@ public partial class ApprovalCard : Control
     private readonly List<ArgumentRow> _rows = [];
     private readonly Dictionary<string, string> _original = [];
     private ToolbarButton? _deny, _always, _approve, _retry, _again;
+    private Border? _approveKey;
     private ApprovalOutcome _pending;
     private Decorator? _root;
     private int _generation;
@@ -94,6 +95,7 @@ public partial class ApprovalCard : Control
     internal System.Windows.Controls.Button? RestoreForTest(string label) => _rows.First(row => row.Argument.Label == label).Restore;
     internal Border CardForTest => _card;
     internal FrameworkElement DecisionForTest => _decision;
+    internal bool ApproveKeyShownForTest => _approveKey?.Visibility == Visibility.Visible;
 
     static ApprovalCard() => DefaultStyleKeyProperty.OverrideMetadata(typeof(ApprovalCard), new FrameworkPropertyMetadata(typeof(ApprovalCard)));
 
@@ -108,6 +110,7 @@ public partial class ApprovalCard : Control
         _card.Child = _height;
         // Shortcuts answer anywhere in the card, including after a click left focus on nothing in particular.
         _card.MouseDown += (_, e) => { if (ReferenceEquals(e.OriginalSource, _card) || e.OriginalSource is TextBlock) { _card.Focus(); } };
+        _card.SizeChanged += (_, _) => UpdateCompactLayout();
         PreviewKeyDown += OnKey;
         BuildMenu();
     }
@@ -284,6 +287,7 @@ public partial class ApprovalCard : Control
         right.Children.Add(_approve);
         Grid.SetColumn(right, 1);
         grid.Children.Add(right);
+        UpdateCompactLayout();
         return grid;
     }
 
@@ -316,6 +320,8 @@ public partial class ApprovalCard : Control
         var row = new StackPanel { Orientation = Orientation.Horizontal };
         row.Children.Add(AiUi.Line("Approve", 14, 19.6, "AccentForeground", true, false));
         var key = new Border { Height = 18, Margin = new Thickness(7, 0, 0, 0), Padding = new Thickness(5, 0, 5, 0), CornerRadius = new CornerRadius(5), BorderThickness = new Thickness(1), VerticalAlignment = VerticalAlignment.Center, Opacity = 1 };
+        _approveKey = key;
+        UpdateCompactLayout();
         void Tint()
         {
             var ink = Tween.Resolve(this, "ArcWpf.Brush.AccentForeground");
@@ -333,6 +339,15 @@ public partial class ApprovalCard : Control
         button.Click += (_, _) => Decide(ApprovalOutcome.Approved);
         ThreadUi.PressScale(button, .96);
         return button;
+    }
+
+    private void UpdateCompactLayout()
+    {
+        bool compact = _card.ActualWidth > 0 && _card.ActualWidth < 440;
+        if (_approveKey is not null) { _approveKey.Visibility = compact ? Visibility.Collapsed : Visibility.Visible; }
+        if (_deny is not null) { _deny.Padding = compact ? new Thickness(9, 0, 9, 0) : new Thickness(13, 0, 13, 0); }
+        if (_always is not null) { _always.Padding = compact ? new Thickness(9, 0, 6, 0) : new Thickness(13, 0, 10, 0); }
+        if (_approve is not null) { _approve.Padding = compact ? new Thickness(9, 0, 6, 0) : new Thickness(13, 0, 9, 0); }
     }
 
     private Grid SendingRow()
@@ -353,11 +368,16 @@ public partial class ApprovalCard : Control
         var grid = new Grid { Height = 36 };
         grid.ColumnDefinitions.Add(new ColumnDefinition());
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        var note = new StackPanel { Orientation = Orientation.Horizontal };
+        var note = new Grid();
+        note.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        note.ColumnDefinitions.Add(new ColumnDefinition());
         var icon = AiUi.Glyph(Lucide.CircleAlert, 16, "Danger");
         icon.Margin = new Thickness(0, 0, 6, 0);
         note.Children.Add(icon);
-        note.Children.Add(AiUi.Line(text, 14, 19.6, "Danger"));
+        var message = AiUi.Line(text, 14, 19.6, "Danger");
+        message.TextTrimming = TextTrimming.CharacterEllipsis;
+        Grid.SetColumn(message, 1);
+        note.Children.Add(message);
         grid.Children.Add(note);
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(8, 0, 0, 0) };
         _deny = Quiet("Deny", true);

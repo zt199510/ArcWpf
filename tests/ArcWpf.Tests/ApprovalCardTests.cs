@@ -235,4 +235,20 @@ public sealed class ApprovalCardTests
         Assert.AreEqual(0, decided);
         Assert.IsNotNull(card.ApproveForTest);
     });
+
+    [TestMethod]
+    public void NarrowCardHidesTheApproveKeyHint() => With((card, window) =>
+    {
+        Assert.IsTrue(card.ApproveKeyShownForTest);
+        window.Width = 400;
+        Sta.Pump();
+        Assert.IsFalse(card.ApproveKeyShownForTest);
+        window.Width = 340;
+        Sta.Pump();
+        var right = card.ApproveForTest!.TranslatePoint(new Point(card.ApproveForTest.ActualWidth, 0), card.CardForTest).X;
+        Assert.IsLessThanOrEqualTo(card.CardForTest.ActualWidth - 12, right);
+        window.Width = 560;
+        Sta.Pump();
+        Assert.IsTrue(card.ApproveKeyShownForTest);
+    });
 }

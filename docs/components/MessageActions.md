@@ -1,6 +1,6 @@
 # MessageActions
 
-状态：待验收。消息下方的操作行：复制、重新生成、停止、点赞/点踩、引用；拇指打开追问面板。事实见[参考卡](../references/components/MessageActions.md)。
+状态：本轮用户验收通过（2026-11-11）；专项未测项见验证记录。消息下方的操作行：复制、重新生成、停止、点赞/点踩、引用；拇指打开追问面板。事实见[参考卡](../references/components/MessageActions.md)。
 
 Arc Pro 组件：依据公开文档和公开页面的显示结果独立实现，没有使用 Pro 源码。
 
@@ -26,4 +26,5 @@ Arc Pro 组件：依据公开文档和公开页面的显示结果独立实现，
 
 - 停止和引用是用户要求的扩展，Arc 该行没有；引用只发事件，由调用方写入输入框。
 - Arc 只在悬停时显示行，触屏常显；本控件始终显示，由宿主决定何时放置。
-- 验证环境为 Wine，字体为替身；真实 Windows 未运行，见[验证记录](../verification/2026-11-04-batch12-replication.md)。
+- 本轮修复内容变化后的复制目标同步，以及评分切换/面板关闭时过期异步反馈不得重新打开感谢状态。
+- 旧批次使用 Wine；本轮已做部分 Windows Gallery 目视与鼠标检查，范围及未测项见[验证记录](../verification/2026-11-11-ai-controls-acceptance.md)。

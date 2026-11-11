@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace ArcWpf.Controls;
 
@@ -47,6 +48,7 @@ public class AttachmentTray : Control
     internal string MetaForTest(PromptAttachment item) => _entries[item].MetaText;
     internal bool BarShownForTest(PromptAttachment item) => _entries[item].BarShown;
     internal bool CheckShownForTest(PromptAttachment item) => _entries[item].CheckShown;
+    internal double CheckDashOffsetForTest(PromptAttachment item) => _entries[item].CheckDashOffset;
     internal double ShownProgressForTest(PromptAttachment item) => _entries[item].ShownProgress;
     internal FrameworkElement? ThumbnailForTest(PromptAttachment item) => _entries[item].Thumbnail;
     internal FrameworkElement EntryForTest(PromptAttachment item) => _entries[item].Box;
@@ -195,6 +197,7 @@ public class AttachmentTray : Control
         private readonly Border? _bar;
         private readonly AiRing? _ring;
         private readonly Decorator _check = new() { Visibility = Visibility.Collapsed, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        private readonly Path _checkPath = new() { Data = Geometry.Parse("M4 12.5 L9 17.5 L20 6.5"), Width = 24, Height = 24, StrokeThickness = 2, StrokeStartLineCap = PenLineCap.Round, StrokeEndLineCap = PenLineCap.Round, StrokeLineJoin = PenLineJoin.Round, StrokeDashArray = [12, 12] };
         private PromptAttachmentStatus _shown;
         private bool _landed;
 
@@ -205,6 +208,7 @@ public class AttachmentTray : Control
         public string MetaText => _meta.Text;
         public bool BarShown => _barBox is not null && _bar!.Visibility == Visibility.Visible;
         public bool CheckShown => _check.Visibility == Visibility.Visible;
+        public double CheckDashOffset => _checkPath.StrokeDashOffset;
         public double ShownProgress => _progress.Position;
 
         public Entry(AttachmentTray tray, PromptAttachment item, bool chip)
@@ -221,8 +225,8 @@ public class AttachmentTray : Control
             Retry = AiUi.Icon(Lucide.RotateCcw, hit, 14, $"Retry {item.Name}", hit / 2);
             Retry.Click += (_, _) => tray.RetryItem(item);
             ThreadUi.PressScale(Retry, .96);
-            var check = AiUi.Glyph(Lucide.Check, 14, "Success", 2);
-            _check.Child = check;
+            _checkPath.SetResourceReference(Shape.StrokeProperty, "ArcWpf.Brush.Success");
+            _check.Child = new Viewbox { Width = 14, Height = 14, Child = _checkPath, IsHitTestVisible = false };
             Thumbnail = Thumb(item) is { } source ? MakeThumbnail(source, chip ? 28 : 36) : null;
             _meta = AiUi.Line("", 12, 16.8, "TextMuted");
             var name = AiUi.Line(item.Name, chip ? 12 : 14, chip ? 16.8 : 19.6, "Foreground", true);
@@ -401,7 +405,17 @@ public class AttachmentTray : Control
             if (ready && _check.Visibility != Visibility.Visible)
             {
                 _check.Visibility = Visibility.Visible;
-                if (moving) { PopIn(_check); }
+                if (moving)
+                {
+                    Tween.Set(_checkPath, Shape.StrokeDashOffsetProperty, 12d);
+                    PopIn(_check);
+                    Tween.To(_checkPath, Shape.StrokeDashOffsetProperty, 0, Tween.Standard, ArcEasing.Enter, .08);
+                }
+                else
+                {
+                    Tween.Set(_checkPath, Shape.StrokeDashOffsetProperty, 0d);
+                    Tween.Set(_check, UIElement.OpacityProperty, 1d);
+                }
             }
             else if (!ready) { _check.Visibility = Visibility.Collapsed; }
             if (_ring is not null)

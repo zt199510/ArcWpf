@@ -61,6 +61,7 @@ public sealed class AttachmentTrayTests
         Assert.AreEqual("12 KB  ·  Uploaded", tray.MetaForTest(item));
         Assert.IsFalse(tray.BarShownForTest(item));
         Assert.IsTrue(tray.CheckShownForTest(item));
+        Assert.AreEqual(0, tray.CheckDashOffsetForTest(item));
         Assert.IsFalse(tray.RetryShownForTest(item));
     });
 

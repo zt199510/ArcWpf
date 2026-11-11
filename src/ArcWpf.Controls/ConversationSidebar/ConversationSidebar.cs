@@ -282,13 +282,14 @@ public class ConversationSidebar : Control
         var row = RowFor(item);
         var before = VisibleRows().ToList();
         int index = before.IndexOf(row);
-        var next = index + 1 < before.Count ? before[index + 1] : index > 0 ? before[index - 1] : null;
+        var next = before.Skip(index + 1).FirstOrDefault(candidate => !candidate.Item.IsArchived)
+            ?? before.Take(index).Reverse().FirstOrDefault(candidate => !candidate.Item.IsArchived);
         bool hadFocus = row.Box.IsKeyboardFocusWithin;
         if (hadFocus) { next?.Button.Focus(); }
         // The next chat takes over when the open one goes, as the list closes over it.
         if (SelectedId == item.Id)
         {
-            var heir = next?.Item.IsArchived == false ? next.Item : null;
+            var heir = next?.Item;
             SetCurrentValue(SelectedIdProperty, heir?.Id);
             if (heir is not null) { Selected?.Invoke(this, new ConversationEventArgs(heir)); }
         }

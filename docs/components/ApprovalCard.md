@@ -1,6 +1,6 @@
 # ApprovalCard
 
-状态：待验收。工具调用前的权限确认：风险、可编辑参数、拒绝、始终允许、批准、失败重试和重新请求。事实见[参考卡](../references/components/ApprovalCard.md)。
+状态：本轮用户验收通过（2026-11-11）；专项未测项见验证记录。工具调用前的权限确认：风险、可编辑参数、拒绝、始终允许、批准、失败重试和重新请求。事实见[参考卡](../references/components/ApprovalCard.md)。
 
 Arc Pro 组件：依据公开文档和公开页面的显示结果独立实现，没有使用 Pro 源码。
 
@@ -26,5 +26,6 @@ Arc Pro 组件：依据公开文档和公开页面的显示结果独立实现，
 - 只做单个请求。队列、j/k、规则弹层、已决日志属于 Arc 的整块组件，未实现。
 - “重新请求”按钮是用户要求的扩展：Arc 只有发送失败后的 Retry。重新请求会丢弃上次的参数修改。
 - Always allow 只报告结果，规则持久化由调用方负责。
-- 深色下 Approve 按钮沿用 Accent 令牌，文字对比度偏低，未单独调整。
-- 验证环境为 Wine，字体为替身；真实 Windows 未运行，见[验证记录](../verification/2026-11-04-batch12-replication.md)。
+- 窄宽时隐藏 Enter 键帽并收紧按钮内边距；失败信息在操作按钮前截断，避免溢出。Arc 无对应窄宽基准，属 WPF 适配。
+- 深色下 Approve 仍沿用 Accent 令牌；本轮 Windows Gallery 目视文字可读，未做色彩对比度数值测量。
+- 旧批次使用 Wine；本轮已做部分 Windows Gallery 目视与鼠标检查，范围及未测项见[验证记录](../verification/2026-11-11-ai-controls-acceptance.md)。

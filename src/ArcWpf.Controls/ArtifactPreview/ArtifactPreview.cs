@@ -116,7 +116,9 @@ public class ArtifactPreview : Control
             var tab = new TabItem { Header = string.IsNullOrEmpty(item.Title) ? item.FileName ?? item.Kind.ToString() : item.Title, Content = body };
             _tabs.Items.Add(tab);
         }
-        if (Items.Count > 0) { _tabs.SelectedIndex = Math.Clamp(SelectedIndex, 0, Items.Count - 1); }
+        int selected = Items.Count == 0 ? 0 : Math.Clamp(SelectedIndex, 0, Items.Count - 1);
+        if (Items.Count > 0) { _tabs.SelectedIndex = selected; }
+        if (selected != SelectedIndex) { SetCurrentValue(SelectedIndexProperty, selected); }
         _syncing = false;
         _emptyText.Text = EmptyText;
         _tabs.Visibility = Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;

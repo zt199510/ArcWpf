@@ -131,5 +131,8 @@ public sealed class ArtifactPreviewTests
         preview.Items.RemoveAt(2);
         Sta.Pump();
         Assert.AreEqual(1, preview.TabsForTest.SelectedIndex);
+        Assert.AreEqual(1, preview.SelectedIndex);
+        preview.Items.Clear();
+        Assert.AreEqual(0, preview.SelectedIndex);
     });
 }

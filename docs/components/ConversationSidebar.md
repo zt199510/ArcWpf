@@ -1,6 +1,6 @@
 # ConversationSidebar
 
-状态：待验收。会话列表：新建、搜索、分组、就地重命名、归档与恢复。事实见[参考卡](../references/components/ConversationSidebar.md)。
+状态：本轮用户验收通过（2026-11-11）；专项未测项见验证记录。会话列表：新建、搜索、分组、就地重命名、归档与恢复。事实见[参考卡](../references/components/ConversationSidebar.md)。
 
 Arc 没有同名组件。这是 ArcWpf 的组合设计，视觉取自 Arc Pro 工作区侧栏和聊天历史菜单的公开显示结果，没有使用 Pro 源码；行为按用户需求定义，**没有原版可供比对**。
 
@@ -25,5 +25,5 @@ Arc 没有同名组件。这是 ArcWpf 的组合设计，视觉取自 Arc Pro �
 
 - 列表裁剪行，所以键盘焦点画在行内边，不用共享外环。
 - 搜索只过滤标题；条目多时没有虚拟化，未测大列表性能。
-- 归档选中会话时选中下一个；归档区内的条目不接管选中。
-- 验证环境为 Wine，字体为替身；真实 Windows 未运行，见[验证记录](../verification/2026-11-04-batch12-replication.md)。
+- 归档选中会话时选中下一条未归档会话；归档区内的条目不接管选中。
+- 旧批次使用 Wine；本轮已做部分 Windows Gallery 目视与鼠标检查，范围及未测项见[验证记录](../verification/2026-11-11-ai-controls-acceptance.md)。

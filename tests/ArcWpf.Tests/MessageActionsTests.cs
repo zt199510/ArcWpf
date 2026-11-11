@@ -167,6 +167,37 @@ public sealed class MessageActionsTests
     });
 
     [TestMethod]
+    public void TextChangesUpdateTheCopyAction() => With(row =>
+    {
+        Assert.AreEqual(Visibility.Visible, row.CopyForTest.Visibility);
+        row.Text = null;
+        Assert.AreEqual(Visibility.Collapsed, row.CopyForTest.Visibility);
+        row.Text = "Updated reply";
+        Assert.AreEqual(Visibility.Visible, row.CopyForTest.Visibility);
+    });
+
+    [TestMethod]
+    public void ChangingRatingIgnoresAnOlderFeedbackSend() => With(row =>
+    {
+        var send = new TaskCompletionSource();
+        int submitted = 0;
+        row.SubmitFeedback = _ => send.Task;
+        row.FeedbackSubmitted += (_, _) => submitted++;
+        Press(row.DownForTest);
+        Sta.Pump();
+        Press(row.ChipsForTest[0]);
+        Press(row.SubmitForTest!);
+        Sta.Pump();
+        Press(row.UpForTest);
+        Sta.Pump();
+        Assert.AreEqual("up", row.PanelKindForTest);
+        send.SetResult();
+        Sta.Pump();
+        Assert.AreEqual("up", row.PanelKindForTest);
+        Assert.AreEqual(0, submitted);
+    });
+
+    [TestMethod]
     public void NoPositiveReasonsSkipsTheFollowUp() => With(row =>
     {
         row.PositiveReasons = [];

@@ -20,13 +20,13 @@ public sealed record MessageFeedback(MessageRating Rating, IReadOnlyList<string>
 [TemplatePart(Name = "PART_Root", Type = typeof(Decorator))]
 public class MessageActions : Control
 {
-    public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(MessageActions), new FrameworkPropertyMetadata(null));
+    public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(MessageActions), new FrameworkPropertyMetadata(null, (d, _) => ((MessageActions)d).Chrome()));
     public static readonly DependencyProperty IsGeneratingProperty = Prop(nameof(IsGenerating), false);
     public static readonly DependencyProperty CanRegenerateProperty = Prop(nameof(CanRegenerate), true);
     public static readonly DependencyProperty CanQuoteProperty = Prop(nameof(CanQuote), true);
     public static readonly DependencyProperty CanRateProperty = Prop(nameof(CanRate), true);
     public static readonly DependencyProperty AsksWhyProperty = Prop(nameof(AsksWhy), true);
-    public static readonly DependencyProperty RatingProperty = DependencyProperty.Register(nameof(Rating), typeof(MessageRating), typeof(MessageActions), new FrameworkPropertyMetadata(MessageRating.None, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (d, _) => ((MessageActions)d).ShowRating(true)));
+    public static readonly DependencyProperty RatingProperty = DependencyProperty.Register(nameof(Rating), typeof(MessageRating), typeof(MessageActions), new FrameworkPropertyMetadata(MessageRating.None, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (d, _) => ((MessageActions)d).OnRatingChanged()));
 
     private static DependencyProperty Prop(string name, bool fallback) => DependencyProperty.Register(name, typeof(bool), typeof(MessageActions), new FrameworkPropertyMetadata(fallback, (d, _) => ((MessageActions)d).Chrome()));
 
@@ -154,6 +154,14 @@ public class MessageActions : Control
         _down.Show(Rating == MessageRating.Down, animate);
     }
 
+    private void OnRatingChanged()
+    {
+        _generation++;
+        _sending = false;
+        ShowRating(true);
+        if (Rating == MessageRating.None && _panelOpen) { Fold(); }
+    }
+
     private void Press(MessageRating rating)
     {
         var next = Rating == rating ? MessageRating.None : rating;
@@ -213,6 +221,8 @@ public class MessageActions : Control
 
     private void Fold()
     {
+        _generation++;
+        _sending = false;
         _thanks.Stop();
         if (!_panelOpen && _panelHolder.Child is null) { return; }
         _panelOpen = false;

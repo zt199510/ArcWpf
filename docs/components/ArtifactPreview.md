@@ -1,6 +1,6 @@
 # ArtifactPreview
 
-状态：待验收。运行结果的标签页预览：代码、JSON、Markdown、文件。事实见[参考卡](../references/components/ArtifactPreview.md)。
+状态：本轮用户验收通过（2026-11-11）；专项未测项见验证记录。运行结果的标签页预览：代码、JSON、Markdown、文件。事实见[参考卡](../references/components/ArtifactPreview.md)。
 
 Arc 没有同名组件，也没有 Markdown 组件。这是 ArcWpf 的组合设计，**没有原版可供比对**。
 
@@ -24,4 +24,5 @@ Arc 没有同名组件，也没有 Markdown 组件。这是 ArcWpf 的组合设�
 - Markdown 只支持回复渲染器的子集：段落、标题、列表、粗体、行内代码、代码块；表格和图片不支持。
 - 所有标签内容在添加时一次构建，未对超大结果做延迟加载。
 - Open、Download 只发事件。
-- 验证环境为 Wine，字体为替身；真实 Windows 未运行，见[验证记录](../verification/2026-11-04-batch12-replication.md)。
+- 移除当前或末尾标签后，`SelectedIndex` 与实际选中页同步；清空时归零。
+- 旧批次使用 Wine；本轮已做部分 Windows Gallery 目视与鼠标检查，范围及未测项见[验证记录](../verification/2026-11-11-ai-controls-acceptance.md)。

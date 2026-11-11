@@ -12,7 +12,7 @@
 |---|---|---|---|
 | Code | 直接用 CodeBlock，头部 53 高，Copy code | 运行观察 | 一致 |
 | JSON | 直接用 JSONViewer，保留其搜索与复制 | 运行观察 | 一致 |
-| Markdown | 头部沿用 CodeBlock 样式，正文走回复渲染器 | WPF适配 | 无原版可比 |
+| Markdown | 头部沿用 CodeBlock 样式，正文走回复渲染器 | WPF适配 | 无原版可比，非 Arc 同名控件复刻 |
 | File | 文件信息、Open、Download、可选摘录或图片 | WPF适配 | 无原版可比 |
 
 ## WPF差异和回归入口

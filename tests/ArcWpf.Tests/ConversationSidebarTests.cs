@@ -142,6 +142,18 @@ public sealed class ConversationSidebarTests
     });
 
     [TestMethod]
+    public void ArchivingWithArchiveOpenKeepsSelectionOnAnActiveChat() => With(bar =>
+    {
+        Press(bar.ArchiveForTest("b"));
+        Press(bar.ArchiveToggleForTest);
+        Press(bar.RowForTest("c"));
+        Press(bar.ArchiveForTest("c"));
+        Sta.Pump();
+        Assert.AreEqual("a", bar.SelectedId);
+        CollectionAssert.AreEqual(new[] { "Add region", "Partition events", "Churn themes" }, bar.VisibleTitlesForTest.ToArray());
+    });
+
+    [TestMethod]
     public void ArchivingTheLastChatClearsSelection() => With(bar =>
     {
         foreach (var id in new[] { "c", "b", "a" }) { Press(bar.ArchiveForTest(id)); Sta.Pump(); }
