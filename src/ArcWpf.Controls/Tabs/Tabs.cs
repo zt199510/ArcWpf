@@ -43,7 +43,7 @@ public partial class Tabs:TabControl
     private long _lastFrame;
     private int _version,_previousIndex=-1;
     private DispatcherOperation? _pending;
-    internal bool IsMotionRunning=>_rendering||_fade.IsRunning||_scrollMotion.IsRunning;
+    internal bool IsMotionRunning=>_rendering||_fade.IsRunning||_scrollMotion.IsRunning||_shift.IsRunning;
     static Tabs()
     {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(Tabs),new FrameworkPropertyMetadata(typeof(Tabs)));
@@ -59,7 +59,12 @@ public partial class Tabs:TabControl
     }
     protected override bool IsItemItsOwnContainerOverride(object item)=>item is NativeTab;
     protected override DependencyObject GetContainerForItemOverride()=>new TabItem();
-    protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e){base.OnItemsChanged(e);QueueLayout(false);}
+    protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+    {
+        base.OnItemsChanged(e);
+        // Closing or moving a tab shifts the selected index without a selection change; the next transition takes its direction from here.
+        _previousIndex=SelectedIndex;QueueLayout(false);
+    }
     protected override void OnSelectionChanged(SelectionChangedEventArgs e)
     {
         int token=++_version;int before=_previousIndex;_previousIndex=SelectedIndex;
@@ -84,6 +89,7 @@ public partial class Tabs:TabControl
     protected override void OnPreviewKeyDown(KeyEventArgs e)
     {
         base.OnPreviewKeyDown(e);
+        if(!e.Handled&&ReorderKey(e)){e.Handled=true;return;}
         if(e.Handled||Keyboard.Modifiers!=ModifierKeys.None||e.Key is not(Key.Left or Key.Right or Key.Home or Key.End))return;
         var focused=HeaderFrom(Keyboard.FocusedElement as DependencyObject);if(focused is null)return;
         int next=FindHeader(Items.IndexOf(ItemContainerGenerator.ItemFromContainer(focused)),e.Key);
@@ -152,7 +158,7 @@ public partial class Tabs:TabControl
     }
     private void ResetMotion()
     {
-        ++_version;_pending?.Abort();_pending=null;StopFrames();_indicatorActive=_panelActive=_heightActive=false;_indicatorPlaced=false;_fade.Stop();_scrollMotion.Stop();
+        EndDrag(false);++_version;_pending?.Abort();_pending=null;StopFrames();_indicatorActive=_panelActive=_heightActive=false;_indicatorPlaced=false;_fade.Stop();_scrollMotion.Stop();
         if(_panelFrame is not null){_panelFrame.Height=double.NaN;_panelFrame.ClipToBounds=false;}
         if(_content is not null)_content.Opacity=1;if(_contentMove is not null)_contentMove.X=0;
         if(_outgoing is not null){_outgoing.Source=null;_outgoing.Opacity=0;}

@@ -23,5 +23,13 @@
       <arc:Tabs FlowDirection="RightToLeft" HeaderAlignment="Right" Margin="0,0,0,24"><arc:TabItem Header="Overview" Content="Right-to-left content"/><arc:TabItem Header="Activity" Content="Recent activity"/></arc:Tabs>
       <arc:Tabs><arc:TabItem Header="Parent"><arc:Tabs><arc:TabItem Header="Child A" Content="Nested content A"/><arc:TabItem Header="Child B" Content="Nested content B"/></arc:Tabs></arc:TabItem><arc:TabItem Header="Other" Content="Other parent content"/></arc:Tabs>
     </StackPanel></Expander>
+    <Expander Header="可关闭与拖动重排（文档标签）" IsExpanded="True" Margin="0,24,0,0" HorizontalContentAlignment="Stretch"><StackPanel Margin="0,16,0,0">
+      <arc:Tabs x:Name="Documents" Width="520" HorizontalAlignment="Left" AllowReorder="True" ItemsSource="{Binding Documents}" SelectedIndex="0" TabClosing="OnTabClosing" TabClosed="OnTabClosed" TabMoved="OnTabMoved" AutomationProperties.Name="Open documents">
+        <arc:Tabs.ItemContainerStyle><Style TargetType="arc:TabItem"><Setter Property="Header" Value="{Binding Name}"/><Setter Property="IsClosable" Value="{Binding CanClose}"/></Style></arc:Tabs.ItemContainerStyle>
+        <arc:Tabs.ContentTemplate><DataTemplate><TextBlock Text="{Binding Summary}" TextWrapping="Wrap"/></DataTemplate></arc:Tabs.ContentTemplate>
+      </arc:Tabs>
+      <arc:Button Content="新建标签" Variant="Secondary" Click="AddDocument" HorizontalAlignment="Left" Margin="0,16,0,0"/>
+      <TextBlock Text="{Binding DocumentStatus}" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,12,0,0" TextWrapping="Wrap"/>
+    </StackPanel></Expander>
   </StackPanel>
 </UserControl>

@@ -28,3 +28,11 @@
 - WPF 使用 `TreeNode` 对象图、`ObservableCollection`/只读节点集合、`ExpandedIds` 或内部展开集合、`SelectedNode` 和路由事件；不复制 React props 或 ARIA 属性。
 - 使用 `ItemsControl`/自定义可见行展平，而不是让每个文件夹都创建未展开的可视子树，保持关闭分支不渲染。
 - 自定义 `AutomationPeer` 映射 tree/treeitem 语义；实际 UIA、DPI 和动效尚待窗口验收。
+
+## 2026-11-11 增强与来源的关系
+
+冻结的 `tree-view.tsx` 没有懒加载、加载状态、虚拟化或子项变更通知：它每次渲染都展平全部可见节点。这四项是 ArcWpf 为桌面文件树加的设计，没有可对照的原版外观；加载弧线沿用 Button 加载指示的画法，失败色用 Danger 令牌。
+
+## 2026-11-12 补齐的首版项
+
+行进入/退出、分支线、选中底色滑动、Chevron 与文件夹图标切换、悬停与选中颜色、文件类型色按冻结的 `tree-view.tsx`、`tree-view.module.css` 和 `motion.json` 逐项实现，参数见[组件规格的动效清单](../../components/TreeView.md#动效清单tree-viewtsx--modulecss)。图标路径取自 lucide-static 0.460.0（ISC），与 `Lucide` 常量同源。
