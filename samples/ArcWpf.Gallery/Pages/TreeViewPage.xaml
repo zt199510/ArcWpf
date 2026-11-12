@@ -15,5 +15,18 @@
         <TextBlock Text="关闭的文件夹不会进入可见行和键盘导航；窄容器中的长标签会省略。" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,12,0,0" TextWrapping="Wrap" />
       </StackPanel>
     </Expander>
+    <Expander Header="懒加载：展开时才读取子项" IsExpanded="True" Margin="0,24,0,0">
+      <StackPanel Margin="0,16,0,0">
+        <arc:TreeView x:Name="Lazy" MaxHeight="300" Label="Lazy file tree" ChildrenLoadFailed="OnLoadFailed" ExpandedChanged="OnLazyExpanded" />
+        <arc:Button Content="重新读取 src" Variant="Secondary" Click="ReloadSource" HorizontalAlignment="Left" Margin="0,12,0,0" />
+        <TextBlock x:Name="LazyResult" Text="每个文件夹第一次展开时读取 0.7 秒；读取中收起会取消。“restricted” 第一次读取失败，再展开一次会重试。" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,12,0,0" TextWrapping="Wrap" />
+      </StackPanel>
+    </Expander>
+    <Expander Header="虚拟化：10,100 行" IsExpanded="True" Margin="0,24,0,0">
+      <StackPanel Margin="0,16,0,0">
+        <arc:TreeView x:Name="Large" Height="320" Label="Large file tree" ScrollViewer.ScrollChanged="OnLargeScrolled" />
+        <TextBlock x:Name="LargeResult" Foreground="{DynamicResource ArcWpf.Brush.TextSecondary}" Margin="0,12,0,0" TextWrapping="Wrap" />
+      </StackPanel>
+    </Expander>
   </StackPanel>
 </UserControl>

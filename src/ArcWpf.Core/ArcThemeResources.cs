@@ -295,6 +295,9 @@ public sealed class ArcThemeResources : ResourceDictionary
         // tree-table.module.css: accent-subtle with foreground 4%, and the chevron hover over surface-muted.
         PutBrush("TreeSelectedHover", Alpha(Oklch(accentL * .96 + neutrals["Foreground"] * .04, 0, 0), (dark ? .13 : .1) * .96 + .04));
         PutBrush("TreeChevronHover", Oklch(MixL("SurfaceMuted", "Foreground", .06), 0, 0));
+        // tree-view.module.css file tones: color-mix(in oklab, <hex> N%, var(--foreground)).
+        foreach (var (name, hex, share) in new[] { ("TypeScript", 0x3178c6, .78), ("Stylesheet", 0x8b6ace, .73), ("Markdown", 0x38896b, .74), ("Json", 0xc48637, .78) })
+            PutBrush($"TreeFile{name}", MixOklab(hex, share, neutrals["Foreground"]));
         // The small status badge the 2026-11-02 data demos show: 20 high, radius 5, computed from uiarc.dev in both themes.
         PutBrush("StatusNeutralFill", Oklch(dark ? .2816 : .946, 0, 0));
         PutBrush("StatusNeutralInk", Oklch(dark ? .7814 : .4104, 0, 0));
@@ -352,6 +355,21 @@ public sealed class ArcThemeResources : ResourceDictionary
         var brush = new SolidColorBrush(color);
         brush.Freeze();
         this[$"ArcWpf.Brush.{name}"] = brush;
+    }
+
+    // color-mix(in oklab, rgb share, neutral) where the neutral is an achromatic OKLCH lightness.
+    private static Color MixOklab(int rgb, double share, double neutralL)
+    {
+        static double Linear(int channel) { double c = channel / 255d; return c <= .04045 ? c / 12.92 : Math.Pow((c + .055) / 1.055, 2.4); }
+        double r = Linear(rgb >> 16 & 255), g = Linear(rgb >> 8 & 255), b = Linear(rgb & 255);
+        double l = Math.Cbrt(.4122214708 * r + .5363325363 * g + .0514459929 * b);
+        double m = Math.Cbrt(.2119034982 * r + .6806995451 * g + .1073969566 * b);
+        double s = Math.Cbrt(.0883024619 * r + .2817188376 * g + .6299787005 * b);
+        double lightness = .2104542553 * l + .7936177850 * m - .0040720468 * s;
+        double a = 1.9779984951 * l - 2.4285922050 * m + .4505937099 * s;
+        double bb = .0259040371 * l + .7827717662 * m - .8086757660 * s;
+        double mixA = a * share, mixB = bb * share;
+        return Oklch(lightness * share + neutralL * (1 - share), Math.Sqrt(mixA * mixA + mixB * mixB), Math.Atan2(mixB, mixA) * 180 / Math.PI);
     }
 
     // OKLCH -> linear sRGB -> encoded sRGB. Out-of-gamut channels are clipped for WPF's sRGB palette.

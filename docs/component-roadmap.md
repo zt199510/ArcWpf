@@ -195,7 +195,8 @@ ThemeSwitch、ToggleGroup、ActionSwap、UndoToast、ExpandableText 已完成来
 
 - [x] DiffView 完成实现、Gallery 和专项测试；功能是 ArcWpf 的设计，行样式按 Arc Code suggestion 的公开样式校准；状态为待验收，见[验证记录](verification/2026-11-05-diff-view.md)
 - [x] TerminalOutput 完成实现、Gallery 和专项测试；实时行为是 ArcWpf 的设计（Arc 的 `log-stream` 查不到），外观参考 Typewriter terminal 公开样式；状态为待验收，见[验证记录](verification/2026-11-05-terminal-output.md)
-- [ ] TreeView、Tabs 增强
+- [x] TreeView、Tabs 增强：TreeView 懒加载与虚拟化、Tabs 关闭与拖动重排已实现并接入 Gallery；状态为待验收，见[验证记录](verification/2026-11-11-treeview-tabs-enhancements.md)。TreeView 多选/搜索/拖拽、Tabs 垂直方向/手动激活未做。
+- [x] TreeView 首版缺失的行动效、选中滑动、图标与 AutomationPeer 已补齐；状态为待验收，见[验证记录](verification/2026-11-12-treeview-motion-automation.md)
 - [ ] ArcWindow
 - [ ] 长会话虚拟化、CodeBlock 性能（先用真实会话测出瓶颈）
 

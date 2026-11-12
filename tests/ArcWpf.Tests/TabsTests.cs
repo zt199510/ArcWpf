@@ -123,6 +123,134 @@ public sealed class TabsTests
         var scroll=Part<ScrollViewer>(tabs,"PART_HeaderScroll");Assert.IsTrue(tabs.HasOverflow);Assert.AreEqual(260d,tabs.ActualWidth,.01);Assert.IsGreaterThan(0d,scroll.HorizontalOffset);
         var last=(Tab)tabs.Items[8];double x=last.TranslatePoint(new Point(),scroll).X;Assert.IsTrue(x>=-1&&x+last.ActualWidth<=scroll.ActualWidth+1,$"Header outside viewport: {x}, viewport {scroll.ActualWidth}");
     });
+    [TestMethod]
+    public void CloseButtonOnlyShowsOnClosableTabsAndSitsInsideTheHeader()=>Sta.Run(()=>
+    {
+        var tabs=Make();var first=(Tab)tabs.Items[0];var second=(Tab)tabs.Items[1];second.IsClosable=true;Layout(tabs);
+        var hidden=Part<ButtonBase>(first,"PART_Close");var close=Part<ButtonBase>(second,"PART_Close");
+        Assert.AreEqual(Visibility.Collapsed,hidden.Visibility);Assert.AreEqual(88d,first.ActualWidth,.01,"A tab that can't be closed keeps its source width.");
+        Assert.AreEqual(Visibility.Visible,close.Visibility);Assert.AreEqual(18d,close.ActualWidth,.01);Assert.AreEqual(18d,close.ActualHeight,.01);
+        var at=close.TranslatePoint(new Point(),second);var label=Part<ContentPresenter>(second,"PART_Label");
+        Assert.AreEqual((second.ActualHeight-18)/2,at.Y,.01,"The button is centred on the header's height.");
+        Assert.AreEqual(8d,second.ActualWidth-at.X-18,.01,"Eight after the button, where the label alone has twelve.");
+        Assert.IsTrue(label.TranslatePoint(new Point(label.ActualWidth,0),second).X<=at.X-6+.01,"Label and button keep a gap of six.");
+        Assert.IsFalse(close.Focusable);Assert.AreEqual("Close Two",System.Windows.Automation.AutomationProperties.GetName(close));
+        second.Header="Renamed";Assert.AreEqual("Close Renamed",System.Windows.Automation.AutomationProperties.GetName(close));
+        var glyph=Descendants(close).OfType<System.Windows.Shapes.Path>().Single();Assert.AreEqual(new Rect(6,6,12,12),glyph.Data.Bounds);
+    });
+    [TestMethod]
+    public void ClosingAnUnselectedTabRemovesItAndLeavesTheSelectionAlone()=>Sta.Run(()=>
+    {
+        var tabs=Make();tabs.Items.Add(new Tab{Header="Three",IsClosable=true});Layout(tabs);var third=(Tab)tabs.Items[2];
+        var log=new List<string>();int selections=0;tabs.SelectionChanged+=(_,_)=>selections++;
+        tabs.TabClosing+=(_,e)=>log.Add($"closing {((Tab)e.Item).Header} {e.Index}");tabs.TabClosed+=(_,e)=>log.Add($"closed {((Tab)e.Item).Header} {e.Index}");
+        Part<ButtonBase>(third,"PART_Close").RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));Layout(tabs);
+        Assert.AreEqual(2,tabs.Items.Count);Assert.IsFalse(tabs.Items.Contains(third));Assert.AreEqual(0,tabs.SelectedIndex);Assert.AreEqual(0,selections);
+        CollectionAssert.AreEqual(new[]{"closing Three 2","closed Three 2"},log);
+    });
+    [TestMethod]
+    public void ClosingTheSelectedTabSelectsANeighbourAndTheIndicatorFollows()=>Sta.Run(()=>
+    {
+        var tabs=Make();tabs.Items.Add(new Tab{Header="Three",Content=new TextBlock{Text="Content three"}});tabs.SelectedIndex=1;Layout(tabs);var second=(Tab)tabs.Items[1];
+        Assert.IsTrue(tabs.CloseTab(second));Layout(tabs);Layout(tabs);
+        Assert.AreEqual(2,tabs.Items.Count);Assert.IsTrue(tabs.SelectedIndex>=0,"Something must stay selected.");
+        var selected=(Tab)tabs.SelectedItem;var indicator=Part<Border>(tabs,"PART_Selection");
+        Assert.AreEqual(selected.TranslatePoint(new Point(),Part<FrameworkElement>(tabs,"PART_HeaderTrack")).X,((TranslateTransform)indicator.RenderTransform).X,.01);Assert.AreEqual(1d,indicator.Opacity);
+        Assert.AreSame(selected.Content,tabs.SelectedContent);
+    });
+    [TestMethod]
+    public void TabClosingCanCancelAndACloseCommandOwnsTheRemoval()=>Sta.Run(()=>
+    {
+        var tabs=Make();Layout(tabs);var second=(Tab)tabs.Items[1];int closed=0;bool cancel=true;
+        tabs.TabClosing+=(_,e)=>e.Cancel=cancel;tabs.TabClosed+=(_,_)=>closed++;
+        Assert.IsFalse(tabs.CloseTab(second));Assert.AreEqual(2,tabs.Items.Count);Assert.AreEqual(0,closed);
+        cancel=false;object? asked=null;bool remove=false;
+        tabs.CloseCommand=new Relay(item=>{asked=item;if(remove)tabs.Items.Remove(item);});
+        Assert.IsFalse(tabs.CloseTab(second),"A command that keeps the tab has not closed it.");Assert.AreSame(second,asked);Assert.AreEqual(2,tabs.Items.Count);Assert.AreEqual(0,closed);
+        remove=true;Assert.IsTrue(tabs.CloseTab(second));Assert.AreEqual(1,tabs.Items.Count);Assert.AreEqual(1,closed);
+    });
+    [TestMethod]
+    public void ClosingEditsAnObservableSourceAndRefusesAFixedOne()=>Sta.Run(()=>
+    {
+        var source=new System.Collections.ObjectModel.ObservableCollection<string>{"One","Two","Three"};var tabs=new Tabs{ItemsSource=source,SelectedIndex=2};Layout(tabs);
+        Assert.IsTrue(tabs.CloseTab(tabs.ItemContainerGenerator.ContainerFromIndex(0)),"A container is accepted as well as its item.");CollectionAssert.AreEqual(new[]{"Two","Three"},source);Assert.AreEqual("Three",tabs.SelectedItem);
+        Assert.IsTrue(tabs.CloseTab("Two"));CollectionAssert.AreEqual(new[]{"Three"},source);Assert.IsFalse(tabs.CloseTab("Missing"));
+        var fixedTabs=new Tabs{ItemsSource=new[]{"One","Two"},AllowReorder=true};Layout(fixedTabs);int closed=0;fixedTabs.TabClosed+=(_,_)=>closed++;
+        Assert.IsFalse(fixedTabs.CloseTab("One"));Assert.AreEqual(2,fixedTabs.Items.Count);Assert.AreEqual(0,closed);
+        Assert.IsFalse(fixedTabs.BeginDrag((System.Windows.Controls.TabItem)fixedTabs.ItemContainerGenerator.ContainerFromIndex(0),10),"An array can't be reordered in place, so a drag never starts.");Assert.IsFalse(fixedTabs.MoveTab(0,1));
+    });
+    [TestMethod]
+    public void MovingTheSelectedTabKeepsItSelectedWithoutASelectionChange()=>Sta.Run(()=>
+    {
+        var input=new TextBox{Text="kept"};var tabs=Make(input);tabs.Items.Add(new Tab{Header="Three"});tabs.Items.Add(new Tab{Header="Four"});
+        var model=new Model{Index=0};var binding=tabs.SetBinding(Selector.SelectedIndexProperty,new Binding(nameof(Model.Index)){Source=model,Mode=BindingMode.TwoWay});Layout(tabs);
+        var first=tabs.Items[0];int selections=0;TabMovedEventArgs? moved=null;tabs.SelectionChanged+=(_,_)=>selections++;tabs.TabMoved+=(_,e)=>moved=e;
+        Assert.IsTrue(tabs.MoveTab(0,2));Layout(tabs);
+        CollectionAssert.AreEqual(new[]{"Two","Three","One","Four"},Headers(tabs));Assert.AreEqual(2,tabs.SelectedIndex);Assert.AreSame(first,tabs.SelectedItem);Assert.AreSame(input,tabs.SelectedContent);
+        Assert.AreEqual(0,selections);Assert.AreEqual(2,model.Index);Assert.AreSame(binding,BindingOperations.GetBindingExpression(tabs,Selector.SelectedIndexProperty));
+        Assert.AreSame(first,moved!.Item);Assert.AreEqual(0,moved.OldIndex);Assert.AreEqual(2,moved.NewIndex);
+        Assert.IsTrue(tabs.MoveTab(2,0));Assert.IsTrue(tabs.MoveTab(3,1));Layout(tabs);
+        CollectionAssert.AreEqual(new[]{"One","Four","Two","Three"},Headers(tabs));Assert.AreEqual(0,tabs.SelectedIndex);Assert.AreEqual(0,selections);
+        var source=new System.Collections.ObjectModel.ObservableCollection<string>{"a","b","c"};var bound=new Tabs{ItemsSource=source,SelectedIndex=1};Layout(bound);int boundSelections=0;bound.SelectionChanged+=(_,_)=>boundSelections++;
+        Assert.IsTrue(bound.MoveTab(1,0));Layout(bound);CollectionAssert.AreEqual(new[]{"b","a","c"},source);Assert.AreEqual("b",bound.SelectedItem);Assert.AreEqual(0,bound.SelectedIndex);Assert.AreEqual(0,boundSelections);
+    });
+    [TestMethod]
+    public void DraggingPastANeighboursMiddleMakesRoomAndDroppingReorders()=>Sta.Run(()=>
+    {
+        var tabs=Make();tabs.Items.Add(new Tab{Header="Three"});tabs.AllowReorder=true;Layout(tabs);
+        var track=Part<FrameworkElement>(tabs,"PART_HeaderTrack");var one=(Tab)tabs.Items[0];var two=(Tab)tabs.Items[1];var three=(Tab)tabs.Items[2];var indicator=Part<Border>(tabs,"PART_Selection");
+        Assert.IsTrue(tabs.BeginDrag(one,40));tabs.DragTo(80);Layout(tabs);
+        Assert.AreEqual(40d,X(one,track),.01,"The header follows the pointer.");Assert.AreEqual(92d,X(two,track),.01,"Its edge is at 128, short of the neighbour's middle at 136.");
+        Assert.AreEqual(40d,((TranslateTransform)indicator.RenderTransform).X,.01,"The selection travels with its header.");
+        tabs.DragTo(90);Layout(tabs);
+        var fill=Part<Border>(one,"DragFill");Assert.IsTrue(one.IsDragging);Assert.AreEqual(Visibility.Visible,fill.Visibility,"The lifted header covers the labels it passes over.");Assert.AreEqual(1,Panel.GetZIndex(one));Assert.AreEqual(one.ActualWidth,fill.ActualWidth+2,.01);Assert.IsFalse(two.IsDragging);
+        Assert.AreEqual(50d,X(one,track),.01);Assert.AreEqual(0d,X(two,track),.01,"Past the middle the neighbour takes the vacated slot.");Assert.AreEqual(184d,X(three,track),.01);
+        tabs.DragTo(80);Layout(tabs);Assert.AreEqual(92d,X(two,track),.01,"Dragging back returns it.");
+        tabs.DragTo(900);Layout(tabs);Assert.AreEqual(184d,X(one,track),.01,"The header stops at the end of the strip.");Assert.AreEqual(0d,X(two,track),.01);Assert.AreEqual(92d,X(three,track),.01);
+        Assert.AreEqual(new RotateTransform().Value,((Transform)one.RenderTransform).Value,"Reordering must not touch the header's own transform.");
+        tabs.EndDrag(true);Layout(tabs);
+        CollectionAssert.AreEqual(new[]{"Two","Three","One"},Headers(tabs));Assert.AreEqual(2,tabs.SelectedIndex);Assert.IsFalse(tabs.IsDragging);
+        Assert.IsFalse(one.IsDragging);Assert.AreEqual(Visibility.Collapsed,fill.Visibility);Assert.AreEqual(0,Panel.GetZIndex(one));
+        Assert.AreEqual(0d,X(two,track),.01);Assert.AreEqual(92d,X(three,track),.01);Assert.AreEqual(184d,X(one,track),.01);Assert.AreEqual(184d,((TranslateTransform)indicator.RenderTransform).X,.01);
+    });
+    [TestMethod]
+    public void CancelledDragAndTemplateChangePutEveryHeaderBack()=>Sta.Run(()=>
+    {
+        var tabs=Make();tabs.Items.Add(new Tab{Header="Three"});tabs.AllowReorder=true;tabs.SelectedIndex=2;Layout(tabs);
+        var track=Part<FrameworkElement>(tabs,"PART_HeaderTrack");var one=(Tab)tabs.Items[0];var two=(Tab)tabs.Items[1];var three=(Tab)tabs.Items[2];int moves=0;tabs.TabMoved+=(_,_)=>moves++;
+        Assert.IsTrue(tabs.BeginDrag(three,200));tabs.DragTo(-500);Layout(tabs);
+        Assert.AreEqual(0d,X(three,track),.01,"The header stops at the start of the strip.");Assert.AreEqual(92d,X(one,track),.01);Assert.AreEqual(184d,X(two,track),.01);
+        tabs.EndDrag(false);Layout(tabs);
+        CollectionAssert.AreEqual(new[]{"One","Two","Three"},Headers(tabs));Assert.AreEqual(0d,X(one,track),.01);Assert.AreEqual(92d,X(two,track),.01);Assert.AreEqual(184d,X(three,track),.01);Assert.AreEqual(0,moves);
+        Assert.IsTrue(tabs.BeginDrag(one,10));tabs.DragTo(150);ArcMotion.SetLevel(tabs,ArcMotionLevel.Off);Layout(tabs);
+        Assert.IsFalse(tabs.IsDragging,"Changing the motion level resets the strip, drag included.");Assert.IsFalse(one.IsDragging);Assert.AreEqual(0d,X(one,track),.01);Assert.AreEqual(92d,X(two,track),.01);Assert.AreEqual(0,moves);
+        tabs.AllowReorder=false;Layout(tabs);Assert.IsTrue(tabs.MoveTab(0,1),"MoveTab is the programmatic path and does not depend on AllowReorder.");
+    });
+    [TestMethod]
+    public void DroppedHeaderGlidesIntoItsSlotOnARealClockAndLeavesNoOffsetBehind()=>Sta.Run(()=>
+    {
+        var tabs=Make();tabs.Items.Add(new Tab{Header="Three"});tabs.AllowReorder=true;
+        var window=new Window{Content=tabs,Width=420,Height=200,ShowActivated=false,ShowInTaskbar=false,WindowStyle=WindowStyle.None};window.Show();
+        try
+        {
+            Sta.Pump();var track=Part<FrameworkElement>(tabs,"PART_HeaderTrack");var one=(Tab)tabs.Items[0];var two=(Tab)tabs.Items[1];
+            Assert.IsTrue(tabs.BeginDrag(one,40));tabs.DragTo(100);tabs.UpdateLayout();
+            Assert.IsTrue(two.HasAnimatedProperties,"With motion on, the neighbour slides rather than jumps.");
+            tabs.EndDrag(true);tabs.UpdateLayout();
+            Assert.IsTrue(one.HasAnimatedProperties);Assert.IsTrue(one.IsDragging,"It stays lifted while it glides over its neighbour.");
+            // Sampled on rendered frames: the clock only takes hold on the first one, and the idle pump may not run until the glide is over.
+            double first=double.NaN,lowest=double.MaxValue;EventHandler sample=(_,_)=>{double x=X(one,track);if(double.IsNaN(first))first=x;lowest=Math.Min(lowest,x);};
+            CompositionTarget.Rendering+=sample;Pump(400);CompositionTarget.Rendering-=sample;tabs.UpdateLayout();
+            Assert.AreEqual(60d,lowest,1.5,"The drop starts from where the header was held, not from its new slot.");Assert.IsTrue(first<91,$"The first rendered frame must not show the header already at rest, got {first}.");
+            Assert.IsFalse(one.HasAnimatedProperties);Assert.IsFalse(two.HasAnimatedProperties);Assert.IsFalse(tabs.IsMotionRunning);Assert.IsFalse(one.IsDragging,"The lift ends once the header has settled.");
+            Assert.AreEqual(92d,X(one,track),.01);Assert.AreEqual(0d,X(two,track),.01);CollectionAssert.AreEqual(new[]{"Two","One","Three"},Headers(tabs));
+        }
+        finally{window.Close();}
+    });
+    private static double X(FrameworkElement element,FrameworkElement track)=>element.TranslatePoint(new Point(),track).X;
+    private static string[] Headers(Tabs tabs)=>tabs.Items.Cast<Tab>().Select(tab=>(string)tab.Header).ToArray();
+    private static IEnumerable<DependencyObject> Descendants(DependencyObject root){for(int i=0;i<VisualTreeHelper.GetChildrenCount(root);i++){var child=VisualTreeHelper.GetChild(root,i);yield return child;foreach(var next in Descendants(child))yield return next;}}
+    private sealed class Relay(Action<object> run):ICommand{public event EventHandler? CanExecuteChanged{add{}remove{}}public bool CanExecute(object? parameter)=>true;public void Execute(object? parameter)=>run(parameter!);}
     private static Tabs Make(object? content=null){var tabs=new Tabs();tabs.Items.Add(new Tab{Header="One",Content=content??new TextBlock{Text="Content one"}});tabs.Items.Add(new Tab{Header="Two",Content=new TextBlock{Text="Content two"}});return tabs;}
     private static BitmapSource Snapshot(){var bitmap=new RenderTargetBitmap(10,10,96,96,PixelFormats.Pbgra32);bitmap.Freeze();return bitmap;}
     private static void Layout(FrameworkElement element,double width=420){if(!element.IsInitialized){element.BeginInit();element.EndInit();}element.Measure(new Size(width,1000));element.Arrange(new Rect(0,0,width,element.DesiredSize.Height));element.UpdateLayout();Sta.Pump();}

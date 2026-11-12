@@ -33,6 +33,10 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 
 2026-11-05 TerminalOutput：实现完成，状态待验收，尚未接入真实进程和审批流程。同时更正“Arc 没有 diff 组件”的错误记录，DiffView 行样式按 Arc Code suggestion 的公开样式校准。见[验证记录](verification/2026-11-05-terminal-output.md)。
 
+2026-11-11 TreeView 与 Tabs 增强：TreeView 加入懒加载（含取消、失败与重试）、虚拟化、已展开分支子项增删自动反映；Tabs 加入关闭（按钮、中键、Ctrl+F4、可取消、命令）和拖动/键盘重排。Arc 源码没有这些功能，属 ArcWpf 设计。专项 38 项通过，Wine 窗口内真实输入已运行；真实 Windows 未运行，状态待验收。TreeView 多选/搜索/拖拽、Tabs 垂直方向/手动激活未做；核对时发现 TreeView 首版规格标为已实现的行动效和 AutomationPeer 实际不存在，已记入规格。见[验证记录](verification/2026-11-11-treeview-tabs-enhancements.md)。2026-11-12 补跑 JSONViewer 专项 10 项通过。
+
+2026-11-12 TreeView 首版缺失项补齐：行进入/退出与逐项延迟、退出中再展开、选中底色滑动、Chevron 与文件夹图标切换、悬停与选中颜色、整行宽高亮、文件类型色、各层分支线，以及 Tree/TreeItem 的 AutomationPeer。TreeView 与 JSONViewer 专项 33 项通过，Wine 真实输入与明暗截图已看；真实 Windows 未运行，状态待验收。见[验证记录](verification/2026-11-12-treeview-motion-automation.md)。
+
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。
