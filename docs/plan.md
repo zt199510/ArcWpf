@@ -37,6 +37,8 @@ SwipeActions 已完成 Arc 来源冻结、WPF 实现、主题、Gallery 和 2 �
 
 2026-11-12 TreeView 首版缺失项补齐：行进入/退出与逐项延迟、退出中再展开、选中底色滑动、Chevron 与文件夹图标切换、悬停与选中颜色、整行宽高亮、文件类型色、各层分支线，以及 Tree/TreeItem 的 AutomationPeer。TreeView 与 JSONViewer 专项 33 项通过，Wine 真实输入与明暗截图已看；真实 Windows 未运行，状态待验收。见[验证记录](verification/2026-11-12-treeview-motion-automation.md)。
 
+2026-11-12 ArcWindow：Arc 风格顶层窗口（ArcWpf 的设计），WindowChrome 保留系统边框行为，标题栏有内容与操作插槽，支持 Windows 11 贴靠布局和 DWM 深色边框。专项 6 项通过，Wine 真实拖动、调整大小、最大化、双击与按钮点击已运行；最大化画面、DWM 和贴靠布局浮层需真实 Windows，状态待验收。见[验证记录](verification/2026-11-12-arc-window.md)。下一项按既定顺序为长会话虚拟化与 CodeBlock 性能。
+
 2026-11-03 第七批：TextMorph、TextReveal、TextShimmer、IconMorph、InViewTitle 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，见[验证记录](verification/2026-11-03-batch7-replication.md)。
 
 2026-11-03 第六批：FloatingButtonGroup、ExpandingButtonGroup、CardStack、LiquidTabBar、CoverFlow 已实现并接入 Gallery；真实窗口、触控和高 DPI 性能未运行，状态待验收，LiquidTabBar、CoverFlow 的 Pro 许可待确认，见 [验证记录](verification/2026-11-03-batch6-replication.md)。

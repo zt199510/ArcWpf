@@ -71,6 +71,12 @@ public sealed class ArcThemeResources : ResourceDictionary
         double dangerL = dark ? .76 : .54;
         double dangerC = dark ? .2 : .21;
         PutBrush("Danger", Oklch(dangerL, dangerC, 25));
+        // ArcWindow caption buttons: the pressed fill one step past hover, and a close button that turns danger with white ink.
+        PutBrush("WindowCaptionPressed", Oklch(MixL("SurfaceMuted", "Foreground", .06), 0, 0));
+        // Light-theme danger in both themes: the dark theme's lighter red would leave white ink unreadable.
+        PutBrush("WindowCloseHover", Oklch(.54, .21, 25));
+        PutBrush("WindowClosePressed", Oklch(.49, .21, 25));
+        PutBrush("WindowCloseInk", Colors.White);
         // OTP input: frozen 2026-10-27 foundation accent and srgb danger/surface mix.
         var otpAccent = Oklch(dark ? .8 : .33, 0, 0); PutBrush("Accent", otpAccent);
         otpAccent.A = (byte)Math.Round(255 * (dark ? .13 : .1)); PutBrush("AccentSubtle", otpAccent);

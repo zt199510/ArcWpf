@@ -21,6 +21,7 @@ internal static class Lucide
     public const string RotateCcw = "M3,12 A9,9 0 1 0 12,3 A9.75,9.75 0 0 0 5.26,5.74 L3,8 M3,3 V8 H8";
     public const string Pipette = "M2,22 L3,21 H6 L15,12 M3,21 V18 L12,9 M15,6 L18.4,2.6 A2.1,2.1 0 1 1 21.4,5.6 L18,9 L18.4,9.4 A2.1,2.1 0 1 1 15.4,12.4 L11.6,8.6 A2.1,2.1 0 1 1 14.6,5.6 L15,6 Z";
     public const string Plus = "M5,12 H19 M12,5 V19";
+    public const string Minus = "M5,12 H19";
     public const string Columns2 = "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z M12 3v18";
     public const string Rows2 = "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z M3 12h18";
     public const string UnfoldVertical = "M12 22v-6 M12 8V2 M4 12H2 M10 12H8 M16 12h-2 M22 12h-2 M15 19l-3 3-3-3 M15 5l-3-3-3 3";
