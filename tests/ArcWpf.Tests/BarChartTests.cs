@@ -93,8 +93,8 @@ public sealed class BarChartTests
     {
         chart.Data = [.. Enumerable.Range(0, 40).Select(index => new BarChartDatum($"k{index}", $"Day {index}", index, $"Label {index}"))];
         var shown = chart.AxisForTest;
-        Assert.IsTrue(shown.Length < 40);
-        Assert.IsTrue(shown.Contains("Label 39"), "the newest always shows");
+        Assert.IsLessThan(40, shown.Length);
+        CollectionAssert.Contains(shown, "Label 39", "the newest always shows");
     });
 
     [TestMethod]
